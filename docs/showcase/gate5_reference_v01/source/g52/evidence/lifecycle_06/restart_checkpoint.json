@@ -1,0 +1,58 @@
+{
+  "a_pid": 97866,
+  "a_still_running": true,
+  "accepted_sha256": "77664a4a7a17f0b152156f9f32fddfc0e09b31660d9f5c2dc7c8e58c02b422af",
+  "b1_pid": 97867,
+  "b1_rc": 0,
+  "b1_reaped": true,
+  "budget": {
+    "body_bytes": 2146,
+    "metadata": 7,
+    "opened": 2,
+    "payload": 2,
+    "reservations": [
+      "g5request:b3a2a06160c9ec894c428f69ad8c459ba1afcc08e26873c5d4bf3cb6a42c2d17",
+      "g5request:591c879d661b9dc7512f957608d5ec172f14b611fd0f91f353611e5bb3fd119a",
+      "g5request:f8f83cbef16ead7f143830069b4d4bdb6c24ce4a86221ed683b438a90f6312f7",
+      "g5request:a660a10e35172f642fc3e95ba9eeca1cd3e93e6fb8bfd793258860c80896993f",
+      "g5request:a698fcf2b0e1745cd555b055fcad8b90a98d33f7993a4bfccad072c17f6c3956",
+      "g5request:4e1e47e66ac5ddb53566cfbe91607c896daca1d76247e52da6f9a149fbd6c542",
+      "g5request:3e7daae3ae7bb805d1be5bd0a0cc67abb5627a60a473b55be90d795df6d9a186",
+      "g5request:0eebc8c85b901d9c2c648c4a1919e30eb4f9ea6bcf18fd2aef2ada268fef13eb",
+      "g5request:cf57c7644af4f3d36069594e4fc69dd1b151ade8be4c4b9a54e3c6bda2b7c604"
+    ],
+    "task": "task:gate5:exchange"
+  },
+  "persisted_state": {
+    "credit": 0,
+    "duplicates": [
+      {
+        "body_hash": "56998ecfe67ad7f66285bf316da9104df9f144094a3afd3edf15e143bb6a03ab",
+        "key": "[\"root:gate5:calibration\",\"source:gate5:calibration:one\",1]",
+        "pointer": "g5pointer:28251c22b6bf0a2e90c74b9356742f75f7da5e3525bac8e922791bbcba1959c1"
+      }
+    ],
+    "highwater": {
+      "[\"root:gate5:calibration\",\"g5pointer:28251c22b6bf0a2e90c74b9356742f75f7da5e3525bac8e922791bbcba1959c1\",\"stream:gate5:calibration:1\"]": {
+        "effective_at": 1790277511,
+        "entry_hash": "564c6251a0180ec2756ac258a2da546392ae97489bc27358bd799b8c6d296972",
+        "pointer_id": "g5pointer:28251c22b6bf0a2e90c74b9356742f75f7da5e3525bac8e922791bbcba1959c1",
+        "publisher_root_id": "root:gate5:calibration",
+        "reason_ref": "reason:gate5:declared-revocation",
+        "revision": 2,
+        "state": "REVOKED",
+        "stream_id": "stream:gate5:calibration:1",
+        "version": "g51.entry.v01"
+      }
+    },
+    "quarantine": [],
+    "sources": {
+      "[\"root:gate5:calibration\",\"source:gate5:calibration:one\",1]": {
+        "body_hash": "56998ecfe67ad7f66285bf316da9104df9f144094a3afd3edf15e143bb6a03ab",
+        "pointer": "g5pointer:28251c22b6bf0a2e90c74b9356742f75f7da5e3525bac8e922791bbcba1959c1",
+        "revision": 1,
+        "source_ref": "source:gate5:calibration:one"
+      }
+    }
+  }
+}

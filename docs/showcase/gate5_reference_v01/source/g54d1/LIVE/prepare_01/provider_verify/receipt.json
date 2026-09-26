@@ -1,0 +1,42 @@
+{
+  "ended": "2026-09-25T18:06:32.743467+00:00",
+  "finish_reason": "STOP",
+  "first_content_or_call": 3.003909000195563,
+  "first_event": 3.003909000195563,
+  "http_status": 200,
+  "idle_seconds": 90,
+  "last_network_progress": 3.0028747506439686,
+  "last_progress": 3.003909000195563,
+  "local_request_closed": true,
+  "model": "gemini-2.5-flash",
+  "model_version": "gemini-2.5-flash",
+  "network_bytes": 590,
+  "network_chunks": 6,
+  "overall_seconds": 150,
+  "received_events": 1,
+  "remote_completion": "COMPLETED_RESPONSE_OBSERVED",
+  "request_bytes": 3035,
+  "request_send": 0.011005000211298466,
+  "request_sha256": "2aa3a73bf0379aeb3b8b268c2098330073f66b8362d7ba889248fc93f8aaad7e",
+  "response_body_sha256": "07e6ac07cc881831ea0b076ae577d53ed9c2a5e0525b41bea619fd08fde24543",
+  "response_headers": 3.0012300414964557,
+  "sdk_retries": 0,
+  "seconds": 3.004368333145976,
+  "started": "2026-09-25T18:06:29.739105+00:00",
+  "status": "COMPLETE",
+  "stream": false,
+  "usage": {
+    "candidates_token_count": 300,
+    "prompt_token_count": 483,
+    "prompt_tokens_details": [
+      {
+        "modality": "TEXT",
+        "token_count": 483
+      }
+    ],
+    "thoughts_token_count": 265,
+    "total_token_count": 1048
+  },
+  "version": "g54r.provider_request.v02",
+  "wire_sends": 1
+}

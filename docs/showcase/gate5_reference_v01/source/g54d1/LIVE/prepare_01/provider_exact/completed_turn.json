@@ -1,0 +1,24 @@
+{
+  "content": {
+    "parts": [
+      {
+        "text": "{\"operation\":\"FIND_OFFER\",\"parameters\":{\"request_id\":\"request:exam:one\",\"revision\":1,\"team_ref\":\"team:one\",\"venue_ref\":\"venue:synthetic\",\"timezone\":\"Europe/Tirane\",\"currency\":\"EUR\",\"budget_minor\":7000,\"owner_approval_ref\":null,\"sessions\":[{\"session_id\":\"session:7\",\"start\":\"2027-01-07T16:30:00\",\"end\":\"2027-01-07T18:00:00\",\"allow_shift_minutes\":0},{\"session_id\":\"session:8\",\"start\":\"2027-01-08T11:00:00\",\"end\":\"2027-01-08T12:30:00\",\"allow_shift_minutes\":0},{\"session_id\":\"session:9\",\"start\":\"2027-01-09T11:00:00\",\"end\":\"2027-01-09T12:30:00\",\"allow_shift_minutes\":0}]}}"
+      }
+    ],
+    "role": "model"
+  },
+  "finish_reason": "STOP",
+  "model_version": "gemini-2.5-flash",
+  "usage": {
+    "candidates_token_count": 251,
+    "prompt_token_count": 249,
+    "prompt_tokens_details": [
+      {
+        "modality": "TEXT",
+        "token_count": 249
+      }
+    ],
+    "thoughts_token_count": 873,
+    "total_token_count": 1373
+  }
+}

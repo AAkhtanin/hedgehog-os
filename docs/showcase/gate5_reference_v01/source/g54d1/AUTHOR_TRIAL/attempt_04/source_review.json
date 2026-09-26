@@ -1,0 +1,57 @@
+{
+  "candidate_imported_on_host": false,
+  "changed": [
+    "PASSPORT.json",
+    "README.md",
+    "candidate.json",
+    "candidate_domain/run.py",
+    "source_impact.json",
+    "tests/test_status_refusal.py"
+  ],
+  "files": {
+    "PASSPORT.json": "2be4142da3ecc1749f158c014ee8a2e5223bd2769371b9b5ac34aa72dad8ad30",
+    "README.md": "bc996b63faf6f8a83c70633d85e318a869f154dc5ff96e3b6b9cf5da3d501e0c",
+    "candidate.json": "701f79ca02d0d125a17222281b8ae13fd9fb9ea3e448b3ad49503b3392b3317a",
+    "candidate_domain/__init__.py": "e68644b065f0506d9c4a1b022ea7099cdeb209d5b712c566744946748569404d",
+    "candidate_domain/domain.py": "a98b895d5c6d59ee72d64f6beef97567e320eef4bfc986d8513ae7888abf3662",
+    "candidate_domain/effect.py": "f06c394747f8746dae844e787c760f07c782e9eb1dad918a6864aa2fa7803be7",
+    "candidate_domain/memory.py": "a6a3c1eebe8a068d945a4b249ce3d1dacba8c52ceca580fecbcbb3e7df209686",
+    "candidate_domain/native.py": "abfb69a8445614db75562f59a818b36d6a9c4f559960b5dc5a42f89d743a4707",
+    "candidate_domain/policy.py": "f9edbd5b8d2975496663d62e798d298c32c19c831fcfb55e7ae8ba776f585821",
+    "candidate_domain/profile.py": "4e3e36c6ba87c7156afdf739c0f86a2965379fe88ac3668b7f76b6f56978d8bc",
+    "candidate_domain/publication.py": "5df538e6d0c4ddc50cf2f836e23b41da268f147d2ddda1ec518a7468f3b0be61",
+    "candidate_domain/run.py": "0d56d79c2c0cdf4a9d410a4bf39331b5ad9e9fa8f7a9fbc2b1eabfc974f98f12",
+    "candidate_domain/storage.py": "85b2ab1b045f48eb816838a988999c4174c5a3f9bb26fb05da59e1a56b194e1b",
+    "dependencies.json": "80e535079ac218a1571ef6a983784360d072f58e098da02d9f71a2909c25e637",
+    "schemas/body.schema.json": "d5f2a2b439c426a42370b108025197f57ea26ddafde3bddc366581b22c40c042",
+    "schemas/inventory.schema.json": "f2ffbc17326a4780ea03a886df8bf0d7557f7bc167f6e4b47ad89187e5358825",
+    "schemas/request.schema.json": "21c483c8fcbacd56bbe3a1ed7dfcfc9460837ecc96995705cc91f0808c28e48d",
+    "schemas/result.schema.json": "81c776010fbcc70acf4862329e010dde98129e7783de9702d2742f7851a6ffb0",
+    "source_impact.json": "8f3291c3eb0a0bc1cb5372503a45f5918b0b45bcd0e777683b0d68ced05db8e5",
+    "tests/test_business_semantics.py": "93a401a22459a9e691015e5afe1920cb16f193fcc26031cc3ef38d946f35df3e",
+    "tests/test_descent.py": "2bb0c98531155ffda1faac86adab07d879e6f5ddf5c568231870a999f41a92a4",
+    "tests/test_domain.py": "5597cf830dd9cfefb230d9a8ef0faa900b98dd923dc51d52d67928664460dd0a",
+    "tests/test_final_correction.py": "69a060b5416824f8367f1b64ab9dfc70c7a0f3ec0539624108a02ade13ca9699",
+    "tests/test_status_refusal.py": "478f0bf37e04a9aeb9e38311d65c86faa49f51b07699b41e007003aa4e020f37"
+  },
+  "inherited_unchanged_review": "PREDECESSOR/AUTHOR_TRIAL/attempt_03/source_review.json",
+  "notes": {
+    "approval_scope": "Only exact pinned confined P7 execution and independent review; not owner admission or technical acceptance.",
+    "authorship": "Exact seed plus recorded broker operations reconstructed independently; one submission, no supervisor implementation edits.",
+    "changed_files_read": [
+      "PASSPORT.json",
+      "README.md",
+      "candidate.json",
+      "candidate_domain/run.py",
+      "source_impact.json",
+      "tests/test_status_refusal.py"
+    ],
+    "implementation_review": "Read the entire production delta and surrounding requester flow. It retains the actual current check and terminal persistence, then handles only status_not_active by authenticating exact retained evidence and obtaining a fresh rejecting local native Root decision. The original request, source/status identities, actual failed active predicate and evidence hash join the claim. No ACCEPT is relabeled. Confirmation uncertainty stays separate; unknown errors propagate. No source, selection algorithm, admission, consent, transport or effect mechanism changed.",
+    "io_review": "No new production imports, process/network/provider calls, cross-role reads or observer access. New writes are requester-local evidence using existing save/review helpers. Same synchronous scope, recorded times do not renew source permission. Existing callback remains the sole registry mutator.",
+    "review_complete": true,
+    "source_recipe": "Exact policy.py hash unchanged; unchanged independent source-ref projection applies without fallback or representation patch.",
+    "tests_review": "Read the complete added component test, docs, passport, source bindings and generated manifest. It distinguishes in-memory signed component fixtures from independent P7 telemetry and makes no execution claim. The existing tests and schemas are unchanged. Component tests are not host-imported or counted as native proof."
+  },
+  "reviewer": "SUPERVISOR_INDEPENDENT_SOURCE_REVIEW",
+  "status": "APPROVED_FOR_DECLARED_CONFINED_EXECUTION"
+}

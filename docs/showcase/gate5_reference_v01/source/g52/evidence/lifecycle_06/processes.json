@@ -1,0 +1,62 @@
+[
+  {
+    "argv": [
+      "/Users/admin/Projects/hedgehog-os/.venv/bin/python",
+      "-B",
+      "/private/tmp/RADIOLARIA_GATE5_G52.xpJutB/candidate/demo/run_gate5_lifecycle_v01.py",
+      "peer",
+      "A",
+      "3",
+      "6",
+      "/private/tmp/RADIOLARIA_GATE5_G52.xpJutB/lifecycle_06/A",
+      "0"
+    ],
+    "end": 1790277512.557197,
+    "pid": 97866,
+    "rc": 0,
+    "reaped": true,
+    "role": "A",
+    "session": 0,
+    "start": 1790277509.5177531
+  },
+  {
+    "argv": [
+      "/Users/admin/Projects/hedgehog-os/.venv/bin/python",
+      "-B",
+      "/private/tmp/RADIOLARIA_GATE5_G52.xpJutB/candidate/demo/run_gate5_lifecycle_v01.py",
+      "peer",
+      "B",
+      "5",
+      "4",
+      "/private/tmp/RADIOLARIA_GATE5_G52.xpJutB/lifecycle_06/B",
+      "1"
+    ],
+    "end": 1790277512.5572,
+    "pid": 97867,
+    "rc": 0,
+    "reaped": true,
+    "role": "B",
+    "session": 1,
+    "start": 1790277510.0030951
+  },
+  {
+    "argv": [
+      "/Users/admin/Projects/hedgehog-os/.venv/bin/python",
+      "-B",
+      "/private/tmp/RADIOLARIA_GATE5_G52.xpJutB/candidate/demo/run_gate5_lifecycle_v01.py",
+      "peer",
+      "B",
+      "5",
+      "4",
+      "/private/tmp/RADIOLARIA_GATE5_G52.xpJutB/lifecycle_06/B",
+      "2"
+    ],
+    "end": 1790277512.557201,
+    "pid": 97870,
+    "rc": 0,
+    "reaped": true,
+    "role": "B",
+    "session": 2,
+    "start": 1790277511.430389
+  }
+]

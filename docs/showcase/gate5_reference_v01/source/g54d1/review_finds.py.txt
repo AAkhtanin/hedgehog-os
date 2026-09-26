@@ -1,0 +1,194 @@
+"""Source-specific passive-evidence projection to frozen G54D FIND predicates.
+
+This never imports candidate code, reexecutes Work or supplies an answer to it.
+Incomplete runs remain partial even when their completed FIND events validate.
+"""
+import copy
+import hashlib
+import json
+from pathlib import Path
+import sys
+import traceback
+W=Path(__file__).resolve().parent
+sys.path[:0]=[str(W/'EXAMINER_PRIVATE'),str(W/'AUTHOR_VISIBLE/source')]
+from examiner import need,sha,canonical,check_report,optimal_rank
+from examiner_g54d_core_v01 import events,one,cross_root,cross_work,counts
+from examiner_g54c_v01 import source_semantics
+from selection_and_release_g54d_v01 import source_selection,producer_consumer,release_root_join
+from hedgehog.external_drs import gate5_contracts_v01 as c
+from hedgehog.external_drs.gate5_body_profile_v01 import ReviewedBodyProfileV01,COMMON_BODY_FIELDS
+from hedgehog.external_drs.gate5_supplied_v01 import native_result
+from hedgehog.external_drs.gate5_lifecycle_supplied_v01 import root_record
+import action_profile_g54c2_v01 as old_profile
+
+def read(p):return json.loads(Path(p).read_text())
+def expected_policy(operator,keys,r,original,source_recipe='legacy'):
+    # Exact documented representation from reviewed policy.consumer_policy, not an oracle.
+    return dict(local_root=operator['local_root'],peer_root=operator['peer_root'],peer_keys=keys,
+        source_record_ref=(sha(dict(domain='football.source_record.v01',original=sha(original),booking=r['operation']=='CONFIRM_MOCK_BOOKING'))
+            if source_recipe=='domain_separated_sha256' else 'source:football:'+sha(dict(original=sha(original),booking=r['operation']=='CONFIRM_MOCK_BOOKING'))),
+        source_policy_ref='policy:football:source',object_id='object:football:'+sha({k:r[k] for k in ('request_id','revision','team_ref','venue_ref')}),
+        domain='FOOTBALL',schemas=['FootballVenueOfferV01'],uses=['LOCAL_CONTEXT'],accept_football=operator['accept_football'],
+        max_source_age=operator['max_source_age'],max_validity_horizon=300,transport_scope='owner:football:inherited-pipes',
+        original_request_sha256=sha(original),team_ref=r['team_ref'],venue_ref=r['venue_ref'],currency=r['currency'],
+        request_revision=r['revision'],budget_minor=r['budget_minor'])
+
+def body_shape(body):old_profile.body_shape(body)
+def pointer_shape(pointer):
+    need(pointer['safe_summary']=='Bounded synthetic football venue offer metadata.','declared_safe_metadata')
+    need(pointer['allowed_use_classes']==['LOCAL_CONTEXT'] and pointer['forbidden_use_classes']==['ACTION'],'pointer_use')
+    need(pointer['semantic_address']['subject_class']=='venue_offer' and pointer['semantic_address']['intent_class']=='context_lookup','pointer_meaning')
+def body_policy(body,policy,pointer):
+    E=body['offer'];r=E['request']
+    need(body['publisher']==policy['peer_root'] and body['recipient']==policy['local_root'] and pointer['recipient_scope']==[policy['local_root']],'body_audience')
+    need(pointer['published_scope']==dict(domain='FOOTBALL'),'body_scope')
+    need(body['request_sha256']==sha(r)==policy['original_request_sha256'],'original_request_hash')
+    need((r['team_ref'],r['venue_ref'],r['revision'],r['currency'])==(policy['team_ref'],policy['venue_ref'],policy['request_revision'],policy['currency']),'original_request_policy')
+    need(E['total_minor']<=policy['budget_minor'],'original_budget')
+PROFILE=ReviewedBodyProfileV01('FootballVenueOfferV01',COMMON_BODY_FIELDS+('publisher','recipient','request_sha256','offer','booking'),
+    ('domain',),'accept_football',body_shape,pointer_shape,body_policy)
+
+def scalar_projection(E,case,report):
+    """Only spelling/counter representation changes for the unchanged old oracle."""
+    E=copy.deepcopy(E);case=copy.deepcopy(case);report=copy.deepcopy(report)
+    for f in case['inventory']['fields']:
+        need(f['surface'] in ('natural_grass','artificial'),'declared_surface')
+        f['surface']={'natural_grass':'NATURAL_GRASS','artificial':'ARTIFICIAL'}[f['surface']]
+    for f in E['fields']:
+        need(f['surface']=='natural_grass','natural_surface');f['surface']='NATURAL_GRASS'
+    need(set(report['counts'])=={'search','dispatch','mutations','observed'},'declared_counter_shape')
+    need(all(type(v)is int and 0<=v<=8 for v in report['counts'].values()),'actual_counter_types')
+    report['counts']={k:report['counts'][k] for k in ('search','dispatch','mutations')}
+    return E,case,report
+
+def load(folder):
+    folder=Path(folder);receipt=read(folder/'receipt.json');parent=read(folder/'trusted_parent_receipt.json')
+    need(receipt['container_removed'] and receipt['cli_reaped'],'process_cleanup')
+    need(parent['version']=='g54d.runner.v01' and parent['effect_routes_enabled'] and not parent['author_or_exam_acceptance'],'runner_version')
+    freeze=read(W/receipt['freeze_path'])
+    need(receipt['source_pins']==freeze['files'],'runtime_freeze')
+    for path,pin in freeze['files'].items():need(hashlib.sha256((W/path).read_bytes()).hexdigest()==pin,'frozen_source:'+path)
+    cfg=read(folder/'configuration.json');hc=cfg['HostConfig']
+    need(hc['NetworkMode']=='none' and hc['ReadonlyRootfs'] and not hc['Privileged'] and hc['CapDrop']==['ALL'] and hc['PidsLimit']==16,'confinement')
+    need(cfg['Config']['User']=='65532:65532' and all(not m['RW'] for m in cfg['Mounts']),'unprivileged_readonly')
+    need({m['Destination'] for m in cfg['Mounts']}=={'/approved','/runner','/candidate','/inputs'},'mounts')
+    recorded={m['Destination']:Path(m['Source']) for m in cfg['Mounts']}
+    old_work=recorded['/approved'].parent
+    need(recorded['/approved'].name=='AUTHOR_VISIBLE','recorded_public_root')
+    mounts={k:W/p.relative_to(old_work) for k,p in recorded.items()}
+    for role,rows in parent['observations'].items():
+        need(not [r for r in rows if r['kind']=='OBSERVER_ERROR'],'observer_error')
+        fs=[r for r in rows if r['kind']=='FILTERED_BEFORE_IMPORT'];need(len(fs)==1,'filter_origin')
+        q=fs[0]['restrictions'];need(q['NoNewPrivs']=='1' and q['Seccomp']=='2' and int(q['CapEff'],16)==0,'preimport_filter')
+        path=mounts['/inputs']/role/'input.json'
+        need(read(path)==parent['parent_inputs'][role] and hashlib.sha256(path.read_bytes()).hexdigest()==parent['parent_input_sha256'][role],'parent_inputs')
+        origins=one(rows,'IMPORT_ORIGINS','FINAL')['origins']
+        for mod,item in origins.items():
+            prefix='/candidate' if item['path'].startswith('/candidate/') else '/approved'
+            p=mounts[prefix]/item['path'][len(prefix)+1:]
+            need(hashlib.sha256(p.read_bytes()).hexdigest()==item['sha256']==freeze['files'][str(p.relative_to(W))],'import_origin:'+mod)
+    state=folder/'worker/publisher/state/registry.json'
+    need((read(state) if state.exists() else dict(records=[],idempotency={}))==parent['runner_final_source_state'],'independent_readback')
+    keys={};wire=[]
+    for row in parent['wire']:
+        raw=bytes.fromhex(row['raw_hex']);need(hashlib.sha256(raw).hexdigest()==row['sha256'],'wire_hash')
+        msg=c.decode(raw);need(c.canonical(msg)==raw,'wire_canonical')
+        received=[r for r in parent['observations'][row['receiver']] if r['kind']=='WIRE_RECEIVE' and r.get('lane')==row['lane'] and r.get('received_sha256')==row['sha256']]
+        need(len(received)==1 and receipt['started']<=row['utc']<=received[0]['utc']<=receipt['end'],'actual_received_wire')
+        wire.append(dict(row,message=msg,event_id=received[0]['event_id']))
+        if row['lane']=='bootstrap':
+            public=msg['value'];c.keyset(public)
+            need(public['root_ids']==[parent['parent_inputs'][row['sender']]['policy']['local_root']],'bootstrap_root')
+            need(any(r.get('public')==public for r in parent['observations'][row['sender']] if r['kind']=='PUBLIC_KEYS'),'bootstrap_actual_origin')
+            keys[row['sender']]=public
+    need(set(keys)=={'publisher','requester'},'bootstrap_pair')
+    policy_hashes={one(parent['observations'][role],'IMPORT_ORIGINS','FINAL')['origins']['candidate_domain.policy']['sha256'] for role in ('publisher','requester')}
+    need(len(policy_hashes)==1,'same_reviewed_policy_source')
+    recipe='domain_separated_sha256' if policy_hashes=={'f9edbd5b8d2975496663d62e798d298c32c19c831fcfb55e7ae8ba776f585821'} else 'legacy'
+    return dict(folder=folder,parent=parent,receipt=receipt,keys=keys,wire=wire,freeze=freeze,source_recipe=recipe)
+
+def check_find(cap,event):
+    folder=cap['folder'];label=event['event_id'];r=event['request'];parent=cap['parent']
+    rows={role:[x for x in parent['observations'][role] if x.get('event_id')==label] for role in ('publisher','requester')}
+    proofs={role:{p.stem:read(p) for p in (folder/f'worker/{role}/evidence/{label}').glob('*.json')} for role in rows}
+    for role in rows:
+        expected=next(e for e in parent['parent_inputs'][role]['events'] if e['event_id']==label)
+        need(one(rows[role],'EVENT','START')['parent_input_event_sha256']==sha(expected),'event_input')
+        need(one(rows[role],'INTAKE','RETURN')['request_sha256']==sha(r),'actual_intake')
+        need(one(rows[role],'EVENT','RETURN')['report']==proofs[role]['report'],'actual_report')
+        one(rows[role],'EVENT','END')
+        need(counts(rows[role])['DISPATCH']==counts(rows[role])['EXECUTOR']==counts(rows[role])['STATE_WRITE']==0,'find_no_effect')
+    policy=expected_policy(parent['parent_inputs']['requester']['policy'],cap['keys']['publisher'],r,r,cap['source_recipe'])
+    need(proofs['requester']['local_policy']==policy,'independent_operator_policy')
+    requests={};material={}
+    for row in cap['wire']:
+        if row['lane']!='channel' or row['event_id']!=label:continue
+        msg=row['message']
+        if row['sender']=='requester':
+            v=msg['value']['value'];request=c.verify(msg['value'],cap['keys']['requester'],'REQUEST',v['trust_profile_hash']);c.validate('request',request)
+            need(request['op'] not in requests,'duplicate_request');requests[request['op']]=request
+            need(request['request_revision']==r['revision'] and request['task_ref']=='task:football:'+sha(r) and request['object_id']==policy['object_id'],'request_original_binding')
+            need(request['issued_at']<=int(row['utc'])<request['deadline'],'current_request')
+        else:material[msg['kind']]=msg['value']
+    need(list(requests)==['DESCRIBE','STATUS','FETCH','CLOSE'],'retrieval_sequence')
+    close=c.verify(material['CLOSED'],cap['keys']['publisher'],'CLOSE',requests['CLOSE']['trust_profile_hash'])
+    need(close==dict(request_ref=requests['CLOSE']['request_id'],session=label),'actual_close')
+    fetch=requests['FETCH'];pointer=material['POINTER']['value']
+    need(fetch['trust_profile_hash']==sha(policy),'fetch_policy')
+    need(requests['STATUS']['subject_request_ref']==fetch['request_id'] and requests['STATUS']['nonce']==fetch['nonce'],'status_fetch')
+    starts=events(rows['requester'],'BUNDLE_CHECK','START');ends=events(rows['requester'],'BUNDLE_CHECK','RETURN')
+    need(len(starts)==len(ends)==2,'two_actual_bundle_consumers')
+    for start,end in zip(starts,ends):
+        args=start['material'];now=args['now']
+        need(type(now)is int and 0<=start['utc']-now<2,'actual_utc_use')
+        required=dict(bundle=material['BUNDLE'],pointer_envelope=material['POINTER'],request=fetch,status=material['STATUS'],policy=policy)
+        need(all(args[k]==v for k,v in required.items()),'actual_received_bundle_arguments')
+        # Authenticate these exact bytes at recorded use time. No current action is reconstructed.
+        checked=c.check_bundle(**args,profile=PROFILE)
+        need(end['checked']==checked,'actual_checked_return')
+    body=checked['body'];E=body['offer'];source=proofs['publisher']['venue_work']
+    cross_work(source,rows['publisher'])
+    out=native_result(source,'VenueRoot',dict(request_json=canonical(r).decode(),inventory_json=canonical(event['inventory']).decode()))
+    need(out==dict(offer_json=canonical(E).decode()),'actual_E_not_substituted')
+    t=body['time_envelope'];st=material['STATUS']['value']
+    S=dict(publisher=body['publisher'],recipient=body['recipient'],request_revision=r['revision'],schedule_revision=event['inventory']['revision'],
+        offer_revision=body['source_revision'],observed_at=t['source_observed_at'],valid_from=t['valid_from'],valid_to=t['valid_to'],ttl=t['ttl_seconds'],pt=t['pt_created_at'],
+        status=checked['status_entry']['state'],status_checked=st['checked_at'],status_until=st['valid_until'])
+    report=proofs['requester']['report'];ep,case,rp=scalar_projection(E,event,report)
+    source_semantics(ep,case);source_selection(ep,case,S,starts[0]['material']['now'])
+    producer_consumer(E,report,r['operation'])
+    check_report(dict(case,evaluation_time=starts[-1]['material']['now'],allowed_statuses=['OFFER_READY'] if optimal_rank(case) is not None else ['NO_COMPLETE_OFFER','NEEDS_CONFIRMATION']),rp)
+    review=proofs['publisher']['source_review'];cross_root(review,rows['publisher'])
+    claim=dict(request_sha256=sha(r),inventory_sha256=sha(event['inventory']),consumed_offer=E,source_work_ref=source['artifact']['artifact_id'],booking=None,previous_source_ref=None,previous_review_ref=None)
+    need(body['source_work_ref']==source['artifact']['artifact_id'] and body['source_review_ref']==review['result']['decision_id'],'source_links')
+    root_record(review,'VenueRoot',source['artifact']['artifact_id'],claim,body['source_record_ref'])
+    for name,selected,claim,subject in (
+        ('publication_review',pointer['pointer_id'],dict(pointer=pointer,source_review_ref=body['source_review_ref']),body['source_record_ref']),
+        ('release_review',fetch['request_id'],dict(request=fetch,pointer_ref=pointer['pointer_id'],body_hash=sha(body),source_review_ref=body['source_review_ref']),pointer['pointer_id'])):
+        proof=proofs['publisher'][name];cross_root(proof,rows['publisher']);root_record(proof,'VenueRoot',selected,claim,subject)
+    release_root_join(material['BUNDLE']['release']['value'],proofs['publisher']['release_review'])
+    C=dict(body=body,source_projection=S);consumer=proofs['requester']['requester_work'];cross_work(consumer,rows['requester'])
+    semantic={k:v for k,v in report.items() if k!='native_refs'}
+    need(report['source']==S and proofs['requester']['consumption_context']==C,'independent_C_projection')
+    out=native_result(consumer,'ActivePlanetRoot',dict(request_json=canonical(r).decode(),offer_json=canonical(C).decode()))
+    need(out==dict(result_json=canonical(semantic).decode()),'full_canonical_consumer_report')
+    review=proofs['requester']['requester_review'];cross_root(review,rows['requester'])
+    root_record(review,'ActivePlanetRoot',consumer['artifact']['artifact_id'],dict(request_sha256=sha(r),offer_sha256=sha(body),result_sha256=sha(semantic)),r['request_id'])
+    for role in rows:
+        need(counts(rows[role])['PURE']==1 and proofs[role]['report']['counts']==dict(search=1,dispatch=0,mutations=0,observed=1),'actual_find_role_counts')
+    return dict(event=label,status='PASS_COMPLETED_FIND_ONLY',source_selection=E['status'],total_minor=E['total_minor'],
+        native_source_work=1,native_consumer_work=1,bundle_checks=2,root_release_join=True,canonical_C_sha256=sha(C))
+
+def main():
+    folder=Path(sys.argv[1]);result=dict(classification='COMPLETED_FIND_PARTIAL_NATIVE_PROOF_NOT_FULL_MATRIX',events=[],errors=[])
+    try:
+        cap=load(folder)
+        for event in cap['parent']['parent_inputs']['publisher']['events']:
+            if event['request']['operation']=='FIND_OFFER' and (folder/f'worker/requester/evidence/{event["event_id"]}/report.json').exists():
+                try:result['events'].append(check_find(cap,event))
+                except Exception as exc:result['errors'].append(dict(event=event['event_id'],error=str(exc),traceback=traceback.format_exc()))
+    except Exception as exc:result['errors'].append(dict(error=str(exc),traceback=traceback.format_exc()))
+    result['reviewer_source_sha256']=hashlib.sha256(Path(__file__).read_bytes()).hexdigest()
+    (folder/'independent_find_review.json').write_text(json.dumps(result,sort_keys=True,indent=2)+'\n')
+    print(json.dumps(result,indent=2));return bool(result['errors'])
+if __name__=='__main__':raise SystemExit(main())

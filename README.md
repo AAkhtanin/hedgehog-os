@@ -32,6 +32,7 @@ accepted design and older status passages retain their historical provenance.
 [Gate 4 Reference: presentation and evidence (full scope reconsidered after Gate 6)](docs/showcase/gate4_reference_v01/README.md)
 [Wedding: one intent, different computers, traceable results](docs/showcase/wedding_seating_v01/README.md)
 [G54B1: external authoring case (INCOMPLETE)](docs/showcase/g54b1_authoring_case_v01/README.md)
+[Gate 5 Reference: Football, External DRS and Independent Authoring](docs/showcase/gate5_reference_v01/README.md)
 
 ## Testflix V11 Preparation
 

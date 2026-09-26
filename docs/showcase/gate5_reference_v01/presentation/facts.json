@@ -1,0 +1,47 @@
+{
+  "basis_commit": "64f2b38b0d671e4907bae8649fff8f3d2ee0751c",
+  "basis_parent": "5cef2c52fd805daedec958109caf9d1806899eb4",
+  "basis_tree": "cacb14a9574c350fb33239680abe0c3a5ede7b5e",
+  "native": {
+    "cases": 16,
+    "events": 56,
+    "mock_executor_starts": 7
+  },
+  "live": {
+    "provider_calls": 3,
+    "events": 5,
+    "mock_executor_starts": 1,
+    "model": "gemini-2.5-flash",
+    "proposals_precollected": true
+  },
+  "football": {
+    "sessions": 3,
+    "duration_minutes": 90,
+    "budget_minor_eur": 7000,
+    "offer_minor_eur": 6300,
+    "jan8_shift_minutes": 30
+  },
+  "authorship": {
+    "model": "gpt-6-astra",
+    "effort": "ultra",
+    "service_tier": "default",
+    "correction": 4,
+    "submission": 5,
+    "broker_operations": 79,
+    "authored_files": 23,
+    "broker_files": 1
+  },
+  "engineering": {
+    "additions": 212,
+    "preserved_files": 4367,
+    "final_files": 4579,
+    "shared_files": 13,
+    "pack_files": 24
+  },
+  "proof": {
+    "d1_bytes": 32702,
+    "d1_sha256": "0eba67d7652765c387988d760cd5daeeacecbdf33b9dc577dbe6a1cad40ed4b0",
+    "g55l_bytes": 37389,
+    "g55l_sha256": "d2a25ed3b1ab123912e59d096808351dbcf18f59a16229b9abcaff9f647eacff"
+  }
+}

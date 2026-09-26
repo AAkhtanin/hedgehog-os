@@ -1,0 +1,375 @@
+{
+  "current": {
+    "adaptation_ref": "g5adaptation:64f5be705236bd407a2905f9ff6c0ce1e2d3106530cff45c44b5e9e1b11f5753",
+    "assessment": "REVIEW_REQUIRED",
+    "body_hash": "d95888f179ac5d521edf2b778b7398f8e5a45ec78332c3256e8423e1e11d7b5c",
+    "dependency_fingerprint": "f5c27bb4550bb282411737c91569a99665921112fcceb0b52a48f258cccdd609",
+    "limit": 100,
+    "local_request_ref": "g5request:8be49de48f85daac54a54bf9023034a9efb0e83724b1083cb66a4b3d6e835293",
+    "outputs": {
+      "corrected_den": 1,
+      "corrected_num": 102,
+      "mean_den": 1,
+      "mean_num": 106
+    },
+    "policy_hash": "36b5fcfe6f311d22a992b628b2b4c135844b73c90bb02f178427018267ed2a1d",
+    "source_ref": "source:gate5:calibration:one",
+    "source_revision": 2,
+    "work_result_ref": "work_results:797bf13b35a22f3e91d7dbd075ff69fb13c9f60b204a6424f0f43b9b4b149aa0"
+  },
+  "historical": {
+    "adaptation_ref": "g5adaptation:08e965ea143ada427386c2196d554389013a69d91bed6ce13766fb2cbdd110bf",
+    "assessment": "WITHIN_REFERENCE_LIMIT",
+    "body_hash": "56998ecfe67ad7f66285bf316da9104df9f144094a3afd3edf15e143bb6a03ab",
+    "dependency_fingerprint": "19b9bb35d916c99b2203078ef7eb1743e33719fd5ee012fd5b54acc988084ef2",
+    "limit": 100,
+    "local_request_ref": "g5request:f8f83cbef16ead7f143830069b4d4bdb6c24ce4a86221ed683b438a90f6312f7",
+    "outputs": {
+      "corrected_den": 1,
+      "corrected_num": 96,
+      "mean_den": 1,
+      "mean_num": 106
+    },
+    "policy_hash": "36b5fcfe6f311d22a992b628b2b4c135844b73c90bb02f178427018267ed2a1d",
+    "source_ref": "source:gate5:calibration:one",
+    "source_revision": 1,
+    "work_result_ref": "work_results:4c1a42cbd52dc3e07a8eaf7e119995cf94d8f05f3b21702220b25a2652245ab8"
+  },
+  "importer_state": {
+    "credit": 0,
+    "duplicates": [
+      {
+        "body_hash": "56998ecfe67ad7f66285bf316da9104df9f144094a3afd3edf15e143bb6a03ab",
+        "key": "[\"root:gate5:calibration\",\"source:gate5:calibration:one\",1]",
+        "pointer": "g5pointer:28251c22b6bf0a2e90c74b9356742f75f7da5e3525bac8e922791bbcba1959c1"
+      }
+    ],
+    "highwater": {
+      "[\"root:gate5:calibration\",\"g5pointer:254632115733161e310edfd93f91ad9c1c4324cb4ccc979199159f377c1a637a\",\"stream:gate5:calibration:2\"]": {
+        "effective_at": 1790277511,
+        "entry_hash": "2f2898b929843462ebd9b96dcc15bcb5d2b04daeac1495d465671fe2ff564b13",
+        "pointer_id": "g5pointer:254632115733161e310edfd93f91ad9c1c4324cb4ccc979199159f377c1a637a",
+        "publisher_root_id": "root:gate5:calibration",
+        "reason_ref": "reason:gate5:published",
+        "revision": 1,
+        "state": "ACTIVE",
+        "stream_id": "stream:gate5:calibration:2",
+        "version": "g51.entry.v01"
+      },
+      "[\"root:gate5:calibration\",\"g5pointer:28251c22b6bf0a2e90c74b9356742f75f7da5e3525bac8e922791bbcba1959c1\",\"stream:gate5:calibration:1\"]": {
+        "effective_at": 1790277511,
+        "entry_hash": "564c6251a0180ec2756ac258a2da546392ae97489bc27358bd799b8c6d296972",
+        "pointer_id": "g5pointer:28251c22b6bf0a2e90c74b9356742f75f7da5e3525bac8e922791bbcba1959c1",
+        "publisher_root_id": "root:gate5:calibration",
+        "reason_ref": "reason:gate5:declared-revocation",
+        "revision": 2,
+        "state": "REVOKED",
+        "stream_id": "stream:gate5:calibration:1",
+        "version": "g51.entry.v01"
+      }
+    },
+    "quarantine": [
+      {
+        "envelope": {
+          "commitment": {
+            "artifact_hash": "b4befc1bbc77528422fa92d267cb8784f3e1932b8b18e2ae917a16119afdcefd",
+            "commitment_id": "g5commit:0769180cfbf6f51ed9ddd6349b6b2ab3b77357fc2f3c6a5b13acb792806fe31c",
+            "commitment_scope": "gate5:STATUS:v01",
+            "commitment_version": "v0.1",
+            "key_id": "be537f93c797a5b5c1944033c12bb361c080670980628fe8e1e04bbaf770cbd8",
+            "manifest_hash": "ff0ce80939d8949d3a2140c2f002b65f718d60680b8bd513a72a8c3b3e0c3a2e",
+            "owner_root_id": "root:gate5:calibration",
+            "transaction_id": "transaction:gate5:reference"
+          },
+          "signature": {
+            "algorithm": "Ed25519",
+            "commitment_hash": "cebfc35ab2e52a2b7796fae283fb3e5b0e2761b802be3a6b461667aa512ddee1",
+            "commitment_id": "g5commit:0769180cfbf6f51ed9ddd6349b6b2ab3b77357fc2f3c6a5b13acb792806fe31c",
+            "key_id": "be537f93c797a5b5c1944033c12bb361c080670980628fe8e1e04bbaf770cbd8",
+            "owner_root_id": "root:gate5:calibration",
+            "signature_hex": "21776f5c7a4a67b882ba4e028012b7f508642dda540e735fe76f6750d116e8102a8885c22ca769fb9e8f3948fe8c901a54d4eafbbdcce8b149c9e8dc0df7430c",
+            "signature_version": "v0.1",
+            "transaction_id": "transaction:gate5:reference"
+          },
+          "value": {
+            "checked_at": 1790277510,
+            "entry": {
+              "effective_at": 1790277510,
+              "entry_hash": "b425ed09d44db1a206949b5bb0957c874ae030160ea74c711682ecb0f4a71b81",
+              "pointer_id": "g5pointer:28251c22b6bf0a2e90c74b9356742f75f7da5e3525bac8e922791bbcba1959c1",
+              "publisher_root_id": "root:gate5:calibration",
+              "reason_ref": "reason:gate5:published",
+              "revision": 1,
+              "state": "ACTIVE",
+              "stream_id": "stream:gate5:calibration:1",
+              "version": "g51.entry.v01"
+            },
+            "nonce": "d5c53eeffe294c937f957154f4cfa1ff5db7d24be9bdf3fced267d235c0fbebf",
+            "request_revision": 1,
+            "requested_pointer_hash": "1878ba2a79cab600636a9542953328031cf31a5bc42f49d24d27f01c7301062a",
+            "requester": "root:gate5:site",
+            "subject_request_ref": "g5request:f8f83cbef16ead7f143830069b4d4bdb6c24ce4a86221ed683b438a90f6312f7",
+            "valid_until": 1790277570,
+            "version": "g51.status.v01"
+          }
+        },
+        "kind": "STATUS",
+        "reason": "status_rollback",
+        "request": {
+          "allowed_size": 65536,
+          "deadline": 1790277570,
+          "issued_at": 1790277510,
+          "nonce": "d5c53eeffe294c937f957154f4cfa1ff5db7d24be9bdf3fced267d235c0fbebf",
+          "object_id": "object:gate5:calibration:one",
+          "op": "FETCH",
+          "owner_transport_scope": "owner:gate5:inherited-pipes",
+          "pointer_ref": "g5pointer:28251c22b6bf0a2e90c74b9356742f75f7da5e3525bac8e922791bbcba1959c1",
+          "publisher": "root:gate5:calibration",
+          "request_id": "g5request:f8f83cbef16ead7f143830069b4d4bdb6c24ce4a86221ed683b438a90f6312f7",
+          "request_revision": 1,
+          "requester": "root:gate5:site",
+          "subject_request_ref": null,
+          "task_ref": "task:gate5:exchange",
+          "trust_profile_hash": "36b5fcfe6f311d22a992b628b2b4c135844b73c90bb02f178427018267ed2a1d",
+          "use_class": "LOCAL_CONTEXT",
+          "version": "g51.request.v01"
+        }
+      }
+    ],
+    "sources": {
+      "[\"root:gate5:calibration\",\"source:gate5:calibration:one\",1]": {
+        "body_hash": "56998ecfe67ad7f66285bf316da9104df9f144094a3afd3edf15e143bb6a03ab",
+        "pointer": "g5pointer:28251c22b6bf0a2e90c74b9356742f75f7da5e3525bac8e922791bbcba1959c1",
+        "revision": 1,
+        "source_ref": "source:gate5:calibration:one"
+      },
+      "[\"root:gate5:calibration\",\"source:gate5:calibration:one\",2]": {
+        "body_hash": "d95888f179ac5d521edf2b778b7398f8e5a45ec78332c3256e8423e1e11d7b5c",
+        "pointer": "g5pointer:254632115733161e310edfd93f91ad9c1c4324cb4ccc979199159f377c1a637a",
+        "revision": 2,
+        "source_ref": "source:gate5:calibration:one"
+      }
+    }
+  },
+  "process_restart": true,
+  "seconds": 3.042603624984622,
+  "source_state": {
+    "contexts": {
+      "task:gate5:exchange": {
+        "object_id": "object:gate5:calibration:one",
+        "owner_epoch": "g52.declared.before.execution",
+        "purpose": "REVISION_ONE_AND_RESTART",
+        "requester": "root:gate5:site",
+        "source_revision": 1,
+        "uses": [
+          "LOCAL_CONTEXT"
+        ]
+      },
+      "task:gate5:revision-two": {
+        "object_id": "object:gate5:calibration:one",
+        "owner_epoch": "g52.declared.before.execution",
+        "purpose": "REVISION_TWO",
+        "requester": "root:gate5:site",
+        "source_revision": 2,
+        "uses": [
+          "LOCAL_CONTEXT"
+        ]
+      },
+      "task:gate5:scope-refusal": {
+        "object_id": "object:gate5:calibration:one",
+        "owner_epoch": "g52.declared.before.execution",
+        "purpose": "ISOLATED_AUDIT_REFUSAL",
+        "requester": "root:gate5:site",
+        "source_revision": 1,
+        "uses": [
+          "AUDIT"
+        ]
+      }
+    },
+    "events": [
+      {
+        "allowed": true,
+        "operation": "RESERVE_ATTEMPT",
+        "request": "g5request:b3a2a06160c9ec894c428f69ad8c459ba1afcc08e26873c5d4bf3cb6a42c2d17",
+        "task": "task:gate5:exchange"
+      },
+      {
+        "allowed": true,
+        "operation": "RESERVE_ATTEMPT",
+        "request": "g5request:509017a7a1bdbb2e9df3ba2787cceca758b0892fe55520f14cc7295df25e7385",
+        "task": "task:gate5:scope-refusal"
+      },
+      {
+        "allowed": true,
+        "operation": "RESERVE_ATTEMPT",
+        "request": "g5request:591c879d661b9dc7512f957608d5ec172f14b611fd0f91f353611e5bb3fd119a",
+        "task": "task:gate5:exchange"
+      },
+      {
+        "allowed": true,
+        "operation": "RESERVE_ATTEMPT",
+        "request": "g5request:f8f83cbef16ead7f143830069b4d4bdb6c24ce4a86221ed683b438a90f6312f7",
+        "task": "task:gate5:exchange"
+      },
+      {
+        "bytes": 1073,
+        "operation": "RESERVE_DISCLOSURE",
+        "request": "g5request:f8f83cbef16ead7f143830069b4d4bdb6c24ce4a86221ed683b438a90f6312f7",
+        "task": "task:gate5:exchange"
+      },
+      {
+        "allowed": true,
+        "operation": "RESERVE_ATTEMPT",
+        "request": "g5request:a660a10e35172f642fc3e95ba9eeca1cd3e93e6fb8bfd793258860c80896993f",
+        "task": "task:gate5:exchange"
+      },
+      {
+        "allowed": true,
+        "operation": "RESERVE_ATTEMPT",
+        "request": "g5request:a698fcf2b0e1745cd555b055fcad8b90a98d33f7993a4bfccad072c17f6c3956",
+        "task": "task:gate5:exchange"
+      },
+      {
+        "bytes": 1073,
+        "operation": "RESERVE_DISCLOSURE",
+        "request": "g5request:a698fcf2b0e1745cd555b055fcad8b90a98d33f7993a4bfccad072c17f6c3956",
+        "task": "task:gate5:exchange"
+      },
+      {
+        "allowed": false,
+        "operation": "RESERVE_ATTEMPT",
+        "request": "g5request:40dc652492799a937d9a5bba73526b271f292e82c0adb846570b12d6b1d5a205",
+        "task": "task:gate5:exchange"
+      },
+      {
+        "allowed": false,
+        "operation": "RESERVE_ATTEMPT",
+        "request": "g5request:07227595b5e30db22972001205a7c6e9f7d4a6dbca986a96c994b7f76427c1fc",
+        "task": "task:gate5:exchange"
+      },
+      {
+        "allowed": true,
+        "operation": "RESERVE_ATTEMPT",
+        "request": "g5request:4e1e47e66ac5ddb53566cfbe91607c896daca1d76247e52da6f9a149fbd6c542",
+        "task": "task:gate5:exchange"
+      },
+      {
+        "allowed": true,
+        "operation": "RESERVE_ATTEMPT",
+        "request": "g5request:3e7daae3ae7bb805d1be5bd0a0cc67abb5627a60a473b55be90d795df6d9a186",
+        "task": "task:gate5:exchange"
+      },
+      {
+        "allowed": true,
+        "operation": "RESERVE_ATTEMPT",
+        "request": "g5request:0eebc8c85b901d9c2c648c4a1919e30eb4f9ea6bcf18fd2aef2ada268fef13eb",
+        "task": "task:gate5:exchange"
+      },
+      {
+        "allowed": true,
+        "operation": "RESERVE_ATTEMPT",
+        "request": "g5request:cf57c7644af4f3d36069594e4fc69dd1b151ade8be4c4b9a54e3c6bda2b7c604",
+        "task": "task:gate5:exchange"
+      },
+      {
+        "allowed": true,
+        "operation": "RESERVE_ATTEMPT",
+        "request": "g5request:5d0af0fd6a7f6a146bf3863c2418edfe173726b2a01b480b3ac9c928ff189119",
+        "task": "task:gate5:exchange"
+      },
+      {
+        "allowed": true,
+        "operation": "RESERVE_ATTEMPT",
+        "request": "g5request:886d1d762cc86027979f8b392c44d4088a407530365157351555457f417194ba",
+        "task": "task:gate5:revision-two"
+      },
+      {
+        "allowed": true,
+        "operation": "RESERVE_ATTEMPT",
+        "request": "g5request:aae81ac0de56ccd2a0636c7d1d02401911b801d8df8567213f3bbf0664419539",
+        "task": "task:gate5:revision-two"
+      },
+      {
+        "allowed": true,
+        "operation": "RESERVE_ATTEMPT",
+        "request": "g5request:8be49de48f85daac54a54bf9023034a9efb0e83724b1083cb66a4b3d6e835293",
+        "task": "task:gate5:revision-two"
+      },
+      {
+        "bytes": 1152,
+        "operation": "RESERVE_DISCLOSURE",
+        "request": "g5request:8be49de48f85daac54a54bf9023034a9efb0e83724b1083cb66a4b3d6e835293",
+        "task": "task:gate5:revision-two"
+      },
+      {
+        "allowed": true,
+        "operation": "RESERVE_ATTEMPT",
+        "request": "g5request:c00325c813d4796fd33b3b8c27f21cde5d5fb4abb2b3c975dae9c025477f7712",
+        "task": "task:gate5:revision-two"
+      }
+    ],
+    "tasks": {
+      "task:gate5:exchange": {
+        "attempts": 12,
+        "bodies": 2,
+        "body_bytes": 2146,
+        "denied": 2,
+        "disclosures": [
+          "g5request:f8f83cbef16ead7f143830069b4d4bdb6c24ce4a86221ed683b438a90f6312f7",
+          "g5request:a698fcf2b0e1745cd555b055fcad8b90a98d33f7993a4bfccad072c17f6c3956"
+        ],
+        "metadata": 8,
+        "payload": 2,
+        "refused_responses": 2,
+        "released_responses": 2,
+        "request_ids": [
+          "g5request:b3a2a06160c9ec894c428f69ad8c459ba1afcc08e26873c5d4bf3cb6a42c2d17",
+          "g5request:591c879d661b9dc7512f957608d5ec172f14b611fd0f91f353611e5bb3fd119a",
+          "g5request:f8f83cbef16ead7f143830069b4d4bdb6c24ce4a86221ed683b438a90f6312f7",
+          "g5request:a660a10e35172f642fc3e95ba9eeca1cd3e93e6fb8bfd793258860c80896993f",
+          "g5request:a698fcf2b0e1745cd555b055fcad8b90a98d33f7993a4bfccad072c17f6c3956",
+          "g5request:4e1e47e66ac5ddb53566cfbe91607c896daca1d76247e52da6f9a149fbd6c542",
+          "g5request:3e7daae3ae7bb805d1be5bd0a0cc67abb5627a60a473b55be90d795df6d9a186",
+          "g5request:0eebc8c85b901d9c2c648c4a1919e30eb4f9ea6bcf18fd2aef2ada268fef13eb",
+          "g5request:cf57c7644af4f3d36069594e4fc69dd1b151ade8be4c4b9a54e3c6bda2b7c604",
+          "g5request:5d0af0fd6a7f6a146bf3863c2418edfe173726b2a01b480b3ac9c928ff189119"
+        ]
+      },
+      "task:gate5:revision-two": {
+        "attempts": 4,
+        "bodies": 1,
+        "body_bytes": 1152,
+        "denied": 0,
+        "disclosures": [
+          "g5request:8be49de48f85daac54a54bf9023034a9efb0e83724b1083cb66a4b3d6e835293"
+        ],
+        "metadata": 3,
+        "payload": 1,
+        "refused_responses": 0,
+        "released_responses": 1,
+        "request_ids": [
+          "g5request:886d1d762cc86027979f8b392c44d4088a407530365157351555457f417194ba",
+          "g5request:aae81ac0de56ccd2a0636c7d1d02401911b801d8df8567213f3bbf0664419539",
+          "g5request:8be49de48f85daac54a54bf9023034a9efb0e83724b1083cb66a4b3d6e835293",
+          "g5request:c00325c813d4796fd33b3b8c27f21cde5d5fb4abb2b3c975dae9c025477f7712"
+        ]
+      },
+      "task:gate5:scope-refusal": {
+        "attempts": 1,
+        "bodies": 0,
+        "body_bytes": 0,
+        "denied": 0,
+        "disclosures": [],
+        "metadata": 0,
+        "payload": 1,
+        "refused_responses": 1,
+        "released_responses": 0,
+        "request_ids": [
+          "g5request:509017a7a1bdbb2e9df3ba2787cceca758b0892fe55520f14cc7295df25e7385"
+        ]
+      }
+    }
+  },
+  "status": "COLLECTED_G52",
+  "transport": "INHERITED_OS_PIPES_NOT_ENCRYPTION"
+}

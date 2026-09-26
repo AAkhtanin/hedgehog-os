@@ -1,0 +1,32 @@
+{
+  "schema": "radiolaria_gate5_publication_status_bridge_v01",
+  "basis_commit": "64f2b38b0d671e4907bae8649fff8f3d2ee0751c",
+  "basis_parent": "5cef2c52fd805daedec958109caf9d1806899eb4",
+  "basis_tree": "cacb14a9574c350fb33239680abe0c3a5ede7b5e",
+  "engineering_admission": "ENGINEERING_ACCEPTED",
+  "engineering_publication": "INDEPENDENT_REMOTE_READBACK_PASS",
+  "G55L": "COMPLETE",
+  "G54D": "INITIAL_PLUS_THREE_INCOMPLETE",
+  "G54D1": "ACCEPTED_UNDER_EXPLICIT_FOURTH_CORRECTION_IN_RESTORED_CONTINUATION",
+  "R19": "COMPLETE",
+  "documentation_publication_at_authoring": "PREPARED_FOR_INDEPENDENT_REVIEW",
+  "R20_at_authoring": "PENDING_G56_PUBLICATION",
+  "final_R21_at_authoring": "PENDING_G56_PUBLICATION",
+  "gate5_closed_at_authoring": false,
+  "Gate6": "NOT_STARTED_BY_THIS_PUBLICATION",
+  "completion_condition": [
+    "Exact independent acceptance of this documentation delta",
+    "Unchanged R1 DOCUMENTATION admission of actual sole-parent child",
+    "Ordinary commit and push",
+    "Independent remote byte readback including new assets",
+    "Recorded R20 and final R21 completion against actual published result"
+  ],
+  "effective_status_rule": "Actual external FINALIZED, landing and readback receipts bind the publication commit and complete the finite documentation obligations. This immutable at-authoring snapshot has no future self-commit hash.",
+  "historical_preparation_status": "G55 checkpoint PENDING describes its preparation freeze; the accepted G55L receipts establish later engineering acceptance without rewriting that checkpoint.",
+  "known_proof": {
+    "d1_bytes": 32702,
+    "d1_sha256": "0eba67d7652765c387988d760cd5daeeacecbdf33b9dc577dbe6a1cad40ed4b0",
+    "g55l_bytes": 37389,
+    "g55l_sha256": "d2a25ed3b1ab123912e59d096808351dbcf18f59a16229b9abcaff9f647eacff"
+  }
+}

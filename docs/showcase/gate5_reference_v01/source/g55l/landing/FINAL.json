@@ -1,0 +1,11 @@
+{
+  "manifest_sha256": "e9159acc0ed4c1bf42020c0ae8870fa9365f94b1f2a1264b4e593b8a689bf261",
+  "owner_mutation": true,
+  "policy_id": "d788fa45194be3dbcf23bb83634f901f8f1c20bcdf24334782fc916074b9bb2a",
+  "publication": "INDEPENDENT_REMOTE_COMMIT_TREE_MODE_AND_BLOB_READBACK_PASS",
+  "status": "EXACT_OWNER_ENGINEERING_LANDING",
+  "tip": {
+    "commit": "64f2b38b0d671e4907bae8649fff8f3d2ee0751c",
+    "tree": "cacb14a9574c350fb33239680abe0c3a5ede7b5e"
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "actual_calls": 3,
+  "candidate_attempt": 4,
+  "labels": [
+    "exact",
+    "shift",
+    "verify"
+  ],
+  "model": "gemini-2.5-flash",
+  "provider_credentials_exported": false,
+  "status": "PROPOSALS_CAPTURED_NOT_YET_NATIVE_CONSUMED"
+}

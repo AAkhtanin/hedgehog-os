@@ -1,0 +1,203 @@
+{
+  "controls": [
+    {
+      "detail": null,
+      "name": "F01_actual_pointer_only_index",
+      "outcome": "PASS"
+    },
+    {
+      "detail": null,
+      "name": "F02_actual_local_denial",
+      "outcome": "PASS"
+    },
+    {
+      "detail": null,
+      "name": "F03_authenticated_A_refusal",
+      "outcome": "PASS"
+    },
+    {
+      "detail": null,
+      "name": "coherent_hostile_key_allowed_neighbor",
+      "outcome": "PASS"
+    },
+    {
+      "name": "F05_signed_foreign_domain",
+      "outcome": "REFUSED",
+      "reason": "schema_scope"
+    },
+    {
+      "name": "F05_signed_foreign_unit",
+      "outcome": "REFUSED",
+      "reason": "source_scope"
+    },
+    {
+      "name": "F05_signed_foreign_recipient",
+      "outcome": "REFUSED",
+      "reason": "local_scope"
+    },
+    {
+      "name": "F07_request_revision_binding",
+      "outcome": "REFUSED",
+      "reason": "release_request_binding"
+    },
+    {
+      "name": "F13_pointer_key_substitution",
+      "outcome": "REFUSED",
+      "reason": "publisher_identity"
+    },
+    {
+      "name": "F13_unpinned_signer",
+      "outcome": "REFUSED",
+      "reason": "signature_invalid"
+    },
+    {
+      "name": "F14_closed_permission",
+      "outcome": "REFUSED",
+      "reason": "closed_fields"
+    },
+    {
+      "name": "F14_closed_RootFinal",
+      "outcome": "REFUSED",
+      "reason": "closed_fields"
+    },
+    {
+      "name": "F14_closed_capability_handle",
+      "outcome": "REFUSED",
+      "reason": "closed_fields"
+    },
+    {
+      "name": "F14_closed_command",
+      "outcome": "REFUSED",
+      "reason": "closed_fields"
+    },
+    {
+      "name": "F14_closed_import_path",
+      "outcome": "REFUSED",
+      "reason": "closed_fields"
+    },
+    {
+      "name": "F16_signed_foreign_object",
+      "outcome": "REFUSED",
+      "reason": "pinned_object_identity"
+    },
+    {
+      "name": "F16_unsupported_route_https://other.example/object",
+      "outcome": "REFUSED",
+      "reason": "route_endpoint"
+    },
+    {
+      "name": "F16_unsupported_route_../private",
+      "outcome": "REFUSED",
+      "reason": "route_endpoint"
+    },
+    {
+      "name": "F16_unsupported_route_endpoint:foreign",
+      "outcome": "REFUSED",
+      "reason": "route_endpoint"
+    },
+    {
+      "detail": null,
+      "name": "F17_one_hop_neighbor",
+      "outcome": "PASS"
+    },
+    {
+      "name": "F17_self_pointer",
+      "outcome": "REFUSED",
+      "reason": "route_cycle"
+    },
+    {
+      "name": "F17_depth_two",
+      "outcome": "REFUSED",
+      "reason": "route_hop_limit"
+    },
+    {
+      "detail": null,
+      "name": "same_entry_fresh_nonce_not_conflict",
+      "outcome": "PASS"
+    },
+    {
+      "name": "F11_signed_status_equivocation",
+      "outcome": "REFUSED",
+      "reason": "status_equivocation"
+    },
+    {
+      "name": "invalid_status_cannot_poison_highwater",
+      "outcome": "REFUSED",
+      "reason": "signature_invalid"
+    },
+    {
+      "name": "F10_terminal_current_refusal",
+      "outcome": "REFUSED",
+      "reason": "status_not_active"
+    },
+    {
+      "name": "F10_old_active_after_reopen",
+      "outcome": "REFUSED",
+      "reason": "status_rollback"
+    },
+    {
+      "detail": null,
+      "name": "terminal_stored_before_refusal",
+      "outcome": "PASS"
+    },
+    {
+      "detail": null,
+      "name": "same_revision_changed_body_valid_components",
+      "outcome": "PASS"
+    },
+    {
+      "name": "F11_signed_content_conflict",
+      "outcome": "REFUSED",
+      "reason": "source_equivocation"
+    },
+    {
+      "detail": null,
+      "name": "publisher_reopened_budget_refusal",
+      "outcome": "PASS"
+    },
+    {
+      "name": "caller_cannot_establish_task",
+      "outcome": "REFUSED",
+      "reason": "publisher_unknown_task_context"
+    },
+    {
+      "name": "approved_refusal_context_is_not_budget_reset",
+      "outcome": "REFUSED",
+      "reason": "publisher_context_use"
+    },
+    {
+      "detail": null,
+      "name": "new_declared_task_cannot_disclose_old_revision",
+      "outcome": "PASS"
+    },
+    {
+      "detail": null,
+      "name": "G51_affected_43_controls_on_G52_capture",
+      "outcome": "PASS"
+    },
+    {
+      "detail": null,
+      "name": "status_unavailable",
+      "outcome": "PASS"
+    },
+    {
+      "detail": null,
+      "name": "revoked_current_use",
+      "outcome": "PASS"
+    },
+    {
+      "detail": null,
+      "name": "restart_old_active",
+      "outcome": "PASS"
+    },
+    {
+      "detail": null,
+      "name": "lawful_actual_Work_after_refusals",
+      "outcome": "PASS"
+    }
+  ],
+  "g51_controls": 43,
+  "modes": "FRESH_PURE_AND_DISPOSABLE_STATE_CONTROLS_ON_FINAL_SOURCE; ACTUAL_RECORDED_IPC_LIFECYCLE; ONE_NEW_G51_NATIVE_INPUT_CONTRAST",
+  "seconds": 0.29207858350127935,
+  "status": "PASS_G52_FOCUSED"
+}

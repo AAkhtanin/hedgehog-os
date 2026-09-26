@@ -1,0 +1,133 @@
+{
+  "version": "g56.corpus.coverage.v01",
+  "basis_commit": "64f2b38b0d671e4907bae8649fff8f3d2ee0751c",
+  "scope": "Linked accepted G55 corpus, focused exact G56 excerpts, G55L landing records and historical B1 capsule. Not every file of every attempted trial.",
+  "selected_archived_member_records": 7623,
+  "omitted_archived_member_records": 8857,
+  "archives": [
+    {
+      "archive_id": "g50",
+      "prefix": "g50_native_seams_return/",
+      "sha256": "a3d1e9444825bc68ec13ba235d1156125251a6e01901b3ae73adfc8324651dd7",
+      "selected_members": 137,
+      "omitted_members": 13,
+      "selected_bytes_before_deduplication": 1744096,
+      "exact_inventory_source": "docs/gate5_reference_evidence_v01/member_index.json",
+      "omission_detail_pointer": "/omissions/g50"
+    },
+    {
+      "archive_id": "g51",
+      "prefix": "g51_calibration_exchange_return/",
+      "sha256": "806ab39111f9c2d915967664309e740b8e044030825908996ecf9e21cd05f679",
+      "selected_members": 130,
+      "omitted_members": 328,
+      "selected_bytes_before_deduplication": 1309070,
+      "exact_inventory_source": "docs/gate5_reference_evidence_v01/member_index.json",
+      "omission_detail_pointer": "/omissions/g51"
+    },
+    {
+      "archive_id": "g52",
+      "prefix": "g52_lifecycle_restart_return/",
+      "sha256": "4f967a4189f62c0eede9931ec13cb38933ab855eacf864297f305f34a257f510",
+      "selected_members": 397,
+      "omitted_members": 646,
+      "selected_bytes_before_deduplication": 4601465,
+      "exact_inventory_source": "docs/gate5_reference_evidence_v01/member_index.json",
+      "omission_detail_pointer": "/omissions/g52"
+    },
+    {
+      "archive_id": "g53",
+      "prefix": "g53_authoring_kit_exam_return/",
+      "sha256": "dde9ea8dcb1658d9feff97421d2d7b51f2b8ba6ca2b20455569291b03745d5b1",
+      "selected_members": 151,
+      "omitted_members": 133,
+      "selected_bytes_before_deduplication": 2118193,
+      "exact_inventory_source": "docs/gate5_reference_evidence_v01/member_index.json",
+      "omission_detail_pointer": "/omissions/g53"
+    },
+    {
+      "archive_id": "g54c",
+      "prefix": "g54c_return/",
+      "sha256": "998c261b4b5aa0451a52b02d30d19274ef472dbecf9620788fbcdef551e6de53",
+      "selected_members": 256,
+      "omitted_members": 139,
+      "selected_bytes_before_deduplication": 10073912,
+      "exact_inventory_source": "docs/gate5_reference_evidence_v01/member_index.json",
+      "omission_detail_pointer": "/omissions/g54c"
+    },
+    {
+      "archive_id": "g54d",
+      "prefix": "g54d_return/",
+      "sha256": "2da2c2838f9987a8ca50745a95ca563092fb4e77ee8b8e60748222b1287dc806",
+      "selected_members": 1463,
+      "omitted_members": 7172,
+      "selected_bytes_before_deduplication": 70189170,
+      "exact_inventory_source": "docs/gate5_reference_evidence_v01/member_index.json",
+      "omission_detail_pointer": "/omissions/g54d"
+    },
+    {
+      "archive_id": "g54d1",
+      "prefix": "g54d1_return/",
+      "sha256": "0558786b4d2882be7610223dd754e927bedce2530e2d5ac4ca1d429ce7ac22f0",
+      "selected_members": 5089,
+      "omitted_members": 426,
+      "selected_bytes_before_deduplication": 164054914,
+      "exact_inventory_source": "docs/gate5_reference_evidence_v01/member_index.json",
+      "omission_detail_pointer": "/omissions/g54d1"
+    }
+  ],
+  "not_republished": [
+    "Owner admission contexts, secrets and keys",
+    "The whole 42 MB preparation archive",
+    "Duplicate 216 MB expanded blob corpus"
+  ],
+  "author_input_boundary": "The audit corpus contains private examiner history; the blind author surface is a separately enumerated kit plus an explicitly chosen WHAT.",
+  "hidden_reasoning": "Not extracted or published; model requests, visible responses and tool records are evidence data.",
+  "historical_attempts": [
+    {
+      "id": "G54",
+      "status": "INCOMPLETE; earlier Gemini cold-author start",
+      "route": "Initial FINAL_RESULT source retained with its own archive identity"
+    },
+    {
+      "id": "G54R",
+      "status": "INCOMPLETE",
+      "route": "Previously published B1 predecessor record"
+    },
+    {
+      "id": "G54B",
+      "status": "AUTHOR_BOUNDARY_UNVERIFIED; no task delivery",
+      "route": "Previously published B1 predecessor record"
+    },
+    {
+      "id": "G54B1",
+      "status": "INCOMPLETE",
+      "route": "Immutable B1 showcase and source map"
+    },
+    {
+      "id": "G54C..C4",
+      "status": "Contract/examiner preparation, not new blind authors",
+      "route": "G54C contract records; later D/D1 examiner lineage"
+    },
+    {
+      "id": "G54D",
+      "status": "INITIAL_PLUS_THREE_INCOMPLETE",
+      "route": "Accepted G55 linked archive members"
+    },
+    {
+      "id": "G54D1",
+      "status": "ACCEPTED_UNDER_EXPLICIT_FOURTH_CORRECTION",
+      "route": "Amendment, restoration, authored delta, native/live/supplied"
+    },
+    {
+      "id": "G55L",
+      "status": "ENGINEERING_ACCEPTED_COMMITTED_AND_PUBLISHED",
+      "route": "Exact landing records in this capsule"
+    },
+    {
+      "id": "G56",
+      "status": "PUBLICATION_PREPARATION",
+      "route": "publication_status_v01.json; actual publication receives separate review"
+    }
+  ]
+}

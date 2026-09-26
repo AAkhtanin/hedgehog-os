@@ -1,0 +1,76 @@
+{
+  "request": {
+    "allowed_size": 65536,
+    "deadline": 1790277571,
+    "issued_at": 1790277511,
+    "nonce": "67b2f7024b50a8be82899fa35cd0b2fd752cbff4cf8b6b381f6c3865c3c69979",
+    "object_id": "object:gate5:calibration:one",
+    "op": "FETCH",
+    "owner_transport_scope": "owner:gate5:inherited-pipes",
+    "pointer_ref": "g5pointer:28251c22b6bf0a2e90c74b9356742f75f7da5e3525bac8e922791bbcba1959c1",
+    "publisher": "root:gate5:calibration",
+    "request_id": "g5request:40dc652492799a937d9a5bba73526b271f292e82c0adb846570b12d6b1d5a205",
+    "request_revision": 1,
+    "requester": "root:gate5:site",
+    "subject_request_ref": null,
+    "task_ref": "task:gate5:exchange",
+    "trust_profile_hash": "36b5fcfe6f311d22a992b628b2b4c135844b73c90bb02f178427018267ed2a1d",
+    "use_class": "LOCAL_CONTEXT",
+    "version": "g51.request.v01"
+  },
+  "response": {
+    "kind": "BUNDLE",
+    "value": {
+      "body": null,
+      "manifest": null,
+      "release": {
+        "commitment": {
+          "artifact_hash": "0eac81896278ebd5c9faa3382e08a174795cbc80d943f3fd56b4e6758d7d3ed4",
+          "commitment_id": "g5commit:f1828b167a97e06c8e2974c190ed9cc98085b8763d19516b52b5a2c8d5b148c8",
+          "commitment_scope": "gate5:RELEASE:v01",
+          "commitment_version": "v0.1",
+          "key_id": "be537f93c797a5b5c1944033c12bb361c080670980628fe8e1e04bbaf770cbd8",
+          "manifest_hash": "ff0ce80939d8949d3a2140c2f002b65f718d60680b8bd513a72a8c3b3e0c3a2e",
+          "owner_root_id": "root:gate5:calibration",
+          "transaction_id": "transaction:gate5:reference"
+        },
+        "signature": {
+          "algorithm": "Ed25519",
+          "commitment_hash": "541664e735aa3ffabe225442196824e023b4c5979c684e6dd594056e62f518eb",
+          "commitment_id": "g5commit:f1828b167a97e06c8e2974c190ed9cc98085b8763d19516b52b5a2c8d5b148c8",
+          "key_id": "be537f93c797a5b5c1944033c12bb361c080670980628fe8e1e04bbaf770cbd8",
+          "owner_root_id": "root:gate5:calibration",
+          "signature_hex": "e108bb0f457f396c1094b392d997186b8e305ebcb71ec529d819c394e129ac7c86d98b1ed0cc5c0eefa87134420a5c6625c077f8c76bca310991d376f3e7000c",
+          "signature_version": "v0.1",
+          "transaction_id": "transaction:gate5:reference"
+        },
+        "value": {
+          "body_hash": "56998ecfe67ad7f66285bf316da9104df9f144094a3afd3edf15e143bb6a03ab",
+          "deadline": 1790277571,
+          "manifest_ref": "g5manifest:ff0ce80939d8949d3a2140c2f002b65f718d60680b8bd513a72a8c3b3e0c3a2e",
+          "nonce": "67b2f7024b50a8be82899fa35cd0b2fd752cbff4cf8b6b381f6c3865c3c69979",
+          "pointer_ref": "g5pointer:28251c22b6bf0a2e90c74b9356742f75f7da5e3525bac8e922791bbcba1959c1",
+          "recipient": "root:gate5:site",
+          "release_review_ref": "6d87e57f3ee45c091ed942bdddf1a8f1b9765fac205f354481c070501069d8a4",
+          "request_ref": "g5request:40dc652492799a937d9a5bba73526b271f292e82c0adb846570b12d6b1d5a205",
+          "request_revision": 1,
+          "state": "REFUSED",
+          "use_class": "LOCAL_CONTEXT",
+          "version": "g51.release.v01"
+        }
+      }
+    }
+  },
+  "wire_after": {
+    "received": 7,
+    "received_bytes": 17251,
+    "sent": 7,
+    "sent_bytes": 12723
+  },
+  "wire_before": {
+    "received": 6,
+    "received_bytes": 15451,
+    "sent": 6,
+    "sent_bytes": 10916
+  }
+}

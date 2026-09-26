@@ -1,0 +1,102 @@
+{
+  "additional_corrections": 1,
+  "all_execution_processes_final": true,
+  "author_effort": "ultra",
+  "author_mode": "RESTORED_CONTINUATION",
+  "author_model": "gpt-6-astra",
+  "author_tier": "default",
+  "author_transport_turns": 1,
+  "broker_operations": 79,
+  "commit": false,
+  "correction_index": 4,
+  "current_thread": "01a0d9af-3e81-7661-bfe0-59d4f37d434a",
+  "first_actual_unresolved_blocker": null,
+  "gate5_closed": false,
+  "limitations": [
+    "Reviewed-reference finite profile, not arbitrary hostile-code attestation or universal football planning.",
+    "Original G54D initial plus three remains INCOMPLETE; restored continuation is not identical opaque model state.",
+    "One author submission only; author tests were text-reviewed, not host-imported or separately executed.",
+    "Boundary/uncertainty and altered-evidence controls are pure checks, not native crash/race injections.",
+    "Three proposals were precollected; model VERIFY did not see a later native receipt.",
+    "Supplied checks are safe-derived captured-proof verification, not restored Root/Host authority.",
+    "Historical G54B1/C1-C3/C4 outcomes and unresolved different standalone-command route remain unchanged."
+  ],
+  "live": {
+    "actual_attempts": 3,
+    "actual_wire_sends": 3,
+    "confirm": "SCRIPTED_CONTROLLED_OWNER_INPUT",
+    "mock_executor_starts": 1,
+    "provider": "gemini-2.5-flash",
+    "semantics": [
+      "exact",
+      "shift",
+      "verify"
+    ],
+    "status": "PASS",
+    "verify_and_repeat_new_work_or_effects": 0,
+    "verify_proposal_saw_later_receipt": false
+  },
+  "native": {
+    "actual_refusal_root_and_causal_status_binding": "PASS",
+    "cases": 16,
+    "events": 56,
+    "main_mock_executor_starts": 1,
+    "mock_executor_starts": 7,
+    "status": "PASS",
+    "unchanged_technical_predicates": true
+  },
+  "next_boundary": "Independent review of this amended continuation; G55 closure/source admission/owner landing and G56 publication require separate tasks.",
+  "no_supervisor_candidate_edits": true,
+  "not_a_new_cold_trial": true,
+  "original_budget_success": false,
+  "original_corrections": 3,
+  "original_initial": 1,
+  "original_result": "G54D_INCOMPLETE",
+  "original_thread": "01a0d92d-db22-7463-8aaf-8f1f1690459e",
+  "owner_head": "5cef2c52fd805daedec958109caf9d1806899eb4",
+  "owner_landing": false,
+  "owner_unchanged": true,
+  "push": false,
+  "real_world_effects": 0,
+  "result": "G54D1_ACCEPTED_UNDER_EXPLICIT_PROTOCOL_AMENDMENT",
+  "runtime_total_mock_executor_starts": 8,
+  "supplied": {
+    "comparison": {
+      "bytes": 32702,
+      "commands": [
+        "commands/19_supplied_one/receipt.json",
+        "commands/20_supplied_two/receipt.json"
+      ],
+      "sha256": "0eba67d7652765c387988d760cd5daeeacecbdf33b9dc577dbe6a1cad40ed4b0",
+      "status": "BYTE_IDENTICAL"
+    },
+    "observed_audit": {
+      "calibration": 1,
+      "candidate_import": 0,
+      "process_launch": 0,
+      "socket_connect": 0,
+      "socket_dns": 0
+    },
+    "observed_calls": {
+      "bound_effects": 0,
+      "calibration": 1,
+      "executor_starts": 0,
+      "host_dispatches": 0,
+      "mock_effects": 0,
+      "pure_work_execution": 0,
+      "root_decisions": 0
+    },
+    "status": "PASS_TWO_INDEPENDENT_PROCESSES"
+  },
+  "timings_seconds": {
+    "03_author_continuation": 629.5014538336545,
+    "07_native_matrix": 60.421498040668666,
+    "14_live_prepare": 16.760797291062772,
+    "15_live_native": 4.889425875619054,
+    "16_live_review": 0.7789518749341369,
+    "17_live_consumption": 0.7825316675007343,
+    "19_supplied_one": 3.4522691247984767,
+    "20_supplied_two": 3.435524291358888
+  },
+  "total_submissions": 5
+}

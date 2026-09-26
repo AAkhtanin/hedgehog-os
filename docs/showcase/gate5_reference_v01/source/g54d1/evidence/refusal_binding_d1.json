@@ -1,0 +1,33 @@
+{
+  "candidate_imported": false,
+  "capture": "SUPERVISOR_EVIDENCE/p7_candidate_7071661f",
+  "classification": "ACTUAL_NATIVE_ROOT_AND_AUTHENTICATED_STATUS_CAUSAL_JOIN",
+  "events": {
+    "exact": {
+      "actual_refusal_call_sequence": 29,
+      "decision_id": "a6a496ce9872ee0d40fe3d4057d9911d94b49512131d4c89345f90fd02372b8d",
+      "evidence_sha256": "82ca7e43f666ea55814b0852268ece371215ac99e8b7dd486a583697ff4a2f61",
+      "native_decision": "BLOCKED_FAIL_CLOSED",
+      "reason": "status_not_active",
+      "request_sha256": "785cf3b0568f2b365786ebc2a66928d86af0be286a6980d3fca4322de67ac02f",
+      "source_record_ref": "018926ddc598863691c594891b540bbd2f484e3a4f1d705f636d4324e1c9372d",
+      "source_revision": 4,
+      "status": "PASS",
+      "status_sha256": "67c15170351e7df96322828d8477d1f8519b53491949793dfc8c7fc4d47f6e98"
+    },
+    "shift": {
+      "actual_refusal_call_sequence": 66,
+      "decision_id": "d938e0891178a00ce3f43f6b4c4d7177cc649896bbbef362c37ca695596022e4",
+      "evidence_sha256": "43bd0619a69ad306dea468ec3c3598b3ba4a06fa5cd4e151752fa325d26cd9b9",
+      "native_decision": "BLOCKED_FAIL_CLOSED",
+      "reason": "status_not_active",
+      "request_sha256": "41fc59596b47d6dadc7d85b11cb6238fb308c916bdc686df6acb43a7e11fe294",
+      "source_record_ref": "d8eafc63c564cd4bfa0a0a40c4e0ea0f8832d153a0fc3271c7d29d518b80c808",
+      "source_revision": 4,
+      "status": "PASS",
+      "status_sha256": "c6e48b35d214ca826aaf0e4a5efeeba7bf328c0922ba66e3aa1f17c0a062da99"
+    }
+  },
+  "helper_sha256": "45ca70d61270aed255196f397bc253293a2bf0fa830b868c05918e7d53673553",
+  "status": "PASS"
+}

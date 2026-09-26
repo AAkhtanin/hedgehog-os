@@ -1,0 +1,229 @@
+{
+  "controls": [
+    {
+      "name": "recorded_positive_components",
+      "outcome": "PASS"
+    },
+    {
+      "name": "independent_calibration_oracle",
+      "outcome": "PASS"
+    },
+    {
+      "name": "opaque_digest_separate_from_semantic_summary",
+      "outcome": "PASS_NATIVE_LOCAL_DESCENT"
+    },
+    {
+      "name": "altered_body_bytes",
+      "outcome": "REFUSED",
+      "reason": "body_integrity"
+    },
+    {
+      "name": "altered_signature",
+      "outcome": "REFUSED",
+      "reason": "signature_invalid"
+    },
+    {
+      "name": "wrong_purpose",
+      "outcome": "REFUSED",
+      "reason": "signature_purpose"
+    },
+    {
+      "name": "request_target_publisher",
+      "outcome": "REFUSED",
+      "reason": "request_target_binding"
+    },
+    {
+      "name": "request_target_pointer_ref",
+      "outcome": "REFUSED",
+      "reason": "request_target_binding"
+    },
+    {
+      "name": "request_target_object_id",
+      "outcome": "REFUSED",
+      "reason": "request_target_binding"
+    },
+    {
+      "name": "request_target_owner_transport_scope",
+      "outcome": "REFUSED",
+      "reason": "request_target_binding"
+    },
+    {
+      "name": "request_size_limit",
+      "outcome": "REFUSED",
+      "reason": "requested_size_limit"
+    },
+    {
+      "name": "hostile_key_coherent_arithmetic_neighbor",
+      "outcome": "PASS_PURE_COMPONENTS_NOT_LOCAL_AUTHORITY"
+    },
+    {
+      "name": "genuinely_signed_bad_arithmetic",
+      "outcome": "REFUSED",
+      "reason": "calibration_arithmetic"
+    },
+    {
+      "name": "signed_other_request_ref",
+      "outcome": "REFUSED",
+      "reason": "release_request_binding"
+    },
+    {
+      "name": "signed_other_recipient",
+      "outcome": "REFUSED",
+      "reason": "release_request_binding"
+    },
+    {
+      "name": "signed_other_use_class",
+      "outcome": "REFUSED",
+      "reason": "release_request_binding"
+    },
+    {
+      "name": "signed_other_nonce",
+      "outcome": "REFUSED",
+      "reason": "release_request_binding"
+    },
+    {
+      "name": "signed_status_wrong_nonce",
+      "outcome": "REFUSED",
+      "reason": "status_request_binding"
+    },
+    {
+      "name": "exact_source_expiry",
+      "outcome": "REFUSED",
+      "reason": "source_not_current"
+    },
+    {
+      "name": "exact_valid_to",
+      "outcome": "REFUSED",
+      "reason": "source_not_current"
+    },
+    {
+      "name": "exact_ttl_seconds",
+      "outcome": "REFUSED",
+      "reason": "source_not_current"
+    },
+    {
+      "name": "exact_source_age",
+      "outcome": "REFUSED",
+      "reason": "source_not_current"
+    },
+    {
+      "name": "ingestion_cannot_renew",
+      "outcome": "REFUSED",
+      "reason": "source_not_current"
+    },
+    {
+      "name": "exact_status_expiry",
+      "outcome": "REFUSED",
+      "reason": "status_not_current"
+    },
+    {
+      "name": "duplicate_json_keys",
+      "outcome": "REFUSED",
+      "reason": "duplicate_json_key"
+    },
+    {
+      "name": "noncanonical_json",
+      "outcome": "REFUSED",
+      "reason": "noncanonical_json"
+    },
+    {
+      "name": "float",
+      "outcome": "REFUSED",
+      "reason": "float_forbidden"
+    },
+    {
+      "name": "nonfinite",
+      "outcome": "REFUSED",
+      "reason": "nonfinite_forbidden"
+    },
+    {
+      "name": "unknown_body_field",
+      "outcome": "REFUSED",
+      "reason": "closed_fields"
+    },
+    {
+      "name": "bool_as_int",
+      "outcome": "REFUSED",
+      "reason": "integer_range_or_type"
+    },
+    {
+      "name": "bad_identifier",
+      "outcome": "REFUSED",
+      "reason": "reference"
+    },
+    {
+      "name": "unknown_schema",
+      "outcome": "REFUSED",
+      "reason": "schema_version"
+    },
+    {
+      "name": "missing_source_field",
+      "outcome": "REFUSED",
+      "reason": "closed_fields"
+    },
+    {
+      "name": "oversized_body",
+      "outcome": "REFUSED",
+      "reason": "message_size"
+    },
+    {
+      "name": "depth_bound",
+      "outcome": "REFUSED",
+      "reason": "json_depth"
+    },
+    {
+      "name": "arithmetic_overflow",
+      "outcome": "REFUSED",
+      "reason": "integer_range_or_type"
+    },
+    {
+      "name": "reduced_fraction_minus_two_thirds",
+      "outcome": "PASS",
+      "value": {
+        "correction": {
+          "den": 3,
+          "num": -2
+        },
+        "n": 3,
+        "total": 302
+      }
+    },
+    {
+      "name": "immutable_contract_projection",
+      "outcome": "PASS"
+    },
+    {
+      "name": "oversized_frame_before_body_read",
+      "outcome": "REFUSED",
+      "reason": "frame_size_before_payload_read"
+    },
+    {
+      "name": "budget_helper_reentry",
+      "outcome": "REFUSED",
+      "reason": "attempt_budget"
+    },
+    {
+      "name": "actual_consumed_input_contrast",
+      "outcome": "PASS",
+      "result": {
+        "corrected_den": 1,
+        "corrected_num": 97,
+        "mean_den": 1,
+        "mean_num": 106
+      }
+    },
+    {
+      "name": "missing_native_input_no_fallback",
+      "outcome": "REFUSED",
+      "reason": "native_required_inputs"
+    },
+    {
+      "name": "unchanged_positive_after_mutations",
+      "outcome": "PASS"
+    }
+  ],
+  "evidence_mode": "FRESH_PURE_VALIDATION_AT_RECORDED_USE_TIME_PLUS_ONE_NEW_CONTROLLED_NATIVE_WORK",
+  "next_stage_tests_not_run": true,
+  "seconds": 0.2582404175773263,
+  "status": "PASS_FOCUSED_G51"
+}

@@ -1,0 +1,228 @@
+{
+  "all_proposals_precollected": true,
+  "bookings": 1,
+  "candidate_manifest_sha256": "701f79ca02d0d125a17222281b8ae13fd9fb9ea3e448b3ad49503b3392b3317a",
+  "capture": "SUPERVISOR_EVIDENCE/p7_candidate_66a1519a",
+  "classification": "ACTUAL_PROVIDER_PROPOSALS_CONSUMED_BY_REVIEWED_NATIVE_EXECUTION",
+  "confirm_origin": "SCRIPTED_CONTROLLED_OWNER_INPUT",
+  "helper_sha256": "ebacd48afad7587abbbdead78913bce6a40b89e91d0e3c5172c6681a34bd8dab",
+  "joins": {
+    "exact": {
+      "actual_model": "gemini-2.5-flash",
+      "independently_reviewed_native_result": {
+        "counts": {
+          "publisher": {
+            "CALLBACK": 0,
+            "DISPATCH": 0,
+            "EFFECT": 0,
+            "EXECUTOR": 0,
+            "PURE": 1,
+            "STATE_WRITE": 0
+          },
+          "requester": {
+            "CALLBACK": 0,
+            "DISPATCH": 0,
+            "EFFECT": 0,
+            "EXECUTOR": 0,
+            "PURE": 1,
+            "STATE_WRITE": 0
+          }
+        },
+        "state_sha256": "61fc425c423ad3de96c729a7386139ce1e32b2d4cee111404489ac3169c500da",
+        "status": "NO_COMPLETE_OFFER",
+        "verdict": {
+          "bundle_checks": 2,
+          "canonical_C_sha256": "3d1f16973be834efe97986d0ea9cfd4e4413469e89046f54e238e7f1efb364e3",
+          "event": "exact",
+          "native_consumer_work": 1,
+          "native_source_work": 1,
+          "root_release_join": true,
+          "source_selection": "NO_COMPLETE_OFFER",
+          "status": "PASS_COMPLETED_FIND_ONLY",
+          "total_minor": 0
+        }
+      },
+      "provider_model": "gemini-2.5-flash",
+      "provider_seconds": 10.147739584557712,
+      "raw_response_sha256": "d3cbf7c9b51fe172df62ecc5273231e36a3565eab4fbdcfcdaf82be3e201c913",
+      "request_sha256": "785cf3b0568f2b365786ebc2a66928d86af0be286a6980d3fca4322de67ac02f",
+      "response_sha256": "ee9d08a8777d182edc51d21528be58de0d019a8a046465598234c38ce19113a6",
+      "roles": {
+        "publisher": {
+          "actual_intake_request_sha256": "785cf3b0568f2b365786ebc2a66928d86af0be286a6980d3fca4322de67ac02f",
+          "capture_sha256": "438ecede8e6ddee5515c898ee6dded1599f273141b2d98eecb0ad5f3106c8bf2",
+          "counts": {
+            "CALLBACK": 0,
+            "DISPATCH": 0,
+            "EFFECT": 0,
+            "EXECUTOR": 0,
+            "PURE": 1,
+            "STATE_WRITE": 0
+          },
+          "event_start_sequence": 4,
+          "intake_return_sequence": 5,
+          "parent_event_sha256": "26c9195a68703af8b7f740c0885e35a5c4b9c1c5bdc9f5a022aa36a20265cdc4"
+        },
+        "requester": {
+          "actual_intake_request_sha256": "785cf3b0568f2b365786ebc2a66928d86af0be286a6980d3fca4322de67ac02f",
+          "capture_sha256": "2d8fa9cf7f433fad3a36ba4112275944bd46878c4543ea16d8c8c8194b68d1cf",
+          "counts": {
+            "CALLBACK": 0,
+            "DISPATCH": 0,
+            "EFFECT": 0,
+            "EXECUTOR": 0,
+            "PURE": 1,
+            "STATE_WRITE": 0
+          },
+          "event_start_sequence": 4,
+          "intake_return_sequence": 5,
+          "parent_event_sha256": "0b1b36d773d1d51e417e865fd8d233c47fc57b8df4a456c8397c316adf42402b"
+        }
+      }
+    },
+    "shift": {
+      "actual_model": "gemini-2.5-flash",
+      "independently_reviewed_native_result": {
+        "counts": {
+          "publisher": {
+            "CALLBACK": 0,
+            "DISPATCH": 0,
+            "EFFECT": 0,
+            "EXECUTOR": 0,
+            "PURE": 1,
+            "STATE_WRITE": 0
+          },
+          "requester": {
+            "CALLBACK": 0,
+            "DISPATCH": 0,
+            "EFFECT": 0,
+            "EXECUTOR": 0,
+            "PURE": 1,
+            "STATE_WRITE": 0
+          }
+        },
+        "state_sha256": "61fc425c423ad3de96c729a7386139ce1e32b2d4cee111404489ac3169c500da",
+        "status": "OFFER_READY",
+        "verdict": {
+          "bundle_checks": 2,
+          "canonical_C_sha256": "2d8dd3066c171639b909157de86f79431b2f9dc6cba33c9b30a737799539eba7",
+          "event": "shift",
+          "native_consumer_work": 1,
+          "native_source_work": 1,
+          "root_release_join": true,
+          "source_selection": "OFFER_READY",
+          "status": "PASS_COMPLETED_FIND_ONLY",
+          "total_minor": 6300
+        }
+      },
+      "provider_model": "gemini-2.5-flash",
+      "provider_seconds": 2.726452416740358,
+      "raw_response_sha256": "af07b80977f175aa3952a1bee770f3ae24a5eadd10848ae8664f9a7d7dfde806",
+      "request_sha256": "41fc59596b47d6dadc7d85b11cb6238fb308c916bdc686df6acb43a7e11fe294",
+      "response_sha256": "a90971391bbbc2cefd3130b49219339717500a1aaf5e7a7acdcbc572478b2cf8",
+      "roles": {
+        "publisher": {
+          "actual_intake_request_sha256": "41fc59596b47d6dadc7d85b11cb6238fb308c916bdc686df6acb43a7e11fe294",
+          "capture_sha256": "f5128ac67324f2aa92416406ba48deefc6c313918f541acccc93a22b326aee0c",
+          "counts": {
+            "CALLBACK": 0,
+            "DISPATCH": 0,
+            "EFFECT": 0,
+            "EXECUTOR": 0,
+            "PURE": 1,
+            "STATE_WRITE": 0
+          },
+          "event_start_sequence": 30,
+          "intake_return_sequence": 31,
+          "parent_event_sha256": "c8770661273a3e4a6e8ae8991da4f5d4f53303d65c85a654db3480ffd7520cfb"
+        },
+        "requester": {
+          "actual_intake_request_sha256": "41fc59596b47d6dadc7d85b11cb6238fb308c916bdc686df6acb43a7e11fe294",
+          "capture_sha256": "575ae9d3230047d2084c11e71de9470602e1caf0c40edb7b628072943a02ff32",
+          "counts": {
+            "CALLBACK": 0,
+            "DISPATCH": 0,
+            "EFFECT": 0,
+            "EXECUTOR": 0,
+            "PURE": 1,
+            "STATE_WRITE": 0
+          },
+          "event_start_sequence": 60,
+          "intake_return_sequence": 61,
+          "parent_event_sha256": "8651aa843077d3437ac551393a178f981033441c814933207d090c6997e300f1"
+        }
+      }
+    },
+    "verify": {
+      "actual_model": "gemini-2.5-flash",
+      "independently_reviewed_native_result": {
+        "counts": {
+          "publisher": {
+            "CALLBACK": 0,
+            "DISPATCH": 0,
+            "EFFECT": 0,
+            "EXECUTOR": 0,
+            "PURE": 0,
+            "STATE_WRITE": 0
+          },
+          "requester": {
+            "CALLBACK": 0,
+            "DISPATCH": 0,
+            "EFFECT": 0,
+            "EXECUTOR": 0,
+            "PURE": 0,
+            "STATE_WRITE": 0
+          }
+        },
+        "state_sha256": "0229bd656e9bbacca764e0e85da21f7a397a314d4ee46d96e3ae6a3a0cc23fa4",
+        "status": "VERIFIED",
+        "verdict": "PASS_HISTORY_ZERO_WORK_EFFECT"
+      },
+      "provider_model": "gemini-2.5-flash",
+      "provider_seconds": 3.004368333145976,
+      "raw_response_sha256": "07e6ac07cc881831ea0b076ae577d53ed9c2a5e0525b41bea619fd08fde24543",
+      "request_sha256": "31d9f6d62b0601213a58dbb789645a77d645373bf913cc334f3beb15b07a6120",
+      "response_sha256": "081a7051f7317a3990989817ae632edc64af53d46819375af98a1b478b9f3d96",
+      "roles": {
+        "publisher": {
+          "actual_intake_request_sha256": "31d9f6d62b0601213a58dbb789645a77d645373bf913cc334f3beb15b07a6120",
+          "capture_sha256": "d4e28f89bac3e07fac6df50b9405c35d6d65e987e774289a8961918233340300",
+          "counts": {
+            "CALLBACK": 0,
+            "DISPATCH": 0,
+            "EFFECT": 0,
+            "EXECUTOR": 0,
+            "PURE": 0,
+            "STATE_WRITE": 0
+          },
+          "event_start_sequence": 105,
+          "intake_return_sequence": 106,
+          "parent_event_sha256": "02224049c9cb6ada1f771dc0123389218943cdb60397c6c195684f880857e58b"
+        },
+        "requester": {
+          "actual_intake_request_sha256": "31d9f6d62b0601213a58dbb789645a77d645373bf913cc334f3beb15b07a6120",
+          "capture_sha256": "fbea5f2f3523cdca02140ecbcebecced36a910f145cd6bc0031baa75cceb8433",
+          "counts": {
+            "CALLBACK": 0,
+            "DISPATCH": 0,
+            "EFFECT": 0,
+            "EXECUTOR": 0,
+            "PURE": 0,
+            "STATE_WRITE": 0
+          },
+          "event_start_sequence": 188,
+          "intake_return_sequence": 189,
+          "parent_event_sha256": "879c60aa5139960e56dc763b23424bc8908772dbbb9f18cfe6cb09fb97629637"
+        }
+      }
+    }
+  },
+  "native_book_time": 1790359684.4094708,
+  "native_verify_time": 1790359685.3266847,
+  "ordering": "All three semantic proposals were collected before native booking; VERIFY proposal has not seen a later receipt.",
+  "preparation": "LIVE/prepare_01",
+  "slots": 3,
+  "source_review_assumption": "Pinned reviewed-reference validate_event reconstruction branch plus observed parent/intake and independent actual Work/Root/receipt joins; not hostile-code attestation.",
+  "status": "PASS",
+  "verify_model_saw_later_receipt": false
+}

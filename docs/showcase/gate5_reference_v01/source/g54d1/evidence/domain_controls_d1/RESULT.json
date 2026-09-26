@@ -1,0 +1,65 @@
+{
+  "actual_capture": "SUPERVISOR_EVIDENCE/p7_candidate_f779b790",
+  "controls": [
+    {
+      "classification": "PURE_ALTERED_EVIDENCE_NOT_NATIVE_ATTACK",
+      "name": "missing_producer_slots",
+      "reason": "source_selection_fields",
+      "status": "REJECTED"
+    },
+    {
+      "classification": "PURE_ALTERED_EVIDENCE_NOT_NATIVE_ATTACK",
+      "name": "missing_producer_total_minor",
+      "reason": "source_selection_fields",
+      "status": "REJECTED"
+    },
+    {
+      "classification": "PURE_ALTERED_EVIDENCE_NOT_NATIVE_ATTACK",
+      "name": "empty_E_valid_consumer",
+      "reason": "all_three_slots",
+      "status": "REJECTED"
+    },
+    {
+      "classification": "PURE_ALTERED_EVIDENCE_NOT_NATIVE_ATTACK",
+      "name": "consumer_substitution",
+      "reason": "producer_consumer_selected_values",
+      "status": "REJECTED"
+    },
+    {
+      "classification": "PURE_ALTERED_EVIDENCE_NOT_NATIVE_ATTACK",
+      "name": "foreign_recipient",
+      "reason": "local_scope",
+      "status": "REJECTED"
+    },
+    {
+      "classification": "PURE_ALTERED_EVIDENCE_NOT_NATIVE_ATTACK",
+      "name": "wrong_request_revision",
+      "reason": "status_request_binding",
+      "status": "REJECTED"
+    },
+    {
+      "classification": "PURE_ALTERED_EVIDENCE_NOT_NATIVE_ATTACK",
+      "name": "stale_STATUS",
+      "reason": "status_not_current",
+      "status": "REJECTED"
+    },
+    {
+      "classification": "PURE_ALTERED_EVIDENCE_NOT_NATIVE_ATTACK",
+      "name": "expired_source",
+      "reason": "source_not_current",
+      "status": "REJECTED"
+    },
+    {
+      "classification": "PURE_ALTERED_EVIDENCE_NOT_NATIVE_ATTACK",
+      "name": "wrong_release_Root",
+      "reason": "release_actual_root_decision_ref",
+      "status": "REJECTED"
+    }
+  ],
+  "effects": 0,
+  "helper_sha256": "3c4759e35a5051ad8818a9f94fdb21f8933da64bb5157d5571d6168765dda961",
+  "intact_positive_after": "PASS",
+  "native_calls": 0,
+  "provider_calls": 0,
+  "status": "PASS"
+}

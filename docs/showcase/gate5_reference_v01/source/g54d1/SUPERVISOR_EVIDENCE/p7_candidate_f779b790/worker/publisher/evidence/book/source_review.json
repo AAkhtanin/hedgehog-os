@@ -1,0 +1,1127 @@
+{
+  "inputs": {
+    "conflict_state": {
+      "items": [
+        [
+          "conflict_set_ids",
+          []
+        ],
+        [
+          "material_unresolved_conflict",
+          false
+        ]
+      ]
+    },
+    "decision_input_id": "d85b03219e9406df3b8a5f759aead0fa2d0245795844de7019fa34aa0ed2667d",
+    "gt_advisory": {
+      "items": [
+        [
+          "actor_role",
+          "gt"
+        ],
+        [
+          "advisory_id",
+          "gt:candidate:football:confirmation:6a2547fbb4d03dac7c5213886c5031ffa9ee4a82a02bc5037cc3ed8201db8e32"
+        ],
+        [
+          "advisory_only",
+          true
+        ],
+        [
+          "attempted_effect",
+          "CREATE_ROOT_DECISION"
+        ],
+        [
+          "candidate_ids",
+          [
+            "candidate:football:confirmation:6a2547fbb4d03dac7c5213886c5031ffa9ee4a82a02bc5037cc3ed8201db8e32"
+          ]
+        ],
+        [
+          "creates_final_output",
+          false
+        ],
+        [
+          "requests_effect",
+          false
+        ],
+        [
+          "score_micros_by_candidate",
+          {
+            "items": [
+              [
+                "candidate:football:confirmation:6a2547fbb4d03dac7c5213886c5031ffa9ee4a82a02bc5037cc3ed8201db8e32",
+                1000000
+              ]
+            ]
+          }
+        ],
+        [
+          "selected_candidate_id",
+          "candidate:football:confirmation:6a2547fbb4d03dac7c5213886c5031ffa9ee4a82a02bc5037cc3ed8201db8e32"
+        ],
+        [
+          "source_artifact_type",
+          "GTAdvisoryReport"
+        ],
+        [
+          "source_lifecycle_state",
+          "VALIDATED"
+        ],
+        [
+          "target_artifact_type",
+          "RootDecision"
+        ]
+      ]
+    },
+    "permission_state": {
+      "items": [
+        [
+          "permission_ref",
+          null
+        ],
+        [
+          "permission_required",
+          false
+        ],
+        [
+          "permission_scope_valid",
+          true
+        ],
+        [
+          "user_permission_present",
+          false
+        ]
+      ]
+    },
+    "policy_state": {
+      "items": [
+        [
+          "allow_accept",
+          true
+        ],
+        [
+          "conflict_policy",
+          "DEFER"
+        ],
+        [
+          "hard_policy_passed",
+          true
+        ],
+        [
+          "identity_passed",
+          true
+        ],
+        [
+          "no_candidate_policy",
+          "NO_UPDATE"
+        ],
+        [
+          "policy_id",
+          "g51:operator_pinned"
+        ],
+        [
+          "scope_passed",
+          true
+        ]
+      ]
+    },
+    "post_vv_bundle": {
+      "items": [
+        [
+          "bundle_id",
+          "g51:checks:7148222bd03104920fdeb875656477c51464d3f0239cdd2ed8e90d49edc464bb"
+        ],
+        [
+          "hard_failure_reasons",
+          []
+        ],
+        [
+          "post_vv_passed",
+          true
+        ],
+        [
+          "provided_evidence_refs",
+          [
+            "evidence:g51:bd33b822b2fac9bbbed5a7e9c19a46c23e46aad2994d5b3489d7f593d82bd579"
+          ]
+        ],
+        [
+          "rejected_candidate_ids",
+          []
+        ],
+        [
+          "required_evidence_refs",
+          [
+            "evidence:g51:bd33b822b2fac9bbbed5a7e9c19a46c23e46aad2994d5b3489d7f593d82bd579"
+          ]
+        ],
+        [
+          "validated_candidate_ids",
+          [
+            "candidate:football:confirmation:6a2547fbb4d03dac7c5213886c5031ffa9ee4a82a02bc5037cc3ed8201db8e32"
+          ]
+        ]
+      ]
+    },
+    "prior_root_state": {
+      "items": [
+        [
+          "prior_decision",
+          null
+        ],
+        [
+          "prior_decision_id",
+          null
+        ],
+        [
+          "prior_selected_candidate_id",
+          null
+        ]
+      ]
+    },
+    "root_review_packet": {
+      "authority_class": "ADVISORY_ONLY",
+      "conflict_set_ids": [],
+      "contribution_ids": [
+        "contribution:candidate:football:confirmation:6a2547fbb4d03dac7c5213886c5031ffa9ee4a82a02bc5037cc3ed8201db8e32"
+      ],
+      "final_output_created": false,
+      "missing_evidence_refs": [],
+      "packet_id": "3cbccbd5466d15b9710087e041ac9de8c459d4ba7adf78a9335254022bc81f51",
+      "permission_created": false,
+      "request_id": "review:candidate:football:confirmation:6a2547fbb4d03dac7c5213886c5031ffa9ee4a82a02bc5037cc3ed8201db8e32",
+      "required_validator_ids": [
+        "original_work",
+        "receipt_readback"
+      ],
+      "review_state": "ROOT_REVIEW_REQUIRED",
+      "root_decision_created": false,
+      "runtime_topology_ref": "g51:topology",
+      "synthesis_proposal": {
+        "authority_class": "ADVISORY_ONLY",
+        "conflict_sets": [],
+        "contribution_modes": [
+          "DETERMINISTIC"
+        ],
+        "missing_evidence_refs": [],
+        "normalized_claims": [
+          {
+            "authority_class": "NONE",
+            "claim_id": "candidate:football:confirmation:6a2547fbb4d03dac7c5213886c5031ffa9ee4a82a02bc5037cc3ed8201db8e32",
+            "confidence_micros": 1000000,
+            "evidence_refs": [
+              "binding:evidence:g51:bd33b822b2fac9bbbed5a7e9c19a46c23e46aad2994d5b3489d7f593d82bd579"
+            ],
+            "object_or_value": {
+              "items": [
+                [
+                  "booking",
+                  {
+                    "items": [
+                      [
+                        "packet_ref",
+                        "acp_v02:76cca06b6d14caf3849b2551faa1cb06c1ae9e2d0ac5c619b3a2ec0403970b63"
+                      ],
+                      [
+                        "payload_sha256",
+                        "038f1109fd197be87fa723afcae0d71840d2983d9fb8e667512672c1394bcdb7"
+                      ],
+                      [
+                        "receipt_ref",
+                        "effect_receipt_v01:37c2a6d339f25e63aad83fb378bbe6d815c281ad1e4e5ece034b3d745418c0a4"
+                      ],
+                      [
+                        "request_sha256",
+                        "120ef370bbf7f84308e1c40afbd7690ea2b61b17e2ad20e21bb53f809dca92b8"
+                      ],
+                      [
+                        "slots",
+                        [
+                          {
+                            "items": [
+                              [
+                                "end_utc",
+                                1799341200
+                              ],
+                              [
+                                "field_id",
+                                "field:elm"
+                              ],
+                              [
+                                "price_minor",
+                                2100
+                              ],
+                              [
+                                "session_id",
+                                "session:7"
+                              ],
+                              [
+                                "start_utc",
+                                1799335800
+                              ],
+                              [
+                                "venue_ref",
+                                "venue:synthetic"
+                              ]
+                            ]
+                          },
+                          {
+                            "items": [
+                              [
+                                "end_utc",
+                                1799409600
+                              ],
+                              [
+                                "field_id",
+                                "field:elm"
+                              ],
+                              [
+                                "price_minor",
+                                2100
+                              ],
+                              [
+                                "session_id",
+                                "session:8"
+                              ],
+                              [
+                                "start_utc",
+                                1799404200
+                              ],
+                              [
+                                "venue_ref",
+                                "venue:synthetic"
+                              ]
+                            ]
+                          },
+                          {
+                            "items": [
+                              [
+                                "end_utc",
+                                1799494200
+                              ],
+                              [
+                                "field_id",
+                                "field:elm"
+                              ],
+                              [
+                                "price_minor",
+                                2100
+                              ],
+                              [
+                                "session_id",
+                                "session:9"
+                              ],
+                              [
+                                "start_utc",
+                                1799488800
+                              ],
+                              [
+                                "venue_ref",
+                                "venue:synthetic"
+                              ]
+                            ]
+                          }
+                        ]
+                      ],
+                      [
+                        "snapshot_sha256",
+                        "b694ab8b5a6dfbab565bc757842dcf8c58bfca5a82dc0b39fb070e45aab07894"
+                      ],
+                      [
+                        "state",
+                        "COMMITTED"
+                      ]
+                    ]
+                  }
+                ],
+                [
+                  "consumed_offer",
+                  {
+                    "items": [
+                      [
+                        "alternatives",
+                        [
+                          {
+                            "items": [
+                              [
+                                "choices",
+                                [
+                                  {
+                                    "items": [
+                                      [
+                                        "end_utc",
+                                        1799341200
+                                      ],
+                                      [
+                                        "field_id",
+                                        "field:elm"
+                                      ],
+                                      [
+                                        "price_minor",
+                                        2100
+                                      ],
+                                      [
+                                        "session_id",
+                                        "session:7"
+                                      ],
+                                      [
+                                        "start_utc",
+                                        1799335800
+                                      ],
+                                      [
+                                        "venue_ref",
+                                        "venue:synthetic"
+                                      ]
+                                    ]
+                                  }
+                                ]
+                              ],
+                              [
+                                "session_id",
+                                "session:7"
+                              ]
+                            ]
+                          },
+                          {
+                            "items": [
+                              [
+                                "choices",
+                                [
+                                  {
+                                    "items": [
+                                      [
+                                        "end_utc",
+                                        1799409600
+                                      ],
+                                      [
+                                        "field_id",
+                                        "field:elm"
+                                      ],
+                                      [
+                                        "price_minor",
+                                        2100
+                                      ],
+                                      [
+                                        "session_id",
+                                        "session:8"
+                                      ],
+                                      [
+                                        "start_utc",
+                                        1799404200
+                                      ],
+                                      [
+                                        "venue_ref",
+                                        "venue:synthetic"
+                                      ]
+                                    ]
+                                  }
+                                ]
+                              ],
+                              [
+                                "session_id",
+                                "session:8"
+                              ]
+                            ]
+                          },
+                          {
+                            "items": [
+                              [
+                                "choices",
+                                [
+                                  {
+                                    "items": [
+                                      [
+                                        "end_utc",
+                                        1799494200
+                                      ],
+                                      [
+                                        "field_id",
+                                        "field:elm"
+                                      ],
+                                      [
+                                        "price_minor",
+                                        2100
+                                      ],
+                                      [
+                                        "session_id",
+                                        "session:9"
+                                      ],
+                                      [
+                                        "start_utc",
+                                        1799488800
+                                      ],
+                                      [
+                                        "venue_ref",
+                                        "venue:synthetic"
+                                      ]
+                                    ]
+                                  }
+                                ]
+                              ],
+                              [
+                                "session_id",
+                                "session:9"
+                              ]
+                            ]
+                          }
+                        ]
+                      ],
+                      [
+                        "currency",
+                        "EUR"
+                      ],
+                      [
+                        "fields",
+                        [
+                          {
+                            "items": [
+                              [
+                                "field_id",
+                                "field:elm"
+                              ],
+                              [
+                                "full_size",
+                                true
+                              ],
+                              [
+                                "price_minor",
+                                2100
+                              ],
+                              [
+                                "surface",
+                                "natural_grass"
+                              ]
+                            ]
+                          }
+                        ]
+                      ],
+                      [
+                        "offer_revision",
+                        4
+                      ],
+                      [
+                        "request",
+                        {
+                          "items": [
+                            [
+                              "budget_minor",
+                              7000
+                            ],
+                            [
+                              "currency",
+                              "EUR"
+                            ],
+                            [
+                              "operation",
+                              "FIND_OFFER"
+                            ],
+                            [
+                              "owner_approval_ref",
+                              "consent:jan8-only"
+                            ],
+                            [
+                              "request_id",
+                              "request:exam:one"
+                            ],
+                            [
+                              "revision",
+                              2
+                            ],
+                            [
+                              "sessions",
+                              [
+                                {
+                                  "items": [
+                                    [
+                                      "allow_shift_minutes",
+                                      0
+                                    ],
+                                    [
+                                      "end",
+                                      "2027-01-07T18:00:00"
+                                    ],
+                                    [
+                                      "session_id",
+                                      "session:7"
+                                    ],
+                                    [
+                                      "start",
+                                      "2027-01-07T16:30:00"
+                                    ]
+                                  ]
+                                },
+                                {
+                                  "items": [
+                                    [
+                                      "allow_shift_minutes",
+                                      30
+                                    ],
+                                    [
+                                      "end",
+                                      "2027-01-08T12:30:00"
+                                    ],
+                                    [
+                                      "session_id",
+                                      "session:8"
+                                    ],
+                                    [
+                                      "start",
+                                      "2027-01-08T11:00:00"
+                                    ]
+                                  ]
+                                },
+                                {
+                                  "items": [
+                                    [
+                                      "allow_shift_minutes",
+                                      0
+                                    ],
+                                    [
+                                      "end",
+                                      "2027-01-09T12:30:00"
+                                    ],
+                                    [
+                                      "session_id",
+                                      "session:9"
+                                    ],
+                                    [
+                                      "start",
+                                      "2027-01-09T11:00:00"
+                                    ]
+                                  ]
+                                }
+                              ]
+                            ],
+                            [
+                              "team_ref",
+                              "team:one"
+                            ],
+                            [
+                              "timezone",
+                              "Europe/Tirane"
+                            ],
+                            [
+                              "venue_ref",
+                              "venue:synthetic"
+                            ]
+                          ]
+                        }
+                      ],
+                      [
+                        "schedule_revision",
+                        4
+                      ],
+                      [
+                        "slots",
+                        [
+                          {
+                            "items": [
+                              [
+                                "end_utc",
+                                1799341200
+                              ],
+                              [
+                                "field_id",
+                                "field:elm"
+                              ],
+                              [
+                                "price_minor",
+                                2100
+                              ],
+                              [
+                                "session_id",
+                                "session:7"
+                              ],
+                              [
+                                "start_utc",
+                                1799335800
+                              ],
+                              [
+                                "venue_ref",
+                                "venue:synthetic"
+                              ]
+                            ]
+                          },
+                          {
+                            "items": [
+                              [
+                                "end_utc",
+                                1799409600
+                              ],
+                              [
+                                "field_id",
+                                "field:elm"
+                              ],
+                              [
+                                "price_minor",
+                                2100
+                              ],
+                              [
+                                "session_id",
+                                "session:8"
+                              ],
+                              [
+                                "start_utc",
+                                1799404200
+                              ],
+                              [
+                                "venue_ref",
+                                "venue:synthetic"
+                              ]
+                            ]
+                          },
+                          {
+                            "items": [
+                              [
+                                "end_utc",
+                                1799494200
+                              ],
+                              [
+                                "field_id",
+                                "field:elm"
+                              ],
+                              [
+                                "price_minor",
+                                2100
+                              ],
+                              [
+                                "session_id",
+                                "session:9"
+                              ],
+                              [
+                                "start_utc",
+                                1799488800
+                              ],
+                              [
+                                "venue_ref",
+                                "venue:synthetic"
+                              ]
+                            ]
+                          }
+                        ]
+                      ],
+                      [
+                        "status",
+                        "OFFER_READY"
+                      ],
+                      [
+                        "total_minor",
+                        6300
+                      ]
+                    ]
+                  }
+                ],
+                [
+                  "inventory_sha256",
+                  "ca41657f48988ebf16c3dbd31e1b5f3d48321e385654834b6fcd74ac0170fc5d"
+                ],
+                [
+                  "previous_review_ref",
+                  "51c5d58f026068bacc1282a78c955ca97b5c740e165d82180dc072e827a68f81"
+                ],
+                [
+                  "previous_source_ref",
+                  "d8eafc63c564cd4bfa0a0a40c4e0ea0f8832d153a0fc3271c7d29d518b80c808"
+                ],
+                [
+                  "request_sha256",
+                  "120ef370bbf7f84308e1c40afbd7690ea2b61b17e2ad20e21bb53f809dca92b8"
+                ],
+                [
+                  "source_work_ref",
+                  "work_results:b61c20eee7eb440fd73159a122a7e62405f699be41d7d7130489a1aaa876b6a9"
+                ]
+              ]
+            },
+            "predicate": "g51_bounded_context_review",
+            "provenance_refs": [
+              "evidence:g51:bd33b822b2fac9bbbed5a7e9c19a46c23e46aad2994d5b3489d7f593d82bd579"
+            ],
+            "source_mode": "DETERMINISTIC",
+            "source_role": "deterministic_runtime",
+            "subject": "8ed641c66d9f8bb3b4cd85f06e1825899962368faabe61d862d569fa178825e7",
+            "time_envelope_ref": "g51:time:1790359282"
+          }
+        ],
+        "proposal_id": "a695edcee93bbf4e6de2db0a1fad4116acb2a065ed65ce359a03dd270f6dd77b",
+        "request_id": "review:candidate:football:confirmation:6a2547fbb4d03dac7c5213886c5031ffa9ee4a82a02bc5037cc3ed8201db8e32",
+        "requested_validators": [
+          "original_work",
+          "receipt_readback"
+        ],
+        "root_review_required": true,
+        "source_contribution_ids": [
+          "contribution:candidate:football:confirmation:6a2547fbb4d03dac7c5213886c5031ffa9ee4a82a02bc5037cc3ed8201db8e32"
+        ],
+        "synthesis_summary": "advisory_claims_ready_for_root_review"
+      },
+      "target_root_id": "VenueRoot",
+      "transaction_id": "transaction:football:confirmation:120ef370bbf7f84308e1c40afbd7690ea2b61b17e2ad20e21bb53f809dca92b8"
+    },
+    "target_root_id": "VenueRoot",
+    "temporal_state": {
+      "items": [
+        [
+          "expired",
+          false
+        ],
+        [
+          "not_before_satisfied",
+          true
+        ],
+        [
+          "temporal_valid",
+          true
+        ],
+        [
+          "time_envelope_ref",
+          "g51:time:1790359282"
+        ]
+      ]
+    },
+    "transaction_id": "transaction:football:confirmation:120ef370bbf7f84308e1c40afbd7690ea2b61b17e2ad20e21bb53f809dca92b8"
+  },
+  "kernel": {
+    "effect_access": "NONE",
+    "kernel_id": "6cbe784404adaf78863830a3dd1cb67d1baaa1c3d46296c633018c715c522235",
+    "kernel_version": "v0.1",
+    "llm_dependency_allowed": false,
+    "precedence_order": [
+      "HARD_FAILURE",
+      "NEEDS_USER",
+      "NEEDS_MORE_EVIDENCE",
+      "MATERIAL_CONFLICT",
+      "NO_VALID_CANDIDATE",
+      "POLICY_REJECT",
+      "ACCEPT"
+    ],
+    "transition_registry": {
+      "abi_major_version": 1,
+      "registry_id": "336c082d1520d49cf9b23d1c6d983637b7835d8fa863a83dbbae82a11bfa26be",
+      "registry_version": "v0.1",
+      "rules": [
+        {
+          "abi_major_version": 1,
+          "actor_role": "orchestrator",
+          "attempted_effect": "CREATE_TARGET_ARTIFACT",
+          "decision": "RETURN_TO_ROOT",
+          "reason_code": "route_acceptance_requires_root",
+          "required_guards": [
+            "artifact_valid",
+            "target_root_bound"
+          ],
+          "root_commit_required": true,
+          "rule_id": "route_proposal_to_root_accepted_route",
+          "source_artifact_type": "OrchestratorRouteProposal",
+          "source_lifecycle_state": "PROPOSED",
+          "target_artifact_type": "RootAcceptedRoute"
+        },
+        {
+          "abi_major_version": 1,
+          "actor_role": "deterministic_runtime",
+          "attempted_effect": "CREATE_TARGET_ARTIFACT",
+          "decision": "ALLOW",
+          "reason_code": "root_accepted_route_allows_topology",
+          "required_guards": [
+            "artifact_valid",
+            "target_root_bound"
+          ],
+          "root_commit_required": true,
+          "rule_id": "root_accepted_route_to_runtime_topology",
+          "source_artifact_type": "RootAcceptedRoute",
+          "source_lifecycle_state": "ROOT_ACCEPTED",
+          "target_artifact_type": "RuntimeExecutionTopology"
+        },
+        {
+          "abi_major_version": 1,
+          "actor_role": "post_vv",
+          "attempted_effect": "CREATE_TARGET_ARTIFACT",
+          "decision": "ALLOW",
+          "reason_code": "actor_contribution_requires_validated_evidence",
+          "required_guards": [
+            "artifact_valid",
+            "required_evidence_present"
+          ],
+          "root_commit_required": false,
+          "rule_id": "actor_contribution_to_validated_evidence",
+          "source_artifact_type": "ActorContribution",
+          "source_lifecycle_state": "VALIDATED",
+          "target_artifact_type": "ValidatedEvidence"
+        },
+        {
+          "abi_major_version": 1,
+          "actor_role": "post_vv",
+          "attempted_effect": "CREATE_TARGET_ARTIFACT",
+          "decision": "ALLOW",
+          "reason_code": "result_proposal_allows_post_vv",
+          "required_guards": [
+            "artifact_valid",
+            "hard_predicates_evaluated"
+          ],
+          "root_commit_required": false,
+          "rule_id": "result_proposal_to_post_vv_report",
+          "source_artifact_type": "ResultProposal",
+          "source_lifecycle_state": "VALIDATED",
+          "target_artifact_type": "PostVVReport"
+        },
+        {
+          "abi_major_version": 1,
+          "actor_role": "gt",
+          "attempted_effect": "CREATE_TARGET_ARTIFACT",
+          "decision": "ALLOW",
+          "reason_code": "post_vv_allows_gt_advisory",
+          "required_guards": [
+            "artifact_valid",
+            "post_vv_passed",
+            "advisory_only"
+          ],
+          "root_commit_required": false,
+          "rule_id": "post_vv_report_to_gt_advisory",
+          "source_artifact_type": "PostVVReport",
+          "source_lifecycle_state": "VALIDATED",
+          "target_artifact_type": "GTAdvisoryReport"
+        },
+        {
+          "abi_major_version": 1,
+          "actor_role": "gt",
+          "attempted_effect": "CREATE_ROOT_DECISION",
+          "decision": "RETURN_TO_ROOT",
+          "reason_code": "gt_advisory_returns_to_root",
+          "required_guards": [
+            "artifact_valid",
+            "post_vv_passed",
+            "advisory_only"
+          ],
+          "root_commit_required": true,
+          "rule_id": "gt_advisory_to_root_decision",
+          "source_artifact_type": "GTAdvisoryReport",
+          "source_lifecycle_state": "VALIDATED",
+          "target_artifact_type": "RootDecision"
+        },
+        {
+          "abi_major_version": 1,
+          "actor_role": "root",
+          "attempted_effect": "CREATE_TARGET_ARTIFACT",
+          "decision": "ALLOW",
+          "reason_code": "root_decision_allows_root_owned_intent",
+          "required_guards": [
+            "artifact_valid",
+            "decision_accept"
+          ],
+          "root_commit_required": true,
+          "rule_id": "root_decision_to_root_owned_intent",
+          "source_artifact_type": "RootDecision",
+          "source_lifecycle_state": "ROOT_ACCEPTED",
+          "target_artifact_type": "RootOwnedIntent"
+        },
+        {
+          "abi_major_version": 1,
+          "actor_role": "root",
+          "attempted_effect": "CREATE_TARGET_ARTIFACT",
+          "decision": "ALLOW",
+          "reason_code": "root_decision_allows_execution_request",
+          "required_guards": [
+            "artifact_valid",
+            "decision_accept",
+            "user_permission_present",
+            "effect_firewall_required"
+          ],
+          "root_commit_required": true,
+          "rule_id": "root_decision_to_execution_request",
+          "source_artifact_type": "RootDecision",
+          "source_lifecycle_state": "ROOT_ACCEPTED",
+          "target_artifact_type": "ExecutionRequest"
+        },
+        {
+          "abi_major_version": 1,
+          "actor_role": "receipt",
+          "attempted_effect": "RETURN_TO_ROOT",
+          "decision": "RETURN_TO_ROOT",
+          "reason_code": "receipt_returns_to_root",
+          "required_guards": [
+            "artifact_valid",
+            "receipt_evidence_only"
+          ],
+          "root_commit_required": true,
+          "rule_id": "evidence_receipt_to_root_review",
+          "source_artifact_type": "EvidenceReceipt",
+          "source_lifecycle_state": "RECEIPT_RECORDED",
+          "target_artifact_type": "RootDecision"
+        },
+        {
+          "abi_major_version": 1,
+          "actor_role": "root",
+          "attempted_effect": "CREATE_FINAL_OUTPUT",
+          "decision": "ALLOW",
+          "reason_code": "root_decision_allows_root_final",
+          "required_guards": [
+            "artifact_valid",
+            "decision_accept",
+            "finalization_policy_passed"
+          ],
+          "root_commit_required": true,
+          "rule_id": "root_decision_to_root_final",
+          "source_artifact_type": "RootDecision",
+          "source_lifecycle_state": "ROOT_ACCEPTED",
+          "target_artifact_type": "RootFinal"
+        },
+        {
+          "abi_major_version": 1,
+          "actor_role": "root",
+          "attempted_effect": "RECORD_EVIDENCE",
+          "decision": "ALLOW",
+          "reason_code": "root_final_allows_transaction_outcome",
+          "required_guards": [
+            "artifact_valid",
+            "outcome_complete"
+          ],
+          "root_commit_required": true,
+          "rule_id": "root_final_to_transaction_outcome",
+          "source_artifact_type": "RootFinal",
+          "source_lifecycle_state": "FINALIZED",
+          "target_artifact_type": "TransactionOutcomeEnvelope"
+        },
+        {
+          "abi_major_version": 1,
+          "actor_role": "root",
+          "attempted_effect": "RETURN_TO_ROOT",
+          "decision": "RETURN_TO_ROOT",
+          "reason_code": "cross_root_evidence_returns_to_target_root",
+          "required_guards": [
+            "artifact_valid",
+            "source_root_isolated",
+            "target_root_bound"
+          ],
+          "root_commit_required": true,
+          "rule_id": "cross_root_evidence_to_root_review",
+          "source_artifact_type": "CrossRootEvidenceRef",
+          "source_lifecycle_state": "VALIDATED",
+          "target_artifact_type": "RootDecision"
+        },
+        {
+          "abi_major_version": 1,
+          "actor_role": "provider_llm",
+          "attempted_effect": "CREATE_ROOT_DECISION",
+          "decision": "BLOCKED_FAIL_CLOSED",
+          "reason_code": "provider_cannot_create_root_decision",
+          "required_guards": [],
+          "root_commit_required": false,
+          "rule_id": "provider_contribution_to_root_decision_forbidden",
+          "source_artifact_type": "ActorContribution",
+          "source_lifecycle_state": "VALIDATED",
+          "target_artifact_type": "RootDecision"
+        },
+        {
+          "abi_major_version": 1,
+          "actor_role": "drs",
+          "attempted_effect": "CREATE_PERMISSION",
+          "decision": "BLOCKED_FAIL_CLOSED",
+          "reason_code": "evidence_cannot_create_permission",
+          "required_guards": [],
+          "root_commit_required": false,
+          "rule_id": "drs_evidence_to_permission_forbidden",
+          "source_artifact_type": "SemanticEvidence",
+          "source_lifecycle_state": "VALIDATED",
+          "target_artifact_type": "ExecutionRequest"
+        },
+        {
+          "abi_major_version": 1,
+          "actor_role": "gt",
+          "attempted_effect": "CREATE_FINAL_OUTPUT",
+          "decision": "BLOCKED_FAIL_CLOSED",
+          "reason_code": "gt_cannot_create_final_output",
+          "required_guards": [],
+          "root_commit_required": false,
+          "rule_id": "gt_advisory_to_root_final_forbidden",
+          "source_artifact_type": "GTAdvisoryReport",
+          "source_lifecycle_state": "VALIDATED",
+          "target_artifact_type": "RootFinal"
+        },
+        {
+          "abi_major_version": 1,
+          "actor_role": "receipt",
+          "attempted_effect": "CREATE_PERMISSION",
+          "decision": "BLOCKED_FAIL_CLOSED",
+          "reason_code": "receipt_cannot_create_permission",
+          "required_guards": [],
+          "root_commit_required": false,
+          "rule_id": "receipt_to_permission_forbidden",
+          "source_artifact_type": "EvidenceReceipt",
+          "source_lifecycle_state": "RECEIPT_RECORDED",
+          "target_artifact_type": "ExecutionRequest"
+        },
+        {
+          "abi_major_version": 1,
+          "actor_role": "replay",
+          "attempted_effect": "CREATE_ROOT_DECISION",
+          "decision": "BLOCKED_FAIL_CLOSED",
+          "reason_code": "causal_evidence_cannot_create_root_decision",
+          "required_guards": [],
+          "root_commit_required": false,
+          "rule_id": "causal_evidence_to_root_decision_forbidden",
+          "source_artifact_type": "CausalConsumptionRef",
+          "source_lifecycle_state": "VALIDATED",
+          "target_artifact_type": "RootDecision"
+        },
+        {
+          "abi_major_version": 1,
+          "actor_role": "domain_adapter",
+          "attempted_effect": "REQUEST_EFFECT",
+          "decision": "BLOCKED_FAIL_CLOSED",
+          "reason_code": "domain_adapter_cannot_request_effect",
+          "required_guards": [],
+          "root_commit_required": false,
+          "rule_id": "domain_adapter_effect_request_forbidden",
+          "source_artifact_type": "RootDecision",
+          "source_lifecycle_state": "ROOT_ACCEPTED",
+          "target_artifact_type": "ExecutionRequest"
+        }
+      ]
+    }
+  },
+  "result": {
+    "conflict_set_ids": [],
+    "decision": "ACCEPT",
+    "decision_id": "760015a943487adfdf238c586c1a5d12d3ab9d73875885928fb6405746828207",
+    "decision_input_id": "d85b03219e9406df3b8a5f759aead0fa2d0245795844de7019fa34aa0ed2667d",
+    "effect_requested": false,
+    "final_output_created": false,
+    "hard_failure_reasons": [],
+    "missing_evidence_refs": [],
+    "permission_created": false,
+    "prior_decision_id": null,
+    "reason_code": "validated_candidate_accepted",
+    "root_commit_created": true,
+    "selected_candidate_id": "candidate:football:confirmation:6a2547fbb4d03dac7c5213886c5031ffa9ee4a82a02bc5037cc3ed8201db8e32",
+    "target_root_id": "VenueRoot",
+    "transaction_id": "transaction:football:confirmation:120ef370bbf7f84308e1c40afbd7690ea2b61b17e2ad20e21bb53f809dca92b8",
+    "transition_decision": {
+      "abi_major_version": 1,
+      "actor_role": "gt",
+      "attempted_effect": "CREATE_ROOT_DECISION",
+      "decision": "RETURN_TO_ROOT",
+      "decision_id": "85eff0e7c3a8a4da444edd85f36a3a2c91929bd85b5ab85eed585a6574976e07",
+      "matched": true,
+      "missing_guards": [],
+      "reason_code": "gt_advisory_returns_to_root",
+      "registry_id": "336c082d1520d49cf9b23d1c6d983637b7835d8fa863a83dbbae82a11bfa26be",
+      "required_guards": [
+        "artifact_valid",
+        "post_vv_passed",
+        "advisory_only"
+      ],
+      "root_commit_present": false,
+      "root_commit_required": true,
+      "rule_id": "gt_advisory_to_root_decision",
+      "satisfied_guards": [
+        "artifact_valid",
+        "post_vv_passed",
+        "advisory_only"
+      ],
+      "source_artifact_type": "GTAdvisoryReport",
+      "source_lifecycle_state": "VALIDATED",
+      "target_artifact_type": "RootDecision"
+    }
+  }
+}

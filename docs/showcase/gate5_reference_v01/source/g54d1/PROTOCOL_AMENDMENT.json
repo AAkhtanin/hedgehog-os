@@ -1,0 +1,14 @@
+{
+  "additional_corrections": 1,
+  "author_only_candidate_edits": true,
+  "correction_index": 4,
+  "curator_sha256": "39058d9f3841b9e6b4b69cc3a0718867de049f0a40385780b19e78f30836ec48",
+  "original_corrections": 3,
+  "original_initial": 1,
+  "original_result": "G54D_INCOMPLETE",
+  "owner_read_only": true,
+  "parent": "G54D",
+  "submission_number": 5,
+  "task_sha256": "e7e210cb0be416c4172acbd8b1c03b7b2bff462e9fd0c0c56fba07838a14a44f",
+  "technical_predicates": "UNCHANGED"
+}

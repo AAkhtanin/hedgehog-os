@@ -1,0 +1,153 @@
+{
+  "clarification": {
+    "path": "AUTHOR_VISIBLE/PUBLIC_CLARIFICATION_G54D1_V01.txt",
+    "sha256": "24f25ae2c9b1a9003172296def66c429b260ac0bdbf70641b782d330e767e080"
+  },
+  "correction_index": 4,
+  "current_role": "CONTINUATION_NOT_NEW_BLIND_AUTHOR",
+  "delivered_feedback": [
+    {
+      "source": "PREDECESSOR/AUTHOR_TRIAL/session/turn_2_input.json",
+      "source_sha256": "c73e182202ef519780913fb8aae353ba89ad3da812ed74c78416b8f4ccff8650",
+      "text": "Independent review feedback for the submitted candidate:\nSubmission 0 passed inert package shape and independent source-safety review, then ran only in the prescribed P7 two-peer environment. The first original FIND event failed before completion. Actual traceback: candidate_domain.run.requester_event line 317 -> candidate_domain.memory.descent line 96 -> approved drs_memory_resolution_v01.execute_local_memory_descent_v01 line 3545: ValueError: drs_root_decision_binding_invalid. The source had performed native offer Work and published metadata; requester resolution/review reached the actual public descent consumer. No booking dispatch/executor or mutation occurred. The other peer subsequently reported SOURCE_UNAVAILABLE_IPC_STALLED while awaiting the next request, not a separate successful refusal. Public requirement: genuine locally Root-reviewed metadata descent with valid exact native bindings, not merely JSON claiming a review. This is correction 1 of at most 3. Correct the implementation using the public sources; preserve its actual authority checks and independent roles. Do not execute code, change approved source, or claim acceptance from syntax. No private expected offer or examiner code is supplied.\nCorrect the candidate using public sources. Do not execute it. Submit the corrected complete pack for review."
+    },
+    {
+      "source": "PREDECESSOR/AUTHOR_TRIAL/session/turn_3_input.json",
+      "source_sha256": "6de09e6e57f925c576101a42c182c30bdccbe13f36d78f953ba3f266af1d5993",
+      "text": "Independent review feedback for the submitted candidate:\nCorrection 1 passed inert shape/source review and genuine native DRS descent. In the prescribed P7 runner, exact FIND and approved-shift FIND both completed source Work, publication/release, requester Work and final Root review. At first CONFIRM the source failed before dispatch: candidate_domain.run.publisher_event -> publication.build line 39 -> effect.book line 154 -> effect.admit line 96 -> approved effect_firewall_v01.build_capability_business_semantics_v01 line 2360 -> ValueError: capability_business_operation. Actual submitted values at the boundary are operation_key='football.book.v01', logical_effect_namespace='football.booking.v01', selected_action_class='mock_action:football_booking'. Native executor starts and registry mutations remain zero. The requester later hit SOURCE_UNAVAILABLE_IPC_STALLED, a consequence, not a successful refusal. Correct the native business-semantics binding using the existing public declaration and validators; do not bypass or weaken them. This is correction 2 of at most 3. No target repair code or private expected selection is supplied. Reviewer representation note: the public kit did not specify a surface enum spelling, so the runtime now uses your documented natural_grass/artificial spelling via an exact bijection of the frozen natural/artificial category facts. No request, ID, price, availability, approval or business rule was changed; that reviewer-only encoding adaptation was not counted as a model correction.\nCorrect the candidate using public sources. Do not execute it. Submit the corrected complete pack for review."
+    },
+    {
+      "source": "PREDECESSOR/AUTHOR_TRIAL/session/turn_4_input.json",
+      "source_sha256": "7cb00af3698269a6e2983f0a4a02d4f773610e97df8bf8e3b54fd4f7616a429e",
+      "text": "Independent review feedback for the submitted candidate:\nCorrection 3 of maximum 3. Independent real P7/native review passed the complete main FIND -> approved-shift -> first native booking -> identical repeat -> VERIFY chain, low-budget no-offer, missing BOOK refusal, missing history UNKNOWN, foreign audience refusal, changed schedule refusal, changed same-key payload refusal, permutation and second-team cases. Two failures remain on attempt_02. (1) Ordinary publisher policy status=REVOKED: requester correctly refuses without Work/effect, but publisher exact report remains NO_COMPLETE_OFFER and shifted report remains OFFER_READY with three slots while report.source.status is REVOKED. Public currentness/refusal/report obligations require an honest unavailable/refused current result rather than a current ready offer. No executor or mutation occurred. (2) A permitted changed-ID/price/order input causes requester memory.descent -> address.build_meaning_record_v01 to raise ValueError('drs_secret_payload_forbidden') at memory.py line 38 before bundle consumption; publisher subsequently reports SOURCE_UNAVAILABLE_IPC_STALLED. The source reference passed in that meaning record is generated by this candidate from ordinary synthetic request data; preserve source/Root/temporal bindings and existing source validators. Do not alter public sources or suppress checks. The reference field and exact traceback are identified, not a prescribed repair. No hidden final variant or expected winning slots are disclosed. Preserve completed native behavior, including denied release with null body, and submit the final corrected implementation with its exact manifest.\nCorrect the candidate using public sources. Do not execute it. Submit the corrected complete pack for review."
+    }
+  ],
+  "no_solution_patch_supplied": true,
+  "omitted": [
+    "Opaque original model state and hidden reasoning",
+    "Raw server/config logs",
+    "Private examiner, case inputs and evidence_refs",
+    "Undelivered final STOP text except the newly authorized minimal diagnostic",
+    "Historical old G54B1 code",
+    "Full prior tool transcript (public sources and own final files remain available)"
+  ],
+  "original_public_input": {
+    "source": "PREDECESSOR/AUTHOR_TRIAL/initial_input.json",
+    "text_sha256": "f0377dd067244fcd19e90f0e38ad76f331e9b446e54d05462a3a2c1eabbcb9a5"
+  },
+  "parent": "G54D",
+  "parent_thread": "01a0d92d-db22-7463-8aaf-8f1f1690459e",
+  "seed": [
+    {
+      "bytes": 5761,
+      "path": "PASSPORT.json",
+      "sha256": "a66064c3e8364bc2e49063a2f04ef0e1a63bf28884705cda3696246c0952384e"
+    },
+    {
+      "bytes": 27116,
+      "path": "README.md",
+      "sha256": "2b09abd208eac318ccdf78bf4ae07c41eb645e8dd9cd877f8b7c2136545d157e"
+    },
+    {
+      "bytes": 74,
+      "path": "candidate_domain/__init__.py",
+      "sha256": "e68644b065f0506d9c4a1b022ea7099cdeb209d5b712c566744946748569404d"
+    },
+    {
+      "bytes": 13992,
+      "path": "candidate_domain/domain.py",
+      "sha256": "a98b895d5c6d59ee72d64f6beef97567e320eef4bfc986d8513ae7888abf3662"
+    },
+    {
+      "bytes": 13939,
+      "path": "candidate_domain/effect.py",
+      "sha256": "f06c394747f8746dae844e787c760f07c782e9eb1dad918a6864aa2fa7803be7"
+    },
+    {
+      "bytes": 8783,
+      "path": "candidate_domain/memory.py",
+      "sha256": "a6a3c1eebe8a068d945a4b249ce3d1dacba8c52ceca580fecbcbb3e7df209686"
+    },
+    {
+      "bytes": 5217,
+      "path": "candidate_domain/native.py",
+      "sha256": "abfb69a8445614db75562f59a818b36d6a9c4f559960b5dc5a42f89d743a4707"
+    },
+    {
+      "bytes": 5518,
+      "path": "candidate_domain/policy.py",
+      "sha256": "f9edbd5b8d2975496663d62e798d298c32c19c831fcfb55e7ae8ba776f585821"
+    },
+    {
+      "bytes": 2764,
+      "path": "candidate_domain/profile.py",
+      "sha256": "4e3e36c6ba87c7156afdf739c0f86a2965379fe88ac3668b7f76b6f56978d8bc"
+    },
+    {
+      "bytes": 10594,
+      "path": "candidate_domain/publication.py",
+      "sha256": "5df538e6d0c4ddc50cf2f836e23b41da268f147d2ddda1ec518a7468f3b0be61"
+    },
+    {
+      "bytes": 32251,
+      "path": "candidate_domain/run.py",
+      "sha256": "ff72610e59d6de7c2cc4dc9716e7b9e109fb81cc6059b04bef34198627ebd464"
+    },
+    {
+      "bytes": 915,
+      "path": "candidate_domain/storage.py",
+      "sha256": "85b2ab1b045f48eb816838a988999c4174c5a3f9bb26fb05da59e1a56b194e1b"
+    },
+    {
+      "bytes": 6422,
+      "path": "dependencies.json",
+      "sha256": "80e535079ac218a1571ef6a983784360d072f58e098da02d9f71a2909c25e637"
+    },
+    {
+      "bytes": 11436,
+      "path": "schemas/body.schema.json",
+      "sha256": "d5f2a2b439c426a42370b108025197f57ea26ddafde3bddc366581b22c40c042"
+    },
+    {
+      "bytes": 2343,
+      "path": "schemas/inventory.schema.json",
+      "sha256": "f2ffbc17326a4780ea03a886df8bf0d7557f7bc167f6e4b47ad89187e5358825"
+    },
+    {
+      "bytes": 2362,
+      "path": "schemas/request.schema.json",
+      "sha256": "21c483c8fcbacd56bbe3a1ed7dfcfc9460837ecc96995705cc91f0808c28e48d"
+    },
+    {
+      "bytes": 6018,
+      "path": "schemas/result.schema.json",
+      "sha256": "81c776010fbcc70acf4862329e010dde98129e7783de9702d2742f7851a6ffb0"
+    },
+    {
+      "bytes": 12059,
+      "path": "source_impact.json",
+      "sha256": "9e70eca1cf32aac537cadb078bf7d5f879b51744d2cc9c277439ca771a1cb36d"
+    },
+    {
+      "bytes": 3485,
+      "path": "tests/test_business_semantics.py",
+      "sha256": "93a401a22459a9e691015e5afe1920cb16f193fcc26031cc3ef38d946f35df3e"
+    },
+    {
+      "bytes": 6321,
+      "path": "tests/test_descent.py",
+      "sha256": "2bb0c98531155ffda1faac86adab07d879e6f5ddf5c568231870a999f41a92a4"
+    },
+    {
+      "bytes": 11651,
+      "path": "tests/test_domain.py",
+      "sha256": "5597cf830dd9cfefb230d9a8ef0faa900b98dd923dc51d52d67928664460dd0a"
+    },
+    {
+      "bytes": 11016,
+      "path": "tests/test_final_correction.py",
+      "sha256": "69a060b5416824f8367f1b64ab9dfc70c7a0f3ec0539624108a02ade13ca9699"
+    }
+  ],
+  "submission_number": 5
+}

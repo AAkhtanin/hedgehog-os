@@ -1,0 +1,9 @@
+{
+  "bytes": 32702,
+  "commands": [
+    "commands/19_supplied_one/receipt.json",
+    "commands/20_supplied_two/receipt.json"
+  ],
+  "sha256": "0eba67d7652765c387988d760cd5daeeacecbdf33b9dc577dbe6a1cad40ed4b0",
+  "status": "BYTE_IDENTICAL"
+}

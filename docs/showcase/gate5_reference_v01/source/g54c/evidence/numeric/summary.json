@@ -1,0 +1,139 @@
+{
+  "classification": "NATIVE_PRODUCER_REVIEW_CONSUMER_AND_SIGNED_COMPONENT_STATUS_NOT_PEER_EXCHANGE_OR_ACTION_AUTHORITY",
+  "consumer_results": [
+    31,
+    47
+  ],
+  "controls": [
+    {
+      "authorization_or_effect_reached": false,
+      "case": "resigned_other_payload",
+      "genuine_signatures": true,
+      "predicate": "payload_projection_not_E",
+      "public_bundle_precheck": true,
+      "status": "EXPECTED_REFUSAL",
+      "verification_new_calls": {
+        "host_action_dispatch": 0,
+        "root_decision": 0,
+        "work": 0
+      }
+    },
+    {
+      "authorization_or_effect_reached": false,
+      "case": "resigned_other_work",
+      "genuine_signatures": true,
+      "predicate": "source_work_ref",
+      "public_bundle_precheck": true,
+      "status": "EXPECTED_REFUSAL",
+      "verification_new_calls": {
+        "host_action_dispatch": 0,
+        "root_decision": 0,
+        "work": 0
+      }
+    },
+    {
+      "authorization_or_effect_reached": false,
+      "case": "resigned_other_review",
+      "genuine_signatures": true,
+      "predicate": "source_review_ref",
+      "public_bundle_precheck": true,
+      "status": "EXPECTED_REFUSAL",
+      "verification_new_calls": {
+        "host_action_dispatch": 0,
+        "root_decision": 0,
+        "work": 0
+      }
+    },
+    {
+      "authorization_or_effect_reached": false,
+      "case": "stale_status",
+      "genuine_signatures": true,
+      "predicate": "status_not_current",
+      "public_bundle_precheck": false,
+      "status": "EXPECTED_REFUSAL",
+      "verification_new_calls": {
+        "host_action_dispatch": 0,
+        "root_decision": 0,
+        "work": 0
+      }
+    },
+    {
+      "authorization_or_effect_reached": false,
+      "case": "wrong_request_status",
+      "genuine_signatures": true,
+      "predicate": "status_request_binding",
+      "public_bundle_precheck": false,
+      "status": "EXPECTED_REFUSAL",
+      "verification_new_calls": {
+        "host_action_dispatch": 0,
+        "root_decision": 0,
+        "work": 0
+      }
+    },
+    {
+      "authorization_or_effect_reached": false,
+      "case": "wrong_pointer_status",
+      "genuine_signatures": true,
+      "predicate": "status_pointer_binding",
+      "public_bundle_precheck": false,
+      "status": "EXPECTED_REFUSAL",
+      "verification_new_calls": {
+        "host_action_dispatch": 0,
+        "root_decision": 0,
+        "work": 0
+      }
+    },
+    {
+      "authorization_or_effect_reached": false,
+      "case": "deleted_consumed_field",
+      "native_work_reached": false,
+      "predicate": "closed_fields",
+      "status": "EXPECTED_REFUSAL"
+    },
+    {
+      "authorization_or_effect_reached": false,
+      "case": "coherent_wrong_context",
+      "genuine_signatures": true,
+      "predicate": "supplied_consumed_input",
+      "public_bundle_precheck": true,
+      "status": "EXPECTED_REFUSAL",
+      "verification_new_calls": {
+        "host_action_dispatch": 0,
+        "root_decision": 0,
+        "work": 0
+      }
+    },
+    {
+      "authorization_or_effect_reached": false,
+      "case": "changed_consumed_field_projection",
+      "genuine_signatures": true,
+      "predicate": "supplied_result_projection",
+      "public_bundle_precheck": true,
+      "status": "EXPECTED_REFUSAL",
+      "verification_new_calls": {
+        "host_action_dispatch": 0,
+        "root_decision": 0,
+        "work": 0
+      }
+    }
+  ],
+  "effects": 0,
+  "equivalent_copy": true,
+  "observed_calls": {
+    "root_decision": 14,
+    "work": 5
+  },
+  "peer_io": 0,
+  "provider_calls": 0,
+  "samples": [
+    7,
+    11
+  ],
+  "seconds": 1.062924874946475,
+  "source_results": [
+    23,
+    35
+  ],
+  "status": "PASS",
+  "unchanged_positive": true
+}

@@ -1,0 +1,562 @@
+--- attempt03/PASSPORT.json
++++ attempt04/PASSPORT.json
+@@ -1,7 +1,7 @@
+ {
+   "needle_id": "football_g54d_v01",
+-  "owner": "Fresh domain author (this inert candidate); source admission belongs to independent local owner review",
+-  "version": "football.candidate.v01.correction3",
++  "owner": "Continuing author of the restored G54D candidate; independent local owner review controls source admission",
++  "version": "football.candidate.v01.correction4",
+   "purpose": "Finite synthetic football offers, controlled MOCK confirmation, exact receipt history and readback. No travel, payments, marketplace or real facility actions.",
+   "domain": "One synthetic venue, January 2027 Europe/Tirane, three 90-minute sessions, up to four fields and two disclosed alternatives/session.",
+   "input_schema": {
+@@ -16,7 +16,7 @@
+   },
+   "actor_roles": [
+     "Publisher owns VenueRoot inventory, key, registry, source/publication/release/action reviews.",
+-    "Requester owns ActivePlanetRoot request, key, retrieval/import/result reviews and local acceptance.",
++    "Requester owns ActivePlanetRoot request, key, retrieval/import/result reviews, authenticated non-active STATUS refusal and local acceptance.",
+     "Untrusted semantic proposals only propose validated event fields; operator approves separately."
+   ],
+   "execution_modes": [
+@@ -45,9 +45,9 @@
+   "sealed_slot_refs": "NOT_APPLICABLE: no sealed slot dependency is provided or invented. Exact public source hashes are declared in dependencies.json.",
+   "adapter_requirements": "Immutable source-observable module-level callbacks; reviewed finite Python; precreated peers and independently bound bootstrap PipeChannels; installed public source/resource/dependencies; OS Europe/Tirane TZ entry.",
+   "time_currentness_dependencies": "Native donor logical 1010..1014, explicitly separate from UTC source and review time. End=min(valid_to,pt+ttl,observed+max_age). STATUS half-open freshness up to60s; request deadline up to60s. Consent, policy, inventory revision/occupancy, status, source identity and payload changes invalidate current action use.",
+-  "failure_policy": "CLARIFY on missing/unsupported essential inputs; REFUSED on policy/scope/conflict; unavailable status and unresolved effects CURRENT_STATUS_UNKNOWN. Persist terminal highwater before use refusal. At most8 ordered events/32 protocol requests, each task2 payload/8metadata/2accepted bodies/128KiB. No blind retry after executor start; exact confirmed history reuses actual saved receipt/readback.",
++  "failure_policy": "CLARIFY on missing/unsupported essential inputs; REFUSED on policy/scope/conflict; unavailable status and unresolved effects CURRENT_STATUS_UNKNOWN. Persist terminal highwater before use refusal. At most8 ordered events/32 protocol requests, each task2 payload/8metadata/2accepted bodies/128KiB. No blind retry after executor start; exact confirmed history reuses actual saved receipt/readback. A verified REVOKED/SUPERSEDED current-use refusal retains authentic terminal state and a fresh local BLOCKED_FAIL_CLOSED Root decision linked to the original request, failed active predicate and signed evidence. Confirmation uncertainty remains CURRENT_STATUS_UNKNOWN; unknown errors propagate.",
+   "compensation": "NOT_APPLICABLE to single disposable all-or-none registry snapshot. No automatic rollback; uncertain native or filesystem outcome stops for saved receipt and independent readback. No cross-owner or power-loss guarantee.",
+-  "audit_provenance": "Original event/source inputs, generic Work admission/invocation/output/artifact, original and current source reviews, pointer publication and request-bound release reviews, signatures, raw wire, local import/disposition, exact C, consumer result review, actual action packet/Host attempt/receipt and registry readback; README maps paths.",
+-  "tests": "tests/test_domain.py covers pure selection and reviewer-only native Work/MOCK. tests/test_descent.py covers actual metadata descent and exact Root bindings. tests/test_business_semantics.py covers native declaration/admission, operation equality, typed mappings, rejection and continuation. tests/test_final_correction.py covers terminal publisher reports, active/unavailable continuation, uncertainty/history, changed synthetic inputs, origin reference format, exact native descent source/Root/time bindings and unchanged secret rejection. No author execution; syntax/data inspection only. README attributes attempt_02 progress and failures to the independent reviewer. Final correction requires independent review and prescribed execution.",
+-  "compatibility": "G54D V01 mapped public seams; calibration profile untouched; no undocumented API or source edits. Finite single-writer local state. Returns inert files, installable_now=false; no runtime-success or admission claim."
++  "audit_provenance": "Original event/source inputs, generic Work admission/invocation/output/artifact, original and current source reviews, pointer publication and request-bound release reviews, signatures, raw wire, local import/disposition, exact C, consumer result review, actual action packet/Host attempt/receipt and registry readback; README maps paths. status_refusal_evidence.json binds original request/policy, signed descriptor/STATUS, prepared FETCH, STATUS request, highwater and recorded check times; refusal.json links the actual refusal_review.json decision and evidence hash.",
++  "tests": "tests/test_domain.py covers pure selection and reviewer-only native Work/MOCK. tests/test_descent.py covers actual metadata descent and exact Root bindings. tests/test_business_semantics.py covers native declaration/admission, operation equality, typed mappings, rejection and continuation. tests/test_final_correction.py covers terminal publisher reports, active/unavailable continuation, uncertainty/history, changed synthetic inputs, origin reference format, exact native descent source/Root/time bindings and unchanged secret rejection. No author execution; syntax/data inspection only. README attributes attempt_02 progress and failures to the independent reviewer. Final correction requires independent review and prescribed execution. tests/test_status_refusal.py adds unexecuted requester-event component regressions with real native publication/descent/Root and public signatures, plus restart/terminal-revival, independent ACTIVE continuation, invalid-signature/unknown-error, stale-status and confirmation-uncertainty checks. Its in-memory message driver is not P7/OS transport telemetry.",
++  "compatibility": "G54D V01 mapped public seams; calibration profile untouched; no undocumented API or source edits. Finite single-writer local state. Returns inert files, installable_now=false; no runtime-success or admission claim. Restored parent G54D correction_index=4, submission_number=5, one owner-authorized additional pack. Original initial-plus-three result remains INCOMPLETE. No old-state migration or new runtime dependency."
+ }
+--- attempt03/README.md
++++ attempt04/README.md
+@@ -1,6 +1,8 @@
+ # Football G54D V01 inert candidate
+ 
+ This directory is a proposal for independent review. It is not installed, admitted, or certified for execution. The author used only approved text readers, candidate text writers and syntax inspection. No candidate import, test, native Work, Root decision, transport, provider call or effect was executed during authoring. The coordinator owns candidate.json.
++
++This is the restored G54D lineage, correction_index=4 and submission_number=5. The owner authorized exactly one additional submitted pack. The historical initial-plus-three result remains INCOMPLETE; this continuation does not reset that trial or claim acceptance.
+ 
+ The entrypoint is exactly:
+ 
+@@ -12,6 +14,24 @@
+ ```
+ 
+ Only the separately approved restricted runner may load it. Import defines functions/classes/constants; it does not admit capabilities, create Roots/keys, perform Work, open files, or communicate. The runner supplies two independent processes and their own directories/channels. The candidate does not create processes or inspect channel descriptors.
++
++## Correction 4: local Root basis for authenticated STATUS refusal
++
++The current reviewer diagnostic identified a missing decision after authenticated non-active STATUS: requester_event's known ValueError path wrote REFUSED without a local Root refusal for that outcome. Earlier metadata and retrieval ACCEPT decisions had different subjects. The reviewer observed no booking execution or registry mutation. This diagnostic was newly supplied after correction 3; the attributed historical progress below remains unchanged.
++
++The focused repair is in candidate_domain.run. ImportStore.observe still authenticates and persists terminal highwater before check_status. The adapter records the exact signed descriptor and STATUS, local prepared FETCH and STATUS request, persisted highwater, and the separately read pointer-check, authentication and current-use-check UTC times. The prepared FETCH in this refusal evidence has not been sent; the normal fetch_request.json remains evidence of the actual FETCH stage. Public check_status still enforces ACTIVE after all authentication/currentness checks.
++
++Only the actual status_not_active exception enters refuse_inactive_status. It revalidates the preserved pointer and STATUS through the public check_pointer/authenticate_status functions at their recorded check times, requires REVOKED/SUPERSEDED and the matching persisted terminal entry, and computes source_active from that entry. Its fresh local Root review uses predicate football_current_source_status_v01 and the original request as subject. The claim binds the full original request and its hash, actual reason, report status, foreign source record/revision/review, pointer, prepared FETCH identity, signed STATUS hash, terminal entry, observation time and the hash of status_refusal_evidence.json. That evidence file also retains the original request and independently pinned local policy/keyset.
++
++The existing native review adapter builds and validates the live Root kernel/input/result. Its failed active check produces the native BLOCKED_FAIL_CLOSED outcome. The repair requires that exact outcome, saves the actual refusal_review.json, and puts its decision_id plus the evidence hash in refusal.json. The completed report's native_refs links both files. It does not use a previous metadata ACCEPT, deserialize authority, copy a foreign decision, or manufacture a native REFUSED enum.
++
++Source support is gate5_contracts_v01.py lines 309-331 (authentication then ACTIVE), gate5_lifecycle_v01.py lines 31-39 (durable observation), gate5_native_v01.py lines 45-103 (live review and projection), and root_decision_v01.py lines 678-716 (hard failure gives BLOCKED_FAIL_CLOSED). Exact pinned hashes are in source_impact.json. No approved code or schema is changed.
++
++The new review's UTC records a refusal now. Checking evidence at its retained observation times proves the basis of that refusal; it does not refresh STATUS, extend source TTL or authorize a fetch/action. No FETCH, consumer Work or local effect follows this terminal branch. For a CONFIRM, the source may already have crossed its independently owned effect boundary before returning metadata, so this branch reports CURRENT_STATUS_UNKNOWN and requires reconciliation instead of claiming a clean source no-effect refusal. Requester counts remain local. Unknown errors or failure to obtain the actual refusal result propagate; no catch converts them to completed REFUSED.
++
++tests/test_status_refusal.py contains reviewer-only regressions for the actual requester_event error branch, genuine native source publication/metadata descent/local refusal, real public signatures, REVOKED and SUPERSEDED with feasible/empty producer results, report-to-decision/evidence linkage, zero requester Work and no FETCH, highwater after reconstruction, refused terminal revival and a distinct lawful ACTIVE observation. It also covers changed signed bytes, an unknown error, stale STATUS and confirmation uncertainty. Its in-memory message driver supplies only component replies, never a body or fake Root result; it does not implement framing, run a second peer, observe OS I/O or claim P7 coverage. The production entrypoint continues to receive real operator-provided PipeChannels. Earlier booking/history tests and runtime behavior are preserved.
++
++All correction 4 code and tests are inert and unexecuted by the author. Only text parsing is available here. The complete pack needs independent review and the separately authorized restricted runner; no installation or admission is claimed.
+ 
+ ## Correction 1: exact metadata descent approval
+ 
+@@ -49,7 +69,7 @@
+ 
+ tests/test_final_correction.py adds reviewer-only component tests for terminal reports with feasible/infeasible E; ACTIVE continuation and unavailable observation; retained terminal status; after-start uncertainty and explicit receipt history; changed synthetic IDs/prices/order; independently derived source references preserved through actual persisted native descent; and native secret-pattern rejection followed by acceptance of the documented bare reference form. Its synthetic report/metadata fixtures are not authenticated bundles, grants, execution telemetry or native receipts. The tests do not prescribe hidden selections. Previous native descent, booking semantics and Work/history tests remain unchanged.
+ 
+-This final pack was checked only as inert Python/JSON text. No candidate import, test, native call or peer execution was performed by the author. Independent review and the prescribed runner decide the corrected behavior. Existing state from an older candidate's different ID recipe is not migrated or relabeled; this pack targets fresh reviewer-owned peer state.
++That correction 3 pack was checked only as inert Python/JSON text. No candidate import, test, native call or peer execution was performed by the author. Independent review and the prescribed runner decide the corrected behavior. Existing state from an older candidate's different ID recipe is not migrated or relabeled; this pack targets fresh reviewer-owned peer state.
+ 
+ ## Inputs and operator policy
+ 
+@@ -133,6 +153,7 @@
+ | Current consent and native action | consent_review.json, action_packet.json, action_root.json, action_admission.json |
+ | Actual native outcome and state | host_outcome.json, receipt.json, state_readback.json |
+ | Uncertainty / refusal | action_failure.json, refusal*.json, refusal_review.json, unhandled_failure.json |
++| Authenticated terminal STATUS refusal | status_refusal_evidence.json (signed originals, local request/policy/highwater/check times), refusal_review.json (actual local Root), refusal.json (decision ID/evidence hash) |
+ | Repeated confirmation / VERIFY | history.json (source saved receipt/readback; requester saved identity plus signed readback) |
+ | Candidate accounting | observations.json, review_calls.jsonl, close.json, completion.json |
+ 
+--- attempt03/candidate.json
++++ attempt04/candidate.json
+@@ -1,16 +1,16 @@
+ {
+-  "candidate_id": "football_g54d_v01",
++  "candidate_id": "football_g54d_v01_correction4",
+   "entrypoint": "candidate_domain.run",
+   "files": [
+     {
+-      "bytes": 5761,
++      "bytes": 6896,
+       "path": "PASSPORT.json",
+-      "sha256": "a66064c3e8364bc2e49063a2f04ef0e1a63bf28884705cda3696246c0952384e"
++      "sha256": "2be4142da3ecc1749f158c014ee8a2e5223bd2769371b9b5ac34aa72dad8ad30"
+     },
+     {
+-      "bytes": 27116,
++      "bytes": 32151,
+       "path": "README.md",
+-      "sha256": "2b09abd208eac318ccdf78bf4ae07c41eb645e8dd9cd877f8b7c2136545d157e"
++      "sha256": "bc996b63faf6f8a83c70633d85e318a869f154dc5ff96e3b6b9cf5da3d501e0c"
+     },
+     {
+       "bytes": 74,
+@@ -53,9 +53,9 @@
+       "sha256": "5df538e6d0c4ddc50cf2f836e23b41da268f147d2ddda1ec518a7468f3b0be61"
+     },
+     {
+-      "bytes": 32251,
++      "bytes": 35816,
+       "path": "candidate_domain/run.py",
+-      "sha256": "ff72610e59d6de7c2cc4dc9716e7b9e109fb81cc6059b04bef34198627ebd464"
++      "sha256": "0d56d79c2c0cdf4a9d410a4bf39331b5ad9e9fa8f7a9fbc2b1eabfc974f98f12"
+     },
+     {
+       "bytes": 915,
+@@ -88,9 +88,9 @@
+       "sha256": "81c776010fbcc70acf4862329e010dde98129e7783de9702d2742f7851a6ffb0"
+     },
+     {
+-      "bytes": 12059,
++      "bytes": 16286,
+       "path": "source_impact.json",
+-      "sha256": "9e70eca1cf32aac537cadb078bf7d5f879b51744d2cc9c277439ca771a1cb36d"
++      "sha256": "8f3291c3eb0a0bc1cb5372503a45f5918b0b45bcd0e777683b0d68ced05db8e5"
+     },
+     {
+       "bytes": 3485,
+@@ -111,6 +111,11 @@
+       "bytes": 11016,
+       "path": "tests/test_final_correction.py",
+       "sha256": "69a060b5416824f8367f1b64ab9dfc70c7a0f3ec0539624108a02ade13ca9699"
++    },
++    {
++      "bytes": 14590,
++      "path": "tests/test_status_refusal.py",
++      "sha256": "478f0bf37e04a9aeb9e38311d65c86faa49f51b07699b41e007003aa4e020f37"
+     }
+   ],
+   "installable_now": false,
+--- attempt03/candidate_domain/run.py
++++ attempt04/candidate_domain/run.py
+@@ -278,8 +278,48 @@
+     status='VERIFIED' if r['operation']=='VERIFY_EXISTING' else 'MOCK_BOOKED'
+     return report(r,status,booking['slots'],old['source'],booking['receipt_ref'],observed=1)
+ 
++def refuse_inactive_status(r,policy,material,folder):
++    """Record a local current-use refusal, never renew the observed source/status."""
++    c.require(material is not None,'status_refusal_observation_missing')
++    observed_at=material['observed_at']
++    pointer=c.check_pointer(material['descriptor'],policy,material['pointer_checked_at'],profile=profile())
++    fetch=material['fetch_request']; status=material['status']
++    key,entry=c.authenticate_status(status,pointer,fetch,policy,observed_at,material['highwater'])
++    c.require(entry['state'] in ('REVOKED','SUPERSEDED'),'status_refusal_not_terminal')
++    c.require(material['highwater'].get(key)==entry,'status_refusal_terminal_not_saved')
++    # Observation time is retained. This new review records refusal at its own UTC;
++    # its default review window does not extend any source or STATUS lifetime.
++    checks=dict(source_active=entry['state']=='ACTIVE',
++        original_request=fetch['task_ref']==task_ref(r) and fetch['object_id']==object_ref(r)
++            and fetch['request_revision']==r['revision'],
++        local_requester=fetch['requester']==policy['local_root'],
++        local_policy=fetch['trust_profile_hash']==c.sha(policy),
++        source_owner=entry['publisher_root_id']==policy['peer_root'],
++        terminal_saved=material['highwater'][key]==entry)
++    evidence=dict(material,request=r,policy=policy)
++    save(folder/'status_refusal_evidence.json',evidence)
++    received_body=read(folder/'offer_body.json')
++    booking=None if received_body is None else received_body['booking']
++    # CONFIRM may already have reached the source effect boundary before DESCRIBE
++    # returned. A requester-local refusal cannot certify that source outcome.
++    outcome='CURRENT_STATUS_UNKNOWN' if r['operation']=='CONFIRM_MOCK_BOOKING' or effect_started(folder) or booking is not None else 'REFUSED'
++    claim=dict(request=r,request_sha256=c.sha(r),reason='status_not_active',status=outcome,
++        source_record_ref=pointer['source_record_ref'],source_revision=pointer['source_revision'],
++        source_review_ref=pointer['source_review_ref'],pointer_ref=pointer['pointer_id'],
++        fetch_request_ref=fetch['request_id'],status_sha256=c.sha(status),
++        status_entry=entry,observed_at=observed_at,evidence_sha256=c.sha(evidence))
++    identity=c.sha(claim)
++    live=review(policy['local_root'],'transaction:football:status_refusal:'+identity,
++        'candidate:football:status_refusal:'+identity,r['request_id'],checks,claim,x.clock(),
++        folder,'refusal_review',predicate='football_current_source_status_v01')
++    c.require(live[2].decision=='BLOCKED_FAIL_CLOSED','status_refusal_root_outcome')
++    save(folder/'refusal.json',dict(reason=claim['reason'],status=outcome,
++        review_ref=live[2].decision_id,evidence_ref='status_refusal_evidence.json',
++        evidence_sha256=c.sha(evidence)))
++    return report(r,outcome,receipt=None if booking is None else booking['receipt_ref'])
++
+ def requester_event(event,p,root,folder,channel,cap,keys,peer):
+-    raw=event['request']; local_problem=None; result=None
++    raw=event['request']; local_problem=None; result=None; status_observation=None
+     try:
+         r=validate_event(event,'requester',p['local_root'])
+         need(p['accept_football'],'local_policy_refusal')
+@@ -319,7 +359,8 @@
+                 need(planning_equal(r,original),'requester_changed_offer_request')
+                 approve_booking(r,prior['body'],p)
+             policy=consumer_policy(p,peer,r,original)
+-            pointer=c.check_pointer(msg['value'],policy,x.clock(),profile=profile())
++            pointer_time=x.clock()
++            pointer=c.check_pointer(msg['value'],policy,pointer_time,profile=profile())
+             save(folder/'descriptor.json',msg['value'])
+             source_end=c.temporal(pointer['time_envelope'],x.clock(),policy)
+             descent(pointer,p['local_root'],folder,x.clock(),source_end)
+@@ -333,9 +374,15 @@
+             need(observed['kind']=='STATUS','status_response')
+             store=ImportStore(root/'imports')
+             # Authenticated terminal entries are persisted before ACTIVE/current-use refusal.
+-            store.observe(observed['value'],pointer,fetch,policy,x.clock())
++            status_time=x.clock()
++            store.observe(observed['value'],pointer,fetch,policy,status_time)
+             save(folder/'status.json',observed['value'])
+-            c.check_status(observed['value'],pointer,fetch,policy,x.clock(),read(store.path)['highwater'])
++            highwater=read(store.path)['highwater']
++            status_check_time=x.clock()
++            status_observation=dict(descriptor=msg['value'],fetch_request=fetch,status_request=status_req,
++                status=observed['value'],highwater=highwater,pointer_checked_at=pointer_time,
++                authenticated_at=status_time,observed_at=status_check_time)
++            c.check_status(observed['value'],pointer,fetch,policy,status_check_time,highwater)
+             received=send_request(channel,budget,fetch,p,cap,keys,folder)
+             save(folder/'fetch_request.json',fetch)
+             save(folder/'fetch_response.json',received)
+@@ -414,8 +461,11 @@
+                'received_budget','football_audience','football_original_request','football_request_policy','football_budget')
+         if str(exc) not in known:
+             raise
+-        save(folder/'refusal.json',dict(reason=str(exc),status=failure_status(exc)))
+-        result=report(raw,failure_status(exc))
++        if str(exc)=='status_not_active':
++            result=refuse_inactive_status(raw,policy,status_observation,folder)
++        else:
++            save(folder/'refusal.json',dict(reason=str(exc),status=failure_status(exc)))
++            result=report(raw,failure_status(exc))
+     close=request(p,raw,'CLOSE')
+     message=send_request(channel,budget,close,p,cap,keys,folder)
+     need(message['kind']=='CLOSED','signed_close_required')
+--- attempt03/source_impact.json
++++ attempt04/source_impact.json
+@@ -22,7 +22,8 @@
+     "tests/test_domain.py",
+     "tests/test_descent.py",
+     "tests/test_business_semantics.py",
+-    "tests/test_final_correction.py"
++    "tests/test_final_correction.py",
++    "tests/test_status_refusal.py"
+   ],
+   "coordinator_manifest": "candidate.json is generated from actual bytes by submit_candidate; author never writes it.",
+   "protected_source_changes": [],
+@@ -96,6 +97,7 @@
+       "keyset",
+       "temporal",
+       "check_pointer(profile=)",
++      "authenticate_status",
+       "check_status",
+       "check_bundle(profile=)",
+       "BODY_MAX",
+@@ -273,5 +275,66 @@
+     ],
+     "compatibility": "Fresh reviewer-owned peer state; no migration or relabeling of saved identities from older candidate versions. Reopens same-version persisted state without changing references.",
+     "validation": "Reviewer-only focused tests authored. Only inert syntax/data inspection by author; no imports, tests, native calls or execution. Coordinator computes exact manifest at final submission."
++  },
++  "correction_4": {
++    "parent": "G54D",
++    "correction_index": 4,
++    "submission_number": 5,
++    "authorization": "One additional owner-authorized correction/submission of the restored implementation. The original initial-plus-three trial remains INCOMPLETE.",
++    "reported_failure": "After verified non-active STATUS the requester emitted honest REFUSED through the known ValueError path without a corresponding local Root refusal. Prior metadata/retrieval acceptance was not that decision. Reviewer observed no booking execution or registry mutation.",
++    "source_predicates": [
++      {
++        "path": "source/hedgehog/external_drs/gate5_contracts_v01.py",
++        "sha256": "db7602a402f67e7acea8dc4f566568b0a58004451ae95e64c999e553d6a02a8f",
++        "lines": [
++          309,
++          331
++        ],
++        "required": "authenticate_status verifies pinned signatures, FETCH/nonce/pointer binding, half-open time and highwater; check_status then requires entry.state == ACTIVE."
++      },
++      {
++        "path": "source/hedgehog/external_drs/gate5_lifecycle_v01.py",
++        "sha256": "627fa5171fbaad181c2d4e1c5e8047cc3b8b5957601a317049b05c980ae3de6f",
++        "lines": [
++          31,
++          39
++        ],
++        "required": "ImportStore.observe authenticates and saves terminal highwater before current-use rejection."
++      },
++      {
++        "path": "source/hedgehog/external_drs/gate5_native_v01.py",
++        "sha256": "bba423e434d9fb9d5695b649191e9f31a2743b7bbe9327c80c0ce8b34162e3ec",
++        "lines": [
++          45,
++          103
++        ],
++        "required": "root_review builds live local input, decides through the Root kernel and validates its result; root_plain preserves it as evidence."
++      },
++      {
++        "path": "source/hedgehog/kernel/root_decision_v01.py",
++        "sha256": "cae47026ba5c8a52ca25b2774e7ac8e92eb4e312c2eb5d1776c3a16ee276409c",
++        "lines": [
++          678,
++          716
++        ],
++        "required": "False policy/Post-V&V checks create hard failures and native BLOCKED_FAIL_CLOSED, retained without renaming the native outcome."
++      }
++    ],
++    "changed_files": [
++      "candidate_domain/run.py",
++      "tests/test_status_refusal.py",
++      "README.md",
++      "PASSPORT.json",
++      "source_impact.json"
++    ],
++    "scope": [
++      "Snapshot exact pointer/STATUS verification times, signed originals, prepared FETCH/STATUS request and persisted highwater before check_status; existing current-use check remains in place.",
++      "Only status_not_active in the known ValueError path calls refuse_inactive_status. Revalidate the preserved evidence at its recorded observation times, then make a distinct current local Root review of the original request/reason/source/status with source_active computed from the authenticated entry.",
++      "Require the actual native BLOCKED_FAIL_CLOSED result before completing the refusal; link decision ID and evidence hash in refusal.json and report.native_refs. Failed review/unknown errors remain visible.",
++      "A confirmation at this boundary remains CURRENT_STATUS_UNKNOWN because the requester cannot infer the source effect outcome. No new effect, retry, receipt or cross-role state access.",
++      "Preserve existing producer/consumer, source reports, metadata descent, denied null-body release, consent, booking, history and native checks. No protected-source, ABI, wire/body/report schema or dependency changes."
++    ],
++    "tests": "Reviewer-only component code: genuine source publication and requester_event metadata/native Root calls, signed REVOKED/SUPERSEDED observations, actual refusal linkage, stop before FETCH/consumer/effect; reopened highwater, rejected terminal revival and distinct ACTIVE continuation; invalid signature and unknown errors stay visible; stale status remains unknown; confirmation does not claim source zero effects. In-memory message fixture supplies no body and is not a peer/transport substitute.",
++    "validation": "Author may inspect Python/JSON text only. No imports, execution, native calls or tests by author. Coordinator computes candidate.json from exact bytes at the single additional submission."
+   }
+ }
+--- attempt03/tests/test_status_refusal.py
++++ attempt04/tests/test_status_refusal.py
+@@ -0,0 +1,230 @@
++"""Reviewer-only signed STATUS/Root regressions; no author execution or P7 claim."""
++import copy
++import tempfile
++import unittest
++from pathlib import Path
++from hedgehog.external_drs import gate5_contracts_v01 as c, gate5_exchange_v01 as x
++from hedgehog.external_drs.gate5_lifecycle_v01 import ImportStore
++from candidate_domain.domain import request_times
++from candidate_domain.policy import consumer_policy
++from candidate_domain.publication import build
++from candidate_domain.profile import profile
++from candidate_domain.run import requester_event, refuse_inactive_status, request
++from candidate_domain.storage import read
++
++
++def fixture():
++    r=dict(request_id='request:own:status',revision=1,operation='FIND_OFFER',
++        team_ref='team:own:status',venue_ref='venue:own:status',timezone='Europe/Tirane',
++        currency='ALL',budget_minor=200,owner_approval_ref=None,sessions=[
++            dict(session_id='session:'+name,start='2027-01-%02dT09:00'%(21+j),
++                 end='2027-01-%02dT10:30'%(21+j),allow_shift_minutes=0)
++            for j,name in enumerate(('east','west','north'))])
++    intervals=[[a,b] for a,b,_ in request_times(r).values()]
++    i=dict(revision=3,venue_ref=r['venue_ref'],currency=r['currency'],fields=[
++        dict(field_id='field:own:status',surface='natural_grass',full_size=True,
++             price_minor=19,available_utc=intervals,occupied_utc=[])])
++    p=dict(local_root='root:own:status_reader',peer_root='root:own:status_source',
++        publish_enabled=True,release_enabled=True,accept_football=True,
++        recipients=['root:own:status_source'],status='ACTIVE',ttl_seconds=300,
++        max_source_age=300,shift_approvals=[],book_approvals=[])
++    return r,i,p
++
++
++def signer(root):
++    cap=c.crypto.generate_root_signer_capability_v01(root_id=root)
++    keys=c.crypto.build_trusted_root_key_set_v01(capabilities=(cap,))
++    return cap,keys,c.crypto.trusted_root_key_set_to_plain_dict_v01(keys)
++
++
++def signed_status(cap,keys,pointer,fetch,state,now,revision=1):
++    entry=dict(version='g51.entry.v01',pointer_id=pointer['pointer_id'],
++        publisher_root_id=pointer['publisher_root_id'],stream_id=pointer['revocation_stream_id'],
++        revision=revision,state=state,effective_at=now,reason_ref='reason:own:component_status')
++    entry['entry_hash']=c.sha(entry); c.validate('entry',entry)
++    value=dict(version='g51.status.v01',entry=entry,requested_pointer_hash=c.sha(pointer),
++        requester=fetch['requester'],subject_request_ref=fetch['request_id'],
++        request_revision=fetch['request_revision'],nonce=fetch['nonce'],
++        checked_at=now,valid_until=now+60)
++    c.validate('status',value)
++    return c.sign(cap,keys,'STATUS',value,pointer['artifact_manifest_ref'].split(':')[1])
++
++
++class StatusMessages:
++    """In-memory component driver, not PipeChannel or independent peer telemetry.
++
++    No framing/transport implementation or authority mock. Signed source metadata
++    comes from actual native publication. This driver supplies only test STATUS
++    and CLOSE replies with public signature primitives; it cannot supply a body.
++    Production run_peer_v01 continues to require the operator's real PipeChannel.
++    """
++    def __init__(self,made,source_signer,requester_public,event_id,state,fault=None):
++        self.made=made
++        self.cap,self.keys,_=source_signer
++        self.requester_public=requester_public
++        self.event_id,self.state,self.fault=event_id,state,fault
++        self.ops=[]; self.pending=None; self.received=0; self.last_status=None
++
++    def send(self,kind,value):
++        if kind!='REQUEST' or self.pending is not None:
++            raise AssertionError('component_request_order')
++        req=c.verify(value,self.requester_public,'REQUEST',value['value']['trust_profile_hash'])
++        c.validate('request',req)
++        self.ops.append(req['op']); self.pending=req
++
++    def receive(self,allow_eof=False):
++        req=self.pending; self.pending=None; self.received+=1
++        if req['op']=='DESCRIBE':
++            return dict(kind='POINTER',value=self.made['descriptor'])
++        if req['op']=='STATUS':
++            if self.fault=='unexpected':
++                raise ValueError('own_component_unexpected_error')
++            fetch=dict(req,request_id=req['subject_request_ref'])
++            now=x.clock()-(60 if self.fault=='stale' else 0)
++            value=signed_status(self.cap,self.keys,self.made['descriptor']['value'],
++                                fetch,self.state,now)
++            if self.fault=='tamper':
++                value=copy.deepcopy(value)
++                value['value']['entry']['reason_ref']='reason:own:changed_after_signing'
++            self.last_status=value
++            return dict(kind='STATUS',value=value)
++        if req['op']=='CLOSE':
++            value=dict(request_ref=req['request_id'],session=self.event_id)
++            return dict(kind='CLOSED',value=c.sign(self.cap,self.keys,'CLOSE',value,req['trust_profile_hash']))
++        raise AssertionError('terminal_status_must_stop_before_'+req['op'])
++
++    def counters(self):
++        # Component message counts only; no OS pipes or wire bytes are claimed.
++        return dict(component_sent=len(self.ops),component_received=self.received)
++
++
++class StatusRefusalTests(unittest.TestCase):
++    def setup_case(self,base,terminal='REVOKED',feasible=True,fault=None):
++        r,i,p=fixture()
++        if not feasible:
++            r['budget_minor']=0
++        source=signer(p['peer_root']); local=signer(p['local_root'])
++        source_policy=dict(p,local_root=p['peer_root'],peer_root=p['local_root'],
++                           recipients=[p['local_root']],status=terminal)
++        source_folder=base/'source_event'; source_folder.mkdir()
++        made=build(r,i,source_policy,base/'source_state',source_folder,*source)
++        folder=base/'requester_event'; folder.mkdir()
++        event=dict(event_id='own_status',request=r)
++        channel=StatusMessages(made,source,local[2],event['event_id'],terminal,fault)
++        return r,p,event,made,folder,channel,source,local
++
++    def test_actual_requester_refusal_links_terminal_evidence_and_local_root(self):
++        for terminal,feasible in (('REVOKED',True),('SUPERSEDED',False)):
++            with self.subTest(terminal=terminal), tempfile.TemporaryDirectory() as directory:
++                base=Path(directory)
++                r,p,event,made,folder,channel,source,local=self.setup_case(base,terminal,feasible)
++                original=copy.deepcopy(made)
++                result=requester_event(event,p,base/'requester_state',folder,channel,
++                                       local[0],local[1],source[2])
++                self.assertEqual(result['status'],'REFUSED')
++                self.assertEqual(result['slots'],[])
++                self.assertEqual(result['total_minor'],0)
++                self.assertIsNone(result['receipt_ref'])
++                self.assertEqual(result['counts'],dict(search=1,dispatch=0,mutations=0,observed=0))
++                self.assertEqual(channel.ops,['DESCRIBE','STATUS','CLOSE'])
++                refusal=read(folder/'refusal.json')
++                live_record=read(folder/'refusal_review.json')
++                evidence=read(folder/'status_refusal_evidence.json')
++                self.assertEqual(live_record['result']['decision'],'BLOCKED_FAIL_CLOSED')
++                self.assertEqual(live_record['result']['target_root_id'],p['local_root'])
++                self.assertFalse(live_record['result']['permission_created'])
++                self.assertFalse(live_record['result']['effect_requested'])
++                self.assertEqual(refusal['review_ref'],live_record['result']['decision_id'])
++                self.assertEqual(refusal['reason'],'status_not_active')
++                self.assertEqual(refusal['evidence_sha256'],c.sha(evidence))
++                claim=live_record['inputs']['root_review_packet']['synthesis_proposal']['normalized_claims'][0]
++                self.assertEqual(claim['predicate'],'football_current_source_status_v01')
++                self.assertEqual(claim['subject'],r['request_id'])
++                self.assertEqual(claim['object_or_value']['request'],r)
++                self.assertEqual(claim['object_or_value']['request_sha256'],c.sha(r))
++                self.assertEqual(claim['object_or_value']['reason'],refusal['reason'])
++                self.assertEqual(claim['object_or_value']['evidence_sha256'],c.sha(evidence))
++                self.assertEqual(claim['object_or_value']['status_entry'],channel.last_status['value']['entry'])
++                self.assertEqual(evidence['descriptor'],made['descriptor'])
++                self.assertEqual(evidence['status'],channel.last_status)
++                self.assertEqual(read(folder/'status.json'),channel.last_status)
++                self.assertEqual(result['native_refs']['refusal_review'],'refusal_review.json')
++                self.assertEqual(result['native_refs']['status_refusal_evidence'],'status_refusal_evidence.json')
++                self.assertEqual(read(folder/'descent_review.json')['result']['decision'],'ACCEPT')
++                self.assertNotEqual(live_record['result']['decision_id'],
++                                    read(folder/'descent_review.json')['result']['decision_id'])
++                for name in ('requester_work.json','native_attempt_requester.json','offer_body.json',
++                             'import_candidate.json','action_packet.json','receipt.json','host_outcome.json'):
++                    self.assertFalse((folder/name).exists(),name)
++                self.assertEqual(made,original)
++                self.check_restart_and_continuation(base,r,p,evidence,source)
++
++    def check_restart_and_continuation(self,base,r,p,evidence,source):
++        store=ImportStore(base/'requester_state'/'imports')
++        highwater=read(store.path)['highwater']
++        pointer=evidence['descriptor']['value']; fetch=evidence['fetch_request']
++        policy=evidence['policy']; t=evidence['observed_at']
++        key,entry=c.authenticate_status(evidence['status'],pointer,fetch,policy,t,highwater)
++        self.assertEqual(highwater[key],entry)
++        with self.assertRaisesRegex(ValueError,'^status_not_active$'):
++            c.check_status(evidence['status'],pointer,fetch,policy,t,highwater)
++        revival=signed_status(source[0],source[1],pointer,fetch,'ACTIVE',x.clock(),entry['revision']+1)
++        with self.assertRaisesRegex(ValueError,'^status_terminal_revival$'):
++            store.observe(revival,pointer,fetch,policy,x.clock())
++        self.assertEqual(read(store.path)['highwater'][key],entry)
++
++        # An independently identified pointer's authentic ACTIVE observation is lawful;
++        # it neither resets the old stream nor grants body/action permission.
++        other=c.with_id('pointer',dict(pointer,revocation_stream_id='stream:own:independent_status'))
++        descriptor=c.sign(source[0],source[1],'POINTER',other,other['artifact_manifest_ref'].split(':')[1])
++        c.check_pointer(descriptor,policy,x.clock(),profile=profile())
++        new_fetch=request(p,r,'FETCH',policy,other)
++        active=signed_status(source[0],source[1],other,new_fetch,'ACTIVE',x.clock())
++        store.observe(active,other,new_fetch,policy,x.clock())
++        new_key,new_entry=c.check_status(active,other,new_fetch,policy,x.clock(),read(store.path)['highwater'])
++        self.assertNotEqual(new_key,key)
++        self.assertEqual(new_entry['state'],'ACTIVE')
++        self.assertEqual(read(store.path)['highwater'][key],entry)
++
++    def test_invalid_signature_and_unknown_error_stay_visible(self):
++        for fault,reason in (('tamper','signed_content_binding'),('unexpected','own_component_unexpected_error')):
++            with self.subTest(fault=fault), tempfile.TemporaryDirectory() as directory:
++                base=Path(directory)
++                r,p,event,made,folder,channel,source,local=self.setup_case(base,fault=fault)
++                with self.assertRaisesRegex(ValueError,'^'+reason+'$'):
++                    requester_event(event,p,base/'requester_state',folder,channel,local[0],local[1],source[2])
++                for name in ('report.json','refusal_review.json','status_refusal_evidence.json'):
++                    self.assertFalse((folder/name).exists(),name)
++
++    def test_stale_status_is_unknown_not_authenticated_terminal_refusal(self):
++        with tempfile.TemporaryDirectory() as directory:
++            base=Path(directory)
++            r,p,event,made,folder,channel,source,local=self.setup_case(base,fault='stale')
++            result=requester_event(event,p,base/'requester_state',folder,channel,local[0],local[1],source[2])
++            self.assertEqual(result['status'],'CURRENT_STATUS_UNKNOWN')
++            self.assertEqual(read(folder/'refusal.json')['reason'],'status_not_current')
++            self.assertFalse((folder/'status_refusal_evidence.json').exists())
++            self.assertFalse((folder/'refusal_review.json').exists())
++            self.assertNotIn('FETCH',channel.ops)
++
++    def test_confirmation_refusal_does_not_certify_source_zero_effects(self):
++        with tempfile.TemporaryDirectory() as directory:
++            base=Path(directory)
++            r,p,event,made,folder,channel,source,local=self.setup_case(base)
++            # Isolate reporting of an authenticated refusal during a confirmation.
++            # No source effect is run or claimed by this component.
++            confirm=dict(r,operation='CONFIRM_MOCK_BOOKING',owner_approval_ref='approval:own:component')
++            policy=consumer_policy(p,source[2],r,r)
++            pointer=made['descriptor']['value']; fetch=request(p,confirm,'FETCH',policy,pointer)
++            status_req=request(p,confirm,'STATUS',policy,pointer,fetch['request_id'],fetch['nonce'])
++            now=x.clock(); status=signed_status(source[0],source[1],pointer,fetch,'REVOKED',now)
++            store=ImportStore(base/'requester_state'/'imports')
++            store.observe(status,pointer,fetch,policy,now)
++            material=dict(descriptor=made['descriptor'],fetch_request=fetch,status_request=status_req,
++                          status=status,highwater=read(store.path)['highwater'],pointer_checked_at=now,
++                          authenticated_at=now,observed_at=now)
++            result=refuse_inactive_status(confirm,policy,material,folder)
++            self.assertEqual(result['status'],'CURRENT_STATUS_UNKNOWN')
++            self.assertEqual(read(folder/'refusal_review.json')['result']['decision'],'BLOCKED_FAIL_CLOSED')
++            self.assertEqual(read(folder/'refusal.json')['status'],'CURRENT_STATUS_UNKNOWN')
++            self.assertIsNone(result['receipt_ref'])

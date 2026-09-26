@@ -1,0 +1,195 @@
+{
+  "bundle": {
+    "body": {
+      "correction": {
+        "den": 1,
+        "num": -10
+      },
+      "n": 3,
+      "observations": [
+        110,
+        110,
+        110
+      ],
+      "quantity_id": "reference_quantity_v01",
+      "reference": 100,
+      "source_lineage_refs": [
+        "work_results:dde1b09b9d1922487d007f5a12bf72feaa673460b14438fee41a9437c1b4ace8"
+      ],
+      "source_record_ref": "source:gate5:calibration:one",
+      "source_review_ref": "34926664268e51da9b66b3e753301ee4b0373530347be3a25b52c4f873261ed7",
+      "source_revision": 1,
+      "source_work_ref": "work_results:dde1b09b9d1922487d007f5a12bf72feaa673460b14438fee41a9437c1b4ace8",
+      "time_envelope": {
+        "ct_context_anchor": 1790277510,
+        "et_observed_at": 1790277510,
+        "freshness_policy_id": "freshness:gate5:source",
+        "kt_as_of": 1790277510,
+        "pt_created_at": 1790277510,
+        "source_observed_at": 1790277510,
+        "source_reported_at": 1790277510,
+        "system_ingested_at": 1790277510,
+        "system_verified_at": 1790277510,
+        "time_envelope_id": "drstime_v01:5a0b22bb96ccbf84c51f35bf6bb879671b35724ba4d1a12f5b90b759820961c6",
+        "time_envelope_version": "v0.1",
+        "ttl_seconds": 300,
+        "valid_from": 1790277510,
+        "valid_to": 1790277810
+      },
+      "total": 330,
+      "ttl_base": "pt_created_at",
+      "unit_id": "synthetic_unit_v01",
+      "version": "g51.body.v01"
+    },
+    "manifest": {
+      "declared_schema": "BoundedCalibrationSummaryV01",
+      "files": [
+        {
+          "bytes": 1073,
+          "path": "body.json",
+          "sha256": "56998ecfe67ad7f66285bf316da9104df9f144094a3afd3edf15e143bb6a03ab"
+        }
+      ],
+      "manifest_id": "g5manifest:ff0ce80939d8949d3a2140c2f002b65f718d60680b8bd513a72a8c3b3e0c3a2e",
+      "publisher": "root:gate5:calibration",
+      "source_refs": [
+        "source:gate5:calibration:one",
+        "work_results:dde1b09b9d1922487d007f5a12bf72feaa673460b14438fee41a9437c1b4ace8",
+        "34926664268e51da9b66b3e753301ee4b0373530347be3a25b52c4f873261ed7"
+      ],
+      "source_revision": 1,
+      "version": "g51.manifest.v01"
+    },
+    "release": {
+      "commitment": {
+        "artifact_hash": "886ef0d39aa2412d1c3c40cec38652692299c570254730a95bc3e7dddc8ef33e",
+        "commitment_id": "g5commit:fa605bfb438df8e7f2e4f8d611d5d7a9460754b6241b7a3ab84f947f84c94e54",
+        "commitment_scope": "gate5:RELEASE:v01",
+        "commitment_version": "v0.1",
+        "key_id": "be537f93c797a5b5c1944033c12bb361c080670980628fe8e1e04bbaf770cbd8",
+        "manifest_hash": "ff0ce80939d8949d3a2140c2f002b65f718d60680b8bd513a72a8c3b3e0c3a2e",
+        "owner_root_id": "root:gate5:calibration",
+        "transaction_id": "transaction:gate5:reference"
+      },
+      "signature": {
+        "algorithm": "Ed25519",
+        "commitment_hash": "8eeaaa7a8d6d9124ef94c7f5aca528ab0620fcb485fdad2c7d114fc2bb378dfd",
+        "commitment_id": "g5commit:fa605bfb438df8e7f2e4f8d611d5d7a9460754b6241b7a3ab84f947f84c94e54",
+        "key_id": "be537f93c797a5b5c1944033c12bb361c080670980628fe8e1e04bbaf770cbd8",
+        "owner_root_id": "root:gate5:calibration",
+        "signature_hex": "fbdc51ae9e8392c52b5d7140976cd2514784b5a49f7958418f8c80113b6280443d9e889e24062b091c480aaef9cda6801bf082e8d27f1b81073bf9fd3f132a02",
+        "signature_version": "v0.1",
+        "transaction_id": "transaction:gate5:reference"
+      },
+      "value": {
+        "body_hash": "56998ecfe67ad7f66285bf316da9104df9f144094a3afd3edf15e143bb6a03ab",
+        "deadline": 1790277571,
+        "manifest_ref": "g5manifest:ff0ce80939d8949d3a2140c2f002b65f718d60680b8bd513a72a8c3b3e0c3a2e",
+        "nonce": "0e5baaca8a88f0cd0a226c2af751d11d4e3d0d821e22193a11b0faf8f1a7184c",
+        "pointer_ref": "g5pointer:28251c22b6bf0a2e90c74b9356742f75f7da5e3525bac8e922791bbcba1959c1",
+        "recipient": "root:gate5:site",
+        "release_review_ref": "b11231fc83b7611df8d83e09a6030f5699c3c7a7d9b67c533069d012ea71bc37",
+        "request_ref": "g5request:a698fcf2b0e1745cd555b055fcad8b90a98d33f7993a4bfccad072c17f6c3956",
+        "request_revision": 1,
+        "state": "RELEASED",
+        "use_class": "LOCAL_CONTEXT",
+        "version": "g51.release.v01"
+      }
+    }
+  },
+  "history_records": 1,
+  "request": {
+    "allowed_size": 65536,
+    "deadline": 1790277571,
+    "issued_at": 1790277511,
+    "nonce": "0e5baaca8a88f0cd0a226c2af751d11d4e3d0d821e22193a11b0faf8f1a7184c",
+    "object_id": "object:gate5:calibration:one",
+    "op": "FETCH",
+    "owner_transport_scope": "owner:gate5:inherited-pipes",
+    "pointer_ref": "g5pointer:28251c22b6bf0a2e90c74b9356742f75f7da5e3525bac8e922791bbcba1959c1",
+    "publisher": "root:gate5:calibration",
+    "request_id": "g5request:a698fcf2b0e1745cd555b055fcad8b90a98d33f7993a4bfccad072c17f6c3956",
+    "request_revision": 1,
+    "requester": "root:gate5:site",
+    "subject_request_ref": null,
+    "task_ref": "task:gate5:exchange",
+    "trust_profile_hash": "36b5fcfe6f311d22a992b628b2b4c135844b73c90bb02f178427018267ed2a1d",
+    "use_class": "LOCAL_CONTEXT",
+    "version": "g51.request.v01"
+  },
+  "state": {
+    "credit": 0,
+    "duplicates": [
+      {
+        "body_hash": "56998ecfe67ad7f66285bf316da9104df9f144094a3afd3edf15e143bb6a03ab",
+        "key": "[\"root:gate5:calibration\",\"source:gate5:calibration:one\",1]",
+        "pointer": "g5pointer:28251c22b6bf0a2e90c74b9356742f75f7da5e3525bac8e922791bbcba1959c1"
+      }
+    ],
+    "highwater": {
+      "[\"root:gate5:calibration\",\"g5pointer:28251c22b6bf0a2e90c74b9356742f75f7da5e3525bac8e922791bbcba1959c1\",\"stream:gate5:calibration:1\"]": {
+        "effective_at": 1790277510,
+        "entry_hash": "b425ed09d44db1a206949b5bb0957c874ae030160ea74c711682ecb0f4a71b81",
+        "pointer_id": "g5pointer:28251c22b6bf0a2e90c74b9356742f75f7da5e3525bac8e922791bbcba1959c1",
+        "publisher_root_id": "root:gate5:calibration",
+        "reason_ref": "reason:gate5:published",
+        "revision": 1,
+        "state": "ACTIVE",
+        "stream_id": "stream:gate5:calibration:1",
+        "version": "g51.entry.v01"
+      }
+    },
+    "quarantine": [],
+    "sources": {
+      "[\"root:gate5:calibration\",\"source:gate5:calibration:one\",1]": {
+        "body_hash": "56998ecfe67ad7f66285bf316da9104df9f144094a3afd3edf15e143bb6a03ab",
+        "pointer": "g5pointer:28251c22b6bf0a2e90c74b9356742f75f7da5e3525bac8e922791bbcba1959c1",
+        "revision": 1,
+        "source_ref": "source:gate5:calibration:one"
+      }
+    }
+  },
+  "status": {
+    "commitment": {
+      "artifact_hash": "fe644c0869a86910fb6b1a6d61eb1205871b12e5bf8b3f7f6b97993e7ea52e3b",
+      "commitment_id": "g5commit:bcec99f13f395d7f46865daedd8477253076d95a408c085e8d1d68649e27e767",
+      "commitment_scope": "gate5:STATUS:v01",
+      "commitment_version": "v0.1",
+      "key_id": "be537f93c797a5b5c1944033c12bb361c080670980628fe8e1e04bbaf770cbd8",
+      "manifest_hash": "ff0ce80939d8949d3a2140c2f002b65f718d60680b8bd513a72a8c3b3e0c3a2e",
+      "owner_root_id": "root:gate5:calibration",
+      "transaction_id": "transaction:gate5:reference"
+    },
+    "signature": {
+      "algorithm": "Ed25519",
+      "commitment_hash": "817b27c7bf1898dac9042f08b76dfd5e6d5faf5f8acde35966d11e73c2ed2370",
+      "commitment_id": "g5commit:bcec99f13f395d7f46865daedd8477253076d95a408c085e8d1d68649e27e767",
+      "key_id": "be537f93c797a5b5c1944033c12bb361c080670980628fe8e1e04bbaf770cbd8",
+      "owner_root_id": "root:gate5:calibration",
+      "signature_hex": "83e72b81a3968daa243fe4d136fa06a5ca0c6f2a277e1c206605d3379786ea8f2cff5bdd94b37775b1ae2d43f9f27861c1d960842fced11b259dd32e776fff00",
+      "signature_version": "v0.1",
+      "transaction_id": "transaction:gate5:reference"
+    },
+    "value": {
+      "checked_at": 1790277511,
+      "entry": {
+        "effective_at": 1790277510,
+        "entry_hash": "b425ed09d44db1a206949b5bb0957c874ae030160ea74c711682ecb0f4a71b81",
+        "pointer_id": "g5pointer:28251c22b6bf0a2e90c74b9356742f75f7da5e3525bac8e922791bbcba1959c1",
+        "publisher_root_id": "root:gate5:calibration",
+        "reason_ref": "reason:gate5:published",
+        "revision": 1,
+        "state": "ACTIVE",
+        "stream_id": "stream:gate5:calibration:1",
+        "version": "g51.entry.v01"
+      },
+      "nonce": "0e5baaca8a88f0cd0a226c2af751d11d4e3d0d821e22193a11b0faf8f1a7184c",
+      "request_revision": 1,
+      "requested_pointer_hash": "1878ba2a79cab600636a9542953328031cf31a5bc42f49d24d27f01c7301062a",
+      "requester": "root:gate5:site",
+      "subject_request_ref": "g5request:a698fcf2b0e1745cd555b055fcad8b90a98d33f7993a4bfccad072c17f6c3956",
+      "valid_until": 1790277571,
+      "version": "g51.status.v01"
+    }
+  }
+}

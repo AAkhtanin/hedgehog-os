@@ -1,0 +1,151 @@
+{
+  "address_files": [
+    "address_index/work/g5pointer_28251c22b6bf0a2e90c74b9356742f75f7da5e3525bac8e922791bbcba1959c1.json"
+  ],
+  "budget": {
+    "body_bytes": 0,
+    "metadata": 1,
+    "opened": 0,
+    "payload": 0,
+    "reservations": [
+      "g5request:b3a2a06160c9ec894c428f69ad8c459ba1afcc08e26873c5d4bf3cb6a42c2d17"
+    ],
+    "task": "task:gate5:exchange"
+  },
+  "index_records": [
+    {
+      "content": {
+        "descriptor": {
+          "commitment": {
+            "artifact_hash": "1878ba2a79cab600636a9542953328031cf31a5bc42f49d24d27f01c7301062a",
+            "commitment_id": "g5commit:cf3dce2c8f593e11b50f2336b18ac30e2f4ee1a198ec895c15b316b0b35d39e6",
+            "commitment_scope": "gate5:POINTER:v01",
+            "commitment_version": "v0.1",
+            "key_id": "be537f93c797a5b5c1944033c12bb361c080670980628fe8e1e04bbaf770cbd8",
+            "manifest_hash": "ff0ce80939d8949d3a2140c2f002b65f718d60680b8bd513a72a8c3b3e0c3a2e",
+            "owner_root_id": "root:gate5:calibration",
+            "transaction_id": "transaction:gate5:reference"
+          },
+          "signature": {
+            "algorithm": "Ed25519",
+            "commitment_hash": "c72c16ad03462f03374df3af6b7e38abc17adb6f2625a4defcdb4362878da6b9",
+            "commitment_id": "g5commit:cf3dce2c8f593e11b50f2336b18ac30e2f4ee1a198ec895c15b316b0b35d39e6",
+            "key_id": "be537f93c797a5b5c1944033c12bb361c080670980628fe8e1e04bbaf770cbd8",
+            "owner_root_id": "root:gate5:calibration",
+            "signature_hex": "ef71813ff11c9ab2ea8647d8e6356658286fda261093dcb8010163e3181912a9f7e8f8a6f137ac0714235a128936e632a795afad6dcfd5b5e26801d9eb976802",
+            "signature_version": "v0.1",
+            "transaction_id": "transaction:gate5:reference"
+          },
+          "value": {
+            "access_policy_ref": "policy:gate5:source:v01",
+            "allowed_use_classes": [
+              "AUDIT",
+              "LOCAL_CONTEXT"
+            ],
+            "artifact_manifest_ref": "g5manifest:ff0ce80939d8949d3a2140c2f002b65f718d60680b8bd513a72a8c3b3e0c3a2e",
+            "body_bytes": 1073,
+            "body_sha256": "56998ecfe67ad7f66285bf316da9104df9f144094a3afd3edf15e143bb6a03ab",
+            "creates_authority": false,
+            "creates_permission": false,
+            "forbidden_use_classes": [
+              "ACTION"
+            ],
+            "media_type": "application/json",
+            "pointer_id": "g5pointer:28251c22b6bf0a2e90c74b9356742f75f7da5e3525bac8e922791bbcba1959c1",
+            "published_scope": {
+              "domain": "CALIBRATION",
+              "quantity_id": "reference_quantity_v01",
+              "unit_id": "synthetic_unit_v01"
+            },
+            "publisher_key_id": "be537f93c797a5b5c1944033c12bb361c080670980628fe8e1e04bbaf770cbd8",
+            "publisher_root_id": "root:gate5:calibration",
+            "recipient_scope": [
+              "root:gate5:site"
+            ],
+            "revocation_stream_id": "stream:gate5:calibration:1",
+            "safe_summary": "{\"kind\":\"calibration\",\"quantity_id\":\"reference_quantity_v01\",\"unit_id\":\"synthetic_unit_v01\"}",
+            "semantic_address": {
+              "domain": "CALIBRATION",
+              "intent_class": "context_lookup",
+              "namespace": "gate5",
+              "schema_id": "BoundedCalibrationSummaryV01",
+              "schema_version": "v01",
+              "subject_class": "bounded_calibration"
+            },
+            "source_lineage_refs": [
+              "work_results:dde1b09b9d1922487d007f5a12bf72feaa673460b14438fee41a9437c1b4ace8"
+            ],
+            "source_record_ref": "source:gate5:calibration:one",
+            "source_review_ref": "34926664268e51da9b66b3e753301ee4b0373530347be3a25b52c4f873261ed7",
+            "source_revision": 1,
+            "time_envelope": {
+              "ct_context_anchor": 1790277510,
+              "et_observed_at": 1790277510,
+              "freshness_policy_id": "freshness:gate5:source",
+              "kt_as_of": 1790277510,
+              "pt_created_at": 1790277510,
+              "source_observed_at": 1790277510,
+              "source_reported_at": 1790277510,
+              "system_ingested_at": 1790277510,
+              "system_verified_at": 1790277510,
+              "time_envelope_id": "drstime_v01:5a0b22bb96ccbf84c51f35bf6bb879671b35724ba4d1a12f5b90b759820961c6",
+              "time_envelope_version": "v0.1",
+              "ttl_seconds": 300,
+              "valid_from": 1790277510,
+              "valid_to": 1790277810
+            },
+            "transport_object_id": "object:gate5:calibration:one",
+            "version": "g51.pointer.v01"
+          }
+        },
+        "drs_hit_is_authority": false,
+        "drs_record_is_truth": false,
+        "drs_reuse_candidate_is_action_permission": false,
+        "kind": "pointer",
+        "revision": 1,
+        "semantic_keys": [
+          "calibration",
+          "pointer"
+        ]
+      },
+      "domain": "G52_POINTER",
+      "layer": "work",
+      "provenance": {
+        "created_by": "root_orchestrator",
+        "request_id": "req:g5pointer:28251c22b6bf0a2e90c74b9356742f75f7da5e3525bac8e922791bbcba1959c1",
+        "trace_refs": [
+          {
+            "kind": "local_drs_resolver",
+            "trace_id": "trace:g5pointer:28251c22b6bf0a2e90c74b9356742f75f7da5e3525bac8e922791bbcba1959c1"
+          }
+        ]
+      },
+      "record_id": "g5pointer:28251c22b6bf0a2e90c74b9356742f75f7da5e3525bac8e922791bbcba1959c1",
+      "status": "active",
+      "time_envelope": {
+        "ct_session_anchor": "sess_real_local_drs_resolver_v01",
+        "et_observed_at": null,
+        "freshness_class": "normal",
+        "kt_asof": "2026-09-24T19:18:30.837365+00:00",
+        "pt_created_at": "2026-09-24T19:18:30.837365+00:00",
+        "ttl_seconds": 2592000,
+        "valid_from": "2026-09-24T19:18:30.837365+00:00",
+        "valid_to": null
+      },
+      "trace_refs": [
+        {
+          "kind": "local_drs_resolver",
+          "trace_id": "trace:g5pointer:28251c22b6bf0a2e90c74b9356742f75f7da5e3525bac8e922791bbcba1959c1"
+        }
+      ],
+      "type": "generic"
+    }
+  ],
+  "quarantine_files": [],
+  "wire": {
+    "received": 1,
+    "received_bytes": 3095,
+    "sent": 1,
+    "sent_bytes": 1738
+  }
+}

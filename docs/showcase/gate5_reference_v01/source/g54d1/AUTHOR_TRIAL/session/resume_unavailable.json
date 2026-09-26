@@ -1,0 +1,13 @@
+{
+  "error": "{'code': -32600, 'message': 'no rollout found for thread id 01a0d92d-db22-7463-8aaf-8f1f1690459e'}",
+  "request": {
+    "cwd": "/private/tmp/RADIOLARIA_GATE5_G54D1.CZcJjg/AUTHOR_VISIBLE",
+    "excludeTurns": true,
+    "model": "gpt-6-astra",
+    "modelProvider": "openai",
+    "permissions": "g54b1-public",
+    "runtimeWorkspaceRoots": [],
+    "serviceTier": "default",
+    "threadId": "01a0d92d-db22-7463-8aaf-8f1f1690459e"
+  }
+}

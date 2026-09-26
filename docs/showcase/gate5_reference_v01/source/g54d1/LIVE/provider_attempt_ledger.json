@@ -1,0 +1,39 @@
+{
+  "attempts": [
+    {
+      "attempt": 1,
+      "ended": "2026-09-25T18:06:27.008796+00:00",
+      "error_type": null,
+      "folder": "LIVE/prepare_01/provider_exact",
+      "model": "gemini-2.5-flash",
+      "receipt_sha256": "7ea78d66419edd96a8f00262836a1d8d47d15621d18c046ce6214059989bc68b",
+      "started": "2026-09-25T18:06:16.860108+00:00",
+      "state": "COMPLETE",
+      "wire_sends": 1
+    },
+    {
+      "attempt": 2,
+      "ended": "2026-09-25T18:06:29.737212+00:00",
+      "error_type": null,
+      "folder": "LIVE/prepare_01/provider_shift",
+      "model": "gemini-2.5-flash",
+      "receipt_sha256": "eed779a0e43d6162f07358eaf26516693cada617496b4cd8933406335117d68d",
+      "started": "2026-09-25T18:06:27.009428+00:00",
+      "state": "COMPLETE",
+      "wire_sends": 1
+    },
+    {
+      "attempt": 3,
+      "ended": "2026-09-25T18:06:32.744011+00:00",
+      "error_type": null,
+      "folder": "LIVE/prepare_01/provider_verify",
+      "model": "gemini-2.5-flash",
+      "receipt_sha256": "752419ffcaf51df6163768d37bb4b3e5221847dc5559770c2c1eab4d8df7945e",
+      "started": "2026-09-25T18:06:29.738441+00:00",
+      "state": "COMPLETE",
+      "wire_sends": 1
+    }
+  ],
+  "limit": 12,
+  "scope": "G54D1_ENTIRE_TASK_ALL_HELPER_INVOCATIONS"
+}

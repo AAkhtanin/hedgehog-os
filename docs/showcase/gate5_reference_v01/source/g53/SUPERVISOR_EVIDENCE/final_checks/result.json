@@ -1,0 +1,3557 @@
+{
+  "compiled_files": 113,
+  "mapped_interfaces": 180,
+  "measurement_kind": "STATIC_AND_DATA_COMPONENT_CHECKS_NOT_DISTINCT_PYTEST_NODES",
+  "rows": [
+    {
+      "name": "syntax_compile_without_execution",
+      "status": "PASS"
+    },
+    {
+      "name": "source_inventory_exact_coverage",
+      "status": "PASS"
+    },
+    {
+      "name": "source_pin:source/demo/run_action_packet_portability_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_pin:source/demo/work_composition_mock_capabilities_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_pin:source/hedgehog/__init__.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_pin:source/hedgehog/action_commit_packet_v02.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_pin:source/hedgehog/avf_v02.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_pin:source/hedgehog/capability_admission_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_pin:source/hedgehog/context_packets.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_pin:source/hedgehog/domains/__init__.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_pin:source/hedgehog/domains/airline/__init__.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_pin:source/hedgehog/domains/airline/outcome_feedback_adapter_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_pin:source/hedgehog/domains/airline/semantic_to_contract_binding_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_pin:source/hedgehog/domains/airline/semantic_to_contract_causal_runtime_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_pin:source/hedgehog/domains/airline/ticket_purchase_corridor_runtime_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_pin:source/hedgehog/domains/airline/ticket_purchase_corridor_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_pin:source/hedgehog/domains/airline/transaction_artifact_ledger_collector_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_pin:source/hedgehog/domains/airline/transaction_artifact_ledger_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_pin:source/hedgehog/domains/ephemeral_workspace/__init__.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_pin:source/hedgehog/domains/ephemeral_workspace/capability_registry_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_pin:source/hedgehog/domains/ephemeral_workspace/contracts_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_pin:source/hedgehog/domains/ephemeral_workspace/evidence_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_pin:source/hedgehog/domains/ephemeral_workspace/kernel_adapter_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_pin:source/hedgehog/domains/ephemeral_workspace/local_services_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_pin:source/hedgehog/domains/ephemeral_workspace/media_continuation_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_pin:source/hedgehog/domains/ephemeral_workspace/media_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_pin:source/hedgehog/domains/ephemeral_workspace/memory_adapter_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_pin:source/hedgehog/domains/ephemeral_workspace/outcome_feedback_adapter_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_pin:source/hedgehog/domains/ephemeral_workspace/semantic_adapter_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_pin:source/hedgehog/domains/ephemeral_workspace/semantic_roles_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_pin:source/hedgehog/domains/ephemeral_workspace/session_runtime_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_pin:source/hedgehog/domains/landslide_sentinel/__init__.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_pin:source/hedgehog/domains/landslide_sentinel/capability_registry_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_pin:source/hedgehog/domains/landslide_sentinel/contracts_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_pin:source/hedgehog/domains/landslide_sentinel/events_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_pin:source/hedgehog/domains/landslide_sentinel/evidence_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_pin:source/hedgehog/domains/landslide_sentinel/incident_policy_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_pin:source/hedgehog/domains/landslide_sentinel/kernel_adapter_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_pin:source/hedgehog/domains/landslide_sentinel/monitoring_runtime_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_pin:source/hedgehog/domains/landslide_sentinel/outbox_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_pin:source/hedgehog/domains/landslide_sentinel/outcome_feedback_adapter_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_pin:source/hedgehog/domains/landslide_sentinel/semantic_adapter_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_pin:source/hedgehog/domains/supplier_water_filter/__init__.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_pin:source/hedgehog/domains/supplier_water_filter/adversarial_feedback_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_pin:source/hedgehog/domains/supplier_water_filter/gate3_runtime_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_pin:source/hedgehog/domains/supplier_water_filter/kernel_adapter_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_pin:source/hedgehog/domains/supplier_water_filter/outcome_feedback_adapter_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_pin:source/hedgehog/domains/testflix/__init__.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_pin:source/hedgehog/domains/testflix/contracts_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_pin:source/hedgehog/domains/testflix/evidence_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_pin:source/hedgehog/domains/testflix/kernel_adapter_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_pin:source/hedgehog/domains/testflix/lifecycle_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_pin:source/hedgehog/domains/testflix/live_semantic_adapter_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_pin:source/hedgehog/domains/testflix/mock_world_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_pin:source/hedgehog/domains/testflix/outcome_feedback_adapter_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_pin:source/hedgehog/domains/testflix/semantic_adapter_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_pin:source/hedgehog/domains/testflix/semantic_roles_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_pin:source/hedgehog/drs.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_pin:source/hedgehog/drs_g2b_compatibility_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_pin:source/hedgehog/drs_memory_resolution_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_pin:source/hedgehog/drs_semantic_address_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_pin:source/hedgehog/evidence/__init__.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_pin:source/hedgehog/evidence/external_anchor_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_pin:source/hedgehog/evidence/sealed_evidence_profile_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_pin:source/hedgehog/evidence/sealed_package_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_pin:source/hedgehog/evidence/sealed_replay_evidence_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_pin:source/hedgehog/external_drs/__init__.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_pin:source/hedgehog/external_drs/gate5_body_profile_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_pin:source/hedgehog/external_drs/gate5_contracts_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_pin:source/hedgehog/external_drs/gate5_exchange_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_pin:source/hedgehog/external_drs/gate5_lifecycle_supplied_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_pin:source/hedgehog/external_drs/gate5_lifecycle_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_pin:source/hedgehog/external_drs/gate5_native_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_pin:source/hedgehog/external_drs/gate5_supplied_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_pin:source/hedgehog/gate3_mechanism_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_pin:source/hedgehog/gt_validator.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_pin:source/hedgehog/kernel/__init__.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_pin:source/hedgehog/kernel/abi_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_pin:source/hedgehog/kernel/conformance_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_pin:source/hedgehog/kernel/continuous_delta_runtime_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_pin:source/hedgehog/kernel/effect_firewall_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_pin:source/hedgehog/kernel/execution_mode_router_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_pin:source/hedgehog/kernel/fractal_runtime_v02.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_pin:source/hedgehog/kernel/integrity_replay_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_pin:source/hedgehog/kernel/multiroot_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_pin:source/hedgehog/kernel/root_decision_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_pin:source/hedgehog/kernel/root_signer_isolation_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_pin:source/hedgehog/kernel/semantic_work_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_pin:source/hedgehog/kernel/transition_registry_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_pin:source/hedgehog/kernel/trust_model_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_pin:source/hedgehog/kernel/work_composition_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_pin:source/hedgehog/local_drs_resolver.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_pin:source/hedgehog/local_drs_v02.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_pin:source/hedgehog/outcome_calibration_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_pin:source/hedgehog/outcome_feedback_consumer_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_pin:source/hedgehog/outcome_feedback_history_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_pin:source/hedgehog/outcome_feedback_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_pin:source/hedgehog/post_vv.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_pin:source/hedgehog/reuse_certificate_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_pin:source/hedgehog/reuse_gate.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_pin:source/hedgehog/semantic_reasoning_adapter.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_pin:source/hedgehog/structured_rationale.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_pin:source/hedgehog/time_model.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_pin:source/hedgehog/wasm_pure_worker_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_pin:source/hedgehog/work_execution_host_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_pin:source/schemas/work_composition_v01.schema.json",
+      "status": "PASS"
+    },
+    {
+      "name": "source_pin:source/tests/test_gate5_calibration_exchange_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:authorize_and_prepare_action_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:authorize_and_prepare_action_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_signature:authorize_and_prepare_action_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:build_native_work_action_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:build_native_work_action_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_signature:build_native_work_action_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:host_for_prepared_action_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:host_for_prepared_action_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_signature:host_for_prepared_action_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:prepare_work_program_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:prepare_work_program_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_signature:prepare_work_program_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:work_literal_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:work_literal_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_signature:work_literal_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:TrustedMockWorkSourceV01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:TrustedMockWorkSourceV01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:admit_pure_operation_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:admit_pure_operation_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_signature:admit_pure_operation_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:ActionEffectParameterRecordV01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:ActionEffectParameterRecordV01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:build_action_effect_parameter_record_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:build_action_effect_parameter_record_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_signature:build_action_effect_parameter_record_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:validate_action_commit_packet_registry_v02",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:validate_action_commit_packet_registry_v02",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_signature:validate_action_commit_packet_registry_v02",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:LocalDRS",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:LocalDRS",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:DRSTemporalQueryV01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:DRSTemporalQueryV01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:MemoryDescentBudgetV01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:MemoryDescentBudgetV01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:MemoryDescentRequestV01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:MemoryDescentRequestV01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:MemoryDescentResultV01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:MemoryDescentResultV01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:QueryEvaluationStateV01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:QueryEvaluationStateV01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:RetrievalPlanV01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:RetrievalPlanV01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:build_drs_temporal_query_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:build_drs_temporal_query_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_signature:build_drs_temporal_query_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:build_memory_descent_budget_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:build_memory_descent_budget_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_signature:build_memory_descent_budget_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:build_memory_descent_request_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:build_memory_descent_request_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_signature:build_memory_descent_request_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:build_retrieval_plan_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:build_retrieval_plan_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_signature:build_retrieval_plan_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:evaluate_drs_candidate_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:evaluate_drs_candidate_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_signature:evaluate_drs_candidate_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:execute_local_memory_descent_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:execute_local_memory_descent_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_signature:execute_local_memory_descent_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:memory_descent_result_to_plain_data_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:memory_descent_result_to_plain_data_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_signature:memory_descent_result_to_plain_data_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:query_evaluation_state_to_plain_data_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:query_evaluation_state_to_plain_data_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_signature:query_evaluation_state_to_plain_data_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:retrieval_plan_to_plain_data_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:retrieval_plan_to_plain_data_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_signature:retrieval_plan_to_plain_data_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:ArtifactPointerV01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:ArtifactPointerV01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:DRSAuthorityEnvelopeV01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:DRSAuthorityEnvelopeV01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:DRSTimeEnvelopeV01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:DRSTimeEnvelopeV01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:LineageEdgeV01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:LineageEdgeV01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:MeaningRecordV01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:MeaningRecordV01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:MemoryPointerV01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:MemoryPointerV01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:SemanticAddressV01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:SemanticAddressV01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:build_drs_authority_envelope_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:build_drs_authority_envelope_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_signature:build_drs_authority_envelope_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:build_drs_time_envelope_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:build_drs_time_envelope_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_signature:build_drs_time_envelope_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:build_meaning_record_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:build_meaning_record_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_signature:build_meaning_record_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:build_semantic_address_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:build_semantic_address_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_signature:build_semantic_address_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:drs_time_envelope_to_plain_data_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:drs_time_envelope_to_plain_data_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_signature:drs_time_envelope_to_plain_data_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:meaning_record_to_plain_data_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:meaning_record_to_plain_data_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_signature:meaning_record_to_plain_data_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:ReviewedBodyProfileV01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:ReviewedBodyProfileV01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:check_local_profile_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:check_local_profile_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_signature:check_local_profile_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:BoundedContractV01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:BoundedContractV01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:add",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:add",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_signature:add",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:authenticate_status",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:authenticate_status",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_signature:authenticate_status",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:calibration",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:calibration",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_signature:calibration",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:canonical",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:canonical",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_signature:canonical",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:check_bundle",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:check_bundle",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_signature:check_bundle",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:check_pointer",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:check_pointer",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_signature:check_pointer",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:check_route",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:check_route",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_signature:check_route",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:check_status",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:check_status",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_signature:check_status",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:contract",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:contract",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_signature:contract",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:corrected",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:corrected",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_signature:corrected",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:decode",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:decode",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_signature:decode",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:hash_value",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:hash_value",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_signature:hash_value",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:identifier",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:identifier",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_signature:identifier",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:integer",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:integer",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_signature:integer",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:keyset",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:keyset",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_signature:keyset",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:label",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:label",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_signature:label",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:mul",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:mul",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_signature:mul",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:ratio",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:ratio",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_signature:ratio",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:rational",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:rational",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_signature:rational",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:ref",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:ref",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_signature:ref",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:require",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:require",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_signature:require",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:sequence",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:sequence",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_signature:sequence",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:sha",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:sha",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_signature:sha",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:shape",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:shape",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_signature:shape",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:sign",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:sign",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_signature:sign",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:temporal",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:temporal",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_signature:temporal",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:time_shape",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:time_shape",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_signature:time_shape",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:total",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:total",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_signature:total",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:validate",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:validate",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_signature:validate",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:verify",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:verify",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_signature:verify",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:walk",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:walk",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_signature:walk",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:with_id",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:with_id",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_signature:with_id",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:Budget",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:Budget",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:PipeChannel",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:PipeChannel",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:PublisherBudget",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:PublisherBudget",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:build_source",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:build_source",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_signature:build_source",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:clock",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:clock",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_signature:clock",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:immutable",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:immutable",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_signature:immutable",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:request",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:request",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_signature:request",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:source_time",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:source_time",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_signature:source_time",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:state_write",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:state_write",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_signature:state_write",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:ImportStore",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:ImportStore",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:native_work",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:native_work",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_signature:native_work",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:persist_and_resolve_pointer",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:persist_and_resolve_pointer",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_signature:persist_and_resolve_pointer",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:plain",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:plain",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_signature:plain",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:pointer_descent_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:pointer_descent_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_signature:pointer_descent_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:root_plain",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:root_plain",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_signature:root_plain",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:root_review",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:root_review",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_signature:root_review",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:save",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:save",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_signature:save",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:native_result",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:native_result",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_signature:native_result",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:record",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:record",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_signature:record",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:root_links",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:root_links",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_signature:root_links",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:tuple_fields",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:tuple_fields",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_signature:tuple_fields",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:KernelArtifactV01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:KernelArtifactV01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:build_kernel_artifact_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:build_kernel_artifact_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_signature:build_kernel_artifact_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:kernel_artifact_to_plain_dict_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:kernel_artifact_to_plain_dict_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_signature:kernel_artifact_to_plain_dict_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:validate_kernel_artifact_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:validate_kernel_artifact_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_signature:validate_kernel_artifact_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:BoundCapabilityInvocationV01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:BoundCapabilityInvocationV01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:CapabilityAdmissionSnapshotV01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:CapabilityAdmissionSnapshotV01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:CapabilityBusinessInputBindingV01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:CapabilityBusinessInputBindingV01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:CapabilityBusinessSemanticsV01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:CapabilityBusinessSemanticsV01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:CapabilityCodeSnapshotV01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:CapabilityCodeSnapshotV01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:CapabilityDefinitionV01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:CapabilityDefinitionV01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:CapabilityFieldV01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:CapabilityFieldV01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:CapabilityValidationEvidenceV01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:CapabilityValidationEvidenceV01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:build_bound_capability_invocation_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:build_bound_capability_invocation_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_signature:build_bound_capability_invocation_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:build_capability_business_input_binding_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:build_capability_business_input_binding_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_signature:build_capability_business_input_binding_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:build_capability_business_semantics_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:build_capability_business_semantics_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_signature:build_capability_business_semantics_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:build_capability_definition_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:build_capability_definition_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_signature:build_capability_definition_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:build_capability_field_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:build_capability_field_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_signature:build_capability_field_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:build_capability_validation_evidence_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:build_capability_validation_evidence_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_signature:build_capability_validation_evidence_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:snapshot_admitted_capability_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:snapshot_admitted_capability_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_signature:snapshot_admitted_capability_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:validate_bound_capability_invocation_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:validate_bound_capability_invocation_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_signature:validate_bound_capability_invocation_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:validate_capability_admission_snapshot_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:validate_capability_admission_snapshot_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_signature:validate_capability_admission_snapshot_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:validate_capability_execution_result_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:validate_capability_execution_result_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_signature:validate_capability_execution_result_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:validate_capability_values_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:validate_capability_values_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_signature:validate_capability_values_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:domain_separated_sha256_hex_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:domain_separated_sha256_hex_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_signature:domain_separated_sha256_hex_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:RootDecisionInputV01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:RootDecisionInputV01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:RootDecisionKernelV01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:RootDecisionKernelV01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:RootDecisionResultV01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:RootDecisionResultV01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:build_root_decision_input_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:build_root_decision_input_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_signature:build_root_decision_input_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:build_root_decision_kernel_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:build_root_decision_kernel_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_signature:build_root_decision_kernel_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:decide_root_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:decide_root_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_signature:decide_root_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:root_decision_result_to_plain_dict_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:root_decision_result_to_plain_dict_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_signature:root_decision_result_to_plain_dict_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:validate_root_decision_input_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:validate_root_decision_input_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_signature:validate_root_decision_input_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:validate_root_decision_result_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:validate_root_decision_result_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_signature:validate_root_decision_result_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:RootOwnedCommitmentV01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:RootOwnedCommitmentV01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:RootSignatureV01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:RootSignatureV01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:RootSignatureVerificationResultV01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:RootSignatureVerificationResultV01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:RootSignerCapabilityV01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:RootSignerCapabilityV01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:TrustedRootKeySetV01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:TrustedRootKeySetV01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:build_root_owned_commitment_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:build_root_owned_commitment_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_signature:build_root_owned_commitment_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:root_owned_commitment_to_plain_dict_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:root_owned_commitment_to_plain_dict_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_signature:root_owned_commitment_to_plain_dict_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:root_signature_to_plain_dict_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:root_signature_to_plain_dict_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_signature:root_signature_to_plain_dict_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:sign_root_owned_commitment_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:sign_root_owned_commitment_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_signature:sign_root_owned_commitment_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:trusted_root_key_set_to_plain_dict_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:trusted_root_key_set_to_plain_dict_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_signature:trusted_root_key_set_to_plain_dict_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:verify_root_signature_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:verify_root_signature_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_signature:verify_root_signature_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:ActorContributionV01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:ActorContributionV01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:ConflictSetV01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:ConflictSetV01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:ConstraintBindingV01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:ConstraintBindingV01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:EvidenceBindingV01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:EvidenceBindingV01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:NormalizedClaimV01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:NormalizedClaimV01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:RootReviewPacketV01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:RootReviewPacketV01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:SemanticWorkRequestV01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:SemanticWorkRequestV01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:SynthesisProposalV01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:SynthesisProposalV01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:UncertaintyBindingV01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:UncertaintyBindingV01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:build_actor_contribution_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:build_actor_contribution_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_signature:build_actor_contribution_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:build_evidence_binding_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:build_evidence_binding_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_signature:build_evidence_binding_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:build_normalized_claim_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:build_normalized_claim_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_signature:build_normalized_claim_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:build_root_review_packet_from_contributions_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:build_root_review_packet_from_contributions_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_signature:build_root_review_packet_from_contributions_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:build_semantic_work_request_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:build_semantic_work_request_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_signature:build_semantic_work_request_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:ComponentTrustProfileV01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:ComponentTrustProfileV01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:build_default_component_trust_profiles_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:build_default_component_trust_profiles_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_signature:build_default_component_trust_profiles_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:WorkBudgetV01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:WorkBudgetV01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:WorkHistoricalOutputV01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:WorkHistoricalOutputV01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:WorkInputBindingV01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:WorkInputBindingV01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:WorkItemV01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:WorkItemV01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:WorkLiteralV01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:WorkLiteralV01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:WorkOutputBindingV01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:WorkOutputBindingV01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:advance_work_program_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:advance_work_program_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_signature:advance_work_program_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:validate_work_program_result_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:validate_work_program_result_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_signature:validate_work_program_result_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:work_program_result_to_artifact_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:work_program_result_to_artifact_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_signature:work_program_result_to_artifact_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:ResolvedDRSCandidate",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:ResolvedDRSCandidate",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:ResolvedDRSReport",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:ResolvedDRSReport",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:SemanticDRSRecordInput",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:SemanticDRSRecordInput",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:SemanticResolveQuery",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:SemanticResolveQuery",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:resolve_semantic_candidates",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:resolve_semantic_candidates",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_signature:resolve_semantic_candidates",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:write_semantic_record",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:write_semantic_record",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_signature:write_semantic_record",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:ActionSourceCaptureV01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:ActionSourceCaptureV01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:RootWorkExecutionHostV01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:RootWorkExecutionHostV01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:TrustedWorkSourceSnapshotV01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:TrustedWorkSourceSnapshotV01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:admit_local_capability_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:admit_local_capability_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_signature:admit_local_capability_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:build_root_work_execution_host_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:build_root_work_execution_host_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_signature:build_root_work_execution_host_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:capture_current_action_source_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:capture_current_action_source_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_signature:capture_current_action_source_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:dispatch_current_action_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:dispatch_current_action_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_signature:dispatch_current_action_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:inspect_current_action_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:inspect_current_action_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_signature:inspect_current_action_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:observe_local_capability_code_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:observe_local_capability_code_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_signature:observe_local_capability_code_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_pin:validate_retained_action_source_capture_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_location:validate_retained_action_source_capture_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "interface_signature:validate_retained_action_source_capture_v01",
+      "status": "PASS"
+    },
+    {
+      "name": "actual_work_output_binding_mapped",
+      "status": "PASS"
+    },
+    {
+      "name": "no_invented_work_output_ref",
+      "status": "PASS"
+    },
+    {
+      "name": "runtime_origins_snapshot_only",
+      "status": "PASS"
+    },
+    {
+      "name": "no_links_in_visible_roots",
+      "status": "PASS"
+    },
+    {
+      "name": "source_visibility:source/demo/run_action_packet_portability_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_visibility:source/demo/work_composition_mock_capabilities_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_visibility:source/tests/test_gate5_calibration_exchange_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_visibility:source/schemas/work_composition_v01.schema.json",
+      "status": "PASS"
+    },
+    {
+      "name": "source_visibility:source/hedgehog/avf_v02.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_visibility:source/hedgehog/drs_memory_resolution_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_visibility:source/hedgehog/wasm_pure_worker_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_visibility:source/hedgehog/action_commit_packet_v02.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_visibility:source/hedgehog/post_vv.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_visibility:source/hedgehog/drs_semantic_address_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_visibility:source/hedgehog/work_execution_host_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_visibility:source/hedgehog/outcome_feedback_consumer_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_visibility:source/hedgehog/context_packets.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_visibility:source/hedgehog/outcome_feedback_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_visibility:source/hedgehog/semantic_reasoning_adapter.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_visibility:source/hedgehog/__init__.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_visibility:source/hedgehog/gate3_mechanism_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_visibility:source/hedgehog/gt_validator.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_visibility:source/hedgehog/reuse_certificate_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_visibility:source/hedgehog/time_model.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_visibility:source/hedgehog/drs_g2b_compatibility_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_visibility:source/hedgehog/reuse_gate.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_visibility:source/hedgehog/local_drs_v02.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_visibility:source/hedgehog/outcome_feedback_history_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_visibility:source/hedgehog/outcome_calibration_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_visibility:source/hedgehog/capability_admission_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_visibility:source/hedgehog/structured_rationale.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_visibility:source/hedgehog/local_drs_resolver.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_visibility:source/hedgehog/drs.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_visibility:source/hedgehog/external_drs/__init__.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_visibility:source/hedgehog/external_drs/gate5_body_profile_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_visibility:source/hedgehog/external_drs/gate5_contracts_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_visibility:source/hedgehog/external_drs/gate5_lifecycle_supplied_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_visibility:source/hedgehog/external_drs/gate5_lifecycle_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_visibility:source/hedgehog/external_drs/gate5_native_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_visibility:source/hedgehog/external_drs/gate5_supplied_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_visibility:source/hedgehog/external_drs/gate5_exchange_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_visibility:source/hedgehog/domains/__init__.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_visibility:source/hedgehog/evidence/sealed_replay_evidence_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_visibility:source/hedgehog/evidence/sealed_evidence_profile_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_visibility:source/hedgehog/evidence/__init__.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_visibility:source/hedgehog/evidence/sealed_package_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_visibility:source/hedgehog/evidence/external_anchor_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_visibility:source/hedgehog/kernel/multiroot_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_visibility:source/hedgehog/kernel/integrity_replay_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_visibility:source/hedgehog/kernel/fractal_runtime_v02.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_visibility:source/hedgehog/kernel/semantic_work_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_visibility:source/hedgehog/kernel/execution_mode_router_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_visibility:source/hedgehog/kernel/__init__.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_visibility:source/hedgehog/kernel/abi_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_visibility:source/hedgehog/kernel/trust_model_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_visibility:source/hedgehog/kernel/effect_firewall_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_visibility:source/hedgehog/kernel/transition_registry_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_visibility:source/hedgehog/kernel/work_composition_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_visibility:source/hedgehog/kernel/root_signer_isolation_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_visibility:source/hedgehog/kernel/root_decision_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_visibility:source/hedgehog/kernel/continuous_delta_runtime_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_visibility:source/hedgehog/kernel/conformance_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_visibility:source/hedgehog/domains/supplier_water_filter/__init__.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_visibility:source/hedgehog/domains/supplier_water_filter/kernel_adapter_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_visibility:source/hedgehog/domains/supplier_water_filter/gate3_runtime_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_visibility:source/hedgehog/domains/supplier_water_filter/outcome_feedback_adapter_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_visibility:source/hedgehog/domains/supplier_water_filter/adversarial_feedback_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_visibility:source/hedgehog/domains/landslide_sentinel/__init__.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_visibility:source/hedgehog/domains/landslide_sentinel/contracts_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_visibility:source/hedgehog/domains/landslide_sentinel/monitoring_runtime_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_visibility:source/hedgehog/domains/landslide_sentinel/evidence_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_visibility:source/hedgehog/domains/landslide_sentinel/semantic_adapter_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_visibility:source/hedgehog/domains/landslide_sentinel/kernel_adapter_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_visibility:source/hedgehog/domains/landslide_sentinel/events_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_visibility:source/hedgehog/domains/landslide_sentinel/outbox_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_visibility:source/hedgehog/domains/landslide_sentinel/outcome_feedback_adapter_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_visibility:source/hedgehog/domains/landslide_sentinel/capability_registry_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_visibility:source/hedgehog/domains/landslide_sentinel/incident_policy_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_visibility:source/hedgehog/domains/testflix/semantic_roles_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_visibility:source/hedgehog/domains/testflix/__init__.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_visibility:source/hedgehog/domains/testflix/contracts_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_visibility:source/hedgehog/domains/testflix/live_semantic_adapter_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_visibility:source/hedgehog/domains/testflix/evidence_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_visibility:source/hedgehog/domains/testflix/lifecycle_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_visibility:source/hedgehog/domains/testflix/semantic_adapter_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_visibility:source/hedgehog/domains/testflix/kernel_adapter_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_visibility:source/hedgehog/domains/testflix/outcome_feedback_adapter_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_visibility:source/hedgehog/domains/testflix/mock_world_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_visibility:source/hedgehog/domains/ephemeral_workspace/local_services_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_visibility:source/hedgehog/domains/ephemeral_workspace/media_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_visibility:source/hedgehog/domains/ephemeral_workspace/semantic_roles_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_visibility:source/hedgehog/domains/ephemeral_workspace/media_continuation_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_visibility:source/hedgehog/domains/ephemeral_workspace/__init__.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_visibility:source/hedgehog/domains/ephemeral_workspace/contracts_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_visibility:source/hedgehog/domains/ephemeral_workspace/evidence_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_visibility:source/hedgehog/domains/ephemeral_workspace/semantic_adapter_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_visibility:source/hedgehog/domains/ephemeral_workspace/kernel_adapter_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_visibility:source/hedgehog/domains/ephemeral_workspace/outcome_feedback_adapter_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_visibility:source/hedgehog/domains/ephemeral_workspace/capability_registry_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_visibility:source/hedgehog/domains/ephemeral_workspace/memory_adapter_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_visibility:source/hedgehog/domains/ephemeral_workspace/session_runtime_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_visibility:source/hedgehog/domains/airline/ticket_purchase_corridor_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_visibility:source/hedgehog/domains/airline/semantic_to_contract_causal_runtime_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_visibility:source/hedgehog/domains/airline/semantic_to_contract_binding_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_visibility:source/hedgehog/domains/airline/ticket_purchase_corridor_runtime_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_visibility:source/hedgehog/domains/airline/__init__.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_visibility:source/hedgehog/domains/airline/transaction_artifact_ledger_collector_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_visibility:source/hedgehog/domains/airline/transaction_artifact_ledger_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "source_visibility:source/hedgehog/domains/airline/outcome_feedback_adapter_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "no_hidden_value:AUTHOR_VISIBLE/DEPENDENCIES.json",
+      "status": "PASS"
+    },
+    {
+      "name": "no_hidden_value:AUTHOR_VISIBLE/AUTHOR_TOOLS.json",
+      "status": "PASS"
+    },
+    {
+      "name": "no_hidden_value:AUTHOR_VISIBLE/LICENSE",
+      "status": "PASS"
+    },
+    {
+      "name": "no_hidden_value:AUTHOR_VISIBLE/START_HERE.md",
+      "status": "PASS"
+    },
+    {
+      "name": "no_hidden_value:AUTHOR_VISIBLE/AUTHOR_SYSTEM.txt",
+      "status": "PASS"
+    },
+    {
+      "name": "no_hidden_value:AUTHOR_VISIBLE/HOW_TO_BUILD.md",
+      "status": "PASS"
+    },
+    {
+      "name": "no_hidden_value:AUTHOR_VISIBLE/SOURCE_INVENTORY.json",
+      "status": "PASS"
+    },
+    {
+      "name": "no_hidden_value:AUTHOR_VISIBLE/candidate_contract.py",
+      "status": "PASS"
+    },
+    {
+      "name": "no_hidden_value:AUTHOR_VISIBLE/CANDIDATE_OUTPUT.md",
+      "status": "PASS"
+    },
+    {
+      "name": "no_hidden_value:AUTHOR_VISIBLE/NATIVE_INTERFACE_MAP.md",
+      "status": "PASS"
+    },
+    {
+      "name": "no_hidden_value:AUTHOR_VISIBLE/NATIVE_INTERFACE_MAP.json",
+      "status": "PASS"
+    },
+    {
+      "name": "no_hidden_value:AUTHOR_VISIBLE/example/reconcile_receipt.py",
+      "status": "PASS"
+    },
+    {
+      "name": "no_hidden_value:AUTHOR_VISIBLE/example/numeric_profile.py",
+      "status": "PASS"
+    },
+    {
+      "name": "no_hidden_value:AUTHOR_VISIBLE/example/check_effect.py",
+      "status": "PASS"
+    },
+    {
+      "name": "no_hidden_value:AUTHOR_VISIBLE/example/run_numeric.py",
+      "status": "PASS"
+    },
+    {
+      "name": "no_hidden_value:AUTHOR_VISIBLE/example/native_seams.py",
+      "status": "PASS"
+    },
+    {
+      "name": "no_hidden_value:AUTHOR_VISIBLE/example/mock_effect.py",
+      "status": "PASS"
+    },
+    {
+      "name": "no_hidden_value:TASK_VISIBLE/WHAT_TO_BUILD.md",
+      "status": "PASS"
+    },
+    {
+      "name": "no_target_source",
+      "status": "PASS"
+    },
+    {
+      "name": "no_git_venv_cache_context",
+      "status": "PASS"
+    },
+    {
+      "name": "no_embedded_private_key:DEPENDENCIES.json",
+      "status": "PASS"
+    },
+    {
+      "name": "no_embedded_private_key:AUTHOR_TOOLS.json",
+      "status": "PASS"
+    },
+    {
+      "name": "no_embedded_private_key:LICENSE",
+      "status": "PASS"
+    },
+    {
+      "name": "no_embedded_private_key:START_HERE.md",
+      "status": "PASS"
+    },
+    {
+      "name": "no_embedded_private_key:AUTHOR_SYSTEM.txt",
+      "status": "PASS"
+    },
+    {
+      "name": "no_embedded_private_key:HOW_TO_BUILD.md",
+      "status": "PASS"
+    },
+    {
+      "name": "no_embedded_private_key:SOURCE_INVENTORY.json",
+      "status": "PASS"
+    },
+    {
+      "name": "no_embedded_private_key:candidate_contract.py",
+      "status": "PASS"
+    },
+    {
+      "name": "no_embedded_private_key:CANDIDATE_OUTPUT.md",
+      "status": "PASS"
+    },
+    {
+      "name": "no_embedded_private_key:NATIVE_INTERFACE_MAP.md",
+      "status": "PASS"
+    },
+    {
+      "name": "no_embedded_private_key:NATIVE_INTERFACE_MAP.json",
+      "status": "PASS"
+    },
+    {
+      "name": "no_embedded_private_key:example/reconcile_receipt.py",
+      "status": "PASS"
+    },
+    {
+      "name": "no_embedded_private_key:example/numeric_profile.py",
+      "status": "PASS"
+    },
+    {
+      "name": "no_embedded_private_key:example/check_effect.py",
+      "status": "PASS"
+    },
+    {
+      "name": "no_embedded_private_key:example/run_numeric.py",
+      "status": "PASS"
+    },
+    {
+      "name": "no_embedded_private_key:example/native_seams.py",
+      "status": "PASS"
+    },
+    {
+      "name": "no_embedded_private_key:example/mock_effect.py",
+      "status": "PASS"
+    },
+    {
+      "name": "no_embedded_private_key:source/demo/run_action_packet_portability_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "no_embedded_private_key:source/demo/work_composition_mock_capabilities_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "no_embedded_private_key:source/tests/test_gate5_calibration_exchange_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "no_embedded_private_key:source/schemas/work_composition_v01.schema.json",
+      "status": "PASS"
+    },
+    {
+      "name": "no_embedded_private_key:source/hedgehog/avf_v02.py",
+      "status": "PASS"
+    },
+    {
+      "name": "no_embedded_private_key:source/hedgehog/drs_memory_resolution_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "no_embedded_private_key:source/hedgehog/wasm_pure_worker_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "no_embedded_private_key:source/hedgehog/action_commit_packet_v02.py",
+      "status": "PASS"
+    },
+    {
+      "name": "no_embedded_private_key:source/hedgehog/post_vv.py",
+      "status": "PASS"
+    },
+    {
+      "name": "no_embedded_private_key:source/hedgehog/drs_semantic_address_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "no_embedded_private_key:source/hedgehog/work_execution_host_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "no_embedded_private_key:source/hedgehog/outcome_feedback_consumer_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "no_embedded_private_key:source/hedgehog/context_packets.py",
+      "status": "PASS"
+    },
+    {
+      "name": "no_embedded_private_key:source/hedgehog/outcome_feedback_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "no_embedded_private_key:source/hedgehog/semantic_reasoning_adapter.py",
+      "status": "PASS"
+    },
+    {
+      "name": "no_embedded_private_key:source/hedgehog/__init__.py",
+      "status": "PASS"
+    },
+    {
+      "name": "no_embedded_private_key:source/hedgehog/gate3_mechanism_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "no_embedded_private_key:source/hedgehog/gt_validator.py",
+      "status": "PASS"
+    },
+    {
+      "name": "no_embedded_private_key:source/hedgehog/reuse_certificate_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "no_embedded_private_key:source/hedgehog/time_model.py",
+      "status": "PASS"
+    },
+    {
+      "name": "no_embedded_private_key:source/hedgehog/drs_g2b_compatibility_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "no_embedded_private_key:source/hedgehog/reuse_gate.py",
+      "status": "PASS"
+    },
+    {
+      "name": "no_embedded_private_key:source/hedgehog/local_drs_v02.py",
+      "status": "PASS"
+    },
+    {
+      "name": "no_embedded_private_key:source/hedgehog/outcome_feedback_history_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "no_embedded_private_key:source/hedgehog/outcome_calibration_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "no_embedded_private_key:source/hedgehog/capability_admission_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "no_embedded_private_key:source/hedgehog/structured_rationale.py",
+      "status": "PASS"
+    },
+    {
+      "name": "no_embedded_private_key:source/hedgehog/local_drs_resolver.py",
+      "status": "PASS"
+    },
+    {
+      "name": "no_embedded_private_key:source/hedgehog/drs.py",
+      "status": "PASS"
+    },
+    {
+      "name": "no_embedded_private_key:source/hedgehog/external_drs/__init__.py",
+      "status": "PASS"
+    },
+    {
+      "name": "no_embedded_private_key:source/hedgehog/external_drs/gate5_body_profile_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "no_embedded_private_key:source/hedgehog/external_drs/gate5_contracts_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "no_embedded_private_key:source/hedgehog/external_drs/gate5_lifecycle_supplied_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "no_embedded_private_key:source/hedgehog/external_drs/gate5_lifecycle_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "no_embedded_private_key:source/hedgehog/external_drs/gate5_native_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "no_embedded_private_key:source/hedgehog/external_drs/gate5_supplied_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "no_embedded_private_key:source/hedgehog/external_drs/gate5_exchange_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "no_embedded_private_key:source/hedgehog/domains/__init__.py",
+      "status": "PASS"
+    },
+    {
+      "name": "no_embedded_private_key:source/hedgehog/evidence/sealed_replay_evidence_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "no_embedded_private_key:source/hedgehog/evidence/sealed_evidence_profile_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "no_embedded_private_key:source/hedgehog/evidence/__init__.py",
+      "status": "PASS"
+    },
+    {
+      "name": "no_embedded_private_key:source/hedgehog/evidence/sealed_package_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "no_embedded_private_key:source/hedgehog/evidence/external_anchor_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "no_embedded_private_key:source/hedgehog/kernel/multiroot_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "no_embedded_private_key:source/hedgehog/kernel/integrity_replay_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "no_embedded_private_key:source/hedgehog/kernel/fractal_runtime_v02.py",
+      "status": "PASS"
+    },
+    {
+      "name": "no_embedded_private_key:source/hedgehog/kernel/semantic_work_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "no_embedded_private_key:source/hedgehog/kernel/execution_mode_router_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "no_embedded_private_key:source/hedgehog/kernel/__init__.py",
+      "status": "PASS"
+    },
+    {
+      "name": "no_embedded_private_key:source/hedgehog/kernel/abi_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "no_embedded_private_key:source/hedgehog/kernel/trust_model_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "no_embedded_private_key:source/hedgehog/kernel/effect_firewall_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "no_embedded_private_key:source/hedgehog/kernel/transition_registry_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "no_embedded_private_key:source/hedgehog/kernel/work_composition_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "no_embedded_private_key:source/hedgehog/kernel/root_signer_isolation_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "no_embedded_private_key:source/hedgehog/kernel/root_decision_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "no_embedded_private_key:source/hedgehog/kernel/continuous_delta_runtime_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "no_embedded_private_key:source/hedgehog/kernel/conformance_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "no_embedded_private_key:source/hedgehog/domains/supplier_water_filter/__init__.py",
+      "status": "PASS"
+    },
+    {
+      "name": "no_embedded_private_key:source/hedgehog/domains/supplier_water_filter/kernel_adapter_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "no_embedded_private_key:source/hedgehog/domains/supplier_water_filter/gate3_runtime_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "no_embedded_private_key:source/hedgehog/domains/supplier_water_filter/outcome_feedback_adapter_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "no_embedded_private_key:source/hedgehog/domains/supplier_water_filter/adversarial_feedback_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "no_embedded_private_key:source/hedgehog/domains/landslide_sentinel/__init__.py",
+      "status": "PASS"
+    },
+    {
+      "name": "no_embedded_private_key:source/hedgehog/domains/landslide_sentinel/contracts_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "no_embedded_private_key:source/hedgehog/domains/landslide_sentinel/monitoring_runtime_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "no_embedded_private_key:source/hedgehog/domains/landslide_sentinel/evidence_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "no_embedded_private_key:source/hedgehog/domains/landslide_sentinel/semantic_adapter_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "no_embedded_private_key:source/hedgehog/domains/landslide_sentinel/kernel_adapter_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "no_embedded_private_key:source/hedgehog/domains/landslide_sentinel/events_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "no_embedded_private_key:source/hedgehog/domains/landslide_sentinel/outbox_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "no_embedded_private_key:source/hedgehog/domains/landslide_sentinel/outcome_feedback_adapter_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "no_embedded_private_key:source/hedgehog/domains/landslide_sentinel/capability_registry_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "no_embedded_private_key:source/hedgehog/domains/landslide_sentinel/incident_policy_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "no_embedded_private_key:source/hedgehog/domains/testflix/semantic_roles_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "no_embedded_private_key:source/hedgehog/domains/testflix/__init__.py",
+      "status": "PASS"
+    },
+    {
+      "name": "no_embedded_private_key:source/hedgehog/domains/testflix/contracts_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "no_embedded_private_key:source/hedgehog/domains/testflix/live_semantic_adapter_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "no_embedded_private_key:source/hedgehog/domains/testflix/evidence_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "no_embedded_private_key:source/hedgehog/domains/testflix/lifecycle_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "no_embedded_private_key:source/hedgehog/domains/testflix/semantic_adapter_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "no_embedded_private_key:source/hedgehog/domains/testflix/kernel_adapter_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "no_embedded_private_key:source/hedgehog/domains/testflix/outcome_feedback_adapter_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "no_embedded_private_key:source/hedgehog/domains/testflix/mock_world_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "no_embedded_private_key:source/hedgehog/domains/ephemeral_workspace/local_services_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "no_embedded_private_key:source/hedgehog/domains/ephemeral_workspace/media_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "no_embedded_private_key:source/hedgehog/domains/ephemeral_workspace/semantic_roles_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "no_embedded_private_key:source/hedgehog/domains/ephemeral_workspace/media_continuation_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "no_embedded_private_key:source/hedgehog/domains/ephemeral_workspace/__init__.py",
+      "status": "PASS"
+    },
+    {
+      "name": "no_embedded_private_key:source/hedgehog/domains/ephemeral_workspace/contracts_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "no_embedded_private_key:source/hedgehog/domains/ephemeral_workspace/evidence_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "no_embedded_private_key:source/hedgehog/domains/ephemeral_workspace/semantic_adapter_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "no_embedded_private_key:source/hedgehog/domains/ephemeral_workspace/kernel_adapter_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "no_embedded_private_key:source/hedgehog/domains/ephemeral_workspace/outcome_feedback_adapter_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "no_embedded_private_key:source/hedgehog/domains/ephemeral_workspace/capability_registry_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "no_embedded_private_key:source/hedgehog/domains/ephemeral_workspace/memory_adapter_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "no_embedded_private_key:source/hedgehog/domains/ephemeral_workspace/session_runtime_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "no_embedded_private_key:source/hedgehog/domains/airline/ticket_purchase_corridor_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "no_embedded_private_key:source/hedgehog/domains/airline/semantic_to_contract_causal_runtime_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "no_embedded_private_key:source/hedgehog/domains/airline/semantic_to_contract_binding_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "no_embedded_private_key:source/hedgehog/domains/airline/ticket_purchase_corridor_runtime_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "no_embedded_private_key:source/hedgehog/domains/airline/__init__.py",
+      "status": "PASS"
+    },
+    {
+      "name": "no_embedded_private_key:source/hedgehog/domains/airline/transaction_artifact_ledger_collector_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "no_embedded_private_key:source/hedgehog/domains/airline/transaction_artifact_ledger_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "no_embedded_private_key:source/hedgehog/domains/airline/outcome_feedback_adapter_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "owner_addition_absent:demo/run_gate5_calibration_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "owner_addition_absent:demo/run_gate5_lifecycle_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "owner_addition_absent:docs/gate5_calibration_exchange_checkpoint_v01.md",
+      "status": "PASS"
+    },
+    {
+      "name": "owner_addition_absent:docs/gate5_lifecycle_restart_checkpoint_v01.md",
+      "status": "PASS"
+    },
+    {
+      "name": "owner_addition_absent:hedgehog/external_drs/gate5_body_profile_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "owner_addition_absent:hedgehog/external_drs/gate5_contracts_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "owner_addition_absent:hedgehog/external_drs/gate5_exchange_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "owner_addition_absent:hedgehog/external_drs/gate5_lifecycle_supplied_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "owner_addition_absent:hedgehog/external_drs/gate5_lifecycle_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "owner_addition_absent:hedgehog/external_drs/gate5_native_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "owner_addition_absent:hedgehog/external_drs/gate5_supplied_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "owner_addition_absent:tests/test_gate5_calibration_exchange_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "owner_addition_absent:tests/test_gate5_lifecycle_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "only_profile_delta_from_g52",
+      "status": "PASS"
+    },
+    {
+      "name": "patch_owner:--check",
+      "status": "PASS"
+    },
+    {
+      "name": "patch_owner:--whitespace=error-all",
+      "status": "PASS"
+    },
+    {
+      "name": "postimage_owner:demo/run_gate5_calibration_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "postimage_owner:demo/run_gate5_lifecycle_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "postimage_owner:docs/gate5_calibration_exchange_checkpoint_v01.md",
+      "status": "PASS"
+    },
+    {
+      "name": "postimage_owner:docs/gate5_lifecycle_restart_checkpoint_v01.md",
+      "status": "PASS"
+    },
+    {
+      "name": "postimage_owner:hedgehog/external_drs/gate5_body_profile_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "postimage_owner:hedgehog/external_drs/gate5_contracts_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "postimage_owner:hedgehog/external_drs/gate5_exchange_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "postimage_owner:hedgehog/external_drs/gate5_lifecycle_supplied_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "postimage_owner:hedgehog/external_drs/gate5_lifecycle_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "postimage_owner:hedgehog/external_drs/gate5_native_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "postimage_owner:hedgehog/external_drs/gate5_supplied_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "postimage_owner:tests/test_gate5_calibration_exchange_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "postimage_owner:tests/test_gate5_lifecycle_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "patch_g52:--check",
+      "status": "PASS"
+    },
+    {
+      "name": "patch_g52:--whitespace=error-all",
+      "status": "PASS"
+    },
+    {
+      "name": "postimage_g52:demo/run_gate5_calibration_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "postimage_g52:demo/run_gate5_lifecycle_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "postimage_g52:docs/gate5_calibration_exchange_checkpoint_v01.md",
+      "status": "PASS"
+    },
+    {
+      "name": "postimage_g52:docs/gate5_lifecycle_restart_checkpoint_v01.md",
+      "status": "PASS"
+    },
+    {
+      "name": "postimage_g52:hedgehog/external_drs/gate5_body_profile_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "postimage_g52:hedgehog/external_drs/gate5_contracts_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "postimage_g52:hedgehog/external_drs/gate5_exchange_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "postimage_g52:hedgehog/external_drs/gate5_lifecycle_supplied_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "postimage_g52:hedgehog/external_drs/gate5_lifecycle_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "postimage_g52:hedgehog/external_drs/gate5_native_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "postimage_g52:hedgehog/external_drs/gate5_supplied_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "postimage_g52:tests/test_gate5_calibration_exchange_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "postimage_g52:tests/test_gate5_lifecycle_v01.py",
+      "status": "PASS"
+    },
+    {
+      "name": "manifestcoverage:AUTHOR_VISIBLE",
+      "status": "PASS"
+    },
+    {
+      "name": "independent_manifest_pin:AUTHOR_VISIBLE",
+      "status": "PASS"
+    },
+    {
+      "name": "manifestcoverage:TASK_VISIBLE",
+      "status": "PASS"
+    },
+    {
+      "name": "independent_manifest_pin:TASK_VISIBLE",
+      "status": "PASS"
+    },
+    {
+      "name": "manifestcoverage:EXAMINER_PRIVATE",
+      "status": "PASS"
+    },
+    {
+      "name": "independent_manifest_pin:EXAMINER_PRIVATE",
+      "status": "PASS"
+    },
+    {
+      "name": "altered_expected_pin_refused",
+      "status": "PASS"
+    }
+  ],
+  "seconds": 1.7483097491785884,
+  "status": "PASS"
+}

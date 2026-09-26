@@ -1,0 +1,19 @@
+{
+  "actual_commit": "64f2b38b0d671e4907bae8649fff8f3d2ee0751c",
+  "added_paths": 212,
+  "all_prior_bytes_git_modes_oids_and_posix_modes_preserved": true,
+  "base_tree": "c7873289ebb7a0d46536e07ea5e09c675b0e534e",
+  "completed": "2026-09-25T19:57:57.209473+00:00",
+  "diff_check_rc": 0,
+  "elapsed_seconds": 2.0578965824097395,
+  "expected_and_actual_tree": "cacb14a9574c350fb33239680abe0c3a5ede7b5e",
+  "final_context_valid": true,
+  "historical_installation_and_accepted_basis_unchanged": true,
+  "independent_remote_commit_tree_all_modes_oids_and_212_blobs": true,
+  "index_matches_head": true,
+  "owner_clean": true,
+  "prior_paths_preserved": 4367,
+  "readme_enforcement_registries_sealed_assets_preserved": true,
+  "sole_parent": "5cef2c52fd805daedec958109caf9d1806899eb4",
+  "status": "PASS"
+}

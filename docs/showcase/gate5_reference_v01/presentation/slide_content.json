@@ -1,0 +1,1420 @@
+{
+  "schema": "radiolaria_gate5_presentation_content_v01",
+  "source_commit": "64f2b38b0d671e4907bae8649fff8f3d2ee0751c",
+  "facts": {
+    "native_cases": 16,
+    "native_events": 56,
+    "native_mock_starts": 7,
+    "live_calls": 3,
+    "live_events": 5,
+    "live_mock_starts": 1,
+    "reservations": 3,
+    "idempotency_entries": 1,
+    "price_minor": 6300,
+    "budget_minor": 7000,
+    "source_additions": 13,
+    "author_files": 23,
+    "pack_files": 24,
+    "all_additions": 212,
+    "old_files": 4367,
+    "seed_files": 22,
+    "broker_operations": 79,
+    "d1_supplied_bytes": 32702,
+    "g55_proof_bytes": 37389
+  },
+  "slides": [
+    {
+      "slide_id": "S01",
+      "number": 1,
+      "topic": "X",
+      "title": "Computing, assembled around intent",
+      "lead": "A working domain. External meaning. Independent authorship.",
+      "claim_ids": [
+        "C01",
+        "C04",
+        "C17",
+        "C20"
+      ],
+      "section_id": "X-01",
+      "source": {
+        "archive_id": null,
+        "archive_sha256": null,
+        "members": [],
+        "source_commit": "64f2b38b0d671e4907bae8649fff8f3d2ee0751c",
+        "repository_paths": [
+          "docs/gate5_reference_evidence_v01/member_index.json",
+          "docs/gate5_reference_contract_v01.md",
+          "docs/gate5_reference_checkpoint_v01.md"
+        ]
+      },
+      "text": [
+        "RADIOLARIA OS / GATE 5 REFERENCE",
+        "Computing,\nassembled\naround intent.",
+        "A working domain.\nExternal meaning.\nIndependent authorship.",
+        "Reference implementation\nSynthetic venue · amended authoring protocol",
+        "Engineering accepted 25 September 2026"
+      ],
+      "notes": "Architectural framing from the owner’s North and the accepted Gate 5 contract. A program written by an external author arranged three synthetic training sessions using another owner’s evidence through the governed exchange. This is not a physical stadium deployment. G54D1 acceptance follows explicitly amended, restored correction 4. Artwork provenance: docs/showcase/g54b1_authoring_case_v01/assets/radiolaria_g54b1_cover_v01.png at parent 5cef2c52fd805daedec958109caf9d1806899eb4. G56 is a separate publication preparation.",
+      "dossier_sections": [
+        "F01",
+        "D01",
+        "A01"
+      ]
+    },
+    {
+      "slide_id": "S02",
+      "number": 2,
+      "topic": "X",
+      "title": "Three subjects explain one connected result",
+      "lead": "A new program used another owner’s evidence to arrange the requested sessions.",
+      "claim_ids": [
+        "C01",
+        "C04",
+        "C17"
+      ],
+      "source": {
+        "archive_id": null,
+        "archive_sha256": null,
+        "members": [],
+        "source_commit": "64f2b38b0d671e4907bae8649fff8f3d2ee0751c",
+        "repository_paths": [
+          "docs/gate5_reference_evidence_v01/member_index.json",
+          "docs/gate5_reference_contract_v01.md"
+        ]
+      },
+      "section_id": "X-02",
+      "text": [
+        "Three subjects explain one connected result",
+        "A new program used another owner’s evidence to arrange the requested sessions.",
+        "Three routes: Football / External DRS / Independent Authoring",
+        "GATE 5 REFERENCE  /  02",
+        "F / FOOTBALL",
+        "What work\nactually happened?",
+        "Intent, a permitted change,\nthree recorded reservations.",
+        "D / EXTERNAL DRS",
+        "How did external\nmeaning become useful?",
+        "An address led to evidence\nthat a local Work consumed.",
+        "A / AUTHORING",
+        "Who built\nthe new program?",
+        "A bounded author created it.\nSeparate reviewers admitted it."
+      ],
+      "notes": "Three editorial routes through the same accepted program and proof corpus. F concerns actual synthetic domain work; D concerns the source and consumption chain; A concerns authored bytes, corrections and separate admission. These are not three additional experiments.",
+      "dossier_sections": [
+        "F01",
+        "D01",
+        "A01"
+      ]
+    },
+    {
+      "slide_id": "S03",
+      "number": 3,
+      "topic": "X",
+      "title": "The program was built first, then used",
+      "lead": "Construction and execution have separate decisions and separate evidence.",
+      "claim_ids": [
+        "C04",
+        "C17",
+        "C18",
+        "C22"
+      ],
+      "source": {
+        "archive_id": "g54d1",
+        "archive_sha256": "0558786b4d2882be7610223dd754e927bedce2530e2d5ac4ca1d429ce7ac22f0",
+        "members": [
+          "PROTOCOL_AMENDMENT.json",
+          "NATIVE_ACCEPTED.json"
+        ],
+        "source_commit": "64f2b38b0d671e4907bae8649fff8f3d2ee0751c",
+        "repository_paths": [
+          "docs/gate5_reference_evidence_v01/member_index.json",
+          "docs/gate5_reference_contract_v01.md"
+        ]
+      },
+      "section_id": "X-03",
+      "text": [
+        "The program was built first, then used",
+        "Construction and execution have separate decisions and separate evidence.",
+        "Design time and run time / mechanism overview",
+        "GATE 5 REFERENCE  /  03",
+        "DESIGN TIME",
+        "HOW + WHAT",
+        "External author",
+        "Candidate",
+        "Review / admission",
+        "ACCEPTED PROGRAM",
+        "RUN TIME",
+        "Intent + proposal",
+        "Local Work / DRS",
+        "Owner consent",
+        "Native MOCK / record",
+        "The running system did not discover, write and install its own football program."
+      ],
+      "notes": "Conceptual diagram constrained to the separately observed stages. The authoring trial precedes candidate review, native runs and later G55L engineering admission. The lower row summarizes execution, not an exact packet trace. There is no runtime self-installation or super-Root.",
+      "dossier_sections": [
+        "A01",
+        "F05"
+      ]
+    },
+    {
+      "slide_id": "S04",
+      "number": 4,
+      "topic": "F",
+      "title": "The request was three training sessions",
+      "lead": "A real planning need supplied the story. The venue, inventory and prices are synthetic.",
+      "claim_ids": [
+        "C01"
+      ],
+      "source": {
+        "archive_id": "g54d1",
+        "archive_sha256": "0558786b4d2882be7610223dd754e927bedce2530e2d5ac4ca1d429ce7ac22f0",
+        "members": [
+          "LIVE/prepare_01/provider_exact/request_body.json"
+        ],
+        "source_commit": "64f2b38b0d671e4907bae8649fff8f3d2ee0751c",
+        "repository_paths": [
+          "docs/gate5_reference_evidence_v01/member_index.json"
+        ]
+      },
+      "section_id": "F-04",
+      "text": [
+        "The request was three training sessions",
+        "A real planning need supplied the story. The venue, inventory and prices are synthetic.",
+        "F / Request, calendar and inventory",
+        "GATE 5 REFERENCE  /  04",
+        "JANUARY 2027",
+        "REQUESTED TIME",
+        "DURATION",
+        "7 January",
+        "16:30–18:00",
+        "90 minutes",
+        "8 January",
+        "11:00–12:30",
+        "90 minutes",
+        "9 January",
+        "11:00–12:30",
+        "90 minutes",
+        "Natural grass. Full-size pitch.",
+        "€70.00 budget",
+        "Europe/Tirane civil times. Budget: 7,000 minor EUR."
+      ],
+      "notes": "Actual exact model input and controlled football profile specify three 90-minute sessions, full-size natural field, Europe/Tirane and budget_minor 7000. The personal motivation was arranging sports camps. No Tirana stadium integration or market tariff is claimed.",
+      "dossier_sections": [
+        "F02"
+      ]
+    },
+    {
+      "slide_id": "S05",
+      "number": 5,
+      "topic": "F",
+      "title": "The exact request had no complete offer",
+      "lead": "The program preserved all requested hours and reported the missing fit.",
+      "claim_ids": [
+        "C01",
+        "C02"
+      ],
+      "source": {
+        "archive_id": "g54d1",
+        "archive_sha256": "0558786b4d2882be7610223dd754e927bedce2530e2d5ac4ca1d429ce7ac22f0",
+        "members": [
+          "LIVE/prepare_01/provider_exact/request_body.json",
+          "LIVE/prepare_01/provider_exact/response_body.raw",
+          "LIVE/consumption_verified.json"
+        ],
+        "source_commit": "64f2b38b0d671e4907bae8649fff8f3d2ee0751c",
+        "repository_paths": [
+          "docs/gate5_reference_evidence_v01/member_index.json"
+        ]
+      },
+      "section_id": "F-05",
+      "text": [
+        "The exact request had no complete offer",
+        "The program preserved all requested hours and reported the missing fit.",
+        "F / EXACT model response and native consumption",
+        "GATE 5 REFERENCE  /  05",
+        "ACTUAL INTENT",
+        "Three sessions\nat exact times",
+        "The owner supplied the dates,\nduration and hard conditions.",
+        "ACTUAL JSON FIELDS",
+        "FIND_OFFER\nallowance [0, 0, 0]",
+        "gemini-2.5-flash returned\nparameters for the program.",
+        "OBSERVED RESULT",
+        "No complete\noffer",
+        "Producer and consumer Work\ncompleted the same request."
+      ],
+      "notes": "The JSON fields shown are an excerpt of actual returned JSON, displayed without unrelated fields. allowance is a compact display of the three allow_shift_minutes values, not the literal JSON property name. LIVE/consumption_verified.json joins.exact shows exact intake request hashes on both roles and native status NO_COMPLETE_OFFER. The model translated intent into parameters. The native program computed offer feasibility.",
+      "dossier_sections": [
+        "F03",
+        "F08"
+      ]
+    },
+    {
+      "slide_id": "S06",
+      "number": 6,
+      "topic": "F",
+      "title": "One permitted change opened a valid offer",
+      "lead": "Only 8 January received a 30-minute allowance. Other conditions stayed fixed.",
+      "claim_ids": [
+        "C02",
+        "C03"
+      ],
+      "source": {
+        "archive_id": "g54d1",
+        "archive_sha256": "0558786b4d2882be7610223dd754e927bedce2530e2d5ac4ca1d429ce7ac22f0",
+        "members": [
+          "LIVE/prepare_01/provider_shift/request_body.json",
+          "LIVE/prepare_01/provider_shift/response_body.raw",
+          "LIVE/consumption_verified.json"
+        ],
+        "source_commit": "64f2b38b0d671e4907bae8649fff8f3d2ee0751c",
+        "repository_paths": [
+          "docs/gate5_reference_evidence_v01/member_index.json"
+        ]
+      },
+      "section_id": "F-06",
+      "text": [
+        "One permitted change opened a valid offer",
+        "Only 8 January received a 30-minute allowance. Other conditions stayed fixed.",
+        "F / SHIFT input, selected offer and arithmetic",
+        "GATE 5 REFERENCE  /  06",
+        "DATE",
+        "REQUESTED",
+        "ACCEPTED OFFER",
+        "7 January",
+        "16:30–18:00",
+        "16:30–18:00",
+        "8 January",
+        "11:00–12:30",
+        "11:30–13:00",
+        "9 January",
+        "11:00–12:30",
+        "11:00–12:30",
+        "allowance [0, 30, 0]",
+        "€63.00 / €70.00",
+        "3 × 2,100 = 6,300 minor EUR. Permission to shift did not authorize booking."
+      ],
+      "notes": "Actual SHIFT response: FIND_OFFER, revision 2, owner_approval_ref consent:jan8-only, only session:8 allow_shift_minutes 30. Original requested times remain in the request; selected offer moves only Jan 8 to 11:30–13:00. Three slots at 2100 minor EUR sum 6300, below 7000. LIVE join native total_minor 6300 and status OFFER_READY. This is a synthetic tariff.",
+      "dossier_sections": [
+        "F04",
+        "F08"
+      ]
+    },
+    {
+      "slide_id": "S07",
+      "number": 7,
+      "topic": "F",
+      "title": "One owner produced the offer; another used it",
+      "lead": "Two native Work results are joined by an external, source-bound exchange.",
+      "claim_ids": [
+        "C04",
+        "C16"
+      ],
+      "source": {
+        "archive_id": "g54d1",
+        "archive_sha256": "0558786b4d2882be7610223dd754e927bedce2530e2d5ac4ca1d429ce7ac22f0",
+        "members": [
+          "LIVE/consumption_verified.json",
+          "SUPERVISOR_EVIDENCE/p7_candidate_f779b790/independent_flow_review.json"
+        ],
+        "source_commit": "64f2b38b0d671e4907bae8649fff8f3d2ee0751c",
+        "repository_paths": [
+          "docs/gate5_reference_evidence_v01/member_index.json"
+        ]
+      },
+      "section_id": "F-07",
+      "text": [
+        "One owner produced the offer; another used it",
+        "Two native Work results are joined by an external, source-bound exchange.",
+        "F / Producer, publication and actual consumer",
+        "GATE 5 REFERENCE  /  07",
+        "VENUE ROOT",
+        "EXTERNAL DRS",
+        "REQUESTER ROOT",
+        "Venue Work",
+        "Computes an offer\nfrom its inventory",
+        "Signed exchange",
+        "Offer body and\ncurrent source status",
+        "Requester Work",
+        "Consumes the\nverified context",
+        "Each local Root retains its own decision. The exchange carries evidence."
+      ],
+      "notes": "Mechanism diagram with actual producer-consumer binding behind it. Native source and consumer Work are independently checked for FIND operations, including the real published body and authenticated source status. This slide does not imply one business Root owns both parties or that supervisor/examiner is a business SuperRoot. Actual trace resolution uses the member index and chosen main capture.",
+      "dossier_sections": [
+        "F05",
+        "D04"
+      ]
+    },
+    {
+      "slide_id": "S08",
+      "number": 8,
+      "topic": "F",
+      "title": "Separate consent created one recorded booking",
+      "lead": "The registry owner executed one native MOCK action for all three accepted slots.",
+      "claim_ids": [
+        "C05",
+        "C06"
+      ],
+      "source": {
+        "archive_id": "g54d1",
+        "archive_sha256": "0558786b4d2882be7610223dd754e927bedce2530e2d5ac4ca1d429ce7ac22f0",
+        "members": [
+          "SUPERVISOR_EVIDENCE/p7_candidate_f779b790/trusted_parent_receipt.json",
+          "SUPERVISOR_EVIDENCE/p7_candidate_f779b790/final_state.json",
+          "SUPERVISOR_EVIDENCE/p7_candidate_f779b790/receipt.json",
+          "SUPERVISOR_EVIDENCE/p7_candidate_f779b790/independent_flow_review.json"
+        ],
+        "source_commit": "64f2b38b0d671e4907bae8649fff8f3d2ee0751c",
+        "repository_paths": [
+          "docs/gate5_reference_evidence_v01/member_index.json"
+        ]
+      },
+      "section_id": "F-08",
+      "text": [
+        "Separate consent created one recorded booking",
+        "The registry owner executed one native MOCK action for all three accepted slots.",
+        "F / Owner confirmation, receipt and independent readback",
+        "GATE 5 REFERENCE  /  08",
+        "Owner consent",
+        "Current Root",
+        "Host / Firewall",
+        "Native MOCK",
+        "3",
+        "reservations",
+        "1",
+        "idempotency entry",
+        "1",
+        "mock execution",
+        "The saved receipt agrees with an independent read of the registry."
+      ],
+      "notes": "Controlled owner CONFIRM is distinct from the SHIFT approval and from the semantic model. One main native Host dispatch and executor start creates three reservations plus one idempotency entry. Actual Root/Host/Firewall, receipt and independent registry readback are checked within the reviewed-reference trust profile. No physical venue booking or payment occurred.",
+      "dossier_sections": [
+        "F06"
+      ]
+    },
+    {
+      "slide_id": "S09",
+      "number": 9,
+      "topic": "F",
+      "title": "Repeating confirmation preserved the same result",
+      "lead": "A second confirmation returned the existing receipt without another effect.",
+      "claim_ids": [
+        "C07"
+      ],
+      "source": {
+        "archive_id": "g54d1",
+        "archive_sha256": "0558786b4d2882be7610223dd754e927bedce2530e2d5ac4ca1d429ce7ac22f0",
+        "members": [
+          "NATIVE_ACCEPTED.json",
+          "SUPERVISOR_EVIDENCE/p7_candidate_f779b790/independent_flow_review.json",
+          "SUPERVISOR_EVIDENCE/p7_candidate_f779b790/final_state.json"
+        ],
+        "source_commit": "64f2b38b0d671e4907bae8649fff8f3d2ee0751c",
+        "repository_paths": [
+          "docs/gate5_reference_evidence_v01/member_index.json"
+        ]
+      },
+      "section_id": "F-09",
+      "text": [
+        "Repeating confirmation preserved the same result",
+        "A second confirmation returned the existing receipt without another effect.",
+        "F / Main five-event history",
+        "GATE 5 REFERENCE  /  09",
+        "EXACT",
+        "No complete offer",
+        "0 new effects",
+        "SHIFT",
+        "Offer ready",
+        "0 new effects",
+        "CONFIRM",
+        "Book three slots",
+        "1 effect",
+        "REPEAT",
+        "Same receipt",
+        "0 new effects",
+        "VERIFY",
+        "History verified",
+        "0 new effects",
+        "One dispatch and one execution across this five-event main story."
+      ],
+      "notes": "The five actual main events are EXACT, SHIFT, CONFIRM, REPEAT and VERIFY. The native matrix summary main row has five events, one host dispatch and one executor start. Event evidence verifies no duplicate effect for repeat or verify. This is one synthetic history, not the seven isolated native effects combined into a repeated booking.",
+      "dossier_sections": [
+        "F07"
+      ]
+    },
+    {
+      "slide_id": "S10",
+      "number": 10,
+      "topic": "F",
+      "title": "Verification selected a different operation",
+      "lead": "The consumed proposal requested existing history and readback.",
+      "claim_ids": [
+        "C02",
+        "C07"
+      ],
+      "source": {
+        "archive_id": "g54d1",
+        "archive_sha256": "0558786b4d2882be7610223dd754e927bedce2530e2d5ac4ca1d429ce7ac22f0",
+        "members": [
+          "LIVE/prepare_01/provider_verify/request_body.json",
+          "LIVE/prepare_01/provider_verify/response_body.raw",
+          "LIVE/consumption_verified.json"
+        ],
+        "source_commit": "64f2b38b0d671e4907bae8649fff8f3d2ee0751c",
+        "repository_paths": [
+          "docs/gate5_reference_evidence_v01/member_index.json"
+        ]
+      },
+      "section_id": "F-10",
+      "text": [
+        "Verification selected a different operation",
+        "The consumed proposal requested existing history and readback.",
+        "F / Precollected VERIFY proposal, later native use",
+        "GATE 5 REFERENCE  /  10",
+        "ACTUAL RETURNED OPERATION",
+        "VERIFY_EXISTING",
+        "Prepared first",
+        "Consumed later",
+        "All three model proposals\npreceded native booking.",
+        "The program read the actual\nexisting result. No new booking."
+      ],
+      "notes": "Actual VERIFY proposal returned operation VERIFY_EXISTING and a historical approval reference. All EXACT/SHIFT/VERIFY proposals were obtained before the subsequent native run. verify_model_saw_later_receipt is false. The model did not inspect the later receipt. The consumed program verified actual history and readback, status VERIFIED, zero new Work/effect. The three provider sends each completed without SDK retries in the saved ledger.",
+      "dossier_sections": [
+        "F07",
+        "F08"
+      ]
+    },
+    {
+      "slide_id": "S11",
+      "number": 11,
+      "topic": "F",
+      "title": "Sixteen native cases used the same final program",
+      "lead": "The cases vary useful work, rights, source state and history.",
+      "claim_ids": [
+        "C08"
+      ],
+      "source": {
+        "archive_id": "g54d1",
+        "archive_sha256": "0558786b4d2882be7610223dd754e927bedce2530e2d5ac4ca1d429ce7ac22f0",
+        "members": [
+          "NATIVE_ACCEPTED.json",
+          "LIVE/consumption_verified.json"
+        ],
+        "source_commit": "64f2b38b0d671e4907bae8649fff8f3d2ee0751c",
+        "repository_paths": [
+          "docs/gate5_reference_evidence_v01/member_index.json"
+        ]
+      },
+      "section_id": "F-11",
+      "text": [
+        "Sixteen native cases used the same final program",
+        "The cases vary useful work, rights, source state and history.",
+        "F / Full native case table and separate live series",
+        "GATE 5 REFERENCE  /  11",
+        "Useful work",
+        "Main and low budget",
+        "Rights",
+        "BOOK, history and release",
+        "Current source",
+        "Revocation, audience and revision",
+        "Variation / history",
+        "Other team, order, occupancy, continuation",
+        "NATIVE",
+        "16 cases / 56 events / 7 mock starts",
+        "LIVE",
+        "3 provider calls / 5 events / 1 additional mock start"
+      ],
+      "notes": "Native 16 cases, 56 events, 7 isolated mock executor starts. Live is a separate series with three gemini-2.5-flash calls, five events and one additional mock start. Combined counts 61 events/8 mock starts do not mean eight physical payments. Cases include main, low_budget, missing_BOOK, missing_history, release_denied, revoked_source, foreign_audience, revision_conflict, same_key_changed, permuted_main, variation_feedback, second_team, long_overlap, occupancy, continuation, variation_final_reserved. Families are an editorial grouping, not additional test cases. The previously reserved final variation is not relabelled as a fresh independent benchmark after restored continuation.",
+      "dossier_sections": [
+        "F09",
+        "F11"
+      ]
+    },
+    {
+      "slide_id": "S12",
+      "number": 12,
+      "topic": "D",
+      "title": "An address travels without the whole memory",
+      "lead": "External DRS connects a limited descriptor to material that stays with its owner.",
+      "claim_ids": [
+        "C09"
+      ],
+      "source": {
+        "archive_id": null,
+        "archive_sha256": null,
+        "members": [],
+        "source_commit": "64f2b38b0d671e4907bae8649fff8f3d2ee0751c",
+        "repository_paths": [
+          "docs/gate5_reference_evidence_v01/member_index.json",
+          "docs/gate5_lifecycle_restart_checkpoint_v01.md",
+          "docs/passport_geometry_root_needles.md"
+        ]
+      },
+      "section_id": "D-12",
+      "text": [
+        "An address travels without the whole memory",
+        "External DRS connects a limited descriptor to material that stays with its owner.",
+        "D / Address, material and local use",
+        "GATE 5 REFERENCE  /  12",
+        "OWNER A",
+        "Rich local material",
+        "Traces, results and source\nhistory stay under its policy.",
+        "ADDRESS / INDEX",
+        "Bounded descriptor",
+        "Type, provenance, time, scope\nand allowed metadata.",
+        "OWNER B",
+        "Permitted fragment",
+        "A local Work consumes\na checked source context.",
+        "DNS is an analogy for addressing, not a claim of DNS wire compatibility."
+      ],
+      "notes": "Architectural mechanism explanation. Four places are distinguished: rich source material, limited descriptor metadata in an index, permitted payload disclosure, checked local consumption context. The receiver can keep a permitted fragment with provenance. The index is not empty of data and does not contain the owner’s entire archive. Observed Gate 5 uses independent processes with signed IPC/bridge, not a public Internet federation or production PKI. Source concept also in the passport geometry.",
+      "dossier_sections": [
+        "D02"
+      ]
+    },
+    {
+      "slide_id": "S13",
+      "number": 13,
+      "topic": "D",
+      "title": "Discovery, disclosure and use are distinct decisions",
+      "lead": "A found address carries neither a disclosure grant nor a local decision.",
+      "claim_ids": [
+        "C09",
+        "C10"
+      ],
+      "source": {
+        "archive_id": null,
+        "archive_sha256": null,
+        "members": [],
+        "source_commit": "64f2b38b0d671e4907bae8649fff8f3d2ee0751c",
+        "repository_paths": [
+          "docs/gate5_reference_evidence_v01/member_index.json",
+          "docs/gate5_calibration_exchange_checkpoint_v01.md",
+          "docs/gate5_reference_contract_v01.md"
+        ]
+      },
+      "section_id": "D-13",
+      "text": [
+        "Discovery, disclosure and use are distinct decisions",
+        "A found address carries neither a disclosure grant nor a local decision.",
+        "D / Local ownership and exchange decisions",
+        "GATE 5 REFERENCE  /  13",
+        "01",
+        "Find pointer",
+        "Index /\nmetadata",
+        "02",
+        "Review retrieval",
+        "Requester\nRoot",
+        "03",
+        "Release payload",
+        "Publisher\nRoot",
+        "04",
+        "Check and use",
+        "Requester\nWork",
+        "Caller, request, scope and budget bind this exchange. No shared SuperRoot."
+      ],
+      "notes": "Conceptual sequence distinguishes pointer discovery, requester-side permission to retrieve, publisher-side release, then local validation and consumption. These are not one universal grant. Signature authenticity does not decide local acceptability. There are two equal local business Roots. Runner, supervisor and examiner are experimental support boundaries, not a third business owner.",
+      "dossier_sections": [
+        "D03"
+      ]
+    },
+    {
+      "slide_id": "S14",
+      "number": 14,
+      "topic": "D",
+      "title": "Evidence gained context while keeping its result",
+      "lead": "Three representations have different causal positions and independently checked links.",
+      "claim_ids": [
+        "C16"
+      ],
+      "source": {
+        "archive_id": "g54d1",
+        "archive_sha256": "0558786b4d2882be7610223dd754e927bedce2530e2d5ac4ca1d429ce7ac22f0",
+        "members": [
+          "LIVE/consumption_verified.json",
+          "SUPERVISOR_EVIDENCE/p7_candidate_f779b790/independent_flow_review.json"
+        ],
+        "source_commit": "64f2b38b0d671e4907bae8649fff8f3d2ee0751c",
+        "repository_paths": [
+          "docs/gate5_reference_evidence_v01/member_index.json",
+          "docs/gate5_reference_contract_v01.md"
+        ]
+      },
+      "section_id": "D-14",
+      "text": [
+        "Evidence gained context while keeping its result",
+        "Three representations have different causal positions and independently checked links.",
+        "D / E, B, C provenance and consumption joins",
+        "GATE 5 REFERENCE  /  14",
+        "E",
+        "Work result",
+        "Computed offer",
+        "B",
+        "Published evidence",
+        "E + Work / review refs",
+        "C",
+        "Consumption context",
+        "B + authenticated status",
+        "B.offer = E",
+        "C.body = B",
+        "Original result preserved"
+      ],
+      "notes": "The verifier independently reconstructs expected consumption from the producer result, published body and authenticated status; it does not accept candidate-declared consumer input as its own oracle. B follows actual Work and review, while C adds later status context. The representations need not be identical whole objects. B1 exposed an inconsistent prior contract; a versioned general correction preceded D. Exact current bindings reside in the source index and independent flow review.",
+      "dossier_sections": [
+        "D04"
+      ]
+    },
+    {
+      "slide_id": "S15",
+      "number": 15,
+      "topic": "D",
+      "title": "New evidence changed 96 into 102",
+      "lead": "The receiving readings and local limit stayed the same.",
+      "claim_ids": [
+        "C11"
+      ],
+      "source": {
+        "archive_id": null,
+        "archive_sha256": null,
+        "members": [],
+        "source_commit": "64f2b38b0d671e4907bae8649fff8f3d2ee0751c",
+        "repository_paths": [
+          "docs/gate5_reference_evidence_v01/member_index.json",
+          "docs/gate5_calibration_exchange_checkpoint_v01.md",
+          "docs/gate5_lifecycle_restart_checkpoint_v01.md"
+        ]
+      },
+      "section_id": "D-15",
+      "text": [
+        "New evidence changed 96 into 102",
+        "The receiving readings and local limit stayed the same.",
+        "D / Controlled numerical calibration",
+        "GATE 5 REFERENCE  /  15",
+        "SOURCE REVISION 1",
+        "106 − 10 = 96",
+        "Correction from A: −10",
+        "Within local limit 100",
+        "SOURCE REVISION 2",
+        "106 − 4 = 102",
+        "Correction from A: −4",
+        "Review required at limit 100",
+        "The earlier 96 remains history. Accepting an accurate report does not erase the limit."
+      ],
+      "notes": "Controlled numerical case, not a physical sensor. A correction r−mean(x): revision 1 r=100, x=[110,110,110] gives −10; revision 2 x=[104,104,104] gives −4. B readings [103,106,109] average 106. Unchanged limit=100. Therefore 96 then 102. Root ACCEPT of a correct report REVIEW_REQUIRED does not assert that 102 is within limit. Historical G52 archive SHA256 4f967a4189f62c0eede9931ec13cb38933ab855eacf864297f305f34a257f510. The source member is resolved through member_index archive g52 lifecycle_06 and checkpoints.",
+      "dossier_sections": [
+        "D06"
+      ]
+    },
+    {
+      "slide_id": "S16",
+      "number": 16,
+      "topic": "D",
+      "title": "Revocation survived a process restart",
+      "lead": "The new requester process retained source state, budgets and prior history.",
+      "claim_ids": [
+        "C12",
+        "C13"
+      ],
+      "source": {
+        "archive_id": null,
+        "archive_sha256": null,
+        "members": [],
+        "source_commit": "64f2b38b0d671e4907bae8649fff8f3d2ee0751c",
+        "repository_paths": [
+          "docs/gate5_reference_evidence_v01/member_index.json",
+          "docs/gate5_lifecycle_restart_checkpoint_v01.md"
+        ]
+      },
+      "section_id": "D-16",
+      "text": [
+        "Revocation survived a process restart",
+        "The new requester process retained source state, budgets and prior history.",
+        "D / G52 restart, rollback refusal and continuation",
+        "GATE 5 REFERENCE  /  16",
+        "01",
+        "Record REVOKED",
+        "Persist the terminal source state before refusing use.",
+        "02",
+        "Restart requester B",
+        "Reject the old ACTIVE state as a rollback.",
+        "03",
+        "Use a lawful revision",
+        "Apply new evidence while retaining the earlier result.",
+        "Observed process restart. Whole-machine snapshot rollback is outside this result."
+      ],
+      "notes": "Actual G52 lifecycle_06 process restart uses persisted pointer/history/budget/highwater state. A terminal REVOKED state remains authoritative against stale ACTIVE. A later lawful revision can support new current use while old 96 remains historical. Ingestion does not reset source time. Time profile end=min(valid_to, PT+TTL, source_observed_at+max_age), half-open, with separate status freshness. This is not proof against rollback of all VM snapshots.",
+      "dossier_sections": [
+        "D07",
+        "D08"
+      ]
+    },
+    {
+      "slide_id": "S17",
+      "number": 17,
+      "topic": "D",
+      "title": "Budgets bound retrieval and preserve failed experience",
+      "lead": "The source can refuse a fetch before releasing its body.",
+      "claim_ids": [
+        "C12",
+        "C14"
+      ],
+      "source": {
+        "archive_id": null,
+        "archive_sha256": null,
+        "members": [],
+        "source_commit": "64f2b38b0d671e4907bae8649fff8f3d2ee0751c",
+        "repository_paths": [
+          "docs/gate5_reference_evidence_v01/member_index.json",
+          "docs/gate5_lifecycle_restart_checkpoint_v01.md",
+          "docs/gate5_reference_evidence_v01/MATRIX.md"
+        ]
+      },
+      "section_id": "D-17",
+      "text": [
+        "Budgets bound retrieval and preserve failed experience",
+        "The source can refuse a fetch before releasing its body.",
+        "D / Task budget, history and bounded continuation",
+        "GATE 5 REFERENCE  /  17",
+        "G52 BASELINE",
+        "ATTEMPTS",
+        "ALLOWED / DENIED",
+        "Metadata",
+        "8",
+        "8 allowed",
+        "Payload",
+        "4",
+        "2 allowed / 2 denied",
+        "Total",
+        "12",
+        "2 bodies / 2,146 bytes",
+        "Duplicate delivery: one source, one history, zero credit.",
+        "Scoped negative history can guide a later lawful continuation."
+      ],
+      "notes": "Full G52 baseline has 12 attempts: 8 allowed metadata, 2 allowed payload and 2 denied payload, 2 bodies/2146 bytes. Source rejection is before body release, not before any I/O. Budget belongs to the same task context and cannot be reset by renaming. Duplicate delivery yields 1 source, 1 history, zero credit; this is not a global reputation algorithm. Scoped history/dead-end/continuation coverage is exactly G5-R11 and F10–F12. Unknown status does not impose an eternal blacklist. Native history queries have one fresh local read review and zero remote sends/new Work, distinct from supplied pure proof with no new Root decisions.",
+      "dossier_sections": [
+        "D09",
+        "D10"
+      ]
+    },
+    {
+      "slide_id": "S18",
+      "number": 18,
+      "topic": "D",
+      "title": "Two subjects used the same exchange rules",
+      "lead": "Calibration and football supply different meaning through a shared, versioned profile seam.",
+      "claim_ids": [
+        "C15",
+        "C16"
+      ],
+      "source": {
+        "archive_id": null,
+        "archive_sha256": null,
+        "members": [],
+        "source_commit": "64f2b38b0d671e4907bae8649fff8f3d2ee0751c",
+        "repository_paths": [
+          "docs/gate5_reference_evidence_v01/member_index.json",
+          "docs/gate5_reference_checkpoint_v01.md",
+          "docs/gate5_reference_evidence_v01/source_bindings.json",
+          "hedgehog/external_drs/gate5_body_profile_v01.py"
+        ]
+      },
+      "section_id": "D-18",
+      "text": [
+        "Two subjects used the same exchange rules",
+        "Calibration and football supply different meaning through a shared, versioned profile seam.",
+        "D / Shared source bindings and two profiles",
+        "GATE 5 REFERENCE  /  18",
+        "CALIBRATION",
+        "Correction value\nwith its source basis",
+        "SHARED EXCHANGE",
+        "Address / disclosure\nTime / provenance\nLocal consumption",
+        "FOOTBALL",
+        "Offer and status\nwith their source basis",
+        "G52 historical lifecycle",
+        "G53 accepted profile seam",
+        "The protocol transfers. The history does not claim every byte was unchanged."
+      ],
+      "notes": "G52 proves historical numeric lifecycle using its exact old contracts hash. G53 adds body-profile support with a precise two-file seam and 43 affected controls. G54C additionally proves a general E/B/C numeric example; D1 uses accepted shared dependencies. The source binding map preserves old/new provenance. This slide does not retarget G52 proof to different source bytes or claim every module stayed unchanged throughout Gate 5.",
+      "dossier_sections": [
+        "D01",
+        "D04",
+        "D05"
+      ]
+    },
+    {
+      "slide_id": "S19",
+      "number": 19,
+      "topic": "A",
+      "title": "The author received a construction contract",
+      "lead": "General HOW and a separate football WHAT defined the task.",
+      "claim_ids": [
+        "C17"
+      ],
+      "source": {
+        "archive_id": "g54d1",
+        "archive_sha256": "0558786b4d2882be7610223dd754e927bedce2530e2d5ac4ca1d429ce7ac22f0",
+        "members": [
+          "AUTHOR_TRIAL/restoration_inventory.json"
+        ],
+        "source_commit": "64f2b38b0d671e4907bae8649fff8f3d2ee0751c",
+        "repository_paths": [
+          "docs/gate5_reference_evidence_v01/member_index.json",
+          "docs/gate5_authoring_kit_v01/START_HERE.md"
+        ]
+      },
+      "section_id": "A-19",
+      "text": [
+        "The author received a construction contract",
+        "General HOW and a separate football WHAT defined the task.",
+        "A / Author input inventory and public kit",
+        "GATE 5 REFERENCE  /  19",
+        "HOW TO BUILD",
+        "WHAT TO BUILD",
+        "Work and Root\nExternal DRS\nSchemas and code anchors",
+        "Natural full-size field\nThree 90-minute sessions\nTime changes need consent",
+        "Different-domain numerical and MOCK examples",
+        "Hidden examiner and target solution stay outside the author input"
+      ],
+      "notes": "The initial revised public kit contains generic HOW with source hashes, schemas, interfaces, formulas, code anchors and allowed source snapshot. WHAT and output profile state football requirements. The hidden examiner and ready football answer are outside author input. In the authorized restored continuation, own code, previous feedback and explicit D1 clarification are deliberately available. White room is a metaphor for known access surface, not absence of pretraining or hardware isolation.",
+      "dossier_sections": [
+        "A02"
+      ]
+    },
+    {
+      "slide_id": "S20",
+      "number": 20,
+      "topic": "A",
+      "title": "The author could edit code, not admit it",
+      "lead": "Construction, execution and acceptance have separately recorded boundaries.",
+      "claim_ids": [
+        "C18"
+      ],
+      "source": {
+        "archive_id": "g54d1",
+        "archive_sha256": "0558786b4d2882be7610223dd754e927bedce2530e2d5ac4ca1d429ce7ac22f0",
+        "members": [
+          "AUTHOR_TRIAL/attempt_04/source_review.json",
+          "AUTHOR_TRIAL/attempt_04/authorship_reconstruction.json"
+        ],
+        "source_commit": "64f2b38b0d671e4907bae8649fff8f3d2ee0751c",
+        "repository_paths": [
+          "docs/gate5_reference_evidence_v01/member_index.json",
+          "docs/gate5_reference_contract_v01.md"
+        ]
+      },
+      "section_id": "A-20",
+      "text": [
+        "The author could edit code, not admit it",
+        "Construction, execution and acceptance have separately recorded boundaries.",
+        "A / Broker, candidate, runner and admission",
+        "GATE 5 REFERENCE  /  20",
+        "AUTHOR",
+        "Creates candidate\nthrough seven tools",
+        "BROKER",
+        "Records bounded\noperations",
+        "REVIEW / EXAM",
+        "Reviews sources\nand native results",
+        "OWNER",
+        "Admits exact bytes\nthrough unchanged R1",
+        "gpt-6-astra / ultra / default",
+        "The reviewed runner and observer are trusted code, not a hostile-Python security claim."
+      ],
+      "notes": "Authoring model gpt-6-astra, literal effort ultra, service tier default. Author changes candidate via seven broker tools. Source reviewer, bounded runner, independent examiner and eventual owner engineering admission remain distinct. Broker access restrictions are not a universal hostile-Python execution sandbox. The reviewed-reference code/observer are explicit trusted components. The historical standalone RPC isolation failure remains unrepaired by this separate accepted route.",
+      "dossier_sections": [
+        "A03"
+      ]
+    },
+    {
+      "slide_id": "S21",
+      "number": 21,
+      "topic": "A",
+      "title": "Recorded operations reconstruct the authored files",
+      "lead": "Authorship rests on exact byte reconstruction, not a name in a report.",
+      "claim_ids": [
+        "C19"
+      ],
+      "source": {
+        "archive_id": "g54d1",
+        "archive_sha256": "0558786b4d2882be7610223dd754e927bedce2530e2d5ac4ca1d429ce7ac22f0",
+        "members": [
+          "AUTHOR_TRIAL/attempt_04/authorship_reconstruction.json",
+          "AUTHOR_TRIAL/restoration_inventory.json",
+          "AUTHOR_TRIAL/attempt_04/author_correction.patch"
+        ],
+        "source_commit": "64f2b38b0d671e4907bae8649fff8f3d2ee0751c",
+        "repository_paths": [
+          "docs/gate5_reference_evidence_v01/member_index.json"
+        ]
+      },
+      "section_id": "A-21",
+      "text": [
+        "Recorded operations reconstruct the authored files",
+        "Authorship rests on exact byte reconstruction, not a name in a report.",
+        "A / Seed, broker operations and final source",
+        "GATE 5 REFERENCE  /  21",
+        "SEED",
+        "22 files",
+        "Own source seeded\nthe continuation.",
+        "RECORDED OPERATIONS",
+        "79 broker operations",
+        "Recorded reads, searches,\nedits and submission.",
+        "FINAL PACKAGE",
+        "23 authored files",
+        "One coordinator manifest\nmakes 24 packaged files.",
+        "The coordinator did not add implementation patches. Tool operations are not model calls."
+      ],
+      "notes": "G54D1 reconstruction replays 79 recorded broker operations against the 22-file seed and exactly matches 23 author-created final files plus coordinator candidate.json = 24 pack files. The 79 comprise 47 candidate reads, 10 public reads, 12 searches, 6 patches, 1 write, 2 syntax checks and 1 submission. They are not 79 model inference calls. The reconstruction audit found no coordinator implementation edit.",
+      "dossier_sections": [
+        "A08"
+      ]
+    },
+    {
+      "slide_id": "S22",
+      "number": 22,
+      "topic": "A",
+      "title": "The successful continuation is explicit",
+      "lead": "Earlier incomplete trials retain their original status.",
+      "claim_ids": [
+        "C20"
+      ],
+      "source": {
+        "archive_id": "g54d1",
+        "archive_sha256": "0558786b4d2882be7610223dd754e927bedce2530e2d5ac4ca1d429ce7ac22f0",
+        "members": [
+          "PROTOCOL_AMENDMENT.json",
+          "AUTHOR_TRIAL/restoration_inventory.json",
+          "NATIVE_ACCEPTED.json"
+        ],
+        "source_commit": "64f2b38b0d671e4907bae8649fff8f3d2ee0751c",
+        "repository_paths": [
+          "docs/gate5_reference_evidence_v01/member_index.json",
+          "docs/gate5_reference_checkpoint_v01.md"
+        ]
+      },
+      "section_id": "A-22",
+      "text": [
+        "The successful continuation is explicit",
+        "Earlier incomplete trials retain their original status.",
+        "A / Trial ledger and separately authorized correction 4",
+        "GATE 5 REFERENCE  /  22",
+        "G54B1",
+        "INCOMPLETE",
+        "Initial + 3 corrections\nContract mismatch",
+        "G54D",
+        "INCOMPLETE",
+        "New cold trial, initial + 3\nNative 15 / 16",
+        "G54D1",
+        "ACCEPTED",
+        "Restored continuation\nAuthorized correction 4",
+        "No new cold start. No claim that the unavailable prior model state was recreated."
+      ],
+      "notes": "D1 is the fifth submission in the D lineage, correction 4 after initial+3. Native thread resume failed because the rollout was unavailable. The continuation was reconstructed with own source, public kit, prior feedback and explicit clarification. It does not recreate hidden model state. Historical B1 and D remain INCOMPLETE. Earlier G54R and G54B, plus C examiner preparation, are retained in the complete dossier trial ledger and are not conflated with new blind authors.",
+      "dossier_sections": [
+        "A04",
+        "A06",
+        "A07"
+      ]
+    },
+    {
+      "slide_id": "S23",
+      "number": 23,
+      "topic": "A",
+      "title": "The final correction supplied the missing Root refusal",
+      "lead": "The technical examiner predicates stayed unchanged between D and D1.",
+      "claim_ids": [
+        "C21"
+      ],
+      "source": {
+        "archive_id": "g54d1",
+        "archive_sha256": "0558786b4d2882be7610223dd754e927bedce2530e2d5ac4ca1d429ce7ac22f0",
+        "members": [
+          "evidence/refusal_binding_d1.json",
+          "AUTHOR_TRIAL/attempt_04/source_review.json",
+          "NATIVE_ACCEPTED.json"
+        ],
+        "source_commit": "64f2b38b0d671e4907bae8649fff8f3d2ee0751c",
+        "repository_paths": [
+          "docs/gate5_reference_evidence_v01/member_index.json"
+        ]
+      },
+      "section_id": "A-23",
+      "text": [
+        "The final correction supplied the missing Root refusal",
+        "The technical examiner predicates stayed unchanged between D and D1.",
+        "A / Authenticated REVOKED and actual local Root event",
+        "GATE 5 REFERENCE  /  23",
+        "BEFORE / G54D",
+        "AFTER / G54D1",
+        "Correctly stopped\nwithout booking",
+        "Authenticated REVOKED\nReal Root refusal\nNo BOOK or registry change",
+        "Required Root decision missing",
+        "BLOCKED_FAIL_CLOSED"
+      ],
+      "notes": "D correctly refused REVOKED without effects but omitted the required Root decision. D1 executes a genuine local Root BLOCKED_FAIL_CLOSED, bound to authenticated terminal source state, original request and provenance. This is not a new report string. The highwater remains preserved and no consuming Work/BOOK is run. Diagnosis surfaced only after earlier checks passed at the original final correction, motivating separately authorized one additional correction. Technical D-to-D1 predicates were preserved, unlike the earlier B1-to-D general contract revision.",
+      "dossier_sections": [
+        "A09"
+      ]
+    },
+    {
+      "slide_id": "S24",
+      "number": 24,
+      "topic": "A",
+      "title": "Independent implementation tested the instructions too",
+      "lead": "The early envelope mismatch led to a general, versioned repair.",
+      "claim_ids": [
+        "C16",
+        "C20",
+        "C21"
+      ],
+      "source": {
+        "archive_id": null,
+        "archive_sha256": null,
+        "members": [],
+        "source_commit": "64f2b38b0d671e4907bae8649fff8f3d2ee0751c",
+        "repository_paths": [
+          "docs/gate5_reference_evidence_v01/member_index.json",
+          "docs/gate5_reference_checkpoint_v01.md",
+          "docs/showcase/g54b1_authoring_case_v01/README.md"
+        ]
+      },
+      "section_id": "A-24",
+      "text": [
+        "Independent implementation tested the instructions too",
+        "The early envelope mismatch led to a general, versioned repair.",
+        "A / Historical contract defect and numerical bridge",
+        "GATE 5 REFERENCE  /  24",
+        "01",
+        "B1 exposed a contradiction",
+        "The required publication envelope referred to events that had not happened yet.",
+        "02",
+        "The contract changed by version",
+        "Work result, publication and checked context gained distinct E / B / C roles.",
+        "03",
+        "A numerical probe preceded D",
+        "An independent domain example tested the repaired handoff.",
+        "Frozen does not mean infallible. Preserved failures remain part of the evidence."
+      ],
+      "notes": "B1’s public HOW ordered B after producer Work and review while frozen examiner required entire B at earlier producer output and consumer input. Saved relations B.offer=E, C.body=B exposed the causal mismatch. G54C numeric probe confirmed generic handoff for 7/11 and outputs 23/35 then 31/47 with nine negative controls. These are not football native cases. Later D used revised kit/examiner. Historic B1 INCOMPLETE is preserved, not rewritten to PASS.",
+      "dossier_sections": [
+        "A05",
+        "D05"
+      ]
+    },
+    {
+      "slide_id": "S25",
+      "number": 25,
+      "topic": "A",
+      "title": "The kit transfers a way of building a new domain",
+      "lead": "A developer can pair the general construction contract with a new subject.",
+      "claim_ids": [
+        "C17",
+        "C24"
+      ],
+      "source": {
+        "archive_id": null,
+        "archive_sha256": null,
+        "members": [],
+        "source_commit": "64f2b38b0d671e4907bae8649fff8f3d2ee0751c",
+        "repository_paths": [
+          "docs/gate5_reference_evidence_v01/member_index.json",
+          "docs/gate5_authoring_kit_v01/START_HERE.md",
+          "docs/gate5_reference_contract_v01.md"
+        ]
+      },
+      "section_id": "A-25",
+      "text": [
+        "The kit transfers a way of building a new domain",
+        "A developer can pair the general construction contract with a new subject.",
+        "A / Published kit and the separate football example",
+        "GATE 5 REFERENCE  /  25",
+        "GENERAL HOW",
+        "Laws and interfaces",
+        "Work, Root, DRS, provenance,\ntime and machine schemas.",
+        "NEW WHAT",
+        "Subject requirements",
+        "Inputs, constraints and the\nneeded outputs stay explicit.",
+        "SEPARATE ACCEPTANCE",
+        "Candidate review",
+        "The owner decides whether\nand how exact code is admitted.",
+        "One working subject profile is demonstrated. The built-in Factory remains future work."
+      ],
+      "notes": "The public kit is a usable entry for this supported reference profile, not a promise to synthesize every module in every language from one paragraph. Existing accepted football code is separately available as an example, never covertly included in a future blind author input. D1 clarification remains versioned and separate from historical inputs. The kit transmits rules and admission route, not the owner’s admission context or credentials.",
+      "dossier_sections": [
+        "A12"
+      ]
+    },
+    {
+      "slide_id": "S26",
+      "number": 26,
+      "topic": "X",
+      "title": "Gate 5 has an admitted engineering result",
+      "lead": "G55L committed, pushed and independently read back the accepted source.",
+      "claim_ids": [
+        "C22"
+      ],
+      "source": {
+        "archive_id": null,
+        "archive_sha256": null,
+        "members": [],
+        "source_commit": "64f2b38b0d671e4907bae8649fff8f3d2ee0751c",
+        "repository_paths": [
+          "docs/gate5_reference_evidence_v01/member_index.json",
+          "docs/gate5_reference_evidence_v01/source_bindings.json",
+          "docs/gate5_reference_contract_v01.md"
+        ]
+      },
+      "section_id": "X-26",
+      "text": [
+        "Gate 5 has an admitted engineering result",
+        "G55L committed, pushed and independently read back the accepted source.",
+        "X / G55L actual landing and status bridge",
+        "GATE 5 REFERENCE  /  26",
+        "64f2b38b0d671e49",
+        "Admit Gate 5 reference DRS and authored football domain",
+        "13",
+        "shared additions",
+        "24",
+        "author-package files",
+        "212",
+        "total new paths",
+        "Engineering admitted. G56 publication receives a separate status."
+      ],
+      "notes": "Actual engineering commit 64f2b38b0d671e4907bae8649fff8f3d2ee0751c, parent 5cef2c52fd805daedec958109caf9d1806899eb4, tree cacb14a9574c350fb33239680abe0c3a5ede7b5e. G55L archive SHA256 c6d7841ba821c554e4a8a96fed254dd0ed24b34907dbdf992eb4e10747e43b77. Exactly 212 additions, preserving all 4367 prior tracked paths and modes. Exact 13 shared additions and 24 author package files are subsets, not counts that sum to 212. Unchanged R1/guard/binder, ordinary push and independent remote readback PASS. Frozen preparation PENDING remains historical. G56 publication, R20 and final R21 are separate and pending actual publication.",
+      "dossier_sections": [
+        "A11"
+      ]
+    },
+    {
+      "slide_id": "S27",
+      "number": 27,
+      "topic": "X",
+      "title": "Saved work can be inspected without repeating it",
+      "lead": "Pure verification checks the recorded evidence without new domain effects.",
+      "claim_ids": [
+        "C22"
+      ],
+      "source": {
+        "archive_id": "g54d1",
+        "archive_sha256": "0558786b4d2882be7610223dd754e927bedce2530e2d5ac4ca1d429ce7ac22f0",
+        "members": [
+          "SUPPLIED/one.json",
+          "SUPPLIED/two.json",
+          "SUPPLIED/comparison.json"
+        ],
+        "source_commit": "64f2b38b0d671e4907bae8649fff8f3d2ee0751c",
+        "repository_paths": [
+          "docs/gate5_reference_evidence_v01/member_index.json",
+          "demo/verify_gate5_reference_v01.py",
+          "docs/gate5_reference_evidence_v01/closure/canonical_result.json"
+        ]
+      },
+      "section_id": "X-27",
+      "text": [
+        "Saved work can be inspected without repeating it",
+        "Pure verification checks the recorded evidence without new domain effects.",
+        "X / Supplied proof and installed verification route",
+        "GATE 5 REFERENCE  /  27",
+        "G54D1 / TWO SUPPLIED RESULTS",
+        "G55L / INSTALLED PROOF",
+        "32,702 bytes",
+        "37,389 bytes",
+        "The two results match\nbyte for byte.",
+        "Matches its own expected\ncanonical result.",
+        "Verification reads data and runs declared pure subprocesses. No new model or native execution."
+      ],
+      "notes": "D1 supplied one/two are each 32702 bytes, SHA256 0eba67d7652765c387988d760cd5daeeacecbdf33b9dc577dbe6a1cad40ed4b0. G55L installed proof is 37389 bytes, SHA256 d2a25ed3b1ab123912e59d096808351dbcf18f59a16229b9abcaff9f647eacff. Different generations are compared to their respective required baseline, not to each other. Public command invokes two explicit pure verifiers, with Python 3.12+ sys.monitoring and existing dependencies, output external to repository. Data reads/process execution are not zero OS activity. No candidate/provider/new Work/Root/Host/action calls.",
+      "dossier_sections": [
+        "F12",
+        "D11"
+      ]
+    },
+    {
+      "slide_id": "S28",
+      "number": 28,
+      "topic": "D",
+      "title": "Addressable experience can connect independent systems",
+      "lead": "Gate 5 shows the foundation. Wider cooperation remains an architectural extension.",
+      "claim_ids": [
+        "C23",
+        "C24"
+      ],
+      "source": {
+        "archive_id": null,
+        "archive_sha256": null,
+        "members": [],
+        "source_commit": "64f2b38b0d671e4907bae8649fff8f3d2ee0751c",
+        "repository_paths": [
+          "docs/gate5_reference_evidence_v01/member_index.json",
+          "docs/gate5_reference_contract_v01.md",
+          "docs/passport_geometry_root_needles.md",
+          "docs/strategic_expansion_map.md"
+        ]
+      },
+      "section_id": "D-28",
+      "text": [
+        "Addressable experience can connect independent systems",
+        "Gate 5 shows the foundation. Wider cooperation remains an architectural extension.",
+        "D / Observed exchange and the future cooperation path",
+        "GATE 5 REFERENCE  /  28",
+        "OBSERVED IN GATE 5",
+        "Owner A",
+        "Addressed evidence",
+        "Owner B",
+        "ARCHITECTURAL EXTENSION / NOT EXECUTED",
+        "Other owners",
+        "Linked experience",
+        "New local Work",
+        "Work creates new conclusions. An index only helps locate and connect their sources."
+      ],
+      "notes": "Solid upper links summarize observed two-owner exchange and actual source consumption, not a literal captured network topology. Dashed lower links are a prospective architectural path: scoped published descriptions, relevant address discovery, permitted disclosure, local checked use, then new source-linked results under owner policy. DRS does not itself create knowledge or grant authority. Public Internet discovery, organizational federation, production identity and cross-domain scaling remain deferred.",
+      "dossier_sections": [
+        "D12",
+        "D13"
+      ]
+    },
+    {
+      "slide_id": "S29",
+      "number": 29,
+      "topic": "X",
+      "title": "Future capabilities can retain local ownership",
+      "lead": "A service description can support remote use or a separately admitted local implementation.",
+      "claim_ids": [
+        "C23",
+        "C24"
+      ],
+      "source": {
+        "archive_id": null,
+        "archive_sha256": null,
+        "members": [],
+        "source_commit": "64f2b38b0d671e4907bae8649fff8f3d2ee0751c",
+        "repository_paths": [
+          "docs/gate5_reference_evidence_v01/member_index.json",
+          "docs/gate5_reference_contract_v01.md",
+          "docs/strategic_expansion_map.md"
+        ]
+      },
+      "section_id": "X-29",
+      "text": [
+        "Future capabilities can retain local ownership",
+        "A service description can support remote use or a separately admitted local implementation.",
+        "D / Capability descriptions and deferred development",
+        "GATE 5 REFERENCE  /  29",
+        "Described capability",
+        "Remote use at its owner",
+        "Local candidate + admission",
+        "DEFERRED DIRECTIONS",
+        "Reflective improvement\nCross-domain transfer",
+        "Cognitive Radiolaria\nCapability Synthesis Factory\nGlobal discovery / federation"
+      ],
+      "notes": "Illustrative future mechanism, not an executed capability import or current customer integration. Remote service use need not download code. A new local implementation requires separate admission. Accepted contract names: Reflective Improvement Radiolaria for own experience and proposals, Cross-Domain Transfer Radiolaria for analogies and transfer candidates, Capability Synthesis Factory for a built-in requirements/code/sandbox cycle. Cognitive Radiolaria is also a deferred direction. These remain deferred and are not new sources of authority. No automatic program import through DRS is implied.",
+      "dossier_sections": [
+        "D14"
+      ]
+    },
+    {
+      "slide_id": "S30",
+      "number": 30,
+      "topic": "X",
+      "title": "Inspect the work and follow its evidence",
+      "lead": "Three independent reading routes share one source corpus and construction contract.",
+      "claim_ids": [
+        "C01",
+        "C04",
+        "C17",
+        "C22",
+        "C23"
+      ],
+      "source": {
+        "archive_id": null,
+        "archive_sha256": null,
+        "members": [],
+        "source_commit": "64f2b38b0d671e4907bae8649fff8f3d2ee0751c",
+        "repository_paths": [
+          "docs/gate5_reference_evidence_v01/member_index.json",
+          "docs/gate5_reference_contract_v01.md"
+        ]
+      },
+      "section_id": "X-30",
+      "text": [
+        "Inspect the work and follow its evidence",
+        "Three independent reading routes share one source corpus and construction contract.",
+        "Gate 5 source-bound publication / engineering basis 64f2b38",
+        "GATE 5 REFERENCE  /  30",
+        "F",
+        "Football Domain",
+        "D",
+        "External DRS",
+        "A",
+        "Independent\nAuthoring",
+        "Reader + source index",
+        "Authoring Kit",
+        "Offline verification",
+        "A new domain was built. External knowledge became useful.\nEach owner kept the right to decide."
+      ],
+      "notes": "The final sentence is an architectural interpretation bounded by the supplied reference evidence. All three dossiers, the neutral Reader, source corpus, accepted kit and offline verifier are linked. Engineering source URLs are pinned to 64f2b38b0d671e4907bae8649fff8f3d2ee0751c. Newly prepared publication asset URLs target their namespace and must be checked after actual G56 landing. G56 full closure is recorded only by separate publication/review events. No Gate 6 execution is claimed.",
+      "dossier_sections": [
+        "F01",
+        "D01",
+        "A01"
+      ]
+    }
+  ],
+  "short_route": [
+    "S01",
+    "S02",
+    "S06",
+    "S08",
+    "S12",
+    "S15",
+    "S19",
+    "S22",
+    "S26",
+    "S30"
+  ],
+  "theme_routes": {
+    "F": [
+      "S01",
+      "S02",
+      "S03",
+      "S04",
+      "S05",
+      "S06",
+      "S07",
+      "S08",
+      "S09",
+      "S10",
+      "S11",
+      "S26",
+      "S27",
+      "S30"
+    ],
+    "D": [
+      "S01",
+      "S02",
+      "S03",
+      "S12",
+      "S13",
+      "S14",
+      "S15",
+      "S16",
+      "S17",
+      "S18",
+      "S28",
+      "S29",
+      "S30"
+    ],
+    "A": [
+      "S01",
+      "S02",
+      "S03",
+      "S19",
+      "S20",
+      "S21",
+      "S22",
+      "S23",
+      "S24",
+      "S25",
+      "S26",
+      "S27",
+      "S30"
+    ]
+  }
+}

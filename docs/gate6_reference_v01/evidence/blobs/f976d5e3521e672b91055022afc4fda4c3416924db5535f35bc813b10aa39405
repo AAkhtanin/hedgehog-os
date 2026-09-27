@@ -1,0 +1,147 @@
+{
+  "attempts": [
+    {
+      "admission_id": "capability_admission:35e1d3e80b019f03323ee8cf7a2bef216eaee512319fc6206170cb139212d73f",
+      "disposition": "COMPLETED",
+      "inputs": [
+        {
+          "parameter_name": "inventory_json",
+          "value": "{\"currency\":\"EUR\",\"fields\":[{\"available_utc\":[[1799308800,1799348400],[1799395200,1799434800],[1799481600,1799521200]],\"field_id\":\"field:J\",\"full_size\":true,\"occupied_utc\":[[1799402400,1799404200]],\"price_minor\":2138,\"surface\":\"natural_grass\"},{\"available_utc\":[[1799308800,1799348400],[1799395200,1799434800],[1799481600,1799521200]],\"field_id\":\"field:K\",\"full_size\":true,\"occupied_utc\":[],\"price_minor\":20,\"surface\":\"artificial\"}],\"revision\":4,\"venue_ref\":\"venue:challenge\"}",
+          "value_type": "TEXT"
+        },
+        {
+          "parameter_name": "request_json",
+          "value": "{\"budget_minor\":99999,\"currency\":\"EUR\",\"operation\":\"FIND_OFFER\",\"owner_approval_ref\":\"consent:jan8-only\",\"request_id\":\"request:second_team\",\"revision\":2,\"sessions\":[{\"allow_shift_minutes\":0,\"end\":\"2027-01-09T13:00:00\",\"session_id\":\"session:X\",\"start\":\"2027-01-09T11:30:00\"},{\"allow_shift_minutes\":30,\"end\":\"2027-01-08T13:00:00\",\"session_id\":\"session:Y\",\"start\":\"2027-01-08T11:30:00\"},{\"allow_shift_minutes\":0,\"end\":\"2027-01-07T18:30:00\",\"session_id\":\"session:Z\",\"start\":\"2027-01-07T17:00:00\"}],\"team_ref\":\"team:second_team\",\"timezone\":\"Europe/Tirane\",\"venue_ref\":\"venue:challenge\"}",
+          "value_type": "TEXT"
+        }
+      ],
+      "invocation": {
+        "admission_id": "capability_admission:35e1d3e80b019f03323ee8cf7a2bef216eaee512319fc6206170cb139212d73f",
+        "candidate_id": null,
+        "definition_id": "capability_definition:0e353bcaee8b3d443ddc7f6fd66f41f41a20678cf0372c163b2673ce16599dd5",
+        "execution_attempt_id": "pure_attempt:4e1c8c6bcb0d84ff985d086f20ef3e2b3726a01e0967c0b8b70b0c55f917fd45",
+        "input_validation": {
+          "definition_id": "capability_definition:0e353bcaee8b3d443ddc7f6fd66f41f41a20678cf0372c163b2673ce16599dd5",
+          "invocation_id": null,
+          "reason_codes": [],
+          "subject_sha256": "8052cad80c80c848764620983e6a913b440918c3bff68871e8a97b2dbaf97a50",
+          "valid": true,
+          "validator_code_sha256": "f02da370499fccddf88bb2dbdbd9fe6e2a33fa4143bf205a59770f9f84bb2731"
+        },
+        "inputs": [
+          {
+            "parameter_name": "inventory_json",
+            "value": "{\"currency\":\"EUR\",\"fields\":[{\"available_utc\":[[1799308800,1799348400],[1799395200,1799434800],[1799481600,1799521200]],\"field_id\":\"field:J\",\"full_size\":true,\"occupied_utc\":[[1799402400,1799404200]],\"price_minor\":2138,\"surface\":\"natural_grass\"},{\"available_utc\":[[1799308800,1799348400],[1799395200,1799434800],[1799481600,1799521200]],\"field_id\":\"field:K\",\"full_size\":true,\"occupied_utc\":[],\"price_minor\":20,\"surface\":\"artificial\"}],\"revision\":4,\"venue_ref\":\"venue:challenge\"}",
+            "value_type": "TEXT"
+          },
+          {
+            "parameter_name": "request_json",
+            "value": "{\"budget_minor\":99999,\"currency\":\"EUR\",\"operation\":\"FIND_OFFER\",\"owner_approval_ref\":\"consent:jan8-only\",\"request_id\":\"request:second_team\",\"revision\":2,\"sessions\":[{\"allow_shift_minutes\":0,\"end\":\"2027-01-09T13:00:00\",\"session_id\":\"session:X\",\"start\":\"2027-01-09T11:30:00\"},{\"allow_shift_minutes\":30,\"end\":\"2027-01-08T13:00:00\",\"session_id\":\"session:Y\",\"start\":\"2027-01-08T11:30:00\"},{\"allow_shift_minutes\":0,\"end\":\"2027-01-07T18:30:00\",\"session_id\":\"session:Z\",\"start\":\"2027-01-07T17:00:00\"}],\"team_ref\":\"team:second_team\",\"timezone\":\"Europe/Tirane\",\"venue_ref\":\"venue:challenge\"}",
+            "value_type": "TEXT"
+          }
+        ],
+        "invocation_id": "capability_invocation:47c28182500b71975fb244fdb93e99a788d4ca1af3676b6b5d4732cf11559180",
+        "owning_root_id": "VenueRoot",
+        "packet_id": null,
+        "resource_refs": [],
+        "task_id": "task:football:produce:71ea73c6c2f4b45b476583c4124ea1fcdb9030b6757c5a498654b45fb1ae6d76",
+        "work_instance_id": "work_instance:5a0997c0852f39d5a727295ed89fd9dba88a12fef52c0221a49eb1e7394101d5"
+      },
+      "reason": null,
+      "result": {
+        "actual_implementation_sha256": "abfb69a8445614db75562f59a818b36d6a9c4f559960b5dc5a42f89d743a4707",
+        "admission_id": "capability_admission:35e1d3e80b019f03323ee8cf7a2bef216eaee512319fc6206170cb139212d73f",
+        "consumed_input_sha256": "8052cad80c80c848764620983e6a913b440918c3bff68871e8a97b2dbaf97a50",
+        "execution_attempt_id": "pure_attempt:4e1c8c6bcb0d84ff985d086f20ef3e2b3726a01e0967c0b8b70b0c55f917fd45",
+        "invocation_id": "capability_invocation:47c28182500b71975fb244fdb93e99a788d4ca1af3676b6b5d4732cf11559180",
+        "outcome": "SUCCEEDED",
+        "output": [
+          {
+            "parameter_name": "offer_json",
+            "value": "{\"alternatives\":[{\"choices\":[{\"end_utc\":1799496000,\"field_id\":\"field:J\",\"price_minor\":2138,\"session_id\":\"session:X\",\"start_utc\":1799490600,\"venue_ref\":\"venue:challenge\"}],\"session_id\":\"session:X\"},{\"choices\":[{\"end_utc\":1799409600,\"field_id\":\"field:J\",\"price_minor\":2138,\"session_id\":\"session:Y\",\"start_utc\":1799404200,\"venue_ref\":\"venue:challenge\"},{\"end_utc\":1799411400,\"field_id\":\"field:J\",\"price_minor\":2138,\"session_id\":\"session:Y\",\"start_utc\":1799406000,\"venue_ref\":\"venue:challenge\"}],\"session_id\":\"session:Y\"},{\"choices\":[{\"end_utc\":1799343000,\"field_id\":\"field:J\",\"price_minor\":2138,\"session_id\":\"session:Z\",\"start_utc\":1799337600,\"venue_ref\":\"venue:challenge\"}],\"session_id\":\"session:Z\"}],\"currency\":\"EUR\",\"fields\":[{\"field_id\":\"field:J\",\"full_size\":true,\"price_minor\":2138,\"surface\":\"natural_grass\"}],\"offer_revision\":4,\"request\":{\"budget_minor\":99999,\"currency\":\"EUR\",\"operation\":\"FIND_OFFER\",\"owner_approval_ref\":\"consent:jan8-only\",\"request_id\":\"request:second_team\",\"revision\":2,\"sessions\":[{\"allow_shift_minutes\":0,\"end\":\"2027-01-09T13:00:00\",\"session_id\":\"session:X\",\"start\":\"2027-01-09T11:30:00\"},{\"allow_shift_minutes\":30,\"end\":\"2027-01-08T13:00:00\",\"session_id\":\"session:Y\",\"start\":\"2027-01-08T11:30:00\"},{\"allow_shift_minutes\":0,\"end\":\"2027-01-07T18:30:00\",\"session_id\":\"session:Z\",\"start\":\"2027-01-07T17:00:00\"}],\"team_ref\":\"team:second_team\",\"timezone\":\"Europe/Tirane\",\"venue_ref\":\"venue:challenge\"},\"schedule_revision\":4,\"slots\":[{\"end_utc\":1799496000,\"field_id\":\"field:J\",\"price_minor\":2138,\"session_id\":\"session:X\",\"start_utc\":1799490600,\"venue_ref\":\"venue:challenge\"},{\"end_utc\":1799409600,\"field_id\":\"field:J\",\"price_minor\":2138,\"session_id\":\"session:Y\",\"start_utc\":1799404200,\"venue_ref\":\"venue:challenge\"},{\"end_utc\":1799343000,\"field_id\":\"field:J\",\"price_minor\":2138,\"session_id\":\"session:Z\",\"start_utc\":1799337600,\"venue_ref\":\"venue:challenge\"}],\"status\":\"OFFER_READY\",\"total_minor\":6414}",
+            "value_type": "TEXT"
+          }
+        ],
+        "output_validation": {
+          "definition_id": "capability_definition:0e353bcaee8b3d443ddc7f6fd66f41f41a20678cf0372c163b2673ce16599dd5",
+          "invocation_id": "capability_invocation:47c28182500b71975fb244fdb93e99a788d4ca1af3676b6b5d4732cf11559180",
+          "reason_codes": [],
+          "subject_sha256": "e26eb4564f342041ca1e03482ef12a5c723f6791a0aa7dcc47a124107813697b",
+          "valid": true,
+          "validator_code_sha256": "abfb69a8445614db75562f59a818b36d6a9c4f559960b5dc5a42f89d743a4707"
+        },
+        "result_id": "capability_result:d24a6486a9c6a6c517435a49ddbfce4ea5798dc6830c04bee2510a4470e52b39"
+      },
+      "task_id": "task:football:produce:71ea73c6c2f4b45b476583c4124ea1fcdb9030b6757c5a498654b45fb1ae6d76",
+      "work_instance_id": "work_instance:5a0997c0852f39d5a727295ed89fd9dba88a12fef52c0221a49eb1e7394101d5"
+    }
+  ],
+  "reasons": [],
+  "results": [
+    {
+      "consumed_fields": [],
+      "invocation": {
+        "admission_id": "capability_admission:35e1d3e80b019f03323ee8cf7a2bef216eaee512319fc6206170cb139212d73f",
+        "candidate_id": null,
+        "definition_id": "capability_definition:0e353bcaee8b3d443ddc7f6fd66f41f41a20678cf0372c163b2673ce16599dd5",
+        "execution_attempt_id": "pure_attempt:4e1c8c6bcb0d84ff985d086f20ef3e2b3726a01e0967c0b8b70b0c55f917fd45",
+        "input_validation": {
+          "definition_id": "capability_definition:0e353bcaee8b3d443ddc7f6fd66f41f41a20678cf0372c163b2673ce16599dd5",
+          "invocation_id": null,
+          "reason_codes": [],
+          "subject_sha256": "8052cad80c80c848764620983e6a913b440918c3bff68871e8a97b2dbaf97a50",
+          "valid": true,
+          "validator_code_sha256": "f02da370499fccddf88bb2dbdbd9fe6e2a33fa4143bf205a59770f9f84bb2731"
+        },
+        "inputs": [
+          {
+            "parameter_name": "inventory_json",
+            "value": "{\"currency\":\"EUR\",\"fields\":[{\"available_utc\":[[1799308800,1799348400],[1799395200,1799434800],[1799481600,1799521200]],\"field_id\":\"field:J\",\"full_size\":true,\"occupied_utc\":[[1799402400,1799404200]],\"price_minor\":2138,\"surface\":\"natural_grass\"},{\"available_utc\":[[1799308800,1799348400],[1799395200,1799434800],[1799481600,1799521200]],\"field_id\":\"field:K\",\"full_size\":true,\"occupied_utc\":[],\"price_minor\":20,\"surface\":\"artificial\"}],\"revision\":4,\"venue_ref\":\"venue:challenge\"}",
+            "value_type": "TEXT"
+          },
+          {
+            "parameter_name": "request_json",
+            "value": "{\"budget_minor\":99999,\"currency\":\"EUR\",\"operation\":\"FIND_OFFER\",\"owner_approval_ref\":\"consent:jan8-only\",\"request_id\":\"request:second_team\",\"revision\":2,\"sessions\":[{\"allow_shift_minutes\":0,\"end\":\"2027-01-09T13:00:00\",\"session_id\":\"session:X\",\"start\":\"2027-01-09T11:30:00\"},{\"allow_shift_minutes\":30,\"end\":\"2027-01-08T13:00:00\",\"session_id\":\"session:Y\",\"start\":\"2027-01-08T11:30:00\"},{\"allow_shift_minutes\":0,\"end\":\"2027-01-07T18:30:00\",\"session_id\":\"session:Z\",\"start\":\"2027-01-07T17:00:00\"}],\"team_ref\":\"team:second_team\",\"timezone\":\"Europe/Tirane\",\"venue_ref\":\"venue:challenge\"}",
+            "value_type": "TEXT"
+          }
+        ],
+        "invocation_id": "capability_invocation:47c28182500b71975fb244fdb93e99a788d4ca1af3676b6b5d4732cf11559180",
+        "owning_root_id": "VenueRoot",
+        "packet_id": null,
+        "resource_refs": [],
+        "task_id": "task:football:produce:71ea73c6c2f4b45b476583c4124ea1fcdb9030b6757c5a498654b45fb1ae6d76",
+        "work_instance_id": "work_instance:5a0997c0852f39d5a727295ed89fd9dba88a12fef52c0221a49eb1e7394101d5"
+      },
+      "reasons": [],
+      "result": {
+        "actual_implementation_sha256": "abfb69a8445614db75562f59a818b36d6a9c4f559960b5dc5a42f89d743a4707",
+        "admission_id": "capability_admission:35e1d3e80b019f03323ee8cf7a2bef216eaee512319fc6206170cb139212d73f",
+        "consumed_input_sha256": "8052cad80c80c848764620983e6a913b440918c3bff68871e8a97b2dbaf97a50",
+        "execution_attempt_id": "pure_attempt:4e1c8c6bcb0d84ff985d086f20ef3e2b3726a01e0967c0b8b70b0c55f917fd45",
+        "invocation_id": "capability_invocation:47c28182500b71975fb244fdb93e99a788d4ca1af3676b6b5d4732cf11559180",
+        "outcome": "SUCCEEDED",
+        "output": [
+          {
+            "parameter_name": "offer_json",
+            "value": "{\"alternatives\":[{\"choices\":[{\"end_utc\":1799496000,\"field_id\":\"field:J\",\"price_minor\":2138,\"session_id\":\"session:X\",\"start_utc\":1799490600,\"venue_ref\":\"venue:challenge\"}],\"session_id\":\"session:X\"},{\"choices\":[{\"end_utc\":1799409600,\"field_id\":\"field:J\",\"price_minor\":2138,\"session_id\":\"session:Y\",\"start_utc\":1799404200,\"venue_ref\":\"venue:challenge\"},{\"end_utc\":1799411400,\"field_id\":\"field:J\",\"price_minor\":2138,\"session_id\":\"session:Y\",\"start_utc\":1799406000,\"venue_ref\":\"venue:challenge\"}],\"session_id\":\"session:Y\"},{\"choices\":[{\"end_utc\":1799343000,\"field_id\":\"field:J\",\"price_minor\":2138,\"session_id\":\"session:Z\",\"start_utc\":1799337600,\"venue_ref\":\"venue:challenge\"}],\"session_id\":\"session:Z\"}],\"currency\":\"EUR\",\"fields\":[{\"field_id\":\"field:J\",\"full_size\":true,\"price_minor\":2138,\"surface\":\"natural_grass\"}],\"offer_revision\":4,\"request\":{\"budget_minor\":99999,\"currency\":\"EUR\",\"operation\":\"FIND_OFFER\",\"owner_approval_ref\":\"consent:jan8-only\",\"request_id\":\"request:second_team\",\"revision\":2,\"sessions\":[{\"allow_shift_minutes\":0,\"end\":\"2027-01-09T13:00:00\",\"session_id\":\"session:X\",\"start\":\"2027-01-09T11:30:00\"},{\"allow_shift_minutes\":30,\"end\":\"2027-01-08T13:00:00\",\"session_id\":\"session:Y\",\"start\":\"2027-01-08T11:30:00\"},{\"allow_shift_minutes\":0,\"end\":\"2027-01-07T18:30:00\",\"session_id\":\"session:Z\",\"start\":\"2027-01-07T17:00:00\"}],\"team_ref\":\"team:second_team\",\"timezone\":\"Europe/Tirane\",\"venue_ref\":\"venue:challenge\"},\"schedule_revision\":4,\"slots\":[{\"end_utc\":1799496000,\"field_id\":\"field:J\",\"price_minor\":2138,\"session_id\":\"session:X\",\"start_utc\":1799490600,\"venue_ref\":\"venue:challenge\"},{\"end_utc\":1799409600,\"field_id\":\"field:J\",\"price_minor\":2138,\"session_id\":\"session:Y\",\"start_utc\":1799404200,\"venue_ref\":\"venue:challenge\"},{\"end_utc\":1799343000,\"field_id\":\"field:J\",\"price_minor\":2138,\"session_id\":\"session:Z\",\"start_utc\":1799337600,\"venue_ref\":\"venue:challenge\"}],\"status\":\"OFFER_READY\",\"total_minor\":6414}",
+            "value_type": "TEXT"
+          }
+        ],
+        "output_validation": {
+          "definition_id": "capability_definition:0e353bcaee8b3d443ddc7f6fd66f41f41a20678cf0372c163b2673ce16599dd5",
+          "invocation_id": "capability_invocation:47c28182500b71975fb244fdb93e99a788d4ca1af3676b6b5d4732cf11559180",
+          "reason_codes": [],
+          "subject_sha256": "e26eb4564f342041ca1e03482ef12a5c723f6791a0aa7dcc47a124107813697b",
+          "valid": true,
+          "validator_code_sha256": "abfb69a8445614db75562f59a818b36d6a9c4f559960b5dc5a42f89d743a4707"
+        },
+        "result_id": "capability_result:d24a6486a9c6a6c517435a49ddbfce4ea5798dc6830c04bee2510a4470e52b39"
+      },
+      "revision_id": "work_revision:3f6167cde20059a7888c7b638dcb0986275b3fc357be0607fe450e312731856a",
+      "status": "COMPLETED",
+      "task_id": "task:football:produce:71ea73c6c2f4b45b476583c4124ea1fcdb9030b6757c5a498654b45fb1ae6d76",
+      "work_id": "venue"
+    }
+  ],
+  "valid": true
+}

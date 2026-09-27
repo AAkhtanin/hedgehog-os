@@ -276,12 +276,24 @@ class LegacyDRSProjectionV01:
     creates_permission: bool
 
 
+_GENERATED_MEANING_WRAPPER_ID = _re.compile(
+    r"\A(?:request|trace):drsmeaning_v01:[0-9a-f]{64}\Z"
+)
+
+
+def _legacy_string_secret_reason(value: str) -> str | None:
+    # Lexical classification only; provenance and Root bindings are still checked.
+    if _GENERATED_MEANING_WRAPPER_ID.fullmatch(value):
+        return None
+    return _secret_reason(value)
+
+
 def _strict_json_plain(value: object, seen: set[int] | None = None) -> object:
     if seen is None:
         seen = set()
     if value is None or type(value) in (bool, int, str):
         if type(value) is str:
-            reason = _secret_reason(value)
+            reason = _legacy_string_secret_reason(value)
             if reason:
                 raise ValueError(reason)
         return value
@@ -343,7 +355,7 @@ def _legacy_id(value: object) -> bool:
     return (
         type(value) is str
         and _LEGACY_ID.fullmatch(value) is not None
-        and _secret_reason(value) is None
+        and _legacy_string_secret_reason(value) is None
     )
 
 

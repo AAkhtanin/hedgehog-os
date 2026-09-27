@@ -1,0 +1,5 @@
+{
+  "pid": 65335,
+  "supervisor_pid": 65328,
+  "identity": "  PID  PPID STARTED                      COMMAND\n65335 65328 Sun Sep 27 09:01:06 2026     /Users/admin/Projects/hedgehog-os-gate6-g6a1-g4nd6eiu/venv/bin/python -B -m demo.run_gate6_reference_v01 readiness --inputs /Users/admin/Projects/hedgehog-os-gate6-g6a4-p9f2we5q/campaign_receipts.json --output /Users/admin/Projects/hedgehog-os-gate6-g6a4-p9f2we5q/consolidated_readiness.json\n"
+}

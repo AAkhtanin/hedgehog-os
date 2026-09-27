@@ -1,0 +1,80 @@
+{
+  "backend": "LOCAL_START_RETURN_FILTERED_GLOBAL_UNWIND",
+  "children": "UNOBSERVED_NOT_ZERO",
+  "counts": {
+    "sentinel": 1,
+    "write": 1,
+    "writeback": 1
+  },
+  "direct_owners": {
+    "sentinel": 1,
+    "write": 1,
+    "writeback": 1
+  },
+  "entered": 1790507297.489022,
+  "events": [
+    {
+      "event": "call",
+      "label": "sentinel",
+      "nested": false,
+      "parents": [],
+      "time": 5839676.668226291
+    },
+    {
+      "event": "return",
+      "label": "sentinel",
+      "time": 5839676.668227875
+    },
+    {
+      "event": "call",
+      "label": "writeback",
+      "nested": false,
+      "parents": [],
+      "time": 5839676.668231458
+    },
+    {
+      "event": "call",
+      "label": "write",
+      "nested": false,
+      "parents": [
+        "writeback"
+      ],
+      "time": 5839676.681807375
+    },
+    {
+      "event": "return",
+      "label": "write",
+      "time": 5839676.682051375
+    },
+    {
+      "event": "return",
+      "label": "writeback",
+      "time": 5839676.683172
+    }
+  ],
+  "exited": 1790507297.504103,
+  "identities": {
+    "write": {
+      "bytes": 3888,
+      "file": "/private/tmp/RADIOLARIA_G6A5R1.53l3ouws/clone/hedgehog/drs.py",
+      "line": 76,
+      "sha256": "7e78be61a24f285608841cbd8d07047967fb0abf7708173eadeff5f5578553f4",
+      "symbol": "LocalDRS.write_record"
+    },
+    "writeback": {
+      "bytes": 53552,
+      "file": "/private/tmp/RADIOLARIA_G6A5R1.53l3ouws/clone/hedgehog/local_drs_resolver.py",
+      "line": 1318,
+      "sha256": "5fa06d3cd243f6ef8cfd87997596413654ef03efac27e622ac9093659aea99a4",
+      "symbol": "_g2b_write_root_reviewed_meaning_record_v01"
+    }
+  },
+  "nested": {},
+  "phase": "policy_writeback",
+  "pid": 83159,
+  "rationale": "Same-family nested wrappers are one owner; D5 inside E5 is visible nested work, not another direct D5.",
+  "restored": true,
+  "scope": "CURRENT_PROCESS_CURRENT_THREAD_ONLY",
+  "sentinel_live": true,
+  "thread": 8409947520
+}

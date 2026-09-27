@@ -1,0 +1,75 @@
+{
+  "argv": [
+    "/Users/admin/Projects/hedgehog-os-gate6-g6a1-g4nd6eiu/venv/bin/python",
+    "-B",
+    "-m",
+    "demo.run_gate6_reference_v01",
+    "execute",
+    "--profile",
+    "G4",
+    "--inputs",
+    "/Users/admin/Projects/hedgehog-os-gate6-g6a4-p9f2we5q/future_inputs.json",
+    "--output",
+    "/Users/admin/Projects/hedgehog-os-gate6-g6a4-p9f2we5q/campaign/G4"
+  ],
+  "cwd": "/Users/admin/Projects/hedgehog-os-gate6-g6a4-p9f2we5q/clone",
+  "environment": {
+    "PATH": "/opt/homebrew/bin:/usr/bin:/bin:/usr/sbin:/sbin",
+    "LANG": "en_US.UTF-8",
+    "TMPDIR": "/Users/admin/Projects/hedgehog-os-gate6-g6a4-p9f2we5q/tmp",
+    "PYTHONDONTWRITEBYTECODE": "1",
+    "PYTEST_DISABLE_PLUGIN_AUTOLOAD": "1",
+    "GIT_OPTIONAL_LOCKS": "0",
+    "PYTHONPATH": "/Users/admin/Projects/hedgehog-os-gate6-g6a4-p9f2we5q/clone",
+    "HOME": "/Users/admin"
+  },
+  "start": "2026-09-27T05:42:25.679726+00:00",
+  "timeout_seconds": 1800,
+  "source_pins": {
+    "tests/test_gate6_reference_conformance_v01.py": {
+      "bytes": 8127,
+      "sha256": "693b7018ef8670e9423453b3dbeb0652b63d358b25087d67112dce7661fd3efc",
+      "mode": 420
+    },
+    "tests/test_gate6_reference_adversarial_v01.py": {
+      "bytes": 14259,
+      "sha256": "80fa9441238b112a14da0b489f6c9c6fa499cfae693f59467a11b073d0e298cb",
+      "mode": 420
+    },
+    "demo/run_gate6_reference_v01.py": {
+      "bytes": 47929,
+      "sha256": "e05f5a6540cb06327e2cb65c407ca5ffba4f75b047419ce2d515d96157ac37f0",
+      "mode": 420
+    },
+    "tools/run_gate6_football_reference_v01.py": {
+      "bytes": 20399,
+      "sha256": "7886cc9e9378766cf0741e13ff4f736b701c8ab60d808696722c5398cbe535af",
+      "mode": 420
+    },
+    "tests/test_gate6_reference_inventory_v01.py": {
+      "bytes": 14383,
+      "sha256": "9053345dde8ce5ae987d0aedcf4d5e219c07ceb70c68116a4c1dc7af439a8103",
+      "mode": 420
+    },
+    "docs/gate6_reference_execution_v01.md": {
+      "bytes": 15439,
+      "sha256": "d7587d029800bfee53385cfe46e3783f3c6850e658aaaae75d9f114ebf56301d",
+      "mode": 420
+    },
+    "tools/run_gate6_model_contrast_v01.py": {
+      "bytes": 21836,
+      "sha256": "0989ec6e6bebf142dd1bb93092faf3558a76d559cf54205993b7e24d9d7357a0",
+      "mode": 420
+    },
+    "tests/test_gate6_model_budget_v01.py": {
+      "bytes": 9972,
+      "sha256": "571b2f14e46052fa4f1885a75908cee359df1ed6a0abadf488c95735ed251392",
+      "mode": 420
+    }
+  },
+  "wrapper": {
+    "bytes": 8745,
+    "sha256": "6a65374bbb0b308bb8115965b396a43b0914cf5d5d3c09a66914cf842bc15460",
+    "mode": 420
+  }
+}

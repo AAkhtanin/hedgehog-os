@@ -1,0 +1,16 @@
+{
+  "architecture": "arm64",
+  "base": "python:3.14-slim-bookworm@sha256:82bc3c539b8813ada9d68c63b40158fa002f7f33de9bf3312a3dfdc0620dff56",
+  "image_id": "sha256:f07e68671249ccaffda9529b14593c191ff9664a8b43b27f6b16570623f63a97",
+  "os": "linux",
+  "recipe": {
+    "bytes": 964,
+    "mode": "0644",
+    "sha256": "75b97091648e2b15ef0230536d4b25d0719403b43e190d40d55041da44977561"
+  },
+  "requirements": {
+    "bytes": 787,
+    "mode": "0644",
+    "sha256": "053fe39d61c89d4bb9306454aa470633b167dee560bba5d80530c02802beff2f"
+  }
+}

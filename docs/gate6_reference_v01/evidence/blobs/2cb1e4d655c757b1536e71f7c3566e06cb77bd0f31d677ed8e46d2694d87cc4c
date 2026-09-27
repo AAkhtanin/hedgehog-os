@@ -1,0 +1,128 @@
+{
+  "content": {
+    "descriptor": {
+      "commitment": {
+        "artifact_hash": "c838fca6cdc3d731edcb8ff4bd4971728005227d91d7b5404ec94f78d182b8f0",
+        "commitment_id": "g5commit:19f807755dba01fdfd6fbf87056da2d5c3496070ccca95f76257ecf8c071ec15",
+        "commitment_scope": "gate5:POINTER:v01",
+        "commitment_version": "v0.1",
+        "key_id": "a6b3b82ea80f5c0ee71bc78d34cb2ab066495fd51bd471ff52b66edc551ffcb3",
+        "manifest_hash": "a899a0c709cd0adb45449fdfa63730447f1229b89086263dbad83c53cee37d03",
+        "owner_root_id": "root:gate5:calibration",
+        "transaction_id": "transaction:gate5:reference"
+      },
+      "signature": {
+        "algorithm": "Ed25519",
+        "commitment_hash": "246502effde6ed4b6199a97e4831e6576e544750e1440aafe044ccd37b050841",
+        "commitment_id": "g5commit:19f807755dba01fdfd6fbf87056da2d5c3496070ccca95f76257ecf8c071ec15",
+        "key_id": "a6b3b82ea80f5c0ee71bc78d34cb2ab066495fd51bd471ff52b66edc551ffcb3",
+        "owner_root_id": "root:gate5:calibration",
+        "signature_hex": "aec57e6011454f6bd48b50d71078a00420562bc41fcb6a27dd9b3ab049cf0ec3529251f99090deec41a6a326d0d6c63515f43a0fbb44df4681a0dae38c447904",
+        "signature_version": "v0.1",
+        "transaction_id": "transaction:gate5:reference"
+      },
+      "value": {
+        "access_policy_ref": "policy:gate5:source:v01",
+        "allowed_use_classes": [
+          "AUDIT",
+          "LOCAL_CONTEXT"
+        ],
+        "artifact_manifest_ref": "g5manifest:a899a0c709cd0adb45449fdfa63730447f1229b89086263dbad83c53cee37d03",
+        "body_bytes": 1152,
+        "body_sha256": "c0a3313ff5f9bbf2871fc02d29e573d7264ec4d7b2327e39662bebabe78c4187",
+        "creates_authority": false,
+        "creates_permission": false,
+        "forbidden_use_classes": [
+          "ACTION"
+        ],
+        "media_type": "application/json",
+        "pointer_id": "g5pointer:92cf0c7eb8c13eda4e7db4c9bc35049f2a0fb16992354a6126623e3f40de1e49",
+        "published_scope": {
+          "domain": "CALIBRATION",
+          "quantity_id": "reference_quantity_v01",
+          "unit_id": "synthetic_unit_v01"
+        },
+        "publisher_key_id": "a6b3b82ea80f5c0ee71bc78d34cb2ab066495fd51bd471ff52b66edc551ffcb3",
+        "publisher_root_id": "root:gate5:calibration",
+        "recipient_scope": [
+          "root:gate5:site"
+        ],
+        "revocation_stream_id": "stream:gate5:calibration:2",
+        "safe_summary": "{\"kind\":\"calibration\",\"quantity_id\":\"reference_quantity_v01\",\"unit_id\":\"synthetic_unit_v01\"}",
+        "semantic_address": {
+          "domain": "CALIBRATION",
+          "intent_class": "context_lookup",
+          "namespace": "gate5",
+          "schema_id": "BoundedCalibrationSummaryV01",
+          "schema_version": "v01",
+          "subject_class": "bounded_calibration"
+        },
+        "source_lineage_refs": [
+          "work_results:dde1b09b9d1922487d007f5a12bf72feaa673460b14438fee41a9437c1b4ace8",
+          "work_results:70b2cbf41e6be3779794223564761a4394d3141fc3bce143b46d73983cfb776b"
+        ],
+        "source_record_ref": "source:gate5:calibration:one",
+        "source_review_ref": "0e221bb54a75ce82aae7b9f4397c9967ded12688bc9cea482650491090471dda",
+        "source_revision": 2,
+        "time_envelope": {
+          "ct_context_anchor": 1790487014,
+          "et_observed_at": 1790487014,
+          "freshness_policy_id": "freshness:gate5:source",
+          "kt_as_of": 1790487014,
+          "pt_created_at": 1790487014,
+          "source_observed_at": 1790487014,
+          "source_reported_at": 1790487014,
+          "system_ingested_at": 1790487014,
+          "system_verified_at": 1790487014,
+          "time_envelope_id": "drstime_v01:b9439b944de9f5592605996a2bcd587e6138209ba2f1fabe139322c3b766ab3c",
+          "time_envelope_version": "v0.1",
+          "ttl_seconds": 300,
+          "valid_from": 1790487014,
+          "valid_to": 1790487314
+        },
+        "transport_object_id": "object:gate5:calibration:one",
+        "version": "g51.pointer.v01"
+      }
+    },
+    "drs_hit_is_authority": false,
+    "drs_record_is_truth": false,
+    "drs_reuse_candidate_is_action_permission": false,
+    "kind": "pointer",
+    "revision": 2,
+    "semantic_keys": [
+      "calibration",
+      "pointer"
+    ]
+  },
+  "domain": "G52_POINTER",
+  "layer": "work",
+  "provenance": {
+    "created_by": "root_orchestrator",
+    "request_id": "req:g5pointer:92cf0c7eb8c13eda4e7db4c9bc35049f2a0fb16992354a6126623e3f40de1e49",
+    "trace_refs": [
+      {
+        "kind": "local_drs_resolver",
+        "trace_id": "trace:g5pointer:92cf0c7eb8c13eda4e7db4c9bc35049f2a0fb16992354a6126623e3f40de1e49"
+      }
+    ]
+  },
+  "record_id": "g5pointer:92cf0c7eb8c13eda4e7db4c9bc35049f2a0fb16992354a6126623e3f40de1e49",
+  "status": "active",
+  "time_envelope": {
+    "ct_session_anchor": "sess_real_local_drs_resolver_v01",
+    "et_observed_at": null,
+    "freshness_class": "normal",
+    "kt_asof": "2026-09-27T05:30:14.551731+00:00",
+    "pt_created_at": "2026-09-27T05:30:14.551731+00:00",
+    "ttl_seconds": 2592000,
+    "valid_from": "2026-09-27T05:30:14.551731+00:00",
+    "valid_to": null
+  },
+  "trace_refs": [
+    {
+      "kind": "local_drs_resolver",
+      "trace_id": "trace:g5pointer:92cf0c7eb8c13eda4e7db4c9bc35049f2a0fb16992354a6126623e3f40de1e49"
+    }
+  ],
+  "type": "generic"
+}

@@ -1,0 +1,50 @@
+{
+  "adaptation_ref": "g5adaptation:29a239ba4a576d42c6f6f0b7ac151fd7d2c0f1b193971bded4efc56566fb4c29",
+  "assessment": "WITHIN_REFERENCE_LIMIT",
+  "budget": {
+    "body_bytes": 1073,
+    "metadata": 3,
+    "opened": 1,
+    "payload": 2,
+    "reservations": [
+      "g5request:3aa44560fb52b82e648611d8088c0df3aa42d8cb3c57726f273e071e927d04bb",
+      "g5request:f3d17781751485d7b32f606955dec713837e98ee88be723a7ff69c07e136cc42",
+      "g5request:7dd4f4979951805759abb516fbabc4d7c63103ab24ee0fde6da2917fffef9ba1",
+      "g5request:3e5599d2a40ea3b85bcc19fb501cfce31526f69fcfe51550e83c6c1249fc31aa",
+      "g5request:d672670d53245541744b31f85938aeb11cc571ac5a85f4e32ae5849efdc9cdb8"
+    ],
+    "task": "task:gate5:exchange"
+  },
+  "checked_time": 1790486978,
+  "corrected": {
+    "den": 1,
+    "num": 96
+  },
+  "drs_writes": 0,
+  "effects": 0,
+  "host_dispatches": 0,
+  "import_ref": "g5import:e891c2f7ae214cf2b8da22ff284e688a52fb361e5de05583c19c2e913552b3af",
+  "model_calls": 0,
+  "new_root_decisions": 0,
+  "peer_fetches": 0,
+  "pointer_ref": "g5pointer:97474a43c3a6efd6b680931070b038e6e95d73577e83f900ad2f6f41eec0e317",
+  "scope": "PUBLIC_CRYPTO_AND_PURE_INVOCATION_RESULT_VALIDATION_PLUS_PINNED_RECORDED_ROOT_CAUSAL_LINKS; NOT_FULL_NATIVE_CANONICAL_REPLAY",
+  "source_correction": {
+    "den": 1,
+    "num": -10
+  },
+  "source_work": 0,
+  "status": "PASS_NARROW_SUPPLIED_G51",
+  "uncorrected": {
+    "mean_den": 1,
+    "mean_num": 106
+  },
+  "verification_mode": "HISTORICAL_CAPTURE_NOT_CURRENT_AUTHORITY",
+  "wire": {
+    "received": 5,
+    "received_bytes": 12043,
+    "sent": 5,
+    "sent_bytes": 9096
+  },
+  "work_result_ref": "work_results:fe54c8690db38fe60c580fd8b96e185433cd734d564148fcf2ca645239fee70a"
+}

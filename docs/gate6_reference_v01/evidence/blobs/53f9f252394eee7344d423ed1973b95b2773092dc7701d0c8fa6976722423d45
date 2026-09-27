@@ -1,0 +1,156 @@
+{
+  "status": "PASS_PER_CASE_PURE",
+  "result": {
+    "classification": "REVIEWED_REFERENCE_NATIVE_PROOF",
+    "case": "variation_final_reserved",
+    "events": {
+      "exact": {
+        "verdict": {
+          "event": "exact",
+          "status": "PASS_COMPLETED_FIND_ONLY",
+          "source_selection": "NO_COMPLETE_OFFER",
+          "total_minor": 0,
+          "native_source_work": 1,
+          "native_consumer_work": 1,
+          "bundle_checks": 2,
+          "root_release_join": true,
+          "canonical_C_sha256": "2f4541913bdd36ad19a5ef08605e2bc113f3ac5fab161cfba453dd9cbb70d632"
+        },
+        "status": "NO_COMPLETE_OFFER",
+        "counts": {
+          "publisher": {
+            "PURE": 1,
+            "DISPATCH": 0,
+            "EFFECT": 0,
+            "EXECUTOR": 0,
+            "CALLBACK": 0,
+            "STATE_WRITE": 0
+          },
+          "requester": {
+            "PURE": 1,
+            "DISPATCH": 0,
+            "EFFECT": 0,
+            "EXECUTOR": 0,
+            "CALLBACK": 0,
+            "STATE_WRITE": 0
+          }
+        },
+        "state_sha256": "61fc425c423ad3de96c729a7386139ce1e32b2d4cee111404489ac3169c500da"
+      },
+      "shift": {
+        "verdict": {
+          "event": "shift",
+          "status": "PASS_COMPLETED_FIND_ONLY",
+          "source_selection": "OFFER_READY",
+          "total_minor": 6798,
+          "native_source_work": 1,
+          "native_consumer_work": 1,
+          "bundle_checks": 2,
+          "root_release_join": true,
+          "canonical_C_sha256": "5fbc7aa016a5ba9b23907b5dc18b5020110d0591f02347c0606d81115b4ee5c5"
+        },
+        "status": "OFFER_READY",
+        "counts": {
+          "publisher": {
+            "PURE": 1,
+            "DISPATCH": 0,
+            "EFFECT": 0,
+            "EXECUTOR": 0,
+            "CALLBACK": 0,
+            "STATE_WRITE": 0
+          },
+          "requester": {
+            "PURE": 1,
+            "DISPATCH": 0,
+            "EFFECT": 0,
+            "EXECUTOR": 0,
+            "CALLBACK": 0,
+            "STATE_WRITE": 0
+          }
+        },
+        "state_sha256": "61fc425c423ad3de96c729a7386139ce1e32b2d4cee111404489ac3169c500da"
+      },
+      "book": {
+        "verdict": "PASS_NATIVE_THREE_SLOT_BOOKING",
+        "status": "MOCK_BOOKED",
+        "counts": {
+          "publisher": {
+            "PURE": 0,
+            "DISPATCH": 1,
+            "EFFECT": 1,
+            "EXECUTOR": 1,
+            "CALLBACK": 1,
+            "STATE_WRITE": 1
+          },
+          "requester": {
+            "PURE": 1,
+            "DISPATCH": 0,
+            "EFFECT": 0,
+            "EXECUTOR": 0,
+            "CALLBACK": 0,
+            "STATE_WRITE": 0
+          }
+        },
+        "state_sha256": "256ae940636f0c69bcaeff37b7b0e9c584cf55166aafe60649a7e0781ca40650"
+      },
+      "repeat": {
+        "verdict": "PASS_HISTORY_ZERO_WORK_EFFECT",
+        "status": "MOCK_BOOKED",
+        "counts": {
+          "publisher": {
+            "PURE": 0,
+            "DISPATCH": 0,
+            "EFFECT": 0,
+            "EXECUTOR": 0,
+            "CALLBACK": 0,
+            "STATE_WRITE": 0
+          },
+          "requester": {
+            "PURE": 0,
+            "DISPATCH": 0,
+            "EFFECT": 0,
+            "EXECUTOR": 0,
+            "CALLBACK": 0,
+            "STATE_WRITE": 0
+          }
+        },
+        "state_sha256": "256ae940636f0c69bcaeff37b7b0e9c584cf55166aafe60649a7e0781ca40650"
+      },
+      "verify": {
+        "verdict": "PASS_HISTORY_ZERO_WORK_EFFECT",
+        "status": "VERIFIED",
+        "counts": {
+          "publisher": {
+            "PURE": 0,
+            "DISPATCH": 0,
+            "EFFECT": 0,
+            "EXECUTOR": 0,
+            "CALLBACK": 0,
+            "STATE_WRITE": 0
+          },
+          "requester": {
+            "PURE": 0,
+            "DISPATCH": 0,
+            "EFFECT": 0,
+            "EXECUTOR": 0,
+            "CALLBACK": 0,
+            "STATE_WRITE": 0
+          }
+        },
+        "state_sha256": "256ae940636f0c69bcaeff37b7b0e9c584cf55166aafe60649a7e0781ca40650"
+      }
+    },
+    "bookings": 1,
+    "slots": 3
+  },
+  "refusal": null,
+  "observed_calls": {
+    "root": 0,
+    "dispatch": 0,
+    "work": 0,
+    "effect": 0,
+    "sentinel": 1
+  },
+  "aggregate_16": "NOT_COMPLETED",
+  "authority": "CAPTURE_IS_EVIDENCE_NOT_RESTORED_HOST"
+}

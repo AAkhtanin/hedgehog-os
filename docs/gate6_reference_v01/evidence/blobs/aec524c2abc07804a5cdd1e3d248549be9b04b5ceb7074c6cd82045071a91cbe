@@ -1,0 +1,179 @@
+"""G54C4 reviewed-reference calibration. Parent owns wire and observer receipts.
+
+No model, source admission or football acceptance. Candidate code runs only after
+the unchanged process filter, on an exact independently reviewed read-only mount.
+"""
+import base64,hashlib,importlib,io,json,os,selectors,signal,stat,struct,sys,tarfile,time,traceback
+from pathlib import Path
+from process_filter import restrict_worker
+OUT=Path('/out');ROLES=('publisher','requester');LANES=('channel','bootstrap');MAX_FRAME=262144
+
+def raw(v):return json.dumps(v,sort_keys=True,separators=(',',':'),ensure_ascii=True).encode()
+def sha(v):return hashlib.sha256(raw(v)).hexdigest()
+def send(fd,v):
+    data=raw(v)+b'\n'
+    if len(data)>1048576:raise ValueError('observer_record_bound')
+    while data:data=data[os.write(fd,data):]
+def restrictions():
+    return {k:v.strip() for l in Path('/proc/self/status').read_text().splitlines() if ':' in l for k,v in [l.split(':',1)]
+        if k in ('Uid','CapEff','NoNewPrivs','Seccomp','Seccomp_filters')}
+
+def historical_find_observer_not_used(fd,role,document,module):
+    from hedgehog import work_execution_host_v01 as h
+    from hedgehog.kernel import work_composition_v01 as w,effect_firewall_v01 as f,abi_v01 as abi
+    from hedgehog.external_drs import gate5_native_v01 as n,gate5_contracts_v01 as c,gate5_exchange_v01 as e
+    event_fn=module.p.event_request
+    functions={event_fn:'EVENT',h.execute_admitted_pure_work_v01:'PURE',w.work_program_result_to_artifact_v01:'ARTIFACT',
+        n.root_review:'ROOT',c.check_bundle:'BUNDLE_CHECK',e.PipeChannel.receive:'WIRE_RECEIVE',
+        c.crypto.trusted_root_key_set_to_plain_dict_v01:'PUBLIC_KEYS',
+        h.dispatch_current_action_v01:'DISPATCH',f.execute_bound_effect_v01:'EFFECT'}
+    codes={fn.__code__:name for fn,name in functions.items()};current={'event':None,'index':-1}
+    sys.monitoring.use_tool_id(4,'g54c1_bounded_capture')
+    def emit(kind,phase,**fields):send(fd,dict(kind=kind,phase=phase,role=role,event_id=current['event'],utc=time.time(),**fields))
+    def start(code,offset):
+        name=codes[code];frame=sys._getframe(1)
+        if frame.f_code is not code:raise ValueError('observer_frame_identity')
+        loc=frame.f_locals
+        if name in ('DISPATCH','EFFECT'):
+            emit(name,'FORBIDDEN');raise ValueError('FIND_ONLY_EFFECT_ROUTE_DISABLED')
+        if name=='EVENT':
+            current['index']+=1;index=current['index']
+            if index>=len(document['events']) or loc['event']!=document['events'][index] or loc['role']!=role:
+                raise ValueError('observer_original_event_binding')
+            current['event']=document['events'][index]['event_id']
+            emit(name,'START',parent_input_event_sha256=sha(document['events'][index]))
+        elif name=='BUNDLE_CHECK':
+            emit(name,'START',material={k:loc[k] for k in ('bundle','pointer_envelope','request','status','policy','now','history','conflicts')})
+        elif name=='ROOT':
+            emit(name,'START',arguments={k:loc[k] for k in ('root','transaction','candidate','subject','checks','claim_value','now','window')})
+    def returned(code,offset,value):
+        name=codes[code];frame=sys._getframe(1)
+        if frame.f_code is not code:raise ValueError('observer_frame_identity')
+        loc=frame.f_locals
+        if name=='PURE':
+            emit(name,'RETURN',native_evidence=dict(admission=n.plain(loc['snapshot']),invocation=n.plain(value[0]),result=n.plain(value[1])))
+        elif name=='ARTIFACT':emit(name,'RETURN',artifact=abi.kernel_artifact_to_plain_dict_v01(value),results=n.plain(loc['results']))
+        elif name=='ROOT':emit(name,'RETURN',record=n.root_plain(value))
+        elif name=='BUNDLE_CHECK':emit(name,'RETURN',checked=value)
+        elif name=='WIRE_RECEIVE' and value is not None:
+            lane='bootstrap' if Path(loc['self'].folder).name=='bootstrap' else 'channel'
+            emit(name,'RETURN',lane=lane,received_sha256=sha(value))
+        elif name=='PUBLIC_KEYS':emit(name,'RETURN',public=value)
+        elif name=='EVENT':emit(name,'RETURN',request_sha256=sha(value))
+    sys.monitoring.register_callback(4,sys.monitoring.events.PY_START,start)
+    sys.monitoring.register_callback(4,sys.monitoring.events.PY_RETURN,returned)
+    for code in codes:sys.monitoring.set_local_events(4,code,sys.monitoring.events.PY_START|sys.monitoring.events.PY_RETURN)
+
+def child(role,channels,observer_fd):
+    folder=OUT/role;folder.mkdir()
+    for name in ('state','evidence'):(folder/name).mkdir()
+    for fd,name in ((1,'stdout.txt'),(2,'stderr.txt')):
+        handle=os.open(folder/name,os.O_WRONLY|os.O_CREAT|os.O_EXCL,0o600);os.dup2(handle,fd);os.close(handle)
+    restrict_worker();state=restrictions()
+    assert state['NoNewPrivs']=='1' and state['Seccomp']=='2' and int(state['CapEff'],16)==0
+    send(observer_fd,dict(kind='FILTERED_BEFORE_IMPORT',role=role,pid=os.getpid(),restrictions=state))
+    from hedgehog.external_drs.gate5_exchange_v01 import PipeChannel
+    data=Path('/inputs')/role/'input.json';document=json.loads(data.read_text())
+    assert 1<=len(document['events'])<=8
+    sys.path.insert(0,'/candidate');module=importlib.import_module('candidate_domain.run')
+    from observer_g54d import install
+    stop=install(observer_fd,role,document,module,send)
+    (folder/'evidence/bootstrap').mkdir()
+    channel=PipeChannel(*channels['channel'],folder/'evidence')
+    bootstrap=PipeChannel(*channels['bootstrap'],folder/'evidence/bootstrap')
+    send(observer_fd,dict(kind='ENTRY_START',role=role,input_sha256=hashlib.sha256(data.read_bytes()).hexdigest(),module=module.__file__))
+    try:
+        value=module.run_peer_v01(role=role,input_data=document,state_root=folder/'state',output_root=folder/'evidence',channel=channel,bootstrap=bootstrap)
+        assert value is None or type(value) is dict
+        send(observer_fd,dict(kind='ENTRY_RETURN',role=role,channel=channel.counters(),bootstrap=bootstrap.counters()))
+    finally:stop()
+
+def main():
+    assert sys.argv[1]=='candidate'
+    inputs={r:json.loads((Path('/inputs')/r/'input.json').read_text()) for r in ROLES}
+    assert all(1<=len(v['events'])<=8 for v in inputs.values())
+    endpoints={(r,l):(os.pipe(),os.pipe()) for r in ROLES for l in LANES}
+    observers={r:os.pipe() for r in ROLES};children={}
+    for role in ROLES:
+        pid=os.fork()
+        if pid:children[pid]=role;continue
+        channels={l:(endpoints[(role,l)][1][0],endpoints[(role,l)][0][1]) for l in LANES}
+        keep={fd for pair in channels.values() for fd in pair}|{observers[role][1]}
+        allfds=[fd for pair in endpoints.values() for p in pair for fd in p]+[fd for p in observers.values() for fd in p]
+        for fd in allfds:
+            if fd not in keep:os.close(fd)
+        try:child(role,channels,observers[role][1]);rc=0
+        except BaseException:traceback.print_exc();rc=1
+        sys.stdout.flush();sys.stderr.flush();os._exit(rc)
+    sel=selectors.DefaultSelector();buffers={};pending={};wire=[];observations={r:bytearray() for r in ROLES}
+    destinations={}
+    for (role,lane),(up,down) in endpoints.items():
+        os.close(up[1]);os.close(down[0]);os.set_blocking(up[0],False);os.set_blocking(down[1],False)
+        sel.register(up[0],selectors.EVENT_READ,('wire',role,lane));buffers[(role,lane)]=bytearray()
+        destinations[(role,lane)]=down[1]
+    for role,(r,w) in observers.items():os.close(w);os.set_blocking(r,False);sel.register(r,selectors.EVENT_READ,('observer',role,None))
+    started=time.monotonic();waits={};error=None
+    try:
+        while sel.get_map() or len(waits)<2:
+            if time.monotonic()-started>90:raise ValueError('WALL_LIMIT')
+            for key,mask in sel.select(.05):
+                kind,role,lane=key.data
+                if kind=='write':
+                    data=pending[key.fd]
+                    try:n=os.write(key.fd,data)
+                    except BrokenPipeError:raise ValueError('receiver_closed_during_forward')
+                    del data[:n]
+                    if not data:sel.unregister(key.fd)
+                    continue
+                part=os.read(key.fd,65536)
+                if not part:
+                    sel.unregister(key.fd);os.close(key.fd)
+                    if kind=='wire' and buffers[(role,lane)]:raise ValueError('partial_frame_at_eof')
+                    continue
+                if kind=='observer':
+                    observations[role].extend(part)
+                    if len(observations[role])>8*1024**2:raise ValueError('OBSERVER_OUTPUT_LIMIT')
+                    continue
+                data=buffers[(role,lane)];data.extend(part)
+                while len(data)>=4:
+                    size=struct.unpack('!I',data[:4])[0]
+                    if size>MAX_FRAME:raise ValueError('frame_size_before_forward')
+                    if len(data)<size+4:break
+                    packet=bytes(data[:size+4]);payload=packet[4:];del data[:size+4]
+                    message=json.loads(payload)
+                    target='requester' if role=='publisher' else 'publisher'
+                    wire.append(dict(sender=role,receiver=target,lane=lane,utc=time.time(),raw_hex=payload.hex(),sha256=hashlib.sha256(payload).hexdigest()))
+                    if len(wire)>80 or sum(len(r['raw_hex']) for r in wire)>2*1024**2:raise ValueError('wire_capture_bound')
+                    fd=destinations[(target,lane)];queue=pending.setdefault(fd,bytearray());queue.extend(packet)
+                    if len(queue)>1048576:raise ValueError('forward_queue_bound')
+                    try:sel.get_key(fd)
+                    except KeyError:sel.register(fd,selectors.EVENT_WRITE,('write',target,lane))
+            for pid in children:
+                if pid not in waits:
+                    actual,raw_status=os.waitpid(pid,os.WNOHANG)
+                    if actual:waits[pid]=os.waitstatus_to_exitcode(raw_status)
+    except BaseException as exc:error=type(exc).__name__+':'+str(exc)
+    finally:
+        for pid in children:
+            if pid not in waits:os.kill(pid,signal.SIGKILL);_,status=os.waitpid(pid,0);waits[pid]=os.waitstatus_to_exitcode(status)
+        sel.close()
+        for fd in destinations.values():os.close(fd)
+    final_registry=OUT/'publisher/state/registry.json'
+    receipt=dict(version='g54d.runner.v01',command='REVIEWED_REFERENCE_NEW_AUTHOR_EXECUTION',seconds=time.monotonic()-started,
+        waits=[dict(pid=p,role=children[p],exit_code=rc,reaped=True) for p,rc in waits.items()],limit_error=error,
+        parent_inputs=inputs,parent_input_sha256={r:hashlib.sha256((Path('/inputs')/r/'input.json').read_bytes()).hexdigest() for r in ROLES},
+        wire=wire,observations={r:[json.loads(l) for l in b.splitlines()] for r,b in observations.items()},
+        effect_routes_enabled=True,author_or_exam_acceptance=False,
+        runner_final_source_state=json.loads(final_registry.read_text()) if final_registry.exists() else dict(records=[],idempotency={}))
+    blob=io.BytesIO();total=0
+    with tarfile.open(fileobj=blob,mode='w:gz') as t:
+        for p in sorted(OUT.rglob('*')):
+            mode=p.lstat().st_mode
+            if stat.S_ISDIR(mode):continue
+            if not stat.S_ISREG(mode) or p.stat().st_nlink!=1:raise ValueError('special_output')
+            total+=p.stat().st_size
+            if total>32*1024**2 or p.stat().st_size>16*1024**2:raise ValueError('output_bound')
+            t.add(p,arcname=str(p.relative_to(OUT)),recursive=False)
+    print(json.dumps(dict(parent_receipt=receipt,evidence_targz_base64=base64.b64encode(blob.getvalue()).decode())))
+    return int(bool(error) or any(waits.values()))
+if __name__=='__main__':raise SystemExit(main())

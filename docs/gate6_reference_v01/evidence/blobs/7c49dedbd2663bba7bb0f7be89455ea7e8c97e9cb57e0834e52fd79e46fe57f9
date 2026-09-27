@@ -1,0 +1,11 @@
+........................................................................ [ 41%]
+........................................................................ [ 82%]
+...............................                                          [100%]
+=============================== warnings summary ===============================
+tests/test_gate6_model_budget_v01.py::test_real_sdk_full_wire_roles_and_no_network
+  /Users/admin/Projects/hedgehog-os-gate6-g6a1-g4nd6eiu/venv/lib/python3.14/site-packages/google/genai/types.py:42: DeprecationWarning: '_UnionGenericAlias' is deprecated and slated for removal in Python 3.17
+    VersionedUnionType = Union[builtin_types.UnionType, _UnionGenericAlias]
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+175 passed, 1 warning in 12.77s
+{"gate6_closed": false, "reasons": ["LIVING_G36_MISSING_FAILED_OR_NOT_RUN", "CONFORMANCE_G36_MISSING_FAILED_OR_NOT_RUN", "G35_MISSING_FAILED_OR_NOT_RUN", "G4_MISSING_FAILED_OR_NOT_RUN", "G51_MISSING_FAILED_OR_NOT_RUN", "G52_MISSING_FAILED_OR_NOT_RUN", "FOOTBALL_MISSING_FAILED_OR_NOT_RUN", "G44_RECORDED_MISSING_FAILED_OR_NOT_RUN", "G5_RECORDED_MISSING_FAILED_OR_NOT_RUN", "MODEL_MISSING_FAILED_OR_NOT_RUN"], "source_admission": "NOT_PERFORMED", "status": "INCOMPLETE"}

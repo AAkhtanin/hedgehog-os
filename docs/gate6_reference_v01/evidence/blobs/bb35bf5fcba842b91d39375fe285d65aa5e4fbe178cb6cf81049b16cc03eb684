@@ -1,0 +1,115 @@
+{
+  "content": {
+    "drs_hit_is_authority": false,
+    "drs_record_is_truth": false,
+    "drs_reuse_candidate_is_action_permission": false,
+    "kind": "pointer",
+    "record": {
+      "artifact_pointers": [],
+      "authority_envelope": {
+        "action_permission_present": false,
+        "authority_class": "CONNECTOR_OBSERVATION",
+        "authority_envelope_id": "drsauth_v01:3f18106bd7d8fd9e1c8a08a029a750d3793244182ecf380efa4c7a8fd6fdf530",
+        "authority_envelope_version": "v0.1",
+        "authority_scope_fingerprint": "0d07b20acaade217a045d03b09aee9b193ef9312c1a1b77ace2c2719e5a05b27",
+        "creates_authority": false,
+        "creates_permission": false,
+        "owning_local_root_id": null,
+        "recording_component": "football:connector",
+        "root_acceptance_state": "UNREVIEWED",
+        "source_root_decision_hash": null,
+        "source_root_decision_id": null,
+        "source_root_decision_input_id": null
+      },
+      "conflict_hints": [],
+      "content_fingerprint": "0d07b20acaade217a045d03b09aee9b193ef9312c1a1b77ace2c2719e5a05b27",
+      "creates_authority": false,
+      "creates_permission": false,
+      "lineage_edges": [],
+      "local_reference_kernel_scope": "LOCAL_REFERENCE_KERNEL",
+      "meaning_record_id": "drsmeaning_v01:7fa977895e32ae9d0dd6464536f9fa094c3c3b5623e6b4043fb64037217be343",
+      "meaning_record_version": "v0.1",
+      "memory_pointers": [],
+      "persistent_lifecycle_state": "ACTIVE",
+      "policy_version": "football.pointer.context.v01",
+      "predecessor_record_id": null,
+      "recording_component": "football:connector",
+      "resonance_reason": "Foreign metadata retained for local context review.",
+      "reuse_policy_class": "CONTEXT_ONLY",
+      "risk_hints": [],
+      "safe_summary": "Bounded synthetic football venue offer metadata.",
+      "schema_versions": [
+        "football.pointer.context.v01"
+      ],
+      "semantic_address": {
+        "address_profile_version": "v0.1",
+        "domain": "FOOTBALL",
+        "intent_class": "context_lookup",
+        "meaning_schema_id": "football.pointer_metadata",
+        "meaning_schema_version": "v01",
+        "namespace": "football",
+        "semantic_address_id": "drsaddr_v01:78ab1ccfb9d2441ee05236ed8782437b344a132092f11365a6313281362c92f8",
+        "subject_class": "external_pointer"
+      },
+      "semantic_tags": [
+        "football",
+        "pointer"
+      ],
+      "source_reference_ids": [
+        "d8eafc63c564cd4bfa0a0a40c4e0ea0f8832d153a0fc3271c7d29d518b80c808"
+      ],
+      "supersession_reason": null,
+      "time_envelope": {
+        "ct_context_anchor": 1790487139,
+        "et_observed_at": 1790487139,
+        "freshness_policy_id": "freshness:football:source",
+        "kt_as_of": 1790487139,
+        "pt_created_at": 1790487139,
+        "source_observed_at": 1790487139,
+        "source_reported_at": 1790487139,
+        "system_ingested_at": 1790487139,
+        "system_verified_at": 1790487139,
+        "time_envelope_id": "drstime_v01:a959a774817edaa5baaa223a4de73a88f18b6eb864bcda408659d6598912966e",
+        "time_envelope_version": "v0.1",
+        "ttl_seconds": 300,
+        "valid_from": 1790487139,
+        "valid_to": 1790487439
+      }
+    },
+    "semantic_keys": [
+      "football",
+      "pointer"
+    ]
+  },
+  "domain": "FOOTBALL",
+  "layer": "work",
+  "provenance": {
+    "created_by": "root_orchestrator",
+    "request_id": "req:drsmeaning_v01:7fa977895e32ae9d0dd6464536f9fa094c3c3b5623e6b4043fb64037217be343",
+    "trace_refs": [
+      {
+        "kind": "local_drs_resolver",
+        "trace_id": "trace:drsmeaning_v01:7fa977895e32ae9d0dd6464536f9fa094c3c3b5623e6b4043fb64037217be343"
+      }
+    ]
+  },
+  "record_id": "drsmeaning_v01:7fa977895e32ae9d0dd6464536f9fa094c3c3b5623e6b4043fb64037217be343",
+  "status": "active",
+  "time_envelope": {
+    "ct_session_anchor": "football:session",
+    "et_observed_at": "2026-09-27T05:32:19+00:00",
+    "freshness_class": "static",
+    "kt_asof": "2026-09-27T05:32:19+00:00",
+    "pt_created_at": "2026-09-27T05:32:19+00:00",
+    "ttl_seconds": 300,
+    "valid_from": "2026-09-27T05:32:19+00:00",
+    "valid_to": "2026-09-27T05:37:19+00:00"
+  },
+  "trace_refs": [
+    {
+      "kind": "local_drs_resolver",
+      "trace_id": "trace:drsmeaning_v01:7fa977895e32ae9d0dd6464536f9fa094c3c3b5623e6b4043fb64037217be343"
+    }
+  ],
+  "type": "generic"
+}

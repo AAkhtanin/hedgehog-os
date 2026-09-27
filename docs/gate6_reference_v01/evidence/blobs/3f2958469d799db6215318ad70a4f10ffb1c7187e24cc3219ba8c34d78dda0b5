@@ -1,0 +1,102 @@
+"""Compatible football body relations, not an independent action certificate.
+
+The unchanged common contract still authenticates transport, time and signatures.
+These pure relations cannot establish custody of Host/Firewall/registry evidence.
+The separate event gate refuses actions until that missing boundary is supplied.
+"""
+import examiner_g54c_v01 as prior
+from hedgehog.external_drs import gate5_contracts_v01 as c
+from hedgehog.external_drs.gate5_body_profile_v01 import ReviewedBodyProfileV01
+
+VERSION = 'g54c2.action_profile.v01'
+REQUEST_FIELDS = ('budget_minor', 'currency', 'operation', 'owner_approval_ref',
+                  'request_id', 'revision', 'sessions', 'team_ref', 'timezone', 'venue_ref')
+BOOKING_FIELDS = ('state', 'receipt_ref', 'payload_sha256', 'snapshot_sha256',
+                  'packet_ref', 'slots', 'request_sha256')
+
+
+def request_transition(original, current):
+    c.shape(original, REQUEST_FIELDS)
+    c.shape(current, REQUEST_FIELDS)
+    c.require(original['operation'] == 'FIND_OFFER', 'original_find_operation')
+    c.require(current['operation'] == 'CONFIRM_MOCK_BOOKING', 'current_confirm_operation')
+    unchanged = set(REQUEST_FIELDS) - {'operation', 'owner_approval_ref'}
+    c.require(all(original[k] == current[k] for k in unchanged), 'confirm_request_transition')
+
+
+def body_shape(body):
+    prior.body_shape(body)
+    if body['booking'] is not None:
+        booking = body['booking']
+        c.shape(booking, BOOKING_FIELDS)
+        c.require(booking['state'] == 'COMMITTED', 'booking_not_committed')
+        for name in ('receipt_ref', 'packet_ref'):
+            c.ref(booking[name])
+        for name in ('payload_sha256', 'snapshot_sha256', 'request_sha256'):
+            c.hash_value(booking[name])
+        c.require(booking['slots'] == body['offer']['slots'] and len(booking['slots']) == 3,
+                  'booking_selected_slots')
+
+
+def body_policy(body, policy, pointer):
+    c.require((body['publisher'], body['recipient']) ==
+              (policy['peer_root'], policy['local_root']), 'body_audience')
+    c.require(pointer['recipient_scope'] == [policy['local_root']], 'pointer_recipient')
+    current = policy['request']
+    if current['operation'] == 'FIND_OFFER':
+        prior.body_policy(body, policy, pointer)
+        return
+    c.require(current['operation'] == 'CONFIRM_MOCK_BOOKING', 'event_requires_separate_history_or_refusal')
+    request_transition(body['offer']['request'], current)
+    c.require(body['booking'] is not None, 'confirm_booking_missing')
+    c.require(body['booking']['request_sha256'] == c.sha(current), 'confirm_current_request_hash')
+    operator = policy['operator_policy']
+    c.require(policy['operator_policy_sha256'] == c.sha(operator), 'operator_policy_binding')
+    c.require(operator['venue_ref'] == current['venue_ref'], 'operator_venue_binding')
+    approval = dict(approval_ref=current['owner_approval_ref'], scope='BOOK', request_sha256=c.sha(current))
+    c.require(current['owner_approval_ref'] is not None and operator['booking_enabled'] is True
+              and approval in operator['approvals'], 'confirm_current_consent')
+    c.require(operator['status'] == 'ACTIVE', 'confirm_operator_not_active')
+
+
+# Same serialized body schema; versioned interpretation, no shared-contract edit.
+PROFILE = ReviewedBodyProfileV01(
+    prior.PROFILE.schema_id, prior.PROFILE.body_fields, prior.PROFILE.scope_fields,
+    prior.PROFILE.policy_accept_field, body_shape, prior.pointer_shape, body_policy)
+
+
+def check_selected_history(body, selected):
+    c.require(body['offer'] == selected['offer'], 'selected_find_E')
+    c.require(selected['booking'] is None, 'selected_find_not_action')
+    c.require(selected['offer']['request']['operation'] == 'FIND_OFFER', 'selected_find_operation')
+    for name in ('source_work_ref', 'source_revision', 'request_sha256', 'time_envelope', 'ttl_base'):
+        c.require(body[name] == selected[name], 'selected_find_' + name)
+
+
+def check_receipt_data(body, current, receipt, readback):
+    """Historical/offline data consistency ONLY; not receipt-origin validation."""
+    booking = body['booking']
+    c.require(receipt['artifact_type'] == 'EvidenceReceipt' and receipt['owner_root_id'] == 'VenueRoot'
+              and receipt['artifact_id'] == booking['receipt_ref'], 'receipt_reference')
+    payload = dict(request=current, offer_sha256=c.sha(body['offer']), slots=body['offer']['slots'],
+                   schedule_revision=body['offer']['schedule_revision'], currency=body['offer']['currency'],
+                   total_minor=body['offer']['total_minor'])
+    c.require(booking['payload_sha256'] == c.sha(payload), 'booking_current_payload')
+    c.require(booking['snapshot_sha256'] == c.sha(readback), 'booking_readback_hash')
+    c.shape(readback, ('idempotency', 'reservations'))
+    matched = [row for row in readback['idempotency'].values() if row['packet_ref'] == booking['packet_ref']]
+    c.require(len(matched) == 1, 'readback_packet')
+    row = matched[0]
+    c.require(row == dict(payload_sha256=booking['payload_sha256'], packet_ref=booking['packet_ref'],
+                         slots=booking['slots'], request_sha256=c.sha(current)), 'readback_payload_binding')
+    c.require(all(readback['reservations'].count(slot) == 1 for slot in booking['slots']), 'readback_atomic_slots')
+    return 'DATA_RELATIONS_ONLY_NOT_ACTION_ACCEPTANCE'
+
+
+def check_history_data(original, repeated, *, event, work_delta, dispatch_delta, effect_delta):
+    """Pure diagnostic relation; deltas need an independent boundary to be evidence."""
+    c.require(event in ('REPEAT', 'VERIFY'), 'history_event')
+    c.require(repeated == original, 'history_exact_receipt_key_payload_packet_readback')
+    c.require(dispatch_delta == effect_delta == 0, 'history_no_extra_effect')
+    c.require(event != 'VERIFY' or work_delta == 0, 'verify_no_new_work')
+    return 'DATA_RELATIONS_ONLY_NOT_ACTION_ACCEPTANCE'

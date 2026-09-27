@@ -1,0 +1,76 @@
+{
+  "base": "b6d11f5fcb619a10e877bbaaf6770881be315f16",
+  "fresh": "Four finite witnesses, compact regression corpus and eight controlled lineage/role nodes; final focused and clean receipts detached.",
+  "historical_original_closure": "859c863fa40000dfcd6759685f3b0083f0e040b777df19e5393154fc9ac0f288",
+  "historical_reviewed_closure": "73f5fe75dee04bb54c629c148bc48b98516765776649b100d108884e5cf7115b",
+  "imports": "Both historical views contain the shared compatibility module; the exact old preimage is required in each.",
+  "limits": "No fresh full native campaign, global supersession, total speedup, hostile-process isolation or model prose certification.",
+  "runtime_delta": {
+    "language": "\\A(?:request|trace):drsmeaning_v01:[0-9a-f]{64}\\Z",
+    "path": "hedgehog/drs_g2b_compatibility_v01.py",
+    "postimage": {
+      "bytes": 48485,
+      "sha256": "5d4fb04cbf2e0819a0df5da17df724a0441747d2573fff924086dc9cfabaece1"
+    },
+    "preimage": {
+      "bytes": 48098,
+      "sha256": "dff9ab0c9717289b3999844440ad2c16a1f9c64dca8ae4151dc4fd2e0a6b48b5"
+    },
+    "sites": [
+      "_legacy_id",
+      "_strict_json_plain: string"
+    ],
+    "unchanged": [
+      "_secret_reason",
+      "_CARD_NUMBER",
+      "_nonempty_text",
+      "producer format",
+      "Root/Host/Firewall",
+      "schemas"
+    ]
+  },
+  "schema": "gate6_exact_drs_source_impact_v01",
+  "unchanged_sources": {
+    "hedgehog/drs_semantic_address_v01.py": {
+      "bytes": 57213,
+      "sha256": "9b0cae8c7d5f02cec8d3df573d7107b7b4b013b3e7416480e871b833aa6e2e20"
+    },
+    "hedgehog/kernel/effect_firewall_v01.py": {
+      "bytes": 128809,
+      "sha256": "46a453e0ef98565f0de59ab062b307eff6549a716973268a034592a5f98463bd"
+    },
+    "hedgehog/kernel/root_decision_v01.py": {
+      "bytes": 43352,
+      "sha256": "cae47026ba5c8a52ca25b2774e7ac8e92eb4e312c2eb5d1776c3a16ee276409c"
+    },
+    "hedgehog/local_drs_resolver.py": {
+      "bytes": 53552,
+      "sha256": "5fa06d3cd243f6ef8cfd87997596413654ef03efac27e622ac9093659aea99a4"
+    },
+    "hedgehog/work_execution_host_v01.py": {
+      "bytes": 52262,
+      "sha256": "56b7ba85e8612df517d566418fa60a2512bcf9f6707877618a3d846010e6071b"
+    }
+  },
+  "worker_views": {
+    "current": [
+      "RETAINED_OBLIGATIONS"
+    ],
+    "original": [
+      "G4_original",
+      "G44_original",
+      "G5_original"
+    ],
+    "reviewed": [
+      "G35",
+      "LIVING_G36",
+      "CONFORMANCE_G36",
+      "G51",
+      "G52",
+      "G4_successor",
+      "G44_successor",
+      "FOOTBALL",
+      "MODEL"
+    ]
+  }
+}

@@ -1,0 +1,87 @@
+{
+  "aggregate_16": "NOT_COMPLETED",
+  "authority": "CAPTURE_IS_EVIDENCE_NOT_RESTORED_HOST",
+  "observed_calls": {
+    "dispatch": 0,
+    "effect": 0,
+    "root": 0,
+    "sentinel": 1,
+    "work": 0
+  },
+  "refusal": null,
+  "result": {
+    "bookings": 0,
+    "case": "long_overlap",
+    "classification": "REVIEWED_REFERENCE_NATIVE_PROOF",
+    "events": {
+      "exact": {
+        "counts": {
+          "publisher": {
+            "CALLBACK": 0,
+            "DISPATCH": 0,
+            "EFFECT": 0,
+            "EXECUTOR": 0,
+            "PURE": 1,
+            "STATE_WRITE": 0
+          },
+          "requester": {
+            "CALLBACK": 0,
+            "DISPATCH": 0,
+            "EFFECT": 0,
+            "EXECUTOR": 0,
+            "PURE": 1,
+            "STATE_WRITE": 0
+          }
+        },
+        "state_sha256": "61fc425c423ad3de96c729a7386139ce1e32b2d4cee111404489ac3169c500da",
+        "status": "NO_COMPLETE_OFFER",
+        "verdict": {
+          "bundle_checks": 2,
+          "canonical_C_sha256": "2ab99bb4a7b8a3c67b92a1f7d2490236c6642c3689898669878b3cabcd673829",
+          "event": "exact",
+          "native_consumer_work": 1,
+          "native_source_work": 1,
+          "root_release_join": true,
+          "source_selection": "NO_COMPLETE_OFFER",
+          "status": "PASS_COMPLETED_FIND_ONLY",
+          "total_minor": 0
+        }
+      },
+      "long_overlap": {
+        "counts": {
+          "publisher": {
+            "CALLBACK": 0,
+            "DISPATCH": 0,
+            "EFFECT": 0,
+            "EXECUTOR": 0,
+            "PURE": 1,
+            "STATE_WRITE": 0
+          },
+          "requester": {
+            "CALLBACK": 0,
+            "DISPATCH": 0,
+            "EFFECT": 0,
+            "EXECUTOR": 0,
+            "PURE": 1,
+            "STATE_WRITE": 0
+          }
+        },
+        "state_sha256": "61fc425c423ad3de96c729a7386139ce1e32b2d4cee111404489ac3169c500da",
+        "status": "NO_COMPLETE_OFFER",
+        "verdict": {
+          "bundle_checks": 2,
+          "canonical_C_sha256": "c084fd68ed2525304d4cc4ac3d853aafc5ff095246f8b890ea31f03187aafe4a",
+          "event": "long_overlap",
+          "native_consumer_work": 1,
+          "native_source_work": 1,
+          "root_release_join": true,
+          "source_selection": "NO_COMPLETE_OFFER",
+          "status": "PASS_COMPLETED_FIND_ONLY",
+          "total_minor": 0
+        }
+      }
+    },
+    "slots": 0
+  },
+  "status": "PASS_PER_CASE_PURE"
+}

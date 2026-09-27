@@ -1,0 +1,163 @@
+{
+  "rows": [
+    {
+      "path": "docs/airline_all_real_full_stack_replay_report_v01.json",
+      "owner_POSIX_mode": 384,
+      "clone_initial_POSIX_mode": 420,
+      "clone_final_POSIX_mode": 420
+    },
+    {
+      "path": "docs/airline_sealed_trace_replay_slice_d_official_report_v01.json",
+      "owner_POSIX_mode": 384,
+      "clone_initial_POSIX_mode": 420,
+      "clone_final_POSIX_mode": 420
+    },
+    {
+      "path": "docs/evidence/two_domain_all_real_sealed_evidence_program_v01/airline/airline_crypto_anchor_v01.json",
+      "owner_POSIX_mode": 384,
+      "clone_initial_POSIX_mode": 420,
+      "clone_final_POSIX_mode": 420
+    },
+    {
+      "path": "docs/evidence/two_domain_all_real_sealed_evidence_program_v01/airline/airline_replay_report_v01.json",
+      "owner_POSIX_mode": 384,
+      "clone_initial_POSIX_mode": 420,
+      "clone_final_POSIX_mode": 420
+    },
+    {
+      "path": "docs/evidence/two_domain_all_real_sealed_evidence_program_v01/airline/airline_safe_execution_report_attempt_04_v01.json",
+      "owner_POSIX_mode": 256,
+      "clone_initial_POSIX_mode": 420,
+      "clone_final_POSIX_mode": 420
+    },
+    {
+      "path": "docs/evidence/two_domain_all_real_sealed_evidence_program_v01/airline/airline_safe_execution_report_v01.json",
+      "owner_POSIX_mode": 256,
+      "clone_initial_POSIX_mode": 420,
+      "clone_final_POSIX_mode": 420
+    },
+    {
+      "path": "docs/evidence/two_domain_all_real_sealed_evidence_program_v01/airline/airline_safe_package_index_v01.json",
+      "owner_POSIX_mode": 384,
+      "clone_initial_POSIX_mode": 420,
+      "clone_final_POSIX_mode": 420
+    },
+    {
+      "path": "docs/evidence/two_domain_all_real_sealed_evidence_program_v01/airline/airline_sealed_package_v01/evidence/01-airline-safe-execution-report-v01.json",
+      "owner_POSIX_mode": 384,
+      "clone_initial_POSIX_mode": 420,
+      "clone_final_POSIX_mode": 420
+    },
+    {
+      "path": "docs/evidence/two_domain_all_real_sealed_evidence_program_v01/airline/airline_sealed_package_v01/evidence/02-airline-source-lineage-v01.json",
+      "owner_POSIX_mode": 384,
+      "clone_initial_POSIX_mode": 420,
+      "clone_final_POSIX_mode": 420
+    },
+    {
+      "path": "docs/evidence/two_domain_all_real_sealed_evidence_program_v01/airline/airline_sealed_package_v01/evidence/03-airline-a2-typed-context-v01.json",
+      "owner_POSIX_mode": 384,
+      "clone_initial_POSIX_mode": 420,
+      "clone_final_POSIX_mode": 420
+    },
+    {
+      "path": "docs/evidence/two_domain_all_real_sealed_evidence_program_v01/airline/airline_sealed_package_v01/evidence/04-airline-sealed-evidence-adapter-result-v01.json",
+      "owner_POSIX_mode": 384,
+      "clone_initial_POSIX_mode": 420,
+      "clone_final_POSIX_mode": 420
+    },
+    {
+      "path": "docs/evidence/two_domain_all_real_sealed_evidence_program_v01/airline/airline_sealed_package_v01/sealed_package_manifest_v01.json",
+      "owner_POSIX_mode": 384,
+      "clone_initial_POSIX_mode": 420,
+      "clone_final_POSIX_mode": 420
+    },
+    {
+      "path": "docs/evidence/two_domain_all_real_sealed_evidence_program_v01/cross_domain_evidence_index_v01.json",
+      "owner_POSIX_mode": 256,
+      "clone_initial_POSIX_mode": 420,
+      "clone_final_POSIX_mode": 420
+    },
+    {
+      "path": "docs/evidence/two_domain_all_real_sealed_evidence_program_v01/supplier_water_filter/supplier_crypto_anchor_v01.json",
+      "owner_POSIX_mode": 384,
+      "clone_initial_POSIX_mode": 420,
+      "clone_final_POSIX_mode": 420
+    },
+    {
+      "path": "docs/evidence/two_domain_all_real_sealed_evidence_program_v01/supplier_water_filter/supplier_replay_report_v01.json",
+      "owner_POSIX_mode": 384,
+      "clone_initial_POSIX_mode": 420,
+      "clone_final_POSIX_mode": 420
+    },
+    {
+      "path": "docs/evidence/two_domain_all_real_sealed_evidence_program_v01/supplier_water_filter/supplier_safe_evidence_index_v01.json",
+      "owner_POSIX_mode": 256,
+      "clone_initial_POSIX_mode": 420,
+      "clone_final_POSIX_mode": 420
+    },
+    {
+      "path": "docs/evidence/two_domain_all_real_sealed_evidence_program_v01/supplier_water_filter/supplier_safe_execution_report_v01.json",
+      "owner_POSIX_mode": 256,
+      "clone_initial_POSIX_mode": 420,
+      "clone_final_POSIX_mode": 420
+    },
+    {
+      "path": "docs/evidence/two_domain_all_real_sealed_evidence_program_v01/supplier_water_filter/supplier_safe_package_index_v01.json",
+      "owner_POSIX_mode": 256,
+      "clone_initial_POSIX_mode": 420,
+      "clone_final_POSIX_mode": 420
+    },
+    {
+      "path": "docs/evidence/two_domain_all_real_sealed_evidence_program_v01/supplier_water_filter/supplier_sealed_package_v01/evidence/01-supplier-safe-evidence-index-v01.json",
+      "owner_POSIX_mode": 384,
+      "clone_initial_POSIX_mode": 420,
+      "clone_final_POSIX_mode": 420
+    },
+    {
+      "path": "docs/evidence/two_domain_all_real_sealed_evidence_program_v01/supplier_water_filter/supplier_sealed_package_v01/sealed_package_manifest_v01.json",
+      "owner_POSIX_mode": 384,
+      "clone_initial_POSIX_mode": 420,
+      "clone_final_POSIX_mode": 420
+    },
+    {
+      "path": "docs/evidence/two_domain_all_real_sealed_evidence_program_v01/supplier_water_filter/supplier_water_filter_negative_matrix_v01.json",
+      "owner_POSIX_mode": 256,
+      "clone_initial_POSIX_mode": 420,
+      "clone_final_POSIX_mode": 420
+    },
+    {
+      "path": "docs/showcase/g54b1_authoring_case_v01/g54b1_authoring_case_v01.pptx",
+      "owner_POSIX_mode": 384,
+      "clone_initial_POSIX_mode": 420,
+      "clone_final_POSIX_mode": 420
+    },
+    {
+      "path": "docs/showcase/gate4_reference_v01/evidence/g44/commands/0019_filesystem_mode_diagnostic/mode_sample.txt",
+      "owner_POSIX_mode": 384,
+      "clone_initial_POSIX_mode": 420,
+      "clone_final_POSIX_mode": 420
+    },
+    {
+      "path": "docs/showcase/gate4_reference_v01/gate4_reference_v01.pptx",
+      "owner_POSIX_mode": 384,
+      "clone_initial_POSIX_mode": 420,
+      "clone_final_POSIX_mode": 420
+    },
+    {
+      "path": "docs/showcase/gate4_reference_v01/presentation/build/validation_r3.json",
+      "owner_POSIX_mode": 384,
+      "clone_initial_POSIX_mode": 420,
+      "clone_final_POSIX_mode": 420
+    },
+    {
+      "path": "docs/showcase/wedding_seating_v01/wedding_presentation_v01.pptx",
+      "owner_POSIX_mode": 384,
+      "clone_initial_POSIX_mode": 420,
+      "clone_final_POSIX_mode": 420
+    }
+  ],
+  "meaning": "Ordinary Git clone uses committed Git modes, not extra local owner POSIX restrictions. These differences existed in the initial clone, precede every edit/check, and remained frozen. Owner permissions were never changed. Git index modes and all original bytes match the accepted base.",
+  "POSIX_owner_clone_equality_claimed": false,
+  "clone_initial_final_untouched_equality": true
+}

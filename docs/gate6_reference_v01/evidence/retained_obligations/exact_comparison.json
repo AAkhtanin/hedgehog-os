@@ -1,0 +1,11 @@
+{
+  "neighbor_projection": "BYTE_IDENTICAL",
+  "original": "REFUSAL_drs_legacy_source_invalid",
+  "repaired": "PASS",
+  "wrapper": "BYTE_IDENTICAL",
+  "wrapper_pin": {
+    "bytes": 5604,
+    "mode": 420,
+    "sha256": "84b7d1b710b6e57c8b47ed3427c5ee35ab39bd046a4c45f9b4d79eb75fb5bc08"
+  }
+}

@@ -1,0 +1,4 @@
+{"candidate":"candidate:football:consent:b26581f9ead5731e476a4796742040d234ac8e4417d6ed85a8d8fd76f6e95919","root":"VenueRoot","stage":"CALLED","subject":"booking:ac396289c6a1bb176d6119080892933bc2f8fec35c69f7a894f2e835280e6b50","utc":1790487152}
+{"candidate":"candidate:football:confirmation:e5f308ef9e22a71a377a9554bdcda971aae89e7a6da40d3811ae518ee737c719","root":"VenueRoot","stage":"CALLED","subject":"cdff26cffd389230237be45279cb2ed08bc3dc3075333f8eab9362277664dc53","utc":1790487152}
+{"candidate":"g5pointer:9b966d4410766851fb6451007b65df013ae8087901ee8342dde65159d5e0e513","root":"VenueRoot","stage":"CALLED","subject":"cdff26cffd389230237be45279cb2ed08bc3dc3075333f8eab9362277664dc53","utc":1790487152}
+{"candidate":"g5request:53664a691e67a851567433bb8a3f153565f6058376ce614e192d0bf2ccb25ada","root":"VenueRoot","stage":"CALLED","subject":"g5pointer:9b966d4410766851fb6451007b65df013ae8087901ee8342dde65159d5e0e513","utc":1790487152}

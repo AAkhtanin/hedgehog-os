@@ -1,0 +1,78 @@
+{
+  "argv": [
+    "/Users/admin/Projects/hedgehog-os-gate6-g6a1-g4nd6eiu/venv/bin/python",
+    "-B",
+    "/private/tmp/RADIOLARIA_G6A4R_OPERATOR.20260927/retained.py",
+    "G4_original"
+  ],
+  "cwd": "/Users/admin/Projects/hedgehog-os-gate6-g6a4r-bsu1xe8j/clone",
+  "environment": {
+    "PATH": "/opt/homebrew/bin:/usr/bin:/bin:/usr/sbin:/sbin",
+    "LANG": "en_US.UTF-8",
+    "TMPDIR": "/Users/admin/Projects/hedgehog-os-gate6-g6a4r-bsu1xe8j/tmp",
+    "PYTHONDONTWRITEBYTECODE": "1",
+    "PYTEST_DISABLE_PLUGIN_AUTOLOAD": "1",
+    "GIT_OPTIONAL_LOCKS": "0",
+    "PYTHONPATH": "/Users/admin/Projects/hedgehog-os-gate6-g6a4r-bsu1xe8j/clone",
+    "HOME": "/Users/admin"
+  },
+  "start": "2026-09-27T07:34:23.343498+00:00",
+  "timeout_seconds": 300,
+  "source_pins": {
+    "tests/test_gate6_reference_conformance_v01.py": {
+      "bytes": 8127,
+      "sha256": "693b7018ef8670e9423453b3dbeb0652b63d358b25087d67112dce7661fd3efc",
+      "mode": 420
+    },
+    "tests/test_gate6_reference_adversarial_v01.py": {
+      "bytes": 14259,
+      "sha256": "80fa9441238b112a14da0b489f6c9c6fa499cfae693f59467a11b073d0e298cb",
+      "mode": 420
+    },
+    "demo/run_gate6_reference_v01.py": {
+      "bytes": 47929,
+      "sha256": "e05f5a6540cb06327e2cb65c407ca5ffba4f75b047419ce2d515d96157ac37f0",
+      "mode": 420
+    },
+    "tools/run_gate6_football_reference_v01.py": {
+      "bytes": 20399,
+      "sha256": "7886cc9e9378766cf0741e13ff4f736b701c8ab60d808696722c5398cbe535af",
+      "mode": 420
+    },
+    "tests/test_gate6_reference_inventory_v01.py": {
+      "bytes": 14383,
+      "sha256": "9053345dde8ce5ae987d0aedcf4d5e219c07ceb70c68116a4c1dc7af439a8103",
+      "mode": 420
+    },
+    "docs/gate6_reference_execution_v01.md": {
+      "bytes": 15439,
+      "sha256": "d7587d029800bfee53385cfe46e3783f3c6850e658aaaae75d9f114ebf56301d",
+      "mode": 420
+    },
+    "tools/run_gate6_model_contrast_v01.py": {
+      "bytes": 21836,
+      "sha256": "0989ec6e6bebf142dd1bb93092faf3558a76d559cf54205993b7e24d9d7357a0",
+      "mode": 420
+    },
+    "tests/test_gate6_model_budget_v01.py": {
+      "bytes": 9972,
+      "sha256": "571b2f14e46052fa4f1885a75908cee359df1ed6a0abadf488c95735ed251392",
+      "mode": 420
+    },
+    "hedgehog/domains/testflix/outcome_feedback_adapter_v01.py": {
+      "bytes": 10595,
+      "sha256": "c979f15b8dc093a9924060efc5db05917ccf20c86d55b1a50b738ac4fa25bde6",
+      "mode": 420
+    },
+    "tests/test_gate6_g35_request_projection_v01.py": {
+      "bytes": 3638,
+      "sha256": "33c6c9eaff076267a300551d14fbda14016ccbc98629fa5e984e5985e3270101",
+      "mode": 420
+    }
+  },
+  "wrapper": {
+    "bytes": 9026,
+    "sha256": "c856f49557cb07ef2b5797e5c70caac085685783f1567593d386dc7f2d64d549",
+    "mode": 420
+  }
+}

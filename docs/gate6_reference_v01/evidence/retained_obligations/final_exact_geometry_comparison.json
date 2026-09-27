@@ -1,0 +1,13 @@
+{
+  "current": {
+    "bytes": 28371,
+    "mode": 420,
+    "sha256": "8a9cf4d32ccf9189e87d41c6fc87e5d21b7657ad8fcdc7fe05358b2f1f08592b"
+  },
+  "original": {
+    "bytes": 28371,
+    "mode": 420,
+    "sha256": "8a9cf4d32ccf9189e87d41c6fc87e5d21b7657ad8fcdc7fe05358b2f1f08592b"
+  },
+  "result": "BYTE_IDENTICAL"
+}

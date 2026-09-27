@@ -1,0 +1,730 @@
+{
+  "inputs": {
+    "conflict_state": {
+      "items": [
+        [
+          "conflict_set_ids",
+          []
+        ],
+        [
+          "material_unresolved_conflict",
+          false
+        ]
+      ]
+    },
+    "decision_input_id": "da4387e8b3b0eefa65b1a25d11e20b382eb7d89d8e66295d5a3d41f1806d6cd6",
+    "gt_advisory": {
+      "items": [
+        [
+          "actor_role",
+          "gt"
+        ],
+        [
+          "advisory_id",
+          "gt:g5import:3f2f4a9bf18287915844067d40b92c8c498e2f5e71400821185949e0219ce28d"
+        ],
+        [
+          "advisory_only",
+          true
+        ],
+        [
+          "attempted_effect",
+          "CREATE_ROOT_DECISION"
+        ],
+        [
+          "candidate_ids",
+          [
+            "g5import:3f2f4a9bf18287915844067d40b92c8c498e2f5e71400821185949e0219ce28d"
+          ]
+        ],
+        [
+          "creates_final_output",
+          false
+        ],
+        [
+          "requests_effect",
+          false
+        ],
+        [
+          "score_micros_by_candidate",
+          {
+            "items": [
+              [
+                "g5import:3f2f4a9bf18287915844067d40b92c8c498e2f5e71400821185949e0219ce28d",
+                1000000
+              ]
+            ]
+          }
+        ],
+        [
+          "selected_candidate_id",
+          "g5import:3f2f4a9bf18287915844067d40b92c8c498e2f5e71400821185949e0219ce28d"
+        ],
+        [
+          "source_artifact_type",
+          "GTAdvisoryReport"
+        ],
+        [
+          "source_lifecycle_state",
+          "VALIDATED"
+        ],
+        [
+          "target_artifact_type",
+          "RootDecision"
+        ]
+      ]
+    },
+    "permission_state": {
+      "items": [
+        [
+          "permission_ref",
+          null
+        ],
+        [
+          "permission_required",
+          false
+        ],
+        [
+          "permission_scope_valid",
+          true
+        ],
+        [
+          "user_permission_present",
+          false
+        ]
+      ]
+    },
+    "policy_state": {
+      "items": [
+        [
+          "allow_accept",
+          true
+        ],
+        [
+          "conflict_policy",
+          "DEFER"
+        ],
+        [
+          "hard_policy_passed",
+          true
+        ],
+        [
+          "identity_passed",
+          true
+        ],
+        [
+          "no_candidate_policy",
+          "NO_UPDATE"
+        ],
+        [
+          "policy_id",
+          "g51:operator_pinned"
+        ],
+        [
+          "scope_passed",
+          true
+        ]
+      ]
+    },
+    "post_vv_bundle": {
+      "items": [
+        [
+          "bundle_id",
+          "g51:checks:8ed98cea86588fc878098f737dd6b4d7ebce042dfe294488674928d9348cc83a"
+        ],
+        [
+          "hard_failure_reasons",
+          []
+        ],
+        [
+          "post_vv_passed",
+          true
+        ],
+        [
+          "provided_evidence_refs",
+          [
+            "evidence:g51:91ec87ee9307d7760a1af9d992e91937ea1166b0ecf621f43419ea0d4ad685f0"
+          ]
+        ],
+        [
+          "rejected_candidate_ids",
+          []
+        ],
+        [
+          "required_evidence_refs",
+          [
+            "evidence:g51:91ec87ee9307d7760a1af9d992e91937ea1166b0ecf621f43419ea0d4ad685f0"
+          ]
+        ],
+        [
+          "validated_candidate_ids",
+          [
+            "g5import:3f2f4a9bf18287915844067d40b92c8c498e2f5e71400821185949e0219ce28d"
+          ]
+        ]
+      ]
+    },
+    "prior_root_state": {
+      "items": [
+        [
+          "prior_decision",
+          null
+        ],
+        [
+          "prior_decision_id",
+          null
+        ],
+        [
+          "prior_selected_candidate_id",
+          null
+        ]
+      ]
+    },
+    "root_review_packet": {
+      "authority_class": "ADVISORY_ONLY",
+      "conflict_set_ids": [],
+      "contribution_ids": [
+        "contribution:g5import:3f2f4a9bf18287915844067d40b92c8c498e2f5e71400821185949e0219ce28d"
+      ],
+      "final_output_created": false,
+      "missing_evidence_refs": [],
+      "packet_id": "66b05c039e5ffce72ac8d040c001e9e12784d99ae37bd854283406baf37c80a6",
+      "permission_created": false,
+      "request_id": "review:g5import:3f2f4a9bf18287915844067d40b92c8c498e2f5e71400821185949e0219ce28d",
+      "required_validator_ids": [
+        "active",
+        "audience",
+        "original_request"
+      ],
+      "review_state": "ROOT_REVIEW_REQUIRED",
+      "root_decision_created": false,
+      "runtime_topology_ref": "g51:topology",
+      "synthesis_proposal": {
+        "authority_class": "ADVISORY_ONLY",
+        "conflict_sets": [],
+        "contribution_modes": [
+          "DETERMINISTIC"
+        ],
+        "missing_evidence_refs": [],
+        "normalized_claims": [
+          {
+            "authority_class": "NONE",
+            "claim_id": "g5import:3f2f4a9bf18287915844067d40b92c8c498e2f5e71400821185949e0219ce28d",
+            "confidence_micros": 1000000,
+            "evidence_refs": [
+              "binding:evidence:g51:91ec87ee9307d7760a1af9d992e91937ea1166b0ecf621f43419ea0d4ad685f0"
+            ],
+            "object_or_value": {
+              "items": [
+                [
+                  "body_sha256",
+                  "0b0829c3c2f77d72fd8b1e3404820ced41dc653b4d2fdd1aa6e7c77431ad036f"
+                ],
+                [
+                  "import_candidate",
+                  {
+                    "items": [
+                      [
+                        "body_hash",
+                        "0b0829c3c2f77d72fd8b1e3404820ced41dc653b4d2fdd1aa6e7c77431ad036f"
+                      ],
+                      [
+                        "creates_permission",
+                        false
+                      ],
+                      [
+                        "dependency_fingerprint",
+                        "587996283fb296aefa2538bfdfd9f4133622faa8debd2f2c9c2dbeb14f0319ce"
+                      ],
+                      [
+                        "foreign_publisher",
+                        "VenueRoot"
+                      ],
+                      [
+                        "foreign_revision",
+                        4
+                      ],
+                      [
+                        "foreign_source_ref",
+                        "f92ad697d4db6061ed1664b76274c5846aedaed9254bb88b3d1048f97334a818"
+                      ],
+                      [
+                        "import_id",
+                        "g5import:3f2f4a9bf18287915844067d40b92c8c498e2f5e71400821185949e0219ce28d"
+                      ],
+                      [
+                        "local_request_ref",
+                        "g5request:5fe198304b7dc2736999d1ebf21865d31866675205b5a5d1b9dc6b8c59617047"
+                      ],
+                      [
+                        "pointer_ref",
+                        "g5pointer:af76a09913b34c0e2c3846d73b12eb832af692d90d519f444c5242d509be33e3"
+                      ],
+                      [
+                        "policy_hash",
+                        "ab7241158617333796140352e76e35f67a9acc8c1b46c1e9c36517f3eab66efd"
+                      ],
+                      [
+                        "receive_event_ref",
+                        "receive:football:36ec46daf5c42b5b9423a71bed2049774687a14ef9ece1e53417be468932f3fb"
+                      ],
+                      [
+                        "received_manifest_hash",
+                        "91f4ced059993e877c6225894bb49343df177b1d2c5f450dcaad2ef52ed4ae7f"
+                      ],
+                      [
+                        "status_entry_hash",
+                        "ed8cb0a6e7cf5b486f2fd59aa188fd92c2684a4ec6e40e88257d716159943e11"
+                      ],
+                      [
+                        "validation_results",
+                        {
+                          "items": [
+                            [
+                              "arithmetic",
+                              true
+                            ],
+                            [
+                              "conflict",
+                              true
+                            ],
+                            [
+                              "integrity",
+                              true
+                            ],
+                            [
+                              "local_policy",
+                              true
+                            ],
+                            [
+                              "provenance",
+                              true
+                            ],
+                            [
+                              "scope",
+                              true
+                            ],
+                            [
+                              "shape",
+                              true
+                            ],
+                            [
+                              "signature",
+                              true
+                            ],
+                            [
+                              "status",
+                              true
+                            ],
+                            [
+                              "temporal",
+                              true
+                            ]
+                          ]
+                        }
+                      ],
+                      [
+                        "version",
+                        "g51.import.v01"
+                      ]
+                    ]
+                  }
+                ],
+                [
+                  "request_sha256",
+                  "b847c16a8f6002e5d8252f6bce0e9a30f4f752bc986f9d24f01a4ae7affaf412"
+                ]
+              ]
+            },
+            "predicate": "g51_bounded_context_review",
+            "provenance_refs": [
+              "evidence:g51:91ec87ee9307d7760a1af9d992e91937ea1166b0ecf621f43419ea0d4ad685f0"
+            ],
+            "source_mode": "DETERMINISTIC",
+            "source_role": "deterministic_runtime",
+            "subject": "f92ad697d4db6061ed1664b76274c5846aedaed9254bb88b3d1048f97334a818",
+            "time_envelope_ref": "g51:time:1790487184"
+          }
+        ],
+        "proposal_id": "6f47dcf26ace61620838bbd9523e5553b32fdaf84063d745451f4a30bd11d001",
+        "request_id": "review:g5import:3f2f4a9bf18287915844067d40b92c8c498e2f5e71400821185949e0219ce28d",
+        "requested_validators": [
+          "active",
+          "audience",
+          "original_request"
+        ],
+        "root_review_required": true,
+        "source_contribution_ids": [
+          "contribution:g5import:3f2f4a9bf18287915844067d40b92c8c498e2f5e71400821185949e0219ce28d"
+        ],
+        "synthesis_summary": "advisory_claims_ready_for_root_review"
+      },
+      "target_root_id": "ActivePlanetRoot",
+      "transaction_id": "transaction:football:import:587996283fb296aefa2538bfdfd9f4133622faa8debd2f2c9c2dbeb14f0319ce"
+    },
+    "target_root_id": "ActivePlanetRoot",
+    "temporal_state": {
+      "items": [
+        [
+          "expired",
+          false
+        ],
+        [
+          "not_before_satisfied",
+          true
+        ],
+        [
+          "temporal_valid",
+          true
+        ],
+        [
+          "time_envelope_ref",
+          "g51:time:1790487184"
+        ]
+      ]
+    },
+    "transaction_id": "transaction:football:import:587996283fb296aefa2538bfdfd9f4133622faa8debd2f2c9c2dbeb14f0319ce"
+  },
+  "kernel": {
+    "effect_access": "NONE",
+    "kernel_id": "6cbe784404adaf78863830a3dd1cb67d1baaa1c3d46296c633018c715c522235",
+    "kernel_version": "v0.1",
+    "llm_dependency_allowed": false,
+    "precedence_order": [
+      "HARD_FAILURE",
+      "NEEDS_USER",
+      "NEEDS_MORE_EVIDENCE",
+      "MATERIAL_CONFLICT",
+      "NO_VALID_CANDIDATE",
+      "POLICY_REJECT",
+      "ACCEPT"
+    ],
+    "transition_registry": {
+      "abi_major_version": 1,
+      "registry_id": "336c082d1520d49cf9b23d1c6d983637b7835d8fa863a83dbbae82a11bfa26be",
+      "registry_version": "v0.1",
+      "rules": [
+        {
+          "abi_major_version": 1,
+          "actor_role": "orchestrator",
+          "attempted_effect": "CREATE_TARGET_ARTIFACT",
+          "decision": "RETURN_TO_ROOT",
+          "reason_code": "route_acceptance_requires_root",
+          "required_guards": [
+            "artifact_valid",
+            "target_root_bound"
+          ],
+          "root_commit_required": true,
+          "rule_id": "route_proposal_to_root_accepted_route",
+          "source_artifact_type": "OrchestratorRouteProposal",
+          "source_lifecycle_state": "PROPOSED",
+          "target_artifact_type": "RootAcceptedRoute"
+        },
+        {
+          "abi_major_version": 1,
+          "actor_role": "deterministic_runtime",
+          "attempted_effect": "CREATE_TARGET_ARTIFACT",
+          "decision": "ALLOW",
+          "reason_code": "root_accepted_route_allows_topology",
+          "required_guards": [
+            "artifact_valid",
+            "target_root_bound"
+          ],
+          "root_commit_required": true,
+          "rule_id": "root_accepted_route_to_runtime_topology",
+          "source_artifact_type": "RootAcceptedRoute",
+          "source_lifecycle_state": "ROOT_ACCEPTED",
+          "target_artifact_type": "RuntimeExecutionTopology"
+        },
+        {
+          "abi_major_version": 1,
+          "actor_role": "post_vv",
+          "attempted_effect": "CREATE_TARGET_ARTIFACT",
+          "decision": "ALLOW",
+          "reason_code": "actor_contribution_requires_validated_evidence",
+          "required_guards": [
+            "artifact_valid",
+            "required_evidence_present"
+          ],
+          "root_commit_required": false,
+          "rule_id": "actor_contribution_to_validated_evidence",
+          "source_artifact_type": "ActorContribution",
+          "source_lifecycle_state": "VALIDATED",
+          "target_artifact_type": "ValidatedEvidence"
+        },
+        {
+          "abi_major_version": 1,
+          "actor_role": "post_vv",
+          "attempted_effect": "CREATE_TARGET_ARTIFACT",
+          "decision": "ALLOW",
+          "reason_code": "result_proposal_allows_post_vv",
+          "required_guards": [
+            "artifact_valid",
+            "hard_predicates_evaluated"
+          ],
+          "root_commit_required": false,
+          "rule_id": "result_proposal_to_post_vv_report",
+          "source_artifact_type": "ResultProposal",
+          "source_lifecycle_state": "VALIDATED",
+          "target_artifact_type": "PostVVReport"
+        },
+        {
+          "abi_major_version": 1,
+          "actor_role": "gt",
+          "attempted_effect": "CREATE_TARGET_ARTIFACT",
+          "decision": "ALLOW",
+          "reason_code": "post_vv_allows_gt_advisory",
+          "required_guards": [
+            "artifact_valid",
+            "post_vv_passed",
+            "advisory_only"
+          ],
+          "root_commit_required": false,
+          "rule_id": "post_vv_report_to_gt_advisory",
+          "source_artifact_type": "PostVVReport",
+          "source_lifecycle_state": "VALIDATED",
+          "target_artifact_type": "GTAdvisoryReport"
+        },
+        {
+          "abi_major_version": 1,
+          "actor_role": "gt",
+          "attempted_effect": "CREATE_ROOT_DECISION",
+          "decision": "RETURN_TO_ROOT",
+          "reason_code": "gt_advisory_returns_to_root",
+          "required_guards": [
+            "artifact_valid",
+            "post_vv_passed",
+            "advisory_only"
+          ],
+          "root_commit_required": true,
+          "rule_id": "gt_advisory_to_root_decision",
+          "source_artifact_type": "GTAdvisoryReport",
+          "source_lifecycle_state": "VALIDATED",
+          "target_artifact_type": "RootDecision"
+        },
+        {
+          "abi_major_version": 1,
+          "actor_role": "root",
+          "attempted_effect": "CREATE_TARGET_ARTIFACT",
+          "decision": "ALLOW",
+          "reason_code": "root_decision_allows_root_owned_intent",
+          "required_guards": [
+            "artifact_valid",
+            "decision_accept"
+          ],
+          "root_commit_required": true,
+          "rule_id": "root_decision_to_root_owned_intent",
+          "source_artifact_type": "RootDecision",
+          "source_lifecycle_state": "ROOT_ACCEPTED",
+          "target_artifact_type": "RootOwnedIntent"
+        },
+        {
+          "abi_major_version": 1,
+          "actor_role": "root",
+          "attempted_effect": "CREATE_TARGET_ARTIFACT",
+          "decision": "ALLOW",
+          "reason_code": "root_decision_allows_execution_request",
+          "required_guards": [
+            "artifact_valid",
+            "decision_accept",
+            "user_permission_present",
+            "effect_firewall_required"
+          ],
+          "root_commit_required": true,
+          "rule_id": "root_decision_to_execution_request",
+          "source_artifact_type": "RootDecision",
+          "source_lifecycle_state": "ROOT_ACCEPTED",
+          "target_artifact_type": "ExecutionRequest"
+        },
+        {
+          "abi_major_version": 1,
+          "actor_role": "receipt",
+          "attempted_effect": "RETURN_TO_ROOT",
+          "decision": "RETURN_TO_ROOT",
+          "reason_code": "receipt_returns_to_root",
+          "required_guards": [
+            "artifact_valid",
+            "receipt_evidence_only"
+          ],
+          "root_commit_required": true,
+          "rule_id": "evidence_receipt_to_root_review",
+          "source_artifact_type": "EvidenceReceipt",
+          "source_lifecycle_state": "RECEIPT_RECORDED",
+          "target_artifact_type": "RootDecision"
+        },
+        {
+          "abi_major_version": 1,
+          "actor_role": "root",
+          "attempted_effect": "CREATE_FINAL_OUTPUT",
+          "decision": "ALLOW",
+          "reason_code": "root_decision_allows_root_final",
+          "required_guards": [
+            "artifact_valid",
+            "decision_accept",
+            "finalization_policy_passed"
+          ],
+          "root_commit_required": true,
+          "rule_id": "root_decision_to_root_final",
+          "source_artifact_type": "RootDecision",
+          "source_lifecycle_state": "ROOT_ACCEPTED",
+          "target_artifact_type": "RootFinal"
+        },
+        {
+          "abi_major_version": 1,
+          "actor_role": "root",
+          "attempted_effect": "RECORD_EVIDENCE",
+          "decision": "ALLOW",
+          "reason_code": "root_final_allows_transaction_outcome",
+          "required_guards": [
+            "artifact_valid",
+            "outcome_complete"
+          ],
+          "root_commit_required": true,
+          "rule_id": "root_final_to_transaction_outcome",
+          "source_artifact_type": "RootFinal",
+          "source_lifecycle_state": "FINALIZED",
+          "target_artifact_type": "TransactionOutcomeEnvelope"
+        },
+        {
+          "abi_major_version": 1,
+          "actor_role": "root",
+          "attempted_effect": "RETURN_TO_ROOT",
+          "decision": "RETURN_TO_ROOT",
+          "reason_code": "cross_root_evidence_returns_to_target_root",
+          "required_guards": [
+            "artifact_valid",
+            "source_root_isolated",
+            "target_root_bound"
+          ],
+          "root_commit_required": true,
+          "rule_id": "cross_root_evidence_to_root_review",
+          "source_artifact_type": "CrossRootEvidenceRef",
+          "source_lifecycle_state": "VALIDATED",
+          "target_artifact_type": "RootDecision"
+        },
+        {
+          "abi_major_version": 1,
+          "actor_role": "provider_llm",
+          "attempted_effect": "CREATE_ROOT_DECISION",
+          "decision": "BLOCKED_FAIL_CLOSED",
+          "reason_code": "provider_cannot_create_root_decision",
+          "required_guards": [],
+          "root_commit_required": false,
+          "rule_id": "provider_contribution_to_root_decision_forbidden",
+          "source_artifact_type": "ActorContribution",
+          "source_lifecycle_state": "VALIDATED",
+          "target_artifact_type": "RootDecision"
+        },
+        {
+          "abi_major_version": 1,
+          "actor_role": "drs",
+          "attempted_effect": "CREATE_PERMISSION",
+          "decision": "BLOCKED_FAIL_CLOSED",
+          "reason_code": "evidence_cannot_create_permission",
+          "required_guards": [],
+          "root_commit_required": false,
+          "rule_id": "drs_evidence_to_permission_forbidden",
+          "source_artifact_type": "SemanticEvidence",
+          "source_lifecycle_state": "VALIDATED",
+          "target_artifact_type": "ExecutionRequest"
+        },
+        {
+          "abi_major_version": 1,
+          "actor_role": "gt",
+          "attempted_effect": "CREATE_FINAL_OUTPUT",
+          "decision": "BLOCKED_FAIL_CLOSED",
+          "reason_code": "gt_cannot_create_final_output",
+          "required_guards": [],
+          "root_commit_required": false,
+          "rule_id": "gt_advisory_to_root_final_forbidden",
+          "source_artifact_type": "GTAdvisoryReport",
+          "source_lifecycle_state": "VALIDATED",
+          "target_artifact_type": "RootFinal"
+        },
+        {
+          "abi_major_version": 1,
+          "actor_role": "receipt",
+          "attempted_effect": "CREATE_PERMISSION",
+          "decision": "BLOCKED_FAIL_CLOSED",
+          "reason_code": "receipt_cannot_create_permission",
+          "required_guards": [],
+          "root_commit_required": false,
+          "rule_id": "receipt_to_permission_forbidden",
+          "source_artifact_type": "EvidenceReceipt",
+          "source_lifecycle_state": "RECEIPT_RECORDED",
+          "target_artifact_type": "ExecutionRequest"
+        },
+        {
+          "abi_major_version": 1,
+          "actor_role": "replay",
+          "attempted_effect": "CREATE_ROOT_DECISION",
+          "decision": "BLOCKED_FAIL_CLOSED",
+          "reason_code": "causal_evidence_cannot_create_root_decision",
+          "required_guards": [],
+          "root_commit_required": false,
+          "rule_id": "causal_evidence_to_root_decision_forbidden",
+          "source_artifact_type": "CausalConsumptionRef",
+          "source_lifecycle_state": "VALIDATED",
+          "target_artifact_type": "RootDecision"
+        },
+        {
+          "abi_major_version": 1,
+          "actor_role": "domain_adapter",
+          "attempted_effect": "REQUEST_EFFECT",
+          "decision": "BLOCKED_FAIL_CLOSED",
+          "reason_code": "domain_adapter_cannot_request_effect",
+          "required_guards": [],
+          "root_commit_required": false,
+          "rule_id": "domain_adapter_effect_request_forbidden",
+          "source_artifact_type": "RootDecision",
+          "source_lifecycle_state": "ROOT_ACCEPTED",
+          "target_artifact_type": "ExecutionRequest"
+        }
+      ]
+    }
+  },
+  "result": {
+    "conflict_set_ids": [],
+    "decision": "ACCEPT",
+    "decision_id": "a7487082d7504f9933a40fde912a6f6a579490c543a44e01b7aaf08f62a37619",
+    "decision_input_id": "da4387e8b3b0eefa65b1a25d11e20b382eb7d89d8e66295d5a3d41f1806d6cd6",
+    "effect_requested": false,
+    "final_output_created": false,
+    "hard_failure_reasons": [],
+    "missing_evidence_refs": [],
+    "permission_created": false,
+    "prior_decision_id": null,
+    "reason_code": "validated_candidate_accepted",
+    "root_commit_created": true,
+    "selected_candidate_id": "g5import:3f2f4a9bf18287915844067d40b92c8c498e2f5e71400821185949e0219ce28d",
+    "target_root_id": "ActivePlanetRoot",
+    "transaction_id": "transaction:football:import:587996283fb296aefa2538bfdfd9f4133622faa8debd2f2c9c2dbeb14f0319ce",
+    "transition_decision": {
+      "abi_major_version": 1,
+      "actor_role": "gt",
+      "attempted_effect": "CREATE_ROOT_DECISION",
+      "decision": "RETURN_TO_ROOT",
+      "decision_id": "85eff0e7c3a8a4da444edd85f36a3a2c91929bd85b5ab85eed585a6574976e07",
+      "matched": true,
+      "missing_guards": [],
+      "reason_code": "gt_advisory_returns_to_root",
+      "registry_id": "336c082d1520d49cf9b23d1c6d983637b7835d8fa863a83dbbae82a11bfa26be",
+      "required_guards": [
+        "artifact_valid",
+        "post_vv_passed",
+        "advisory_only"
+      ],
+      "root_commit_present": false,
+      "root_commit_required": true,
+      "rule_id": "gt_advisory_to_root_decision",
+      "satisfied_guards": [
+        "artifact_valid",
+        "post_vv_passed",
+        "advisory_only"
+      ],
+      "source_artifact_type": "GTAdvisoryReport",
+      "source_lifecycle_state": "VALIDATED",
+      "target_artifact_type": "RootDecision"
+    }
+  }
+}

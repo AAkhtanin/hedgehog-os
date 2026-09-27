@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/private/tmp/RADIOLARIA_G6A4R_OPERATOR.20260927/assess.py", line 30, in <module>
+    assert changed==[work.MODIFY]
+           ^^^^^^^^^^^^^^^^^^^^^^
+AssertionError

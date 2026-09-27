@@ -1,0 +1,44 @@
+{
+  "argv": [
+    "/Users/admin/Projects/hedgehog-os-gate6-g6a1-g4nd6eiu/venv/bin/python",
+    "-B",
+    "/private/tmp/RADIOLARIA_G6A5R1_OPERATOR/test_driver.py",
+    "-q",
+    "tests/test_gate6_drs_generated_id_screen_v01.py",
+    "tests/test_drs_semantic_address_reuse_certificate_g2_b_v01.py::test_g2b_raw_secret_payload_is_rejected_independent_of_key_name",
+    "tests/test_drs_semantic_address_reuse_certificate_g2_b_v01.py::test_g2b_legacy_projection_reports_every_preserved_synthesized_and_missing_field",
+    "tests/test_drs_semantic_address_reuse_certificate_g2_b_v01.py::test_g2b_root_reviewed_writeback_creates_new_immutable_version",
+    "tests/test_drs_semantic_address_reuse_certificate_g2_b_v01.py::test_g2b_supersession_requires_root_provenance_reason_and_predecessor"
+  ],
+  "cwd": "/private/tmp/RADIOLARIA_G6A5R1.53l3ouws/clone",
+  "deadline_seconds": 600,
+  "environment": {
+    "G6_PHASES": "/private/tmp/RADIOLARIA_G6A5R1.53l3ouws/evidence/repair_test_phases.jsonl",
+    "GIT_OPTIONAL_LOCKS": "0",
+    "HOME": "/private/tmp/RADIOLARIA_G6A5R1.53l3ouws/empty_home",
+    "LANG": "en_US.UTF-8",
+    "PATH": "/opt/homebrew/bin:/usr/bin:/bin:/usr/sbin:/sbin",
+    "PYTEST_DISABLE_PLUGIN_AUTOLOAD": "1",
+    "PYTHONDONTWRITEBYTECODE": "1",
+    "PYTHONPATH": "/private/tmp/RADIOLARIA_G6A5R1.53l3ouws/clone",
+    "TMPDIR": "/private/tmp/RADIOLARIA_G6A5R1.53l3ouws/tmp"
+  },
+  "sources": {
+    "demo/run_gate6_retained_obligations_v01.py": {
+      "bytes": 36497,
+      "mode": 420,
+      "sha256": "a23f2c174c287593774dbcc9490486ceddcd03d104299265869852662721da45"
+    },
+    "demo/verify_gate6_reference_v01.py": {
+      "bytes": 22226,
+      "mode": 420,
+      "sha256": "aa6556eef0fea4c0b313a76b0395110d9c732b592992a8ec27660efd175a5479"
+    }
+  },
+  "started": "2026-09-27T10:45:57.665588+00:00",
+  "supervisor": {
+    "bytes": 8005,
+    "mode": 420,
+    "sha256": "0ed64ef3a73ca64c7083545a24fe35044e39dce7385f28eab7761e86d020af82"
+  }
+}

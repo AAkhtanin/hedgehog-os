@@ -1,0 +1,5 @@
+{
+  "pid": 66420,
+  "supervisor_pid": 66374,
+  "identity": "  PID  PPID STARTED                      COMMAND\n66420 66374 Sun Sep 27 09:23:37 2026     git clone --no-local --no-hardlinks /Users/admin/Projects/hedgehog-os /Users/admin/Projects/hedgehog-os-gate6-g6a4r-bsu1xe8j/clone\n"
+}

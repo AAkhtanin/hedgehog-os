@@ -9,6 +9,12 @@ from . import contracts_v01 as c, kernel_adapter_v01 as k, evidence_v01 as e
 from . import lifecycle_v01 as life, mock_world_v01 as world, semantic_adapter_v01 as semantic
 
 
+def _public_request_v01(request):
+    value=e.plain_value_v01(request)
+    value.pop('bank_private');value.pop('user_private')
+    return value
+
+
 def collect_source_v01(directory):
     directory=Path(directory);directory.mkdir(parents=True,exist_ok=False)
     raw=json.loads((Path(__file__).resolve().parents[3]/'demo/testflix_fixtures_v01.json').read_bytes())
@@ -49,7 +55,7 @@ def collect_source_v01(directory):
         after=len([v for v in world.CALLS if v[0]=='EXECUTOR'])
         branches.append(dict(name=name,bound=f.g35_record_to_plain_v01(prepared['bound']),registry=f.g35_record_to_plain_v01(host.registry),
             evidence=evidence,receipt=receipt,refusal=refusal,executor_delta=after-before))
-    safe_request=asdict(request);safe_request.pop('bank_private');safe_request.pop('user_private')
+    safe_request=_public_request_v01(request)
     body=dict(request=safe_request,selected_plan=asdict(sem['selected_plan']),contributions=e.plain_value_v01(sem['contributions']),
         work=f.g35_record_to_plain_v01(quote['results']),admissions=f.g35_record_to_plain_v01(tuple(fw.snapshot_admitted_capability_v01(v) for v in quote['common']['catalogue'])),
         topology=abi.kernel_artifact_to_plain_dict_v01(quote['program'].topology_artifact),result=abi.kernel_artifact_to_plain_dict_v01(artifact),

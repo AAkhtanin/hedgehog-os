@@ -1,0 +1,115 @@
+{
+  "content": {
+    "drs_hit_is_authority": false,
+    "drs_record_is_truth": false,
+    "drs_reuse_candidate_is_action_permission": false,
+    "kind": "pointer",
+    "record": {
+      "artifact_pointers": [],
+      "authority_envelope": {
+        "action_permission_present": false,
+        "authority_class": "CONNECTOR_OBSERVATION",
+        "authority_envelope_id": "drsauth_v01:60388ed50ef75e3e49bbec22a7df5c3189496253d05cd7c0347ab0523dc79eed",
+        "authority_envelope_version": "v0.1",
+        "authority_scope_fingerprint": "b83f613969b46854beeed3b64bea8dab1c2434178c93f420bc6a6da7eead03dd",
+        "creates_authority": false,
+        "creates_permission": false,
+        "owning_local_root_id": null,
+        "recording_component": "g51:connector",
+        "root_acceptance_state": "UNREVIEWED",
+        "source_root_decision_hash": null,
+        "source_root_decision_id": null,
+        "source_root_decision_input_id": null
+      },
+      "conflict_hints": [],
+      "content_fingerprint": "b83f613969b46854beeed3b64bea8dab1c2434178c93f420bc6a6da7eead03dd",
+      "creates_authority": false,
+      "creates_permission": false,
+      "lineage_edges": [],
+      "local_reference_kernel_scope": "LOCAL_REFERENCE_KERNEL",
+      "meaning_record_id": "drsmeaning_v01:089fd7b7a35aee681aeaa88c0684f7fa38573e8f89bd879bf02814243c0d0f1f",
+      "meaning_record_version": "v0.1",
+      "memory_pointers": [],
+      "persistent_lifecycle_state": "ACTIVE",
+      "policy_version": "g51.pointer.context.v01",
+      "predecessor_record_id": null,
+      "recording_component": "g51:connector",
+      "resonance_reason": "Foreign pointer only; never action permission.",
+      "reuse_policy_class": "CONTEXT_ONLY",
+      "risk_hints": [],
+      "safe_summary": "{\"endpoint_ref\":\"endpoint:gate5:A\",\"publisher\":\"root:gate5:calibration\",\"revision\":1,\"schema\":\"BoundedCalibrationSummaryV01\",\"source_record\":\"source:gate5:calibration:one\"}",
+      "schema_versions": [
+        "g51.pointer.context.v01"
+      ],
+      "semantic_address": {
+        "address_profile_version": "v0.1",
+        "domain": "G51_POINTER",
+        "intent_class": "context_lookup",
+        "meaning_schema_id": "g51.pointer_metadata",
+        "meaning_schema_version": "v01",
+        "namespace": "g51",
+        "semantic_address_id": "drsaddr_v01:4d7723aac1c52957020db75232cd2db4197bb399f2941994471fe54badf3100c",
+        "subject_class": "external_pointer"
+      },
+      "semantic_tags": [
+        "g51",
+        "pointer"
+      ],
+      "source_reference_ids": [
+        "source:gate5:calibration:one"
+      ],
+      "supersession_reason": null,
+      "time_envelope": {
+        "ct_context_anchor": 1790487013,
+        "et_observed_at": 1790487013,
+        "freshness_policy_id": "freshness:g51:pointer",
+        "kt_as_of": 1790487013,
+        "pt_created_at": 1790487013,
+        "source_observed_at": 1790487013,
+        "source_reported_at": 1790487013,
+        "system_ingested_at": 1790487013,
+        "system_verified_at": 1790487013,
+        "time_envelope_id": "drstime_v01:6057d6e8b92d54b6846f7288a27fb03007ed5c99405aeedc14d01902afd3f766",
+        "time_envelope_version": "v0.1",
+        "ttl_seconds": 299,
+        "valid_from": 1790487013,
+        "valid_to": 1790487312
+      }
+    },
+    "semantic_keys": [
+      "g51",
+      "pointer"
+    ]
+  },
+  "domain": "G51_POINTER",
+  "layer": "work",
+  "provenance": {
+    "created_by": "root_orchestrator",
+    "request_id": "req:drsmeaning_v01:089fd7b7a35aee681aeaa88c0684f7fa38573e8f89bd879bf02814243c0d0f1f",
+    "trace_refs": [
+      {
+        "kind": "local_drs_resolver",
+        "trace_id": "trace:drsmeaning_v01:089fd7b7a35aee681aeaa88c0684f7fa38573e8f89bd879bf02814243c0d0f1f"
+      }
+    ]
+  },
+  "record_id": "drsmeaning_v01:089fd7b7a35aee681aeaa88c0684f7fa38573e8f89bd879bf02814243c0d0f1f",
+  "status": "active",
+  "time_envelope": {
+    "ct_session_anchor": "g51:session",
+    "et_observed_at": "2026-09-27T05:30:13+00:00",
+    "freshness_class": "static",
+    "kt_asof": "2026-09-27T05:30:13+00:00",
+    "pt_created_at": "2026-09-27T05:30:13+00:00",
+    "ttl_seconds": 299,
+    "valid_from": "2026-09-27T05:30:13+00:00",
+    "valid_to": "2026-09-27T05:35:12+00:00"
+  },
+  "trace_refs": [
+    {
+      "kind": "local_drs_resolver",
+      "trace_id": "trace:drsmeaning_v01:089fd7b7a35aee681aeaa88c0684f7fa38573e8f89bd879bf02814243c0d0f1f"
+    }
+  ],
+  "type": "generic"
+}

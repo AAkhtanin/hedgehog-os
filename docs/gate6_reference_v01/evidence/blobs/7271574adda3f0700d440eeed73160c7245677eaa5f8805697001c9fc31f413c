@@ -1,0 +1,5 @@
+{
+  "pid": 61057,
+  "supervisor_pid": 61056,
+  "identity": "  PID  PPID STARTED                      COMMAND\n61057 61056 Sun Sep 27 07:28:44 2026     /Applications/Docker.app/Contents/Resources/bin/docker --config /Users/admin/Projects/hedgehog-os-gate6-g6a4-p9f2we5q/resources/docker_config --host unix:///Users/admin/.docker/run/docker.sock image inspect sha256:f07e68671249ccaffda9529b14593c191ff9664a8b43b27f6b16570623f63a97\n"
+}

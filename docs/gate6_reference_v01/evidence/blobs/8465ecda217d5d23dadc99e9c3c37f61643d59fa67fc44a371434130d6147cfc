@@ -1,0 +1,72 @@
+{
+  "/Users/admin/Projects/hedgehog-os-gate6-g6a4r-bsu1xe8j/inputs/g6a4/campaign/MODEL/MODEL/summary.json": {
+    "bytes": 7882,
+    "sha256": "fa3ef23855e06cb23d9832bdfba3d99abccbbebd49d89d3d2e529ef4e1a58125",
+    "mode": 420
+  },
+  "/Users/admin/Projects/hedgehog-os-gate6-g6a4r-bsu1xe8j/inputs/g6a4/campaign/MODEL/MODEL/sealed.json": {
+    "bytes": 3075866,
+    "sha256": "08616ccdcac768c3990a4396af232dcfbc98e27a18da724230128b978a6dcb90",
+    "mode": 420
+  },
+  "/Users/admin/Projects/hedgehog-os-gate6-g6a4r-bsu1xe8j/inputs/g6a4/recorded/g6a3/evidence/model_controlled_final/summary.json": {
+    "bytes": 7903,
+    "sha256": "3a0fb4635325447a48a33bd410956f5f94c2677ba88b1c8bee51eff13a9cff5a",
+    "mode": 420
+  },
+  "/Users/admin/Projects/hedgehog-os-gate6-g6a4r-bsu1xe8j/inputs/g6a4/recorded/g6a3/evidence/model_controlled_final/sealed.json": {
+    "bytes": 3064054,
+    "sha256": "6991d02e6d34fc279284749b5825789b13f21319c2cd62e08642d1dd016a37c9",
+    "mode": 420
+  },
+  "/Users/admin/Projects/hedgehog-os-gate6-g6a4r-bsu1xe8j/inputs/g6a4/campaign/MODEL/MODEL/adapter/response_01.json": {
+    "bytes": 2144,
+    "sha256": "e2ba43aa68b824d08c6fe0f7fa879062459c14fe51caaf641f2a652595ba8504",
+    "mode": 420
+  },
+  "/Users/admin/Projects/hedgehog-os-gate6-g6a4r-bsu1xe8j/inputs/g6a4/campaign/MODEL/MODEL/adapter/attempt_03.json": {
+    "bytes": 386,
+    "sha256": "f61e6df6cf667e6e79ed870d77496337b79544926b32cb0a2a5aefe1811349cb",
+    "mode": 420
+  },
+  "/Users/admin/Projects/hedgehog-os-gate6-g6a4r-bsu1xe8j/inputs/g6a4/campaign/MODEL/MODEL/adapter/attempt_02.json": {
+    "bytes": 388,
+    "sha256": "6d2522571bfe5bf239723b60b89a712146a34a44eb11feacefbe83ec7139320d",
+    "mode": 420
+  },
+  "/Users/admin/Projects/hedgehog-os-gate6-g6a4r-bsu1xe8j/inputs/g6a4/campaign/MODEL/MODEL/adapter/attempt_04.json": {
+    "bytes": 383,
+    "sha256": "3a2b1f970686ba8e814f387299358c89f50b2280b3719ff970fea25e857db063",
+    "mode": 420
+  },
+  "/Users/admin/Projects/hedgehog-os-gate6-g6a4r-bsu1xe8j/inputs/g6a4/campaign/MODEL/MODEL/adapter/response_04.json": {
+    "bytes": 4978,
+    "sha256": "52395a6c01729507f63aea4ee841f1f747e217f82c96cb039b81167899502024",
+    "mode": 420
+  },
+  "/Users/admin/Projects/hedgehog-os-gate6-g6a4r-bsu1xe8j/inputs/g6a4/campaign/MODEL/MODEL/adapter/response_03.json": {
+    "bytes": 4278,
+    "sha256": "e86ba69d3b0267b6c2419f74dde6c152e6d13aa1aa9b0da9f41773c370131f07",
+    "mode": 420
+  },
+  "/Users/admin/Projects/hedgehog-os-gate6-g6a4r-bsu1xe8j/inputs/g6a4/campaign/MODEL/MODEL/adapter/attempt_01.json": {
+    "bytes": 384,
+    "sha256": "f0035eec26351b2fad43c10e78c73f08dca09537cdbbf25061811a0f662315bc",
+    "mode": 420
+  },
+  "/Users/admin/Projects/hedgehog-os-gate6-g6a4r-bsu1xe8j/inputs/g6a4/campaign/MODEL/MODEL/adapter/response_02.json": {
+    "bytes": 3554,
+    "sha256": "bb26a512ea3dd8a48ae1de6b09ab1dcfee6d31d030b5345a2a1e47b8443f80ad",
+    "mode": 420
+  },
+  "/Users/admin/Projects/hedgehog-os-gate6-g6a4r-bsu1xe8j/inputs/g6a4/campaign/MODEL/MODEL/budget/budget.lock": {
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "mode": 420
+  },
+  "/Users/admin/Projects/hedgehog-os-gate6-g6a4r-bsu1xe8j/inputs/g6a4/campaign/MODEL/MODEL/budget/budget.jsonl": {
+    "bytes": 35957,
+    "sha256": "a14a23336cb1f5cd3b868efb92a321c50c9c99811088f50553da1e632bfd128e",
+    "mode": 420
+  }
+}

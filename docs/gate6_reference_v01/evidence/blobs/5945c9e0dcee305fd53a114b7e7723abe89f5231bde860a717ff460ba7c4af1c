@@ -1,0 +1,1 @@
+{"events":[{"event_id":"exact","status":"NO_COMPLETE_OFFER"},{"event_id":"long_overlap","status":"NO_COMPLETE_OFFER"}],"executed_provider_calls":0,"role":"publisher","wire":{"received":8,"received_bytes":15152,"sent":8,"sent_bytes":21539}}

@@ -1,0 +1,24 @@
+{
+  "canary_scan": {
+    "files": 26,
+    "matches": 0,
+    "private_body_excluded": true
+  },
+  "counts": {
+    "body_bytes": 1073,
+    "metadata": 3,
+    "payload": 2,
+    "released": 1
+  },
+  "source_result": {
+    "den": 1,
+    "num": -10
+  },
+  "status": "SOURCE_AND_RELEASE_COMPLETE",
+  "wire": {
+    "received": 5,
+    "received_bytes": 9096,
+    "sent": 5,
+    "sent_bytes": 12043
+  }
+}

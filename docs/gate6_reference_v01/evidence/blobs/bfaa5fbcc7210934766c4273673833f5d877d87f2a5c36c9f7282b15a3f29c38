@@ -1,0 +1,153 @@
+"""Finite supervised Docker evaluation; no model backend and no candidate trust grant."""
+import base64
+import hashlib
+import io
+import json
+import os
+from pathlib import Path, PurePosixPath
+import selectors
+import subprocess
+import sys
+import tarfile
+import time
+import uuid
+
+WORK = Path(__file__).resolve().parents[1]
+DOCKER = ['/Applications/Docker.app/Contents/Resources/bin/docker', '--config', str(WORK / 'docker-client'),
+          '--host', 'unix:///Users/admin/.docker/run/docker.sock']
+
+def save(path, value):
+    path.write_text(json.dumps(value, sort_keys=True, indent=2) + '\n')
+
+def cli(args):
+    return subprocess.check_output(DOCKER + args, timeout=30)
+
+def flags(image, mode, name, inputs, candidate):
+    result = ['create', '--name', name, '--label', 'radiolaria.task=G54D',
+        '--network', 'none', '--read-only', '--user', '65532:65532', '--cap-drop', 'ALL',
+        '--security-opt', 'no-new-privileges', '--pids-limit', '16', '--cpus', '1',
+        '--memory', '512m', '--memory-swap', '512m', '--ipc', 'private', '--log-driver', 'none',
+        '--tmpfs', '/tmp:rw,noexec,nosuid,nodev,size=33554432,mode=1777',
+        '--tmpfs', '/out:rw,noexec,nosuid,nodev,size=67108864,mode=1777',
+        '--mount', f'type=bind,src={WORK / "AUTHOR_VISIBLE"},dst=/approved,readonly',
+        '--mount', f'type=bind,src={WORK / "DEPLOYMENT_G54D"},dst=/runner,readonly',
+        '--mount', f'type=bind,src={inputs},dst=/inputs,readonly',
+        '--mount', f'type=bind,src={candidate},dst=/candidate,readonly']
+    if mode in ('smoke','candidate'):
+        return result + ['--entrypoint','python',image,'-B','/runner/action_runner_g54d.py',mode]
+    return result + [image,mode]
+
+def run(mode, input_dir=None, candidate_dir=None, review_path=None, freeze_path=None):
+    assert mode in ('boundary', 'numeric', 'mock', 'pipe', 'excess','smoke','candidate')
+    folder = WORK / 'SUPERVISOR_EVIDENCE' / ('p7_' + mode + '_' + uuid.uuid4().hex[:8])
+    folder.mkdir()
+    inputs = folder / 'inputs'; inputs.mkdir()
+    candidate = folder / 'candidate'; candidate.mkdir()
+    (candidate / 'canary.txt').write_text('read-only reviewed generic candidate canary\n')
+    if mode=='candidate':
+        assert input_dir and candidate_dir and review_path
+        inputs=Path(input_dir).resolve();candidate=Path(candidate_dir).resolve()
+        reviewed=json.loads(Path(review_path).read_text())
+        assert reviewed['status']=='APPROVED_FOR_DECLARED_CONFINED_EXECUTION'
+        actual={str(p.relative_to(candidate)):hashlib.sha256(p.read_bytes()).hexdigest() for p in candidate.rglob('*') if p.is_file()}
+        assert actual==reviewed['files'] and not any(p.is_symlink() for p in candidate.rglob('*'))
+        assert {str(p.relative_to(inputs)) for p in inputs.rglob('*') if p.is_file()}=={'publisher/input.json','requester/input.json'}
+    if mode=='smoke':
+        for role,data in (('publisher',dict(sample=7)),('requester',{})):
+            (inputs/role).mkdir();save(inputs/role/'input.json',data)
+    host = folder / 'host_private'; host.mkdir()
+    (host / 'canary.txt').write_text('synthetic host canary, not a secret\n')
+    (host / 'forbidden.txt').write_text('unchanged\n')
+    host_before = {p.name: hashlib.sha256(p.read_bytes()).hexdigest() for p in host.iterdir()}
+    if mode not in ('smoke','candidate'):
+        save(inputs / 'canary.json', dict(host_canary_path=str(host / 'canary.txt'), host_output_path=str(host / 'forbidden.txt')))
+    image = json.loads((WORK / 'DEPLOYMENT_G54D/image.lock.json').read_text())['image_id']
+    inspect_image = json.loads(cli(['image', 'inspect', image]))
+    save(folder / 'image.json', inspect_image)
+    name = 'radiolaria-g54d-' + uuid.uuid4().hex[:12]
+    args = flags(image, mode, name, inputs, candidate)
+    receipt = dict(mode=mode, image=image, create_argv=DOCKER + args, started=time.time(), rc=None,
+                   wall_limit_seconds=90, stdout_limit_bytes=16*1024**2, stderr_limit_bytes=2*1024**2,
+                   inputs={label+'/'+str(p.relative_to(root)):hashlib.sha256(p.read_bytes()).hexdigest()
+                           for label,root in (('inputs',inputs),('candidate',candidate)) for p in root.rglob('*') if p.is_file()})
+    freeze=json.loads(Path(freeze_path).read_text())
+    receipt['source_pins']={path:hashlib.sha256((WORK/path).read_bytes()).hexdigest() for path in freeze['files']}
+    receipt['freeze_path']=str(Path(freeze_path).relative_to(WORK))
+    assert receipt['source_pins']==freeze['files'], 'frozen_source_changed_before_launch'
+    save(folder / 'receipt.json', receipt)
+    created = False
+    try:
+        cli(args); created = True
+        configuration = json.loads(cli(['inspect', name]))[0]
+        save(folder / 'configuration.json', configuration)
+        cfg = configuration['HostConfig']
+        assert cfg['NetworkMode'] == 'none' and cfg['ReadonlyRootfs'] and not cfg['Privileged']
+        assert cfg['IpcMode'] == 'private' and not cfg['PidMode'] and not cfg['PortBindings']
+        assert cfg['CapDrop'] == ['ALL'] and cfg['PidsLimit'] == 16
+        assert configuration['Config']['User'] == '65532:65532'
+        assert all(not m['RW'] for m in configuration['Mounts'])
+        assert {m['Destination'] for m in configuration['Mounts']} == {'/approved','/runner','/inputs','/candidate'}
+        begin = time.monotonic()
+        proc = subprocess.Popen(DOCKER + ['start', '-a', name], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        receipt['cli_pid'] = proc.pid
+        save(folder / 'receipt.json', receipt)
+        streams = {'stdout':bytearray(), 'stderr':bytearray()}
+        select = selectors.DefaultSelector()
+        for stream, label in ((proc.stdout, 'stdout'), (proc.stderr, 'stderr')):
+            select.register(stream, selectors.EVENT_READ, label)
+        failure = None
+        while select.get_map():
+            if time.monotonic() - begin > 90:
+                failure = 'WALL_LIMIT'; break
+            for key, _ in select.select(1):
+                chunk = os.read(key.fileobj.fileno(), 65536)
+                if not chunk:
+                    select.unregister(key.fileobj); continue
+                streams[key.data].extend(chunk)
+                maximum = receipt[key.data + '_limit_bytes']
+                if len(streams[key.data]) > maximum:
+                    failure = key.data.upper() + '_LIMIT'; break
+            if failure: break
+        if failure:
+            cli(['kill', name])
+        proc.wait(timeout=15)
+        select.close()
+        for label, data in streams.items(): (folder / (label + '.txt')).write_bytes(data)
+        receipt.update(rc=proc.returncode, seconds=time.monotonic()-begin, limit_failure=failure, cli_reaped=True)
+        save(folder / 'final_state.json', json.loads(cli(['inspect', name]))[0]['State'])
+        assert not failure, failure
+        payload = json.loads(streams['stdout'])
+        blob = base64.b64decode(payload['evidence_targz_base64'], validate=True)
+        assert len(blob) <= 12*1024**2
+        (folder / 'worker_evidence.tar.gz').write_bytes(blob)
+        with tarfile.open(fileobj=io.BytesIO(blob), mode='r:gz') as tf:
+            entries = tf.getmembers()
+            seen = set(); total = 0
+            for entry in entries:
+                p = PurePosixPath(entry.name)
+                assert entry.isfile() and not p.is_absolute() and '..' not in p.parts and entry.name not in seen
+                seen.add(entry.name); total += entry.size
+                assert total <= 64*1024**2
+                target = folder / 'worker' / entry.name
+                target.parent.mkdir(parents=True, exist_ok=True)
+                target.write_bytes(tf.extractfile(entry).read())
+        if mode in ('smoke','candidate'):
+            save(folder/'trusted_parent_receipt.json',payload['parent_receipt'])
+            passed=not payload['parent_receipt']['limit_error'] and all(r['exit_code']==0 for r in payload['parent_receipt']['waits'])
+        else:passed=payload['passed']
+        receipt['worker_passed'] = passed
+        assert passed and proc.returncode == 0
+    finally:
+        if created:
+            cleanup = subprocess.run(DOCKER + ['rm', '-f', name], capture_output=True, timeout=30)
+            receipt['container_removed'] = cleanup.returncode == 0
+            receipt['cleanup_stdout'] = cleanup.stdout.decode()
+            receipt['cleanup_stderr'] = cleanup.stderr.decode()
+        receipt['host_canary_unchanged'] = host_before == {p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in host.iterdir()}
+        receipt['end'] = time.time()
+        save(folder / 'receipt.json', receipt)
+        print(json.dumps(dict(folder=str(folder), **receipt)), flush=True)
+    assert receipt['host_canary_unchanged'] and receipt['container_removed']
+
+if __name__ == '__main__':
+    run(*sys.argv[1:])

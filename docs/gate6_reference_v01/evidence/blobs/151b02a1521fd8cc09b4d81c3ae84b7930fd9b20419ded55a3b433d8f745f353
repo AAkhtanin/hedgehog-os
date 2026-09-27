@@ -1,0 +1,1 @@
+{"events":[{"event_id":"exact","status":"OFFER_READY"},{"event_id":"shift","status":"OFFER_READY"},{"event_id":"book","status":"MOCK_BOOKED"},{"event_id":"repeat","status":"MOCK_BOOKED"},{"event_id":"verify","status":"VERIFIED"}],"executed_provider_calls":0,"role":"publisher","wire":{"received":16,"received_bytes":30090,"sent":16,"sent_bytes":44716}}

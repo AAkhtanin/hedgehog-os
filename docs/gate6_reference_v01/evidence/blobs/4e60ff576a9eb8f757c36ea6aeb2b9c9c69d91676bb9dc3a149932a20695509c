@@ -1,0 +1,10 @@
+{"domain": "AIRLINE", "phase": "COLLECT", "event": "START", "at_ns": "1790494213536442000"}
+{"domain": "AIRLINE", "phase": "COLLECT", "event": "RETURN", "elapsed_us": 184434}
+{"domain": "SUPPLIER_WATER_FILTER", "phase": "COLLECT", "event": "START", "at_ns": "1790494213720971000"}
+{"domain": "SUPPLIER_WATER_FILTER", "phase": "COLLECT", "event": "RETURN", "elapsed_us": 1385829}
+{"domain": "TESTFLIX", "phase": "COLLECT", "event": "START", "at_ns": "1790494215106921000"}
+{"domain": "TESTFLIX", "phase": "COLLECT", "event": "RETURN", "elapsed_us": 108488827}
+{"domain": "EPHEMERAL_WORKSPACE", "phase": "COLLECT", "event": "START", "at_ns": "1790494323596654000"}
+{"domain": "EPHEMERAL_WORKSPACE", "phase": "COLLECT", "event": "RETURN", "elapsed_us": 260159}
+{"domain": "LANDSLIDE_SENTINEL", "phase": "COLLECT", "event": "START", "at_ns": "1790494323856901000"}
+{"domain": "LANDSLIDE_SENTINEL", "phase": "COLLECT", "event": "RETURN", "elapsed_us": 4099251}

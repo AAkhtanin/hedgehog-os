@@ -1,0 +1,592 @@
+{
+  "phases": [
+    {
+      "duration": 0.004298999905586243,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_retained_obligations_v01.py::test_supplied_positive_no_new_runtime[avf]",
+      "outcome": "passed",
+      "when": "setup"
+    },
+    {
+      "duration": 0.03410829231142998,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_retained_obligations_v01.py::test_supplied_positive_no_new_runtime[avf]",
+      "outcome": "passed",
+      "when": "call"
+    },
+    {
+      "duration": 8.187536150217056e-05,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_retained_obligations_v01.py::test_supplied_positive_no_new_runtime[avf]",
+      "outcome": "passed",
+      "when": "teardown"
+    },
+    {
+      "duration": 0.00036733224987983704,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_retained_obligations_v01.py::test_supplied_positive_no_new_runtime[reuse]",
+      "outcome": "passed",
+      "when": "setup"
+    },
+    {
+      "duration": 0.1314397919923067,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_retained_obligations_v01.py::test_supplied_positive_no_new_runtime[reuse]",
+      "outcome": "passed",
+      "when": "call"
+    },
+    {
+      "duration": 7.195863872766495e-05,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_retained_obligations_v01.py::test_supplied_positive_no_new_runtime[reuse]",
+      "outcome": "passed",
+      "when": "teardown"
+    },
+    {
+      "duration": 0.0003635827451944351,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_retained_obligations_v01.py::test_supplied_positive_no_new_runtime[policy]",
+      "outcome": "passed",
+      "when": "setup"
+    },
+    {
+      "duration": 0.22009691782295704,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_retained_obligations_v01.py::test_supplied_positive_no_new_runtime[policy]",
+      "outcome": "passed",
+      "when": "call"
+    },
+    {
+      "duration": 6.304122507572174e-05,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_retained_obligations_v01.py::test_supplied_positive_no_new_runtime[policy]",
+      "outcome": "passed",
+      "when": "teardown"
+    },
+    {
+      "duration": 0.000341000035405159,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_retained_obligations_v01.py::test_supplied_positive_no_new_runtime[privacy]",
+      "outcome": "passed",
+      "when": "setup"
+    },
+    {
+      "duration": 0.13768962491303682,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_retained_obligations_v01.py::test_supplied_positive_no_new_runtime[privacy]",
+      "outcome": "passed",
+      "when": "call"
+    },
+    {
+      "duration": 6.320793181657791e-05,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_retained_obligations_v01.py::test_supplied_positive_no_new_runtime[privacy]",
+      "outcome": "passed",
+      "when": "teardown"
+    },
+    {
+      "duration": 9.687524288892746e-05,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_retained_obligations_v01.py::test_avf_actual_bindings[candidate]",
+      "outcome": "passed",
+      "when": "setup"
+    },
+    {
+      "duration": 0.03168945945799351,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_retained_obligations_v01.py::test_avf_actual_bindings[candidate]",
+      "outcome": "passed",
+      "when": "call"
+    },
+    {
+      "duration": 5.4166652262210846e-05,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_retained_obligations_v01.py::test_avf_actual_bindings[candidate]",
+      "outcome": "passed",
+      "when": "teardown"
+    },
+    {
+      "duration": 8.441600948572159e-05,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_retained_obligations_v01.py::test_avf_actual_bindings[root]",
+      "outcome": "passed",
+      "when": "setup"
+    },
+    {
+      "duration": 0.04532104264944792,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_retained_obligations_v01.py::test_avf_actual_bindings[root]",
+      "outcome": "passed",
+      "when": "call"
+    },
+    {
+      "duration": 6.262492388486862e-05,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_retained_obligations_v01.py::test_avf_actual_bindings[root]",
+      "outcome": "passed",
+      "when": "teardown"
+    },
+    {
+      "duration": 9.241700172424316e-05,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_retained_obligations_v01.py::test_avf_actual_bindings[state]",
+      "outcome": "passed",
+      "when": "setup"
+    },
+    {
+      "duration": 0.061580708250403404,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_retained_obligations_v01.py::test_avf_actual_bindings[state]",
+      "outcome": "passed",
+      "when": "call"
+    },
+    {
+      "duration": 5.437526851892471e-05,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_retained_obligations_v01.py::test_avf_actual_bindings[state]",
+      "outcome": "passed",
+      "when": "teardown"
+    },
+    {
+      "duration": 8.674990385770798e-05,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_retained_obligations_v01.py::test_avf_actual_bindings[counter]",
+      "outcome": "passed",
+      "when": "setup"
+    },
+    {
+      "duration": 0.04609733447432518,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_retained_obligations_v01.py::test_avf_actual_bindings[counter]",
+      "outcome": "passed",
+      "when": "call"
+    },
+    {
+      "duration": 6.354227662086487e-05,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_retained_obligations_v01.py::test_avf_actual_bindings[counter]",
+      "outcome": "passed",
+      "when": "teardown"
+    },
+    {
+      "duration": 0.00011295918375253677,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_retained_obligations_v01.py::test_reuse_actual_binding_and_arithmetic[business]",
+      "outcome": "passed",
+      "when": "setup"
+    },
+    {
+      "duration": 0.13139062467962503,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_retained_obligations_v01.py::test_reuse_actual_binding_and_arithmetic[business]",
+      "outcome": "passed",
+      "when": "call"
+    },
+    {
+      "duration": 5.670823156833649e-05,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_retained_obligations_v01.py::test_reuse_actual_binding_and_arithmetic[business]",
+      "outcome": "passed",
+      "when": "teardown"
+    },
+    {
+      "duration": 0.00010612513870000839,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_retained_obligations_v01.py::test_reuse_actual_binding_and_arithmetic[answer]",
+      "outcome": "passed",
+      "when": "setup"
+    },
+    {
+      "duration": 0.2485051667317748,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_retained_obligations_v01.py::test_reuse_actual_binding_and_arithmetic[answer]",
+      "outcome": "passed",
+      "when": "call"
+    },
+    {
+      "duration": 5.745794624090195e-05,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_retained_obligations_v01.py::test_reuse_actual_binding_and_arithmetic[answer]",
+      "outcome": "passed",
+      "when": "teardown"
+    },
+    {
+      "duration": 9.116530418395996e-05,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_retained_obligations_v01.py::test_reuse_actual_binding_and_arithmetic[counter]",
+      "outcome": "passed",
+      "when": "setup"
+    },
+    {
+      "duration": 0.2493680827319622,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_retained_obligations_v01.py::test_reuse_actual_binding_and_arithmetic[counter]",
+      "outcome": "passed",
+      "when": "call"
+    },
+    {
+      "duration": 5.995854735374451e-05,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_retained_obligations_v01.py::test_reuse_actual_binding_and_arithmetic[counter]",
+      "outcome": "passed",
+      "when": "teardown"
+    },
+    {
+      "duration": 9.020883589982986e-05,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_retained_obligations_v01.py::test_reuse_actual_binding_and_arithmetic[warm_root]",
+      "outcome": "passed",
+      "when": "setup"
+    },
+    {
+      "duration": 0.23899462539702654,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_retained_obligations_v01.py::test_reuse_actual_binding_and_arithmetic[warm_root]",
+      "outcome": "passed",
+      "when": "call"
+    },
+    {
+      "duration": 6.008334457874298e-05,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_retained_obligations_v01.py::test_reuse_actual_binding_and_arithmetic[warm_root]",
+      "outcome": "passed",
+      "when": "teardown"
+    },
+    {
+      "duration": 9.133294224739075e-05,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_retained_obligations_v01.py::test_policy_independent_current_derivation[lineage]",
+      "outcome": "passed",
+      "when": "setup"
+    },
+    {
+      "duration": 0.23577337432652712,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_retained_obligations_v01.py::test_policy_independent_current_derivation[lineage]",
+      "outcome": "passed",
+      "when": "call"
+    },
+    {
+      "duration": 5.6957826018333435e-05,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_retained_obligations_v01.py::test_policy_independent_current_derivation[lineage]",
+      "outcome": "passed",
+      "when": "teardown"
+    },
+    {
+      "duration": 9.195785969495773e-05,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_retained_obligations_v01.py::test_policy_independent_current_derivation[current]",
+      "outcome": "passed",
+      "when": "setup"
+    },
+    {
+      "duration": 0.3332007499411702,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_retained_obligations_v01.py::test_policy_independent_current_derivation[current]",
+      "outcome": "passed",
+      "when": "call"
+    },
+    {
+      "duration": 5.724932998418808e-05,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_retained_obligations_v01.py::test_policy_independent_current_derivation[current]",
+      "outcome": "passed",
+      "when": "teardown"
+    },
+    {
+      "duration": 9.470805525779724e-05,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_retained_obligations_v01.py::test_policy_independent_current_derivation[old_certificate]",
+      "outcome": "passed",
+      "when": "setup"
+    },
+    {
+      "duration": 0.316624958999455,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_retained_obligations_v01.py::test_policy_independent_current_derivation[old_certificate]",
+      "outcome": "passed",
+      "when": "call"
+    },
+    {
+      "duration": 5.658343434333801e-05,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_retained_obligations_v01.py::test_policy_independent_current_derivation[old_certificate]",
+      "outcome": "passed",
+      "when": "teardown"
+    },
+    {
+      "duration": 9.529199451208115e-05,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_retained_obligations_v01.py::test_policy_independent_current_derivation[returned_summary]",
+      "outcome": "passed",
+      "when": "setup"
+    },
+    {
+      "duration": 0.3440683754161,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_retained_obligations_v01.py::test_policy_independent_current_derivation[returned_summary]",
+      "outcome": "passed",
+      "when": "call"
+    },
+    {
+      "duration": 6.329268217086792e-05,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_retained_obligations_v01.py::test_policy_independent_current_derivation[returned_summary]",
+      "outcome": "passed",
+      "when": "teardown"
+    },
+    {
+      "duration": 9.249988943338394e-05,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_retained_obligations_v01.py::test_privacy_independent_projection_oracle[private]",
+      "outcome": "passed",
+      "when": "setup"
+    },
+    {
+      "duration": 0.1682881247252226,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_retained_obligations_v01.py::test_privacy_independent_projection_oracle[private]",
+      "outcome": "passed",
+      "when": "call"
+    },
+    {
+      "duration": 5.8040954172611237e-05,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_retained_obligations_v01.py::test_privacy_independent_projection_oracle[private]",
+      "outcome": "passed",
+      "when": "teardown"
+    },
+    {
+      "duration": 8.849985897541046e-05,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_retained_obligations_v01.py::test_privacy_independent_projection_oracle[upstream]",
+      "outcome": "passed",
+      "when": "setup"
+    },
+    {
+      "duration": 0.152816416695714,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_retained_obligations_v01.py::test_privacy_independent_projection_oracle[upstream]",
+      "outcome": "passed",
+      "when": "call"
+    },
+    {
+      "duration": 7.537472993135452e-05,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_retained_obligations_v01.py::test_privacy_independent_projection_oracle[upstream]",
+      "outcome": "passed",
+      "when": "teardown"
+    },
+    {
+      "duration": 0.00010087527334690094,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_retained_obligations_v01.py::test_privacy_independent_projection_oracle[capture]",
+      "outcome": "passed",
+      "when": "setup"
+    },
+    {
+      "duration": 0.1520635411143303,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_retained_obligations_v01.py::test_privacy_independent_projection_oracle[capture]",
+      "outcome": "passed",
+      "when": "call"
+    },
+    {
+      "duration": 5.637574940919876e-05,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_retained_obligations_v01.py::test_privacy_independent_projection_oracle[capture]",
+      "outcome": "passed",
+      "when": "teardown"
+    },
+    {
+      "duration": 9.062513709068298e-05,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_retained_obligations_v01.py::test_privacy_independent_projection_oracle[consumed]",
+      "outcome": "passed",
+      "when": "setup"
+    },
+    {
+      "duration": 0.16485387459397316,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_retained_obligations_v01.py::test_privacy_independent_projection_oracle[consumed]",
+      "outcome": "passed",
+      "when": "call"
+    },
+    {
+      "duration": 5.699973553419113e-05,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_retained_obligations_v01.py::test_privacy_independent_projection_oracle[consumed]",
+      "outcome": "passed",
+      "when": "teardown"
+    },
+    {
+      "duration": 4.424992948770523e-05,
+      "longrepr": null,
+      "nodeid": "tests/test_testflix_semantic_roles_v01.py::test_distinct_duties_consume_upstream_and_preference_v01",
+      "outcome": "passed",
+      "when": "setup"
+    },
+    {
+      "duration": 0.0020822500810027122,
+      "longrepr": null,
+      "nodeid": "tests/test_testflix_semantic_roles_v01.py::test_distinct_duties_consume_upstream_and_preference_v01",
+      "outcome": "passed",
+      "when": "call"
+    },
+    {
+      "duration": 3.354158252477646e-05,
+      "longrepr": null,
+      "nodeid": "tests/test_testflix_semantic_roles_v01.py::test_distinct_duties_consume_upstream_and_preference_v01",
+      "outcome": "passed",
+      "when": "teardown"
+    },
+    {
+      "duration": 9.370781481266022e-05,
+      "longrepr": null,
+      "nodeid": "tests/test_testflix_semantic_roles_v01.py::test_role_boundaries_refuse_coherent_inputs_v01[authority]",
+      "outcome": "passed",
+      "when": "setup"
+    },
+    {
+      "duration": 0.0015191249549388885,
+      "longrepr": null,
+      "nodeid": "tests/test_testflix_semantic_roles_v01.py::test_role_boundaries_refuse_coherent_inputs_v01[authority]",
+      "outcome": "passed",
+      "when": "call"
+    },
+    {
+      "duration": 3.9624981582164764e-05,
+      "longrepr": null,
+      "nodeid": "tests/test_testflix_semantic_roles_v01.py::test_role_boundaries_refuse_coherent_inputs_v01[authority]",
+      "outcome": "passed",
+      "when": "teardown"
+    },
+    {
+      "duration": 6.66249543428421e-05,
+      "longrepr": null,
+      "nodeid": "tests/test_testflix_semantic_roles_v01.py::test_role_boundaries_refuse_coherent_inputs_v01[changed_capture]",
+      "outcome": "passed",
+      "when": "setup"
+    },
+    {
+      "duration": 0.0011469172313809395,
+      "longrepr": null,
+      "nodeid": "tests/test_testflix_semantic_roles_v01.py::test_role_boundaries_refuse_coherent_inputs_v01[changed_capture]",
+      "outcome": "passed",
+      "when": "call"
+    },
+    {
+      "duration": 3.920961171388626e-05,
+      "longrepr": null,
+      "nodeid": "tests/test_testflix_semantic_roles_v01.py::test_role_boundaries_refuse_coherent_inputs_v01[changed_capture]",
+      "outcome": "passed",
+      "when": "teardown"
+    },
+    {
+      "duration": 6.266776472330093e-05,
+      "longrepr": null,
+      "nodeid": "tests/test_testflix_semantic_roles_v01.py::test_role_boundaries_refuse_coherent_inputs_v01[changed_upstream]",
+      "outcome": "passed",
+      "when": "setup"
+    },
+    {
+      "duration": 0.001157917082309723,
+      "longrepr": null,
+      "nodeid": "tests/test_testflix_semantic_roles_v01.py::test_role_boundaries_refuse_coherent_inputs_v01[changed_upstream]",
+      "outcome": "passed",
+      "when": "call"
+    },
+    {
+      "duration": 3.71662899851799e-05,
+      "longrepr": null,
+      "nodeid": "tests/test_testflix_semantic_roles_v01.py::test_role_boundaries_refuse_coherent_inputs_v01[changed_upstream]",
+      "outcome": "passed",
+      "when": "teardown"
+    },
+    {
+      "duration": 3.362540155649185e-05,
+      "longrepr": null,
+      "nodeid": "tests/test_drs_v02_local_lineage_reuse.py::test_drs_v02_hit_is_context_not_authority",
+      "outcome": "passed",
+      "when": "setup"
+    },
+    {
+      "duration": 8.524954319000244e-05,
+      "longrepr": null,
+      "nodeid": "tests/test_drs_v02_local_lineage_reuse.py::test_drs_v02_hit_is_context_not_authority",
+      "outcome": "passed",
+      "when": "call"
+    },
+    {
+      "duration": 3.112573176622391e-05,
+      "longrepr": null,
+      "nodeid": "tests/test_drs_v02_local_lineage_reuse.py::test_drs_v02_hit_is_context_not_authority",
+      "outcome": "passed",
+      "when": "teardown"
+    },
+    {
+      "duration": 3.2667070627212524e-05,
+      "longrepr": null,
+      "nodeid": "tests/test_drs_v02_local_lineage_reuse.py::test_drs_v02_lineage_refs_preserved",
+      "outcome": "passed",
+      "when": "setup"
+    },
+    {
+      "duration": 7.329229265451431e-05,
+      "longrepr": null,
+      "nodeid": "tests/test_drs_v02_local_lineage_reuse.py::test_drs_v02_lineage_refs_preserved",
+      "outcome": "passed",
+      "when": "call"
+    },
+    {
+      "duration": 2.841651439666748e-05,
+      "longrepr": null,
+      "nodeid": "tests/test_drs_v02_local_lineage_reuse.py::test_drs_v02_lineage_refs_preserved",
+      "outcome": "passed",
+      "when": "teardown"
+    },
+    {
+      "duration": 3.1624920666217804e-05,
+      "longrepr": null,
+      "nodeid": "tests/test_drs_v02_local_lineage_reuse.py::test_drs_v02_old_receipt_not_action_permission",
+      "outcome": "passed",
+      "when": "setup"
+    },
+    {
+      "duration": 5.0541944801807404e-05,
+      "longrepr": null,
+      "nodeid": "tests/test_drs_v02_local_lineage_reuse.py::test_drs_v02_old_receipt_not_action_permission",
+      "outcome": "passed",
+      "when": "call"
+    },
+    {
+      "duration": 2.8125010430812836e-05,
+      "longrepr": null,
+      "nodeid": "tests/test_drs_v02_local_lineage_reuse.py::test_drs_v02_old_receipt_not_action_permission",
+      "outcome": "passed",
+      "when": "teardown"
+    },
+    {
+      "duration": 3.27499583363533e-05,
+      "longrepr": null,
+      "nodeid": "tests/test_drs_v02_local_lineage_reuse.py::test_drs_v02_prior_root_final_not_mutated",
+      "outcome": "passed",
+      "when": "setup"
+    },
+    {
+      "duration": 4.866626113653183e-05,
+      "longrepr": null,
+      "nodeid": "tests/test_drs_v02_local_lineage_reuse.py::test_drs_v02_prior_root_final_not_mutated",
+      "outcome": "passed",
+      "when": "call"
+    },
+    {
+      "duration": 3.9249658584594727e-05,
+      "longrepr": null,
+      "nodeid": "tests/test_drs_v02_local_lineage_reuse.py::test_drs_v02_prior_root_final_not_mutated",
+      "outcome": "passed",
+      "when": "teardown"
+    }
+  ]
+}

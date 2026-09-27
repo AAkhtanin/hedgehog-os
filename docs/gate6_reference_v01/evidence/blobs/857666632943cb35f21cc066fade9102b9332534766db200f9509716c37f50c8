@@ -1,0 +1,207 @@
+{
+  "/Users/admin/Projects/hedgehog-os-gate6-g6a4-p9f2we5q/clone/docs/gate5_reference_evidence_v01/member_index.json": {
+    "bytes": 6550307,
+    "sha256": "b3a313c5a2b6555c611e5efeeb9d10ffabe2d2e9af499f08f273ff34aa1c17c3",
+    "mode": 420
+  },
+  "/Users/admin/Projects/hedgehog-os-gate6-g6a4-p9f2we5q/clone/docs/gate5_reference_evidence_v01/proof_input_freeze.json": {
+    "bytes": 50730,
+    "sha256": "af4bf61cdee29e37fbb237f392cedfc37b44346a3be9ce4bb452d9f8624143b9",
+    "mode": 420
+  },
+  "/Users/admin/Projects/hedgehog-os-gate6-g6a4-p9f2we5q/clone/docs/gate5_reference_evidence_v01/README.md": {
+    "bytes": 2446,
+    "sha256": "807668bf38b97ac00c4fe321ba8da6738c690e0fe2c8b2cd9480cf8de27fee93",
+    "mode": 420
+  },
+  "/Users/admin/Projects/hedgehog-os-gate6-g6a4-p9f2we5q/clone/docs/gate5_reference_evidence_v01/source_bindings.json": {
+    "bytes": 140476,
+    "sha256": "a782a2600911b0adcd272793c0449e267c6c1de4942ef3dfad06a1cc86b97832",
+    "mode": 420
+  },
+  "/Users/admin/Projects/hedgehog-os-gate6-g6a4-p9f2we5q/clone/docs/gate5_reference_evidence_v01/MATRIX.md": {
+    "bytes": 19767,
+    "sha256": "40caf204a9e6b0c1d2df8e4df008ff2061d3c2d947845f67de181d04485d8522",
+    "mode": 420
+  },
+  "/Users/admin/Projects/hedgehog-os-gate6-g6a4-p9f2we5q/clone/docs/gate5_reference_evidence_v01/acceptance_matrix.json": {
+    "bytes": 82560,
+    "sha256": "04bedd3790cc0aba71a543e143bfa944cf34fe6c9c0a3683877ab8ffc3fee920",
+    "mode": 420
+  },
+  "/Users/admin/Projects/hedgehog-os-gate6-g6a4-p9f2we5q/clone/docs/gate5_reference_evidence_v01/MASTER_V02_RU.txt": {
+    "bytes": 153528,
+    "sha256": "008cbad1773e116568833ff3e97decce8d73a4dca6e7826fcf40268f11271fef",
+    "mode": 420
+  },
+  "/Users/admin/Projects/hedgehog-os-gate6-g6a4-p9f2we5q/clone/docs/gate5_reference_evidence_v01/material.tar.gz": {
+    "bytes": 36723783,
+    "sha256": "bdf308e48cc3ce1b233b3b506c76c7444b706db95549ad91501c3b01e00cf518",
+    "mode": 420
+  },
+  "/Users/admin/Projects/hedgehog-os-gate6-g6a4-p9f2we5q/clone/docs/gate5_reference_evidence_v01/ACCEPTANCE_AND_G55_INSTRUCTION.txt": {
+    "bytes": 27781,
+    "sha256": "8ffc99f83c49fd1d41c19c2e0ceb270397a9ae609a586d37f83490337a2b3286",
+    "mode": 420
+  },
+  "/Users/admin/Projects/hedgehog-os-gate6-g6a4-p9f2we5q/clone/docs/gate5_reference_evidence_v01/input_verification.json": {
+    "bytes": 1378,
+    "sha256": "316128fc0132f22fe85992f727ccc70be7b3aa6785aa73adeb8f5256079e1e29",
+    "mode": 420
+  },
+  "/Users/admin/Projects/hedgehog-os-gate6-g6a4-p9f2we5q/clone/docs/gate5_reference_evidence_v01/closure/comparison.json": {
+    "bytes": 751,
+    "sha256": "a520a683f97c4d093c827af85ffa2e0103ca8d28434af666a93d2de8b712efdf",
+    "mode": 420
+  },
+  "/Users/admin/Projects/hedgehog-os-gate6-g6a4-p9f2we5q/clone/docs/gate5_reference_evidence_v01/closure/README.md": {
+    "bytes": 399,
+    "sha256": "f364891473fdba90eb9bdaea6b3e47d5a5437fece710059fc8e82ee119b3b983",
+    "mode": 420
+  },
+  "/Users/admin/Projects/hedgehog-os-gate6-g6a4-p9f2we5q/clone/docs/gate5_reference_evidence_v01/closure/canonical_result.json": {
+    "bytes": 37389,
+    "sha256": "d2a25ed3b1ab123912e59d096808351dbcf18f59a16229b9abcaff9f647eacff",
+    "mode": 420
+  },
+  "/Users/admin/Projects/hedgehog-os-gate6-g6a4-p9f2we5q/clone/docs/gate5_reference_evidence_v01/closure/one/d1.receipt.json": {
+    "bytes": 559,
+    "sha256": "c91ee7bb6c80916625bb932fa28be9b6802d918e4c3cf9030dac752570e3ee2e",
+    "mode": 420
+  },
+  "/Users/admin/Projects/hedgehog-os-gate6-g6a4-p9f2we5q/clone/docs/gate5_reference_evidence_v01/closure/one/g52_result.json": {
+    "bytes": 4153,
+    "sha256": "546d11a3f4d7787bf49373f80c751ff85ba89f8506124c5796d5a6b2ebb215d2",
+    "mode": 420
+  },
+  "/Users/admin/Projects/hedgehog-os-gate6-g6a4-p9f2we5q/clone/docs/gate5_reference_evidence_v01/closure/one/g52.stdout": {
+    "bytes": 326,
+    "sha256": "2715a124074c7f3063451965132505dd2a98fd4c340e32e821d17b964e96a104",
+    "mode": 420
+  },
+  "/Users/admin/Projects/hedgehog-os-gate6-g6a4-p9f2we5q/clone/docs/gate5_reference_evidence_v01/closure/one/d1.stderr": {
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "mode": 420
+  },
+  "/Users/admin/Projects/hedgehog-os-gate6-g6a4-p9f2we5q/clone/docs/gate5_reference_evidence_v01/closure/one/g52.receipt.json": {
+    "bytes": 790,
+    "sha256": "9b1dfe81eff01247257fd1280e50e72461d6c0e6e0f3ca8dbeaca479117a8fc6",
+    "mode": 420
+  },
+  "/Users/admin/Projects/hedgehog-os-gate6-g6a4-p9f2we5q/clone/docs/gate5_reference_evidence_v01/closure/one/d1_result.json": {
+    "bytes": 32702,
+    "sha256": "0eba67d7652765c387988d760cd5daeeacecbdf33b9dc577dbe6a1cad40ed4b0",
+    "mode": 420
+  },
+  "/Users/admin/Projects/hedgehog-os-gate6-g6a4-p9f2we5q/clone/docs/gate5_reference_evidence_v01/closure/one/g52.stderr": {
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "mode": 420
+  },
+  "/Users/admin/Projects/hedgehog-os-gate6-g6a4-p9f2we5q/clone/docs/gate5_reference_evidence_v01/closure/one/d1.stdout": {
+    "bytes": 408,
+    "sha256": "c44185ab3308928ed391d53ef94eaa2823c842fdc107bc0505a7edb3e0612279",
+    "mode": 420
+  },
+  "/Users/admin/Projects/hedgehog-os-gate6-g6a4-p9f2we5q/clone/docs/gate5_reference_evidence_v01/closure/two/d1.receipt.json": {
+    "bytes": 560,
+    "sha256": "4f508dc5a7d36e0565bf3df845874c931caf7b3ba2a0a02b653fb2b7a1f4cc6d",
+    "mode": 420
+  },
+  "/Users/admin/Projects/hedgehog-os-gate6-g6a4-p9f2we5q/clone/docs/gate5_reference_evidence_v01/closure/two/g52_result.json": {
+    "bytes": 4153,
+    "sha256": "546d11a3f4d7787bf49373f80c751ff85ba89f8506124c5796d5a6b2ebb215d2",
+    "mode": 420
+  },
+  "/Users/admin/Projects/hedgehog-os-gate6-g6a4-p9f2we5q/clone/docs/gate5_reference_evidence_v01/closure/two/g52.stdout": {
+    "bytes": 326,
+    "sha256": "e67a8a8fc2d19ace4ff2cd6db2132f1714fdcf1eaf4e5a196c692d4d6ec10327",
+    "mode": 420
+  },
+  "/Users/admin/Projects/hedgehog-os-gate6-g6a4-p9f2we5q/clone/docs/gate5_reference_evidence_v01/closure/two/d1.stderr": {
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "mode": 420
+  },
+  "/Users/admin/Projects/hedgehog-os-gate6-g6a4-p9f2we5q/clone/docs/gate5_reference_evidence_v01/closure/two/g52.receipt.json": {
+    "bytes": 791,
+    "sha256": "2551d14d804fa741ac5fbd5f41472acc98226c60f7e7f2dd57f0e3dea6f14550",
+    "mode": 420
+  },
+  "/Users/admin/Projects/hedgehog-os-gate6-g6a4-p9f2we5q/clone/docs/gate5_reference_evidence_v01/closure/two/d1_result.json": {
+    "bytes": 32702,
+    "sha256": "0eba67d7652765c387988d760cd5daeeacecbdf33b9dc577dbe6a1cad40ed4b0",
+    "mode": 420
+  },
+  "/Users/admin/Projects/hedgehog-os-gate6-g6a4-p9f2we5q/clone/docs/gate5_reference_evidence_v01/closure/two/g52.stderr": {
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "mode": 420
+  },
+  "/Users/admin/Projects/hedgehog-os-gate6-g6a4-p9f2we5q/clone/docs/gate5_reference_evidence_v01/closure/two/d1.stdout": {
+    "bytes": 408,
+    "sha256": "c44185ab3308928ed391d53ef94eaa2823c842fdc107bc0505a7edb3e0612279",
+    "mode": 420
+  },
+  "/Users/admin/Projects/hedgehog-os-gate6-g6a4-p9f2we5q/clone/docs/gate5_reference_evidence_v01/closure/two/outer/heartbeat.jsonl": {
+    "bytes": 525,
+    "sha256": "7f1f2731993b8a9909fd864918f1ecc5e2a785349f3b6cd776e7ec47c1f1970e",
+    "mode": 420
+  },
+  "/Users/admin/Projects/hedgehog-os-gate6-g6a4-p9f2we5q/clone/docs/gate5_reference_evidence_v01/closure/two/outer/stdout": {
+    "bytes": 163,
+    "sha256": "0803cb4118ecf3bc4dd98aa07a8807791aa83c94ab3a1e423934b6af66da60e1",
+    "mode": 420
+  },
+  "/Users/admin/Projects/hedgehog-os-gate6-g6a4-p9f2we5q/clone/docs/gate5_reference_evidence_v01/closure/two/outer/stderr": {
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "mode": 420
+  },
+  "/Users/admin/Projects/hedgehog-os-gate6-g6a4-p9f2we5q/clone/docs/gate5_reference_evidence_v01/closure/two/outer/start.json": {
+    "bytes": 476,
+    "sha256": "bfa69e709b0938cef0a36f8448ff71b524517b11c71de59141f71270227c73d1",
+    "mode": 420
+  },
+  "/Users/admin/Projects/hedgehog-os-gate6-g6a4-p9f2we5q/clone/docs/gate5_reference_evidence_v01/closure/two/outer/process.json": {
+    "bytes": 498,
+    "sha256": "12bc6d886ccf385d64e3eac35cd0c0083225f75a566963a87c423cf765a8b43f",
+    "mode": 420
+  },
+  "/Users/admin/Projects/hedgehog-os-gate6-g6a4-p9f2we5q/clone/docs/gate5_reference_evidence_v01/closure/two/outer/receipt.json": {
+    "bytes": 873,
+    "sha256": "1cf7653e96995cda5f875019bf43a657b391c7850d33ed7570977728f3cd6be9",
+    "mode": 420
+  },
+  "/Users/admin/Projects/hedgehog-os-gate6-g6a4-p9f2we5q/clone/docs/gate5_reference_evidence_v01/closure/one/outer/heartbeat.jsonl": {
+    "bytes": 529,
+    "sha256": "0496fce438c34da0c7b14e697e22e6b9d73aee2ac5ca7de13091a4bde1a54d35",
+    "mode": 420
+  },
+  "/Users/admin/Projects/hedgehog-os-gate6-g6a4-p9f2we5q/clone/docs/gate5_reference_evidence_v01/closure/one/outer/stdout": {
+    "bytes": 163,
+    "sha256": "0803cb4118ecf3bc4dd98aa07a8807791aa83c94ab3a1e423934b6af66da60e1",
+    "mode": 420
+  },
+  "/Users/admin/Projects/hedgehog-os-gate6-g6a4-p9f2we5q/clone/docs/gate5_reference_evidence_v01/closure/one/outer/stderr": {
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "mode": 420
+  },
+  "/Users/admin/Projects/hedgehog-os-gate6-g6a4-p9f2we5q/clone/docs/gate5_reference_evidence_v01/closure/one/outer/start.json": {
+    "bytes": 476,
+    "sha256": "0229879c1f1d70374561dc5bab9f0e414a38498868d23727f7a13770e6e6e238",
+    "mode": 420
+  },
+  "/Users/admin/Projects/hedgehog-os-gate6-g6a4-p9f2we5q/clone/docs/gate5_reference_evidence_v01/closure/one/outer/process.json": {
+    "bytes": 498,
+    "sha256": "294e6110408e0efeb53d22a387a68029f6fd482f2c2aa75e84c6f1f052129888",
+    "mode": 420
+  },
+  "/Users/admin/Projects/hedgehog-os-gate6-g6a4-p9f2we5q/clone/docs/gate5_reference_evidence_v01/closure/one/outer/receipt.json": {
+    "bytes": 873,
+    "sha256": "c0796dc47dcccb1835369d498f622575765db1391d66e01d34dd39849e625aaf",
+    "mode": 420
+  }
+}

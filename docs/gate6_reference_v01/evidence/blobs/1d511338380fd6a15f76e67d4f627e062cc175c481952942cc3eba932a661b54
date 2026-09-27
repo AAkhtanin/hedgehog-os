@@ -1,0 +1,197 @@
+{
+  "backend": "LOCAL_START_RETURN_FILTERED_GLOBAL_UNWIND",
+  "children": "UNOBSERVED_NOT_ZERO",
+  "counts": {
+    "sentinel": 1
+  },
+  "direct_owners": {
+    "sentinel": 1
+  },
+  "entered": 1790494862.622396,
+  "events": [
+    {
+      "event": "call",
+      "label": "sentinel",
+      "nested": false,
+      "parents": [],
+      "time": 5827241.816579875
+    },
+    {
+      "event": "return",
+      "label": "sentinel",
+      "time": 5827241.816581625
+    }
+  ],
+  "exited": 1790494862.714593,
+  "identities": {
+    "D5": {
+      "bytes": 487211,
+      "file": "/Users/admin/Projects/hedgehog-os-gate6-g6a4r-bsu1xe8j/clone/demo/run_fractal_runtime_g2_d_v02.py",
+      "line": 9773,
+      "sha256": "6399913a0aaca15dc11476045fb514e6059e7d43ed012e0da539b3546a2a80a6",
+      "symbol": "collect_fractal_runtime_g2_d_v02"
+    },
+    "D_NATIVE": {
+      "bytes": 947221,
+      "file": "/Users/admin/Projects/hedgehog-os-gate6-g6a4r-bsu1xe8j/clone/hedgehog/kernel/fractal_runtime_v02.py",
+      "line": 14837,
+      "sha256": "ac946801b15c7464dd228034f64f0849c9567a71328ba50f3df314fe433dd0ba",
+      "symbol": "run_fractal_runtime_v02"
+    },
+    "E5": {
+      "bytes": 381288,
+      "file": "/Users/admin/Projects/hedgehog-os-gate6-g6a4r-bsu1xe8j/clone/demo/run_continuous_delta_runtime_g2_e_v01.py",
+      "line": 7612,
+      "sha256": "5a39f5ead5241cc529359d173bdf999ed190b1a5b2668828c0eeca8fbcb6433c",
+      "symbol": "collect_continuous_delta_runtime_g2_e_v01"
+    },
+    "G35": {
+      "bytes": 3465,
+      "file": "/Users/admin/Projects/hedgehog-os-gate6-g6a4r-bsu1xe8j/clone/demo/gate3_scenario_packs_v01.py",
+      "line": 10,
+      "sha256": "cd5d33b56ac086030cd2b81c49473553ee506422d144fd34b18ef7f156361abc",
+      "symbol": "collect_pack_v01"
+    },
+    "G36": {
+      "bytes": 26640,
+      "file": "/Users/admin/Projects/hedgehog-os-gate6-g6a4r-bsu1xe8j/clone/hedgehog/gate3_mechanism_v01.py",
+      "line": 280,
+      "sha256": "ef6bb77e245aea411cd0f400496a25c9f1002007b8021c15232b3229ffc856f8",
+      "symbol": "collect_mechanism_v01"
+    },
+    "G36:episode": {
+      "bytes": 65393,
+      "file": "/Users/admin/Projects/hedgehog-os-gate6-g6a4r-bsu1xe8j/clone/hedgehog/domains/supplier_water_filter/adversarial_feedback_v01.py",
+      "line": 643,
+      "sha256": "683260a8c524f451c061e6da5207fa1196f41b1a0398167c15fa7a1b9c3b8bc6",
+      "symbol": "collect_episode_v01"
+    },
+    "Root": {
+      "bytes": 43352,
+      "file": "/Users/admin/Projects/hedgehog-os-gate6-g6a4r-bsu1xe8j/clone/hedgehog/kernel/root_decision_v01.py",
+      "line": 268,
+      "sha256": "cae47026ba5c8a52ca25b2774e7ac8e92eb4e312c2eb5d1776c3a16ee276409c",
+      "symbol": "decide_root_v01"
+    },
+    "Work": {
+      "bytes": 52262,
+      "file": "/Users/admin/Projects/hedgehog-os-gate6-g6a4r-bsu1xe8j/clone/hedgehog/work_execution_host_v01.py",
+      "line": 768,
+      "sha256": "56b7ba85e8612df517d566418fa60a2512bcf9f6707877618a3d846010e6071b",
+      "symbol": "execute_admitted_pure_work_v01"
+    },
+    "changed_producer": {
+      "bytes": 10595,
+      "file": "/Users/admin/Projects/hedgehog-os-gate6-g6a4r-bsu1xe8j/clone/hedgehog/domains/testflix/outcome_feedback_adapter_v01.py",
+      "line": 18,
+      "sha256": "c979f15b8dc093a9924060efc5db05917ccf20c86d55b1a50b738ac4fa25bde6",
+      "symbol": "collect_source_v01"
+    },
+    "changed_projection": {
+      "bytes": 10595,
+      "file": "/Users/admin/Projects/hedgehog-os-gate6-g6a4r-bsu1xe8j/clone/hedgehog/domains/testflix/outcome_feedback_adapter_v01.py",
+      "line": 12,
+      "sha256": "c979f15b8dc093a9924060efc5db05917ccf20c86d55b1a50b738ac4fa25bde6",
+      "symbol": "_public_request_v01"
+    },
+    "controlled_role": {
+      "bytes": 11152,
+      "file": "/Users/admin/Projects/hedgehog-os-gate6-g6a4r-bsu1xe8j/clone/hedgehog/domains/testflix/semantic_roles_v01.py",
+      "line": 156,
+      "sha256": "7855b9d9011307cd79512fec2c10672b96b5d71dccd09b87a5cf88314dccc736",
+      "symbol": "ControlledRolesV01.respond_v01"
+    },
+    "dispatch": {
+      "bytes": 52262,
+      "file": "/Users/admin/Projects/hedgehog-os-gate6-g6a4r-bsu1xe8j/clone/hedgehog/work_execution_host_v01.py",
+      "line": 496,
+      "sha256": "56b7ba85e8612df517d566418fa60a2512bcf9f6707877618a3d846010e6071b",
+      "symbol": "dispatch_current_action_v01"
+    },
+    "effect": {
+      "bytes": 128809,
+      "file": "/Users/admin/Projects/hedgehog-os-gate6-g6a4r-bsu1xe8j/clone/hedgehog/kernel/effect_firewall_v01.py",
+      "line": 2787,
+      "sha256": "46a453e0ef98565f0de59ab062b307eff6549a716973268a034592a5f98463bd",
+      "symbol": "execute_bound_effect_v01"
+    },
+    "executor_entitlement": {
+      "bytes": 9890,
+      "file": "/Users/admin/Projects/hedgehog-os-gate6-g6a4r-bsu1xe8j/clone/hedgehog/domains/testflix/mock_world_v01.py",
+      "line": 79,
+      "sha256": "929d9d64f87551ae53e598075a11f175b42c7a8b4daf47ab95af103233b6ab32",
+      "symbol": "execute_entitlement_v01"
+    },
+    "executor_payment": {
+      "bytes": 9890,
+      "file": "/Users/admin/Projects/hedgehog-os-gate6-g6a4r-bsu1xe8j/clone/hedgehog/domains/testflix/mock_world_v01.py",
+      "line": 74,
+      "sha256": "929d9d64f87551ae53e598075a11f175b42c7a8b4daf47ab95af103233b6ab32",
+      "symbol": "execute_payment_v01"
+    },
+    "executor_period": {
+      "bytes": 9890,
+      "file": "/Users/admin/Projects/hedgehog-os-gate6-g6a4r-bsu1xe8j/clone/hedgehog/domains/testflix/mock_world_v01.py",
+      "line": 69,
+      "sha256": "929d9d64f87551ae53e598075a11f175b42c7a8b4daf47ab95af103233b6ab32",
+      "symbol": "execute_period_v01"
+    },
+    "executor_playback": {
+      "bytes": 9890,
+      "file": "/Users/admin/Projects/hedgehog-os-gate6-g6a4r-bsu1xe8j/clone/hedgehog/domains/testflix/mock_world_v01.py",
+      "line": 89,
+      "sha256": "929d9d64f87551ae53e598075a11f175b42c7a8b4daf47ab95af103233b6ab32",
+      "symbol": "execute_playback_v01"
+    },
+    "executor_quote": {
+      "bytes": 9890,
+      "file": "/Users/admin/Projects/hedgehog-os-gate6-g6a4r-bsu1xe8j/clone/hedgehog/domains/testflix/mock_world_v01.py",
+      "line": 64,
+      "sha256": "929d9d64f87551ae53e598075a11f175b42c7a8b4daf47ab95af103233b6ab32",
+      "symbol": "execute_quote_v01"
+    },
+    "executor_session": {
+      "bytes": 9890,
+      "file": "/Users/admin/Projects/hedgehog-os-gate6-g6a4r-bsu1xe8j/clone/hedgehog/domains/testflix/mock_world_v01.py",
+      "line": 84,
+      "sha256": "929d9d64f87551ae53e598075a11f175b42c7a8b4daf47ab95af103233b6ab32",
+      "symbol": "execute_session_v01"
+    },
+    "live_role": {
+      "bytes": 10083,
+      "file": "/Users/admin/Projects/hedgehog-os-gate6-g6a4r-bsu1xe8j/clone/hedgehog/domains/testflix/live_semantic_adapter_v01.py",
+      "line": 65,
+      "sha256": "6a1b6d8286a986dc4459c2ea5dea999e0ed49e3784cc253c4ca05a5405b45bec",
+      "symbol": "LiveSemanticProviderV01.respond_v01"
+    },
+    "mock_effect": {
+      "bytes": 128809,
+      "file": "/Users/admin/Projects/hedgehog-os-gate6-g6a4r-bsu1xe8j/clone/hedgehog/kernel/effect_firewall_v01.py",
+      "line": 812,
+      "sha256": "46a453e0ef98565f0de59ab062b307eff6549a716973268a034592a5f98463bd",
+      "symbol": "execute_mock_effect_v01"
+    },
+    "saved_Testflix_relations": {
+      "bytes": 10595,
+      "file": "/Users/admin/Projects/hedgehog-os-gate6-g6a4r-bsu1xe8j/clone/hedgehog/domains/testflix/outcome_feedback_adapter_v01.py",
+      "line": 67,
+      "sha256": "c979f15b8dc093a9924060efc5db05917ccf20c86d55b1a50b738ac4fa25bde6",
+      "symbol": "validate_source_v01"
+    },
+    "saved_g35_relations": {
+      "bytes": 65821,
+      "file": "/Users/admin/Projects/hedgehog-os-gate6-g6a4r-bsu1xe8j/clone/hedgehog/outcome_feedback_v01.py",
+      "line": 915,
+      "sha256": "16331fc98dc00f0d1e3bc1fff9ac65d15e555c0db1d7a3f2262a92d8acfd5a13",
+      "symbol": "validate_g35_source_v01"
+    }
+  },
+  "nested": {},
+  "phase": "G5_RECORDED:pure_consumer",
+  "pid": 67721,
+  "rationale": "Same-family nested wrappers are one owner; D5 inside E5 is visible nested work, not another direct D5.",
+  "restored": true,
+  "scope": "CURRENT_PROCESS_CURRENT_THREAD_ONLY",
+  "sentinel_live": true,
+  "thread": 8409947520
+}

@@ -1,0 +1,315 @@
+{
+  "events": [
+    {
+      "event_id": "prior_exact",
+      "request": {
+        "budget_minor": 7000,
+        "currency": "EUR",
+        "operation": "FIND_OFFER",
+        "owner_approval_ref": null,
+        "request_id": "request:exam:one",
+        "revision": 1,
+        "sessions": [
+          {
+            "allow_shift_minutes": 0,
+            "end": "2027-01-07T18:00:00",
+            "session_id": "session:7",
+            "start": "2027-01-07T16:30:00"
+          },
+          {
+            "allow_shift_minutes": 0,
+            "end": "2027-01-08T12:30:00",
+            "session_id": "session:8",
+            "start": "2027-01-08T11:00:00"
+          },
+          {
+            "allow_shift_minutes": 0,
+            "end": "2027-01-09T12:30:00",
+            "session_id": "session:9",
+            "start": "2027-01-09T11:00:00"
+          }
+        ],
+        "team_ref": "team:one",
+        "timezone": "Europe/Tirane",
+        "venue_ref": "venue:synthetic"
+      }
+    },
+    {
+      "event_id": "prior_shift",
+      "request": {
+        "budget_minor": 7000,
+        "currency": "EUR",
+        "operation": "FIND_OFFER",
+        "owner_approval_ref": "consent:jan8-only",
+        "request_id": "request:exam:one",
+        "revision": 2,
+        "sessions": [
+          {
+            "allow_shift_minutes": 0,
+            "end": "2027-01-07T18:00:00",
+            "session_id": "session:7",
+            "start": "2027-01-07T16:30:00"
+          },
+          {
+            "allow_shift_minutes": 30,
+            "end": "2027-01-08T12:30:00",
+            "session_id": "session:8",
+            "start": "2027-01-08T11:00:00"
+          },
+          {
+            "allow_shift_minutes": 0,
+            "end": "2027-01-09T12:30:00",
+            "session_id": "session:9",
+            "start": "2027-01-09T11:00:00"
+          }
+        ],
+        "team_ref": "team:one",
+        "timezone": "Europe/Tirane",
+        "venue_ref": "venue:synthetic"
+      }
+    },
+    {
+      "event_id": "prior_book",
+      "request": {
+        "budget_minor": 7000,
+        "currency": "EUR",
+        "operation": "CONFIRM_MOCK_BOOKING",
+        "owner_approval_ref": "consent:controlled:booking",
+        "request_id": "request:exam:one",
+        "revision": 2,
+        "sessions": [
+          {
+            "allow_shift_minutes": 0,
+            "end": "2027-01-07T18:00:00",
+            "session_id": "session:7",
+            "start": "2027-01-07T16:30:00"
+          },
+          {
+            "allow_shift_minutes": 30,
+            "end": "2027-01-08T12:30:00",
+            "session_id": "session:8",
+            "start": "2027-01-08T11:00:00"
+          },
+          {
+            "allow_shift_minutes": 0,
+            "end": "2027-01-09T12:30:00",
+            "session_id": "session:9",
+            "start": "2027-01-09T11:00:00"
+          }
+        ],
+        "team_ref": "team:one",
+        "timezone": "Europe/Tirane",
+        "venue_ref": "venue:synthetic"
+      }
+    },
+    {
+      "event_id": "exact",
+      "request": {
+        "budget_minor": 99999,
+        "currency": "EUR",
+        "operation": "FIND_OFFER",
+        "owner_approval_ref": null,
+        "request_id": "request:second_team",
+        "revision": 1,
+        "sessions": [
+          {
+            "allow_shift_minutes": 0,
+            "end": "2027-01-09T13:00:00",
+            "session_id": "session:X",
+            "start": "2027-01-09T11:30:00"
+          },
+          {
+            "allow_shift_minutes": 0,
+            "end": "2027-01-08T13:00:00",
+            "session_id": "session:Y",
+            "start": "2027-01-08T11:30:00"
+          },
+          {
+            "allow_shift_minutes": 0,
+            "end": "2027-01-07T18:30:00",
+            "session_id": "session:Z",
+            "start": "2027-01-07T17:00:00"
+          }
+        ],
+        "team_ref": "team:second_team",
+        "timezone": "Europe/Tirane",
+        "venue_ref": "venue:challenge"
+      }
+    },
+    {
+      "event_id": "shift",
+      "request": {
+        "budget_minor": 99999,
+        "currency": "EUR",
+        "operation": "FIND_OFFER",
+        "owner_approval_ref": "consent:jan8-only",
+        "request_id": "request:second_team",
+        "revision": 2,
+        "sessions": [
+          {
+            "allow_shift_minutes": 0,
+            "end": "2027-01-09T13:00:00",
+            "session_id": "session:X",
+            "start": "2027-01-09T11:30:00"
+          },
+          {
+            "allow_shift_minutes": 30,
+            "end": "2027-01-08T13:00:00",
+            "session_id": "session:Y",
+            "start": "2027-01-08T11:30:00"
+          },
+          {
+            "allow_shift_minutes": 0,
+            "end": "2027-01-07T18:30:00",
+            "session_id": "session:Z",
+            "start": "2027-01-07T17:00:00"
+          }
+        ],
+        "team_ref": "team:second_team",
+        "timezone": "Europe/Tirane",
+        "venue_ref": "venue:challenge"
+      }
+    },
+    {
+      "event_id": "book",
+      "request": {
+        "budget_minor": 99999,
+        "currency": "EUR",
+        "operation": "CONFIRM_MOCK_BOOKING",
+        "owner_approval_ref": "consent:controlled:booking",
+        "request_id": "request:second_team",
+        "revision": 2,
+        "sessions": [
+          {
+            "allow_shift_minutes": 0,
+            "end": "2027-01-09T13:00:00",
+            "session_id": "session:X",
+            "start": "2027-01-09T11:30:00"
+          },
+          {
+            "allow_shift_minutes": 30,
+            "end": "2027-01-08T13:00:00",
+            "session_id": "session:Y",
+            "start": "2027-01-08T11:30:00"
+          },
+          {
+            "allow_shift_minutes": 0,
+            "end": "2027-01-07T18:30:00",
+            "session_id": "session:Z",
+            "start": "2027-01-07T17:00:00"
+          }
+        ],
+        "team_ref": "team:second_team",
+        "timezone": "Europe/Tirane",
+        "venue_ref": "venue:challenge"
+      }
+    },
+    {
+      "event_id": "repeat",
+      "request": {
+        "budget_minor": 99999,
+        "currency": "EUR",
+        "operation": "CONFIRM_MOCK_BOOKING",
+        "owner_approval_ref": "consent:controlled:booking",
+        "request_id": "request:second_team",
+        "revision": 2,
+        "sessions": [
+          {
+            "allow_shift_minutes": 0,
+            "end": "2027-01-09T13:00:00",
+            "session_id": "session:X",
+            "start": "2027-01-09T11:30:00"
+          },
+          {
+            "allow_shift_minutes": 30,
+            "end": "2027-01-08T13:00:00",
+            "session_id": "session:Y",
+            "start": "2027-01-08T11:30:00"
+          },
+          {
+            "allow_shift_minutes": 0,
+            "end": "2027-01-07T18:30:00",
+            "session_id": "session:Z",
+            "start": "2027-01-07T17:00:00"
+          }
+        ],
+        "team_ref": "team:second_team",
+        "timezone": "Europe/Tirane",
+        "venue_ref": "venue:challenge"
+      }
+    },
+    {
+      "event_id": "verify",
+      "request": {
+        "budget_minor": 99999,
+        "currency": "EUR",
+        "operation": "VERIFY_EXISTING",
+        "owner_approval_ref": "consent:controlled:booking",
+        "request_id": "request:second_team",
+        "revision": 2,
+        "sessions": [
+          {
+            "allow_shift_minutes": 0,
+            "end": "2027-01-09T13:00:00",
+            "session_id": "session:X",
+            "start": "2027-01-09T11:30:00"
+          },
+          {
+            "allow_shift_minutes": 30,
+            "end": "2027-01-08T13:00:00",
+            "session_id": "session:Y",
+            "start": "2027-01-08T11:30:00"
+          },
+          {
+            "allow_shift_minutes": 0,
+            "end": "2027-01-07T18:30:00",
+            "session_id": "session:Z",
+            "start": "2027-01-07T17:00:00"
+          }
+        ],
+        "team_ref": "team:second_team",
+        "timezone": "Europe/Tirane",
+        "venue_ref": "venue:challenge"
+      }
+    }
+  ],
+  "policy": {
+    "accept_football": true,
+    "book_approvals": [
+      {
+        "approval_ref": "consent:controlled:booking",
+        "offer_request_sha256": "41fc59596b47d6dadc7d85b11cb6238fb308c916bdc686df6acb43a7e11fe294",
+        "request_sha256": "120ef370bbf7f84308e1c40afbd7690ea2b61b17e2ad20e21bb53f809dca92b8"
+      },
+      {
+        "approval_ref": "consent:controlled:booking",
+        "offer_request_sha256": "80e9b7ac0c8e5f48793c2c75253c1b9093511aafac712e308a210bc134a055ff",
+        "request_sha256": "febbddd5886131ec7f59de65849a85796ff0504724178ddb7e80266dca8a4c9c"
+      }
+    ],
+    "local_root": "ActivePlanetRoot",
+    "max_source_age": 300,
+    "peer_root": "VenueRoot",
+    "publish_enabled": true,
+    "recipients": [
+      "VenueRoot"
+    ],
+    "release_enabled": true,
+    "shift_approvals": [
+      {
+        "approval_ref": "consent:jan8-only",
+        "previous_request_sha256": "785cf3b0568f2b365786ebc2a66928d86af0be286a6980d3fca4322de67ac02f",
+        "request_sha256": "41fc59596b47d6dadc7d85b11cb6238fb308c916bdc686df6acb43a7e11fe294"
+      },
+      {
+        "approval_ref": "consent:jan8-only",
+        "previous_request_sha256": "b847c16a8f6002e5d8252f6bce0e9a30f4f752bc986f9d24f01a4ae7affaf412",
+        "request_sha256": "80e9b7ac0c8e5f48793c2c75253c1b9093511aafac712e308a210bc134a055ff"
+      }
+    ],
+    "status": "ACTIVE",
+    "ttl_seconds": 300
+  },
+  "role": "requester",
+  "version": "g54.peer_input.v01"
+}

@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/private/tmp/RADIOLARIA_G6A4_OPERATOR.EO2dTe/diagnose_g35_request.py", line 23, in <module>
+    assert errors and all(e['actual_type']=='tuple' for e in errors)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError

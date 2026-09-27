@@ -1,0 +1,21 @@
+{
+  "status": "HISTORICAL_TRANSPORT_USAGE_AND_CONSUMPTION_BINDINGS_PASS",
+  "pure_replays": "retained/MODEL/result.json",
+  "generations": 4,
+  "count_tokens": 4,
+  "usage": {
+    "prompt_token_count": 3636,
+    "candidates_token_count": 857,
+    "total_token_count": 4493
+  },
+  "authorization_expiry_checked_at_original_events": true,
+  "new_calls": 0,
+  "final_outcome": {
+    "amount_minor": 600,
+    "currency": "EUR",
+    "plan_id": "plan:ab31",
+    "resolution": 1080
+  },
+  "qualification": "Based on the 'QUALITY' preference, the best plan is 'plan:cd79'. It offers 720p resolution with no ads for 500 minor currency units, which is within the hard ceiling of 650. Although 'plan:ab31' offers higher resolution, it includes ads and is more expensive. 'plan:ef62' is too expensive.",
+  "qualification_meaning": "The terms analyst free-text recommendation cd79 contradicts QUALITY. Structured terms, selector/reviewer, final ab31/1080p/600 and actual consumption remain correct. No uniform prose correctness claimed."
+}

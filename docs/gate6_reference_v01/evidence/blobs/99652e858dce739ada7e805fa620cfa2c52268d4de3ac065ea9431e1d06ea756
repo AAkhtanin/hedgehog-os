@@ -1,0 +1,41 @@
+{
+  "accepted": {
+    "assessment": "WITHIN_REFERENCE_LIMIT",
+    "native_work_seconds": 0.10854875016957521,
+    "outputs": {
+      "corrected_den": 1,
+      "corrected_num": 96,
+      "mean_den": 1,
+      "mean_num": 106
+    },
+    "request_ref": "g5request:d672670d53245541744b31f85938aeb11cc571ac5a85f4e32ae5849efdc9cdb8",
+    "source_end": 1790487278,
+    "use_time": 1790486978
+  },
+  "before": {
+    "mean_den": 1,
+    "mean_num": 106
+  },
+  "budget": {
+    "body_bytes": 1073,
+    "metadata": 3,
+    "opened": 1,
+    "payload": 2,
+    "reservations": [
+      "g5request:3aa44560fb52b82e648611d8088c0df3aa42d8cb3c57726f273e071e927d04bb",
+      "g5request:f3d17781751485d7b32f606955dec713837e98ee88be723a7ff69c07e136cc42",
+      "g5request:7dd4f4979951805759abb516fbabc4d7c63103ab24ee0fde6da2917fffef9ba1",
+      "g5request:3e5599d2a40ea3b85bcc19fb501cfce31526f69fcfe51550e83c6c1249fc31aa",
+      "g5request:d672670d53245541744b31f85938aeb11cc571ac5a85f4e32ae5849efdc9cdb8"
+    ],
+    "task": "task:gate5:exchange"
+  },
+  "source_body_reads": "ONLY_RECEIVED_IPC_BODY; NO_A_STATE_FILES",
+  "status": "CALIBRATION_CONSUMED",
+  "wire": {
+    "received": 5,
+    "received_bytes": 12043,
+    "sent": 5,
+    "sent_bytes": 9096
+  }
+}

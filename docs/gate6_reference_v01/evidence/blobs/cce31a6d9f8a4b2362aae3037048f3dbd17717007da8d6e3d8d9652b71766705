@@ -1,0 +1,76 @@
+{
+  "own_policy": {
+    "max_source_age": 300,
+    "max_validity_horizon": 600,
+    "policy_version": "gate5.publisher.v01",
+    "publish_enabled": true,
+    "quantity_id": "reference_quantity_v01",
+    "recipients": [
+      "root:gate5:site"
+    ],
+    "release_uses": [
+      "LOCAL_CONTEXT"
+    ],
+    "source_policy_ref": "policy:gate5:source:v01",
+    "source_record_ref": "source:gate5:calibration:one",
+    "unit_id": "synthetic_unit_v01"
+  },
+  "peer_keys": {
+    "algorithm": "Ed25519",
+    "key_ids": [
+      "13e5841dc68f1d6d04380a448a394ac958ab9dcf2c82f83d9dba580c8878e04d"
+    ],
+    "key_set_id": "4152c0fbe584590deb448de5a3f66932c2a4bd9d79cff746dc8857a8b5612e02",
+    "key_set_version": "v0.1",
+    "public_key_hexes": [
+      "9fad0fdd6e4b121fba98a8d3ffd1ab7add77cde272e9b323d3c27bda2771db5a"
+    ],
+    "root_ids": [
+      "root:gate5:site"
+    ]
+  },
+  "requester_policy": {
+    "accept_calibration": true,
+    "authority_scope_fingerprint": "5fe950550b91eb6d19aaa8c254e36ac40d2ab09ba19bf0c11c2185a10347be6f",
+    "domain": "CALIBRATION",
+    "endpoint": "endpoint:gate5:A",
+    "local_root": "root:gate5:site",
+    "max_source_age": 300,
+    "max_validity_horizon": 600,
+    "object_id": "object:gate5:calibration:one",
+    "peer_keys": {
+      "algorithm": "Ed25519",
+      "key_ids": [
+        "f3af19a9d80e013e6b12170539c8c4d304dd4f28b1653c75955328d54448fc51"
+      ],
+      "key_set_id": "b819bd4dba66dcfef0e78f2c5e498d591cddf49fc599387ed0f23ca48402e3ca",
+      "key_set_version": "v0.1",
+      "public_key_hexes": [
+        "3cec56dcad8ec4ef641f54252ee5105f054e4e568819c277b0a8e3e92e1699f9"
+      ],
+      "root_ids": [
+        "root:gate5:calibration"
+      ]
+    },
+    "peer_root": "root:gate5:calibration",
+    "policy_version": "gate5.importer.v01",
+    "quantity_id": "reference_quantity_v01",
+    "schemas": [
+      "BoundedCalibrationSummaryV01"
+    ],
+    "source_policy_ref": "policy:gate5:source:v01",
+    "source_record_ref": "source:gate5:calibration:one",
+    "status_max_age": 60,
+    "transport_scope": "owner:gate5:inherited-pipes",
+    "unit_id": "synthetic_unit_v01",
+    "uses": [
+      "AUDIT",
+      "LOCAL_CONTEXT"
+    ]
+  },
+  "source_pins": {
+    "contracts": "db7602a402f67e7acea8dc4f566568b0a58004451ae95e64c999e553d6a02a8f",
+    "exchange": "dfc22ae7beb39be05e7433bac7ceff9f2704e81c2638d0fe4727b2aa3eb36b07",
+    "native": "bba423e434d9fb9d5695b649191e9f31a2743b7bbe9327c80c0ce8b34162e3ec"
+  }
+}

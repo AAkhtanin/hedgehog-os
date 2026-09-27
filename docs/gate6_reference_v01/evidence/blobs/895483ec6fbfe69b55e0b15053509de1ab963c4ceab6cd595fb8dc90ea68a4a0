@@ -1,0 +1,38 @@
+[
+  {
+    "argv": [
+      "/Users/admin/Projects/hedgehog-os-gate6-g6a1-g4nd6eiu/venv/bin/python",
+      "-B",
+      "/Users/admin/Projects/hedgehog-os-gate6-g6a4-p9f2we5q/clone/demo/run_gate5_calibration_v01.py",
+      "peer",
+      "A",
+      "3",
+      "6",
+      "/Users/admin/Projects/hedgehog-os-gate6-g6a4-p9f2we5q/campaign/G51/G51/native/A"
+    ],
+    "end": 1790486979.4816651,
+    "pid": 61094,
+    "rc": 0,
+    "reaped": true,
+    "role": "A",
+    "start": 1790486977.977361
+  },
+  {
+    "argv": [
+      "/Users/admin/Projects/hedgehog-os-gate6-g6a1-g4nd6eiu/venv/bin/python",
+      "-B",
+      "/Users/admin/Projects/hedgehog-os-gate6-g6a4-p9f2we5q/clone/demo/run_gate5_calibration_v01.py",
+      "peer",
+      "B",
+      "5",
+      "4",
+      "/Users/admin/Projects/hedgehog-os-gate6-g6a4-p9f2we5q/campaign/G51/G51/native/B"
+    ],
+    "end": 1790486979.481687,
+    "pid": 61095,
+    "rc": 0,
+    "reaped": true,
+    "role": "B",
+    "start": 1790486977.9794261
+  }
+]

@@ -1,0 +1,103 @@
+{
+  "contexts": {
+    "task:gate5:exchange": {
+      "object_id": "object:gate5:calibration:one",
+      "owner_epoch": "g52.declared.before.execution",
+      "purpose": "REVISION_ONE_AND_RESTART",
+      "requester": "root:gate5:site",
+      "source_revision": 1,
+      "uses": [
+        "LOCAL_CONTEXT"
+      ]
+    },
+    "task:gate5:revision-two": {
+      "object_id": "object:gate5:calibration:one",
+      "owner_epoch": "g52.declared.before.execution",
+      "purpose": "REVISION_TWO",
+      "requester": "root:gate5:site",
+      "source_revision": 2,
+      "uses": [
+        "LOCAL_CONTEXT"
+      ]
+    },
+    "task:gate5:scope-refusal": {
+      "object_id": "object:gate5:calibration:one",
+      "owner_epoch": "g52.declared.before.execution",
+      "purpose": "ISOLATED_AUDIT_REFUSAL",
+      "requester": "root:gate5:site",
+      "source_revision": 1,
+      "uses": [
+        "AUDIT"
+      ]
+    }
+  },
+  "own_policy": {
+    "max_source_age": 300,
+    "max_validity_horizon": 600,
+    "policy_version": "gate5.publisher.v01",
+    "publish_enabled": true,
+    "quantity_id": "reference_quantity_v01",
+    "recipients": [
+      "root:gate5:site"
+    ],
+    "release_uses": [
+      "LOCAL_CONTEXT"
+    ],
+    "source_policy_ref": "policy:gate5:source:v01",
+    "source_record_ref": "source:gate5:calibration:one",
+    "unit_id": "synthetic_unit_v01"
+  },
+  "peer_keys": {
+    "algorithm": "Ed25519",
+    "key_ids": [
+      "99fec290338845e6600d4cf263ee51740adb55587715e2a2f6dc12e9a9a4c960"
+    ],
+    "key_set_id": "4dbd7704f8dc659159becdff56022d2e1ca6cb2756dc07f08172ea19213593c0",
+    "key_set_version": "v0.1",
+    "public_key_hexes": [
+      "3a6aad25379222a34dc578ca109e5a36bdf462fa01f21c3bc2bc3b0e4d2f8d32"
+    ],
+    "root_ids": [
+      "root:gate5:site"
+    ]
+  },
+  "requester_policy": {
+    "accept_calibration": true,
+    "authority_scope_fingerprint": "5fe950550b91eb6d19aaa8c254e36ac40d2ab09ba19bf0c11c2185a10347be6f",
+    "domain": "CALIBRATION",
+    "endpoint": "endpoint:gate5:A",
+    "local_root": "root:gate5:site",
+    "max_source_age": 300,
+    "max_validity_horizon": 600,
+    "object_id": "object:gate5:calibration:one",
+    "peer_keys": {
+      "algorithm": "Ed25519",
+      "key_ids": [
+        "a6b3b82ea80f5c0ee71bc78d34cb2ab066495fd51bd471ff52b66edc551ffcb3"
+      ],
+      "key_set_id": "52a0228cbe4e78acd34e85bbd7c8b56713fccfd3d2ec938a04c009be2bb6c2f6",
+      "key_set_version": "v0.1",
+      "public_key_hexes": [
+        "516b4f1797753e87110db5746fa12879540fb7dd0ddde23c08525f0295daf33e"
+      ],
+      "root_ids": [
+        "root:gate5:calibration"
+      ]
+    },
+    "peer_root": "root:gate5:calibration",
+    "policy_version": "gate5.importer.v01",
+    "quantity_id": "reference_quantity_v01",
+    "schemas": [
+      "BoundedCalibrationSummaryV01"
+    ],
+    "source_policy_ref": "policy:gate5:source:v01",
+    "source_record_ref": "source:gate5:calibration:one",
+    "status_max_age": 60,
+    "transport_scope": "owner:gate5:inherited-pipes",
+    "unit_id": "synthetic_unit_v01",
+    "uses": [
+      "AUDIT",
+      "LOCAL_CONTEXT"
+    ]
+  }
+}

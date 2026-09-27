@@ -1,0 +1,5 @@
+{
+  "pid": 61018,
+  "supervisor_pid": 61017,
+  "identity": "  PID  PPID STARTED                      COMMAND\n61018 61017 Sun Sep 27 07:28:26 2026     /Users/admin/Projects/hedgehog-os-gate6-g6a1-g4nd6eiu/venv/bin/python -B -m tools.run_gate6_football_reference_v01 prepare --root /Users/admin/Projects/hedgehog-os-gate6-g6a4-p9f2we5q/clone --work /Users/admin/Projects/hedgehog-os-gate6-g6a4-p9f2we5q/campaign/football_work --recipe /Users/admin/Projects/hedgehog-os-gate6-g6a4-p9f2we5q/resources/football_recipe --output /Users/admin/Projects/hedgehog-os-gate6-g6a4-p9f2we5q/campaign/football_preparation.json\n"
+}

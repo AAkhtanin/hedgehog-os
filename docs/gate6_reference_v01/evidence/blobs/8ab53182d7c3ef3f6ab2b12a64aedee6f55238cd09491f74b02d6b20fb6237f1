@@ -1,0 +1,112 @@
+{
+  "status": "PASS_PER_CASE_PURE",
+  "result": {
+    "classification": "REVIEWED_REFERENCE_NATIVE_PROOF",
+    "case": "revoked_source",
+    "events": {
+      "exact": {
+        "verdict": [
+          {
+            "classification": "CHECKED_REFUSAL",
+            "causes": [
+              "NONACTIVE_SOURCE"
+            ]
+          }
+        ],
+        "status": "REFUSED",
+        "counts": {
+          "publisher": {
+            "PURE": 1,
+            "DISPATCH": 0,
+            "EFFECT": 0,
+            "EXECUTOR": 0,
+            "CALLBACK": 0,
+            "STATE_WRITE": 0
+          },
+          "requester": {
+            "PURE": 0,
+            "DISPATCH": 0,
+            "EFFECT": 0,
+            "EXECUTOR": 0,
+            "CALLBACK": 0,
+            "STATE_WRITE": 0
+          }
+        },
+        "state_sha256": "61fc425c423ad3de96c729a7386139ce1e32b2d4cee111404489ac3169c500da"
+      },
+      "shift": {
+        "verdict": [
+          {
+            "classification": "CHECKED_REFUSAL",
+            "causes": [
+              "NONACTIVE_SOURCE"
+            ]
+          }
+        ],
+        "status": "REFUSED",
+        "counts": {
+          "publisher": {
+            "PURE": 1,
+            "DISPATCH": 0,
+            "EFFECT": 0,
+            "EXECUTOR": 0,
+            "CALLBACK": 0,
+            "STATE_WRITE": 0
+          },
+          "requester": {
+            "PURE": 0,
+            "DISPATCH": 0,
+            "EFFECT": 0,
+            "EXECUTOR": 0,
+            "CALLBACK": 0,
+            "STATE_WRITE": 0
+          }
+        },
+        "state_sha256": "61fc425c423ad3de96c729a7386139ce1e32b2d4cee111404489ac3169c500da"
+      }
+    },
+    "bookings": 0,
+    "slots": 0
+  },
+  "refusal": {
+    "status": "PASS",
+    "classification": "ACTUAL_NATIVE_ROOT_AND_AUTHENTICATED_STATUS_CAUSAL_JOIN",
+    "events": {
+      "exact": {
+        "status": "PASS",
+        "reason": "status_not_active",
+        "native_decision": "BLOCKED_FAIL_CLOSED",
+        "decision_id": "03f4a41540b3d1f676bc23759e822612fb05eba9835bc2141ffcfdf0e24b0b25",
+        "source_record_ref": "018926ddc598863691c594891b540bbd2f484e3a4f1d705f636d4324e1c9372d",
+        "source_revision": 4,
+        "status_sha256": "654d7ca55ec350916ef0e7949da4df7f1c020b3fd50c6a4beb9ef1fc644ad2f1",
+        "evidence_sha256": "3e2d67a7ae0f3b483728bb6bd15a314acfd97fa8f95bf887458047604635d15e",
+        "actual_refusal_call_sequence": 29,
+        "request_sha256": "785cf3b0568f2b365786ebc2a66928d86af0be286a6980d3fca4322de67ac02f"
+      },
+      "shift": {
+        "status": "PASS",
+        "reason": "status_not_active",
+        "native_decision": "BLOCKED_FAIL_CLOSED",
+        "decision_id": "f3369546ccb6a19872546f965e6862927c10dbc33b422e06fd50c092e703806c",
+        "source_record_ref": "d8eafc63c564cd4bfa0a0a40c4e0ea0f8832d153a0fc3271c7d29d518b80c808",
+        "source_revision": 4,
+        "status_sha256": "294e7873ddf627bb995b264a01c8448280b9beeda080f43cefecbfc229889673",
+        "evidence_sha256": "1bbfff1bd38e3e62988aa43ceb71820883c3e13fd5b87ea75e1930ed18f0433c",
+        "actual_refusal_call_sequence": 66,
+        "request_sha256": "41fc59596b47d6dadc7d85b11cb6238fb308c916bdc686df6acb43a7e11fe294"
+      }
+    },
+    "capture": "SUPERVISOR_EVIDENCE/revoked_source",
+    "candidate_imported": false
+  },
+  "observed_calls": {
+    "root": 0,
+    "dispatch": 0,
+    "work": 0,
+    "effect": 0,
+    "sentinel": 1
+  },
+  "aggregate_16": "NOT_COMPLETED",
+  "authority": "CAPTURE_IS_EVIDENCE_NOT_RESTORED_HOST"
+}

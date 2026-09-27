@@ -1,0 +1,5 @@
+{
+  "pid": 61780,
+  "supervisor_pid": 61779,
+  "identity": "  PID  PPID STARTED                      COMMAND\n61780 61779 Sun Sep 27 07:37:29 2026     /Users/admin/Projects/hedgehog-os-gate6-g6a1-g4nd6eiu/venv/bin/python -B -m tools.run_gate6_model_contrast_v01 replay --package /Users/admin/Projects/hedgehog-os-gate6-g6a4-p9f2we5q/campaign/MODEL/MODEL/sealed.json --manifest-hash 1746e54dc0a23502825fc983d9b935da07877ea32ebdfd19069b646fc25f413a --output /Users/admin/Projects/hedgehog-os-gate6-g6a4-p9f2we5q/evidence/live_pure_replay.json\n"
+}

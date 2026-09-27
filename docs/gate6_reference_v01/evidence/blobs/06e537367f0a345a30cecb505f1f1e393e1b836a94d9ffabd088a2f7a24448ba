@@ -1,0 +1,8 @@
+{
+  "counts": {
+    "socket_connect": 0,
+    "socket_dns": 0,
+    "subprocess": 2
+  },
+  "scope": "Current process only; no secret addresses/arguments collected."
+}

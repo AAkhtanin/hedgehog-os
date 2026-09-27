@@ -1,0 +1,17 @@
+{
+  "ended": "2026-09-27T11:08:18.118465+00:00",
+  "rc": 0,
+  "reaped": true,
+  "seconds": 1.2206843750000003,
+  "stderr": {
+    "bytes": 0,
+    "mode": 420,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "stdout": {
+    "bytes": 136,
+    "mode": 420,
+    "sha256": "9dfc7f55ea60535e28c4631a9020c8f003f73ac3d492b1fa9de091c83d1951c0"
+  },
+  "timeout": false
+}

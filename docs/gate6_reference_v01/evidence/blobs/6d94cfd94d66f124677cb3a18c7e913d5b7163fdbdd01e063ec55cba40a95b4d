@@ -1,0 +1,5 @@
+{
+  "pid": 62183,
+  "supervisor_pid": 62182,
+  "identity": "  PID  PPID STARTED                      COMMAND\n62183 62182 Sun Sep 27 07:44:02 2026     /Users/admin/Projects/hedgehog-os-gate6-g6a1-g4nd6eiu/venv/bin/python -B -m demo.run_gate6_reference_v01 execute --profile LIVING_G36 --inputs /Users/admin/Projects/hedgehog-os-gate6-g6a4-p9f2we5q/future_inputs.json --output /Users/admin/Projects/hedgehog-os-gate6-g6a4-p9f2we5q/campaign/LIVING_G36\n"
+}

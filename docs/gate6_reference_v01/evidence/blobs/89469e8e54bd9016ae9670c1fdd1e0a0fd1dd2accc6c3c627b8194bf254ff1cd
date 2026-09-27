@@ -1,0 +1,62 @@
+[
+  {
+    "argv": [
+      "/Users/admin/Projects/hedgehog-os-gate6-g6a1-g4nd6eiu/venv/bin/python",
+      "-B",
+      "/Users/admin/Projects/hedgehog-os-gate6-g6a4-p9f2we5q/clone/demo/run_gate5_lifecycle_v01.py",
+      "peer",
+      "A",
+      "3",
+      "6",
+      "/Users/admin/Projects/hedgehog-os-gate6-g6a4-p9f2we5q/campaign/G52/G52/native/A",
+      "0"
+    ],
+    "end": 1790487014.97194,
+    "pid": 61177,
+    "rc": 0,
+    "reaped": true,
+    "role": "A",
+    "session": 0,
+    "start": 1790487011.8717802
+  },
+  {
+    "argv": [
+      "/Users/admin/Projects/hedgehog-os-gate6-g6a1-g4nd6eiu/venv/bin/python",
+      "-B",
+      "/Users/admin/Projects/hedgehog-os-gate6-g6a4-p9f2we5q/clone/demo/run_gate5_lifecycle_v01.py",
+      "peer",
+      "B",
+      "5",
+      "4",
+      "/Users/admin/Projects/hedgehog-os-gate6-g6a4-p9f2we5q/campaign/G52/G52/native/B",
+      "1"
+    ],
+    "end": 1790487014.971943,
+    "pid": 61180,
+    "rc": 0,
+    "reaped": true,
+    "role": "B",
+    "session": 1,
+    "start": 1790487012.345016
+  },
+  {
+    "argv": [
+      "/Users/admin/Projects/hedgehog-os-gate6-g6a1-g4nd6eiu/venv/bin/python",
+      "-B",
+      "/Users/admin/Projects/hedgehog-os-gate6-g6a4-p9f2we5q/clone/demo/run_gate5_lifecycle_v01.py",
+      "peer",
+      "B",
+      "5",
+      "4",
+      "/Users/admin/Projects/hedgehog-os-gate6-g6a4-p9f2we5q/campaign/G52/G52/native/B",
+      "2"
+    ],
+    "end": 1790487014.9719439,
+    "pid": 61183,
+    "rc": 0,
+    "reaped": true,
+    "role": "B",
+    "session": 2,
+    "start": 1790487013.788246
+  }
+]

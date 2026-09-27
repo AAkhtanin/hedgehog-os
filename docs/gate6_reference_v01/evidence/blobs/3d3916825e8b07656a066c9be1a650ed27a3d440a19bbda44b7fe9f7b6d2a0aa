@@ -1,0 +1,6 @@
+{
+  "domain": "TESTFLIX",
+  "type": "ValueError",
+  "reason": "g35_source_schema",
+  "traceback": "Traceback (most recent call last):\n  File \"/Users/admin/Projects/hedgehog-os-gate6-g6a4-p9f2we5q/clone/demo/gate3_scenario_packs_v01.py\", line 35, in collect_pack_v01\n    f.validate_g35_source_v01(source)\n    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^\n  File \"/Users/admin/Projects/hedgehog-os-gate6-g6a4-p9f2we5q/clone/hedgehog/outcome_feedback_v01.py\", line 921, in validate_g35_source_v01\n    _require(next(Draft202012Validator(schema).iter_errors(source),None) is None,'g35_source_schema')\n    ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/admin/Projects/hedgehog-os-gate6-g6a4-p9f2we5q/clone/hedgehog/outcome_feedback_v01.py\", line 58, in _require\n    raise ValueError(reason)\nValueError: g35_source_schema\n"
+}

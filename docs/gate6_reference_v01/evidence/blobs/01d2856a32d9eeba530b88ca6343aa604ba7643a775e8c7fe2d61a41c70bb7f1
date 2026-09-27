@@ -1,0 +1,5 @@
+{
+  "pid": 68022,
+  "supervisor_pid": 68015,
+  "identity": "  PID  PPID STARTED                      COMMAND\n68022 68015 Sun Sep 27 09:45:31 2026     /Users/admin/Projects/hedgehog-os-gate6-g6a1-g4nd6eiu/venv/bin/python -B /private/tmp/RADIOLARIA_G6A4R_OPERATOR.20260927/reconcile.py\n"
+}

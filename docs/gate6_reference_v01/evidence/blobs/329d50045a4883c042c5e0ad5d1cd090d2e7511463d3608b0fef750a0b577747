@@ -1,0 +1,23 @@
+{
+  "profile": "G6_MODEL_EXTERNAL_AUTHORIZATION_V01",
+  "run_id": "G6A4-644c7be8fc69479790a4a6657d63b184",
+  "approved": true,
+  "expires_epoch": 1790573646.912707,
+  "plan_sha256": "86ae226dcdb0ff33bf8623112f3cc9b655124c1699ce21259d24f1225c1dc4ed",
+  "limits": {
+    "generations": 4,
+    "counts": 4,
+    "external_calls": 8,
+    "input_per_call": 4096,
+    "input_total": 16384,
+    "output_per_call": 2048,
+    "output_total": 8192,
+    "thinking_budget": 0,
+    "candidate_count": 1,
+    "retries": 0,
+    "request_seconds": 180,
+    "task_seconds": 1800
+  },
+  "model": "gemini-2.5-flash",
+  "output_directory": "/Users/admin/Projects/hedgehog-os-gate6-g6a4-p9f2we5q/campaign/MODEL/MODEL"
+}

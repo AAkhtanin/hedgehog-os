@@ -1,0 +1,84 @@
+{
+  "content": {
+    "drs_hit_is_authority": false,
+    "drs_record_is_truth": false,
+    "drs_reuse_candidate_is_action_permission": false,
+    "semantic_keys": [
+      "calibration",
+      "source"
+    ],
+    "source": {
+      "correction": {
+        "den": 1,
+        "num": -4
+      },
+      "n": 3,
+      "observations": [
+        104,
+        104,
+        104
+      ],
+      "quantity_id": "reference_quantity_v01",
+      "reference": 100,
+      "source_lineage_refs": [
+        "work_results:dde1b09b9d1922487d007f5a12bf72feaa673460b14438fee41a9437c1b4ace8",
+        "work_results:70b2cbf41e6be3779794223564761a4394d3141fc3bce143b46d73983cfb776b"
+      ],
+      "source_record_ref": "source:gate5:calibration:one",
+      "source_review_ref": "0e221bb54a75ce82aae7b9f4397c9967ded12688bc9cea482650491090471dda",
+      "source_revision": 2,
+      "source_work_ref": "work_results:70b2cbf41e6be3779794223564761a4394d3141fc3bce143b46d73983cfb776b",
+      "time_envelope": {
+        "ct_context_anchor": 1790487014,
+        "et_observed_at": 1790487014,
+        "freshness_policy_id": "freshness:gate5:source",
+        "kt_as_of": 1790487014,
+        "pt_created_at": 1790487014,
+        "source_observed_at": 1790487014,
+        "source_reported_at": 1790487014,
+        "system_ingested_at": 1790487014,
+        "system_verified_at": 1790487014,
+        "time_envelope_id": "drstime_v01:b9439b944de9f5592605996a2bcd587e6138209ba2f1fabe139322c3b766ab3c",
+        "time_envelope_version": "v0.1",
+        "ttl_seconds": 300,
+        "valid_from": 1790487014,
+        "valid_to": 1790487314
+      },
+      "total": 312,
+      "ttl_base": "pt_created_at",
+      "unit_id": "synthetic_unit_v01",
+      "version": "g51.body.v01"
+    }
+  },
+  "domain": "CALIBRATION",
+  "layer": "work",
+  "provenance": {
+    "created_by": "root_orchestrator",
+    "request_id": "req:source:gate5:calibration:one",
+    "trace_refs": [
+      {
+        "kind": "local_drs_resolver",
+        "trace_id": "trace:source:gate5:calibration:one"
+      }
+    ]
+  },
+  "record_id": "source:gate5:calibration:one",
+  "status": "active",
+  "time_envelope": {
+    "ct_session_anchor": "sess_real_local_drs_resolver_v01",
+    "et_observed_at": null,
+    "freshness_class": "normal",
+    "kt_asof": "2026-09-27T05:30:14.392267+00:00",
+    "pt_created_at": "2026-09-27T05:30:14.392267+00:00",
+    "ttl_seconds": 2592000,
+    "valid_from": "2026-09-27T05:30:14.392267+00:00",
+    "valid_to": null
+  },
+  "trace_refs": [
+    {
+      "kind": "local_drs_resolver",
+      "trace_id": "trace:source:gate5:calibration:one"
+    }
+  ],
+  "type": "generic"
+}

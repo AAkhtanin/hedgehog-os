@@ -1,0 +1,494 @@
+{
+  "classification": "PURE_REQUEST_PROJECTION_RECONSTRUCTION_NOT_NATIVE_RERUN",
+  "canonical_request_matches_saved": true,
+  "errors": [
+    {
+      "path": [
+        "body",
+        "request",
+        "approved_prices_minor"
+      ],
+      "schema_path": [
+        "allOf",
+        2,
+        "then",
+        "properties",
+        "body",
+        "properties",
+        "request",
+        "properties",
+        "approved_prices_minor",
+        "type"
+      ],
+      "message": "(500, 600) is not of type 'array'",
+      "actual_type": "tuple",
+      "validator": "type"
+    },
+    {
+      "path": [
+        "body",
+        "request",
+        "catalog"
+      ],
+      "schema_path": [
+        "allOf",
+        2,
+        "then",
+        "properties",
+        "body",
+        "properties",
+        "request",
+        "properties",
+        "catalog",
+        "type"
+      ],
+      "message": "({'plan_id': 'plan:cd79', 'price_minor': 500, 'resolution': 720, 'ads': False, 'period_seconds': 2592000}, {'plan_id': 'plan:ab31', 'price_minor': 600, 'resolution': 1080, 'ads': True, 'period_seconds': 2592000}, {'plan_id': 'plan:ef62', 'price_minor': 900, 'resolution': 2160, 'ads': False, 'period_seconds': 2592000}) is not of type 'array'",
+      "actual_type": "tuple",
+      "validator": "type"
+    },
+    {
+      "path": [
+        "body",
+        "request",
+        "registered_devices"
+      ],
+      "schema_path": [
+        "allOf",
+        2,
+        "then",
+        "properties",
+        "body",
+        "properties",
+        "request",
+        "properties",
+        "registered_devices",
+        "type"
+      ],
+      "message": "('device:34a1',) is not of type 'array'",
+      "actual_type": "tuple",
+      "validator": "type"
+    },
+    {
+      "path": [
+        "body",
+        "request",
+        "approved_prices_minor"
+      ],
+      "schema_path": [
+        "properties",
+        "body",
+        "oneOf",
+        5,
+        "additionalProperties",
+        "oneOf",
+        5,
+        "additionalProperties",
+        "oneOf",
+        0,
+        "type"
+      ],
+      "message": "(500, 600) is not of type 'null'",
+      "actual_type": "tuple",
+      "validator": "type"
+    },
+    {
+      "path": [
+        "body",
+        "request",
+        "approved_prices_minor"
+      ],
+      "schema_path": [
+        "properties",
+        "body",
+        "oneOf",
+        5,
+        "additionalProperties",
+        "oneOf",
+        5,
+        "additionalProperties",
+        "oneOf",
+        1,
+        "type"
+      ],
+      "message": "(500, 600) is not of type 'boolean'",
+      "actual_type": "tuple",
+      "validator": "type"
+    },
+    {
+      "path": [
+        "body",
+        "request",
+        "approved_prices_minor"
+      ],
+      "schema_path": [
+        "properties",
+        "body",
+        "oneOf",
+        5,
+        "additionalProperties",
+        "oneOf",
+        5,
+        "additionalProperties",
+        "oneOf",
+        2,
+        "type"
+      ],
+      "message": "(500, 600) is not of type 'number'",
+      "actual_type": "tuple",
+      "validator": "type"
+    },
+    {
+      "path": [
+        "body",
+        "request",
+        "approved_prices_minor"
+      ],
+      "schema_path": [
+        "properties",
+        "body",
+        "oneOf",
+        5,
+        "additionalProperties",
+        "oneOf",
+        5,
+        "additionalProperties",
+        "oneOf",
+        3,
+        "type"
+      ],
+      "message": "(500, 600) is not of type 'string'",
+      "actual_type": "tuple",
+      "validator": "type"
+    },
+    {
+      "path": [
+        "body",
+        "request",
+        "approved_prices_minor"
+      ],
+      "schema_path": [
+        "properties",
+        "body",
+        "oneOf",
+        5,
+        "additionalProperties",
+        "oneOf",
+        5,
+        "additionalProperties",
+        "oneOf",
+        4,
+        "type"
+      ],
+      "message": "(500, 600) is not of type 'array'",
+      "actual_type": "tuple",
+      "validator": "type"
+    },
+    {
+      "path": [
+        "body",
+        "request",
+        "approved_prices_minor"
+      ],
+      "schema_path": [
+        "properties",
+        "body",
+        "oneOf",
+        5,
+        "additionalProperties",
+        "oneOf",
+        5,
+        "additionalProperties",
+        "oneOf",
+        5,
+        "type"
+      ],
+      "message": "(500, 600) is not of type 'object'",
+      "actual_type": "tuple",
+      "validator": "type"
+    },
+    {
+      "path": [
+        "body",
+        "request",
+        "registered_devices"
+      ],
+      "schema_path": [
+        "properties",
+        "body",
+        "oneOf",
+        5,
+        "additionalProperties",
+        "oneOf",
+        5,
+        "additionalProperties",
+        "oneOf",
+        0,
+        "type"
+      ],
+      "message": "('device:34a1',) is not of type 'null'",
+      "actual_type": "tuple",
+      "validator": "type"
+    },
+    {
+      "path": [
+        "body",
+        "request",
+        "registered_devices"
+      ],
+      "schema_path": [
+        "properties",
+        "body",
+        "oneOf",
+        5,
+        "additionalProperties",
+        "oneOf",
+        5,
+        "additionalProperties",
+        "oneOf",
+        1,
+        "type"
+      ],
+      "message": "('device:34a1',) is not of type 'boolean'",
+      "actual_type": "tuple",
+      "validator": "type"
+    },
+    {
+      "path": [
+        "body",
+        "request",
+        "registered_devices"
+      ],
+      "schema_path": [
+        "properties",
+        "body",
+        "oneOf",
+        5,
+        "additionalProperties",
+        "oneOf",
+        5,
+        "additionalProperties",
+        "oneOf",
+        2,
+        "type"
+      ],
+      "message": "('device:34a1',) is not of type 'number'",
+      "actual_type": "tuple",
+      "validator": "type"
+    },
+    {
+      "path": [
+        "body",
+        "request",
+        "registered_devices"
+      ],
+      "schema_path": [
+        "properties",
+        "body",
+        "oneOf",
+        5,
+        "additionalProperties",
+        "oneOf",
+        5,
+        "additionalProperties",
+        "oneOf",
+        3,
+        "type"
+      ],
+      "message": "('device:34a1',) is not of type 'string'",
+      "actual_type": "tuple",
+      "validator": "type"
+    },
+    {
+      "path": [
+        "body",
+        "request",
+        "registered_devices"
+      ],
+      "schema_path": [
+        "properties",
+        "body",
+        "oneOf",
+        5,
+        "additionalProperties",
+        "oneOf",
+        5,
+        "additionalProperties",
+        "oneOf",
+        4,
+        "type"
+      ],
+      "message": "('device:34a1',) is not of type 'array'",
+      "actual_type": "tuple",
+      "validator": "type"
+    },
+    {
+      "path": [
+        "body",
+        "request",
+        "registered_devices"
+      ],
+      "schema_path": [
+        "properties",
+        "body",
+        "oneOf",
+        5,
+        "additionalProperties",
+        "oneOf",
+        5,
+        "additionalProperties",
+        "oneOf",
+        5,
+        "type"
+      ],
+      "message": "('device:34a1',) is not of type 'object'",
+      "actual_type": "tuple",
+      "validator": "type"
+    },
+    {
+      "path": [
+        "body",
+        "request",
+        "catalog"
+      ],
+      "schema_path": [
+        "properties",
+        "body",
+        "oneOf",
+        5,
+        "additionalProperties",
+        "oneOf",
+        5,
+        "additionalProperties",
+        "oneOf",
+        0,
+        "type"
+      ],
+      "message": "({'plan_id': 'plan:cd79', 'price_minor': 500, 'resolution': 720, 'ads': False, 'period_seconds': 2592000}, {'plan_id': 'plan:ab31', 'price_minor': 600, 'resolution': 1080, 'ads': True, 'period_seconds': 2592000}, {'plan_id': 'plan:ef62', 'price_minor': 900, 'resolution': 2160, 'ads': False, 'period_seconds': 2592000}) is not of type 'null'",
+      "actual_type": "tuple",
+      "validator": "type"
+    },
+    {
+      "path": [
+        "body",
+        "request",
+        "catalog"
+      ],
+      "schema_path": [
+        "properties",
+        "body",
+        "oneOf",
+        5,
+        "additionalProperties",
+        "oneOf",
+        5,
+        "additionalProperties",
+        "oneOf",
+        1,
+        "type"
+      ],
+      "message": "({'plan_id': 'plan:cd79', 'price_minor': 500, 'resolution': 720, 'ads': False, 'period_seconds': 2592000}, {'plan_id': 'plan:ab31', 'price_minor': 600, 'resolution': 1080, 'ads': True, 'period_seconds': 2592000}, {'plan_id': 'plan:ef62', 'price_minor': 900, 'resolution': 2160, 'ads': False, 'period_seconds': 2592000}) is not of type 'boolean'",
+      "actual_type": "tuple",
+      "validator": "type"
+    },
+    {
+      "path": [
+        "body",
+        "request",
+        "catalog"
+      ],
+      "schema_path": [
+        "properties",
+        "body",
+        "oneOf",
+        5,
+        "additionalProperties",
+        "oneOf",
+        5,
+        "additionalProperties",
+        "oneOf",
+        2,
+        "type"
+      ],
+      "message": "({'plan_id': 'plan:cd79', 'price_minor': 500, 'resolution': 720, 'ads': False, 'period_seconds': 2592000}, {'plan_id': 'plan:ab31', 'price_minor': 600, 'resolution': 1080, 'ads': True, 'period_seconds': 2592000}, {'plan_id': 'plan:ef62', 'price_minor': 900, 'resolution': 2160, 'ads': False, 'period_seconds': 2592000}) is not of type 'number'",
+      "actual_type": "tuple",
+      "validator": "type"
+    },
+    {
+      "path": [
+        "body",
+        "request",
+        "catalog"
+      ],
+      "schema_path": [
+        "properties",
+        "body",
+        "oneOf",
+        5,
+        "additionalProperties",
+        "oneOf",
+        5,
+        "additionalProperties",
+        "oneOf",
+        3,
+        "type"
+      ],
+      "message": "({'plan_id': 'plan:cd79', 'price_minor': 500, 'resolution': 720, 'ads': False, 'period_seconds': 2592000}, {'plan_id': 'plan:ab31', 'price_minor': 600, 'resolution': 1080, 'ads': True, 'period_seconds': 2592000}, {'plan_id': 'plan:ef62', 'price_minor': 900, 'resolution': 2160, 'ads': False, 'period_seconds': 2592000}) is not of type 'string'",
+      "actual_type": "tuple",
+      "validator": "type"
+    },
+    {
+      "path": [
+        "body",
+        "request",
+        "catalog"
+      ],
+      "schema_path": [
+        "properties",
+        "body",
+        "oneOf",
+        5,
+        "additionalProperties",
+        "oneOf",
+        5,
+        "additionalProperties",
+        "oneOf",
+        4,
+        "type"
+      ],
+      "message": "({'plan_id': 'plan:cd79', 'price_minor': 500, 'resolution': 720, 'ads': False, 'period_seconds': 2592000}, {'plan_id': 'plan:ab31', 'price_minor': 600, 'resolution': 1080, 'ads': True, 'period_seconds': 2592000}, {'plan_id': 'plan:ef62', 'price_minor': 900, 'resolution': 2160, 'ads': False, 'period_seconds': 2592000}) is not of type 'array'",
+      "actual_type": "tuple",
+      "validator": "type"
+    },
+    {
+      "path": [
+        "body",
+        "request",
+        "catalog"
+      ],
+      "schema_path": [
+        "properties",
+        "body",
+        "oneOf",
+        5,
+        "additionalProperties",
+        "oneOf",
+        5,
+        "additionalProperties",
+        "oneOf",
+        5,
+        "type"
+      ],
+      "message": "({'plan_id': 'plan:cd79', 'price_minor': 500, 'resolution': 720, 'ads': False, 'period_seconds': 2592000}, {'plan_id': 'plan:ab31', 'price_minor': 600, 'resolution': 1080, 'ads': True, 'period_seconds': 2592000}, {'plan_id': 'plan:ef62', 'price_minor': 900, 'resolution': 2160, 'ads': False, 'period_seconds': 2592000}) is not of type 'object'",
+      "actual_type": "tuple",
+      "validator": "type"
+    }
+  ],
+  "source_locations": [
+    "hedgehog/domains/testflix/contracts_v01.py:51",
+    "hedgehog/domains/testflix/outcome_feedback_adapter_v01.py:53",
+    "hedgehog/outcome_feedback_v01.py:921"
+  ],
+  "native_effects": 0,
+  "provider_calls": 0,
+  "limitation": "The original in-memory exception lost its detailed schema error. This reproduces the exact pure request builder/asdict boundary with the saved public values; it does not reconstruct Host authority or rerun a producer."
+}

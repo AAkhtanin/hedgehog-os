@@ -1,0 +1,32 @@
+"""Independent producer selection and authenticated release-to-Root predicates."""
+from examiner import need, check_report, optimal_rank
+
+def source_selection(E, case, source_projection, use_time):
+    need(all(k in E for k in ('slots','total_minor','currency','status')), 'source_selection_fields')
+    allowed=['OFFER_READY'] if optimal_rank(case) is not None else ['NO_COMPLETE_OFFER','NEEDS_CONFIRMATION']
+    need(E['status'] in allowed,'source_selection_status')
+    if E['status']!='OFFER_READY':
+        need(E['slots']==[] and type(E['total_minor']) is int and E['total_minor']==0,'source_empty_selection')
+    req=case['request']
+    check_report(dict(case,evaluation_time=use_time,allowed_statuses=allowed),dict(
+        version='g53.result.v01',request_ref=req['request_id'],request_revision=req['revision'],
+        team_ref=req['team_ref'],operation=req['operation'],status=E['status'],slots=E['slots'],
+        total_minor=E['total_minor'],currency=E['currency'],source=source_projection,
+        receipt_ref=None,counts=dict(search=1,dispatch=0,mutations=0),native_refs={}))
+
+def producer_consumer(E, report, operation, *, history=False):
+    successful=report['status'] in ('OFFER_READY','MOCK_BOOKED','VERIFIED')
+    if successful:
+        need(E['status']=='OFFER_READY','consumer_success_without_source_selection')
+        need(all(report[k]==E[k] for k in ('slots','total_minor','currency')),'producer_consumer_selected_values')
+        expected='VERIFIED' if operation=='VERIFY_EXISTING' else 'MOCK_BOOKED' if operation=='CONFIRM_MOCK_BOOKING' else 'OFFER_READY'
+        need(report['status']==expected,'producer_consumer_status_mapping')
+    elif operation=='FIND_OFFER':
+        need(E['status'] in ('NO_COMPLETE_OFFER','NEEDS_CONFIRMATION') and
+             report['status'] in ('NO_COMPLETE_OFFER','NEEDS_CONFIRMATION'),'producer_consumer_no_offer')
+        need(report['slots']==E['slots']==[] and report['total_minor']==E['total_minor']==0 and
+             report['currency']==E['currency'],'producer_consumer_empty_values')
+
+def release_root_join(authenticated_release, actual_review):
+    need(authenticated_release['release_review_ref']==actual_review['result']['decision_id'],
+         'release_actual_root_decision_ref')

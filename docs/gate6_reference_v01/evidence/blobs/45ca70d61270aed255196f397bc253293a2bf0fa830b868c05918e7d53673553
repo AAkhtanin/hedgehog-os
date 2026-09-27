@@ -1,0 +1,61 @@
+"""Additional source/status causal joins on actual new native refusal calls."""
+import copy,hashlib,json,sys
+from pathlib import Path
+from review_finds import W,load,read,need,c,sha,PROFILE,expected_policy,one,events,counts,cross_root,root_record
+from examiner_g54d_core_v01 import gather
+
+def verify(folder):
+ cap=load(folder);values=gather(cap);answers={}
+ final=read(Path(folder)/'worker/requester/state/imports/import_state.json')
+ for label,v in values.items():
+  p=v['proofs']['requester'];rows=v['rows']['requester'];r=v['event']['request']
+  ev=p['status_refusal_evidence'];refusal=p['refusal'];root=p['refusal_review']
+  policy=expected_policy(cap['parent']['parent_inputs']['requester']['policy'],cap['keys']['publisher'],r,r,cap['source_recipe'])
+  need(ev['request']==r and ev['policy']==policy,'original_request_independent_policy')
+  material={x['message']['kind']:x['message']['value'] for x in v['wire'] if x['sender']=='publisher'}
+  need(ev['descriptor']==material['POINTER'] and ev['status']==material['STATUS'],'actual_signed_wire_evidence')
+  pointer=c.check_pointer(ev['descriptor'],policy,ev['pointer_checked_at'],profile=PROFILE)
+  requests={}
+  for row in v['wire']:
+   if row['sender']=='requester':
+    value=row['message']['value'];req=c.verify(value,cap['keys']['requester'],'REQUEST',value['value']['trust_profile_hash']);c.validate('request',req)
+    requests[req['op']]=req
+  need(list(requests)==['DESCRIBE','STATUS','CLOSE'],'no_FETCH_after_terminal')
+  need(ev['status_request']==requests['STATUS'],'actual_signed_STATUS_request')
+  fetch=ev['fetch_request'];c.validate('request',fetch)
+  need(fetch==c.with_id('request',{k:x for k,x in fetch.items() if k!='request_id'}),'prepared_fetch_canonical_identity')
+  need(fetch['task_ref']=='task:football:'+sha(r) and fetch['object_id']==policy['object_id'] and fetch['trust_profile_hash']==sha(policy),'prepared_fetch_original_binding')
+  need(fetch['nonce']==requests['STATUS']['nonce'] and fetch['request_id']==requests['STATUS']['subject_request_ref'],'status_prepared_fetch_binding')
+  start=one(rows,'EVENT','START');end=one(rows,'EVENT','END')
+  need(int(start['utc'])<=ev['pointer_checked_at']<=ev['authenticated_at']<=ev['observed_at']<=int(end['utc']),'retained_verification_times')
+  key,entry=c.authenticate_status(ev['status'],pointer,fetch,policy,ev['observed_at'],ev['highwater'])
+  need(entry['state']=='REVOKED' and ev['highwater'][key]==final['highwater'][key]==entry,'authentic_terminal_persisted')
+  try:c.check_status(ev['status'],pointer,fetch,policy,ev['observed_at'],ev['highwater'])
+  except ValueError as exc:need(str(exc)=='status_not_active','exact_failed_predicate')
+  else:raise ValueError('terminal_current_use_accepted')
+  claim=dict(request=r,request_sha256=sha(r),reason='status_not_active',status='REFUSED',
+    source_record_ref=pointer['source_record_ref'],source_revision=pointer['source_revision'],source_review_ref=pointer['source_review_ref'],
+    pointer_ref=pointer['pointer_id'],fetch_request_ref=fetch['request_id'],status_sha256=sha(ev['status']),status_entry=entry,
+    observed_at=ev['observed_at'],evidence_sha256=sha(ev))
+  cross_root(root,rows);root_record(root,policy['local_root'],None,claim,r['request_id'],accepted=False)
+  calls=[x for x in events(rows,'ROOT','START') if x['arguments']['claim_value']==claim]
+  need(len(calls)==1,'actual_new_refusal_invocation');args=calls[0]['arguments']
+  need(args['root']==policy['local_root'] and args['subject']==r['request_id'],'actual_local_owner_subject')
+  need(args['checks']['source_active'] is False and all(v is True for k,v in args['checks'].items() if k!='source_active'),'actual_failed_active_predicate')
+  need(root['result']['decision']=='BLOCKED_FAIL_CLOSED' and not root['result']['permission_created'] and not root['result']['effect_requested'],'native_refusal_not_permission')
+  need(refusal==dict(reason='status_not_active',status='REFUSED',review_ref=root['result']['decision_id'],evidence_ref='status_refusal_evidence.json',evidence_sha256=sha(ev)),'refusal_decision_evidence_link')
+  need(p['report']['native_refs']['refusal_review']=='refusal_review.json' and p['report']['native_refs']['status_refusal_evidence']=='status_refusal_evidence.json','completed_report_links')
+  need(root['result']['decision_id']!=p['descent_review']['result']['decision_id'],'not_prior_metadata_ACCEPT')
+  need(counts(rows)['PURE']==0 and not events(rows,'BUNDLE_CHECK','START'),'no_body_or_consumer')
+  for role,rr in v['rows'].items():
+   need(all(counts(rr)[k]==0 for k in ('DISPATCH','EXECUTOR','EFFECT','STATE_WRITE')),'no_action_'+role)
+  need(one(v['rows']['publisher'],'EVENT','START')['registry']==one(v['rows']['publisher'],'EVENT','END')['registry'],'no_registry_mutation')
+  answers[label]=dict(status='PASS',reason='status_not_active',native_decision=root['result']['decision'],
+    decision_id=root['result']['decision_id'],source_record_ref=pointer['source_record_ref'],source_revision=pointer['source_revision'],
+    status_sha256=sha(ev['status']),evidence_sha256=sha(ev),actual_refusal_call_sequence=calls[0]['sequence'],request_sha256=sha(r))
+ return dict(status='PASS',classification='ACTUAL_NATIVE_ROOT_AND_AUTHENTICATED_STATUS_CAUSAL_JOIN',events=answers,
+   capture=str(Path(folder).relative_to(W)),candidate_imported=False)
+
+if __name__=='__main__':
+ result=verify(Path(sys.argv[1]));result['helper_sha256']=hashlib.sha256(Path(__file__).read_bytes()).hexdigest()
+ (W/'evidence/refusal_binding_d1.json').write_text(json.dumps(result,indent=2,sort_keys=True)+'\n');print(json.dumps(result,indent=2))

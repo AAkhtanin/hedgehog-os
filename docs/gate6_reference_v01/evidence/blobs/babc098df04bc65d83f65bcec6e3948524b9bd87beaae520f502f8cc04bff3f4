@@ -1,0 +1,29 @@
+{
+  "argv": [
+    "git",
+    "clone",
+    "--no-local",
+    "--no-hardlinks",
+    "/Users/admin/Projects/hedgehog-os",
+    "/Users/admin/Projects/hedgehog-os-gate6-g6a4-p9f2we5q/clone"
+  ],
+  "cwd": "/Users/admin/Projects/hedgehog-os-gate6-g6a4-p9f2we5q",
+  "environment": {
+    "PATH": "/opt/homebrew/bin:/usr/bin:/bin:/usr/sbin:/sbin",
+    "LANG": "en_US.UTF-8",
+    "TMPDIR": "/Users/admin/Projects/hedgehog-os-gate6-g6a4-p9f2we5q/tmp",
+    "PYTHONDONTWRITEBYTECODE": "1",
+    "PYTEST_DISABLE_PLUGIN_AUTOLOAD": "1",
+    "GIT_OPTIONAL_LOCKS": "0",
+    "PYTHONPATH": "/Users/admin/Projects/hedgehog-os-gate6-g6a4-p9f2we5q/clone",
+    "HOME": "/Users/admin"
+  },
+  "start": "2026-09-27T05:24:17.868812+00:00",
+  "timeout_seconds": 180,
+  "source_pins": {},
+  "wrapper": {
+    "bytes": 8584,
+    "sha256": "6c5d574685980ec69cbb00e55dfae245fc56d44cbc8a328fb2a768bd3c9aba9d",
+    "mode": 420
+  }
+}

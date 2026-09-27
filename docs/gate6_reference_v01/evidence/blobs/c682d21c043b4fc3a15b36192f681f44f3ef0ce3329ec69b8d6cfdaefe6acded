@@ -1,0 +1,50 @@
+{
+  "clock_profile": "ACTUAL_INTEGER_UTC_SOURCE_REVIEW_STATUS_USE; DONOR_WORK_LOGICAL_1014",
+  "max_messages_per_session": 32,
+  "max_sessions": 2,
+  "scenarios": {
+    "A": "26c7e43b918fc4c7dd0bb7a4003dd1159264ae64d552c74620a197dea7e6b8fd",
+    "B": "fe85e56d2841ff7a177e9d336af3c08cd6db786ce4748468d5ac257efe50cc84"
+  },
+  "schedule": "A retained; B1 exits after terminal persistence; B2 is a new process and signer explicitly repinned; no key serialization",
+  "source_pins": {
+    "/Users/admin/Projects/hedgehog-os-gate6-g6a4-p9f2we5q/clone/hedgehog/external_drs/gate5_contracts_v01.py": "db7602a402f67e7acea8dc4f566568b0a58004451ae95e64c999e553d6a02a8f",
+    "/Users/admin/Projects/hedgehog-os-gate6-g6a4-p9f2we5q/clone/hedgehog/external_drs/gate5_exchange_v01.py": "dfc22ae7beb39be05e7433bac7ceff9f2704e81c2638d0fe4727b2aa3eb36b07",
+    "/Users/admin/Projects/hedgehog-os-gate6-g6a4-p9f2we5q/clone/hedgehog/external_drs/gate5_lifecycle_v01.py": "627fa5171fbaad181c2d4e1c5e8047cc3b8b5957601a317049b05c980ae3de6f",
+    "/Users/admin/Projects/hedgehog-os-gate6-g6a4-p9f2we5q/clone/hedgehog/external_drs/gate5_native_v01.py": "bba423e434d9fb9d5695b649191e9f31a2743b7bbe9327c80c0ce8b34162e3ec"
+  },
+  "source_status_schedule": "Baseline STATUS #3 unavailable; #4 active; #5+ revoked. Scope task independent.",
+  "task_contexts": {
+    "task:gate5:exchange": {
+      "object_id": "object:gate5:calibration:one",
+      "owner_epoch": "g52.declared.before.execution",
+      "purpose": "REVISION_ONE_AND_RESTART",
+      "requester": "root:gate5:site",
+      "source_revision": 1,
+      "uses": [
+        "LOCAL_CONTEXT"
+      ]
+    },
+    "task:gate5:revision-two": {
+      "object_id": "object:gate5:calibration:one",
+      "owner_epoch": "g52.declared.before.execution",
+      "purpose": "REVISION_TWO",
+      "requester": "root:gate5:site",
+      "source_revision": 2,
+      "uses": [
+        "LOCAL_CONTEXT"
+      ]
+    },
+    "task:gate5:scope-refusal": {
+      "object_id": "object:gate5:calibration:one",
+      "owner_epoch": "g52.declared.before.execution",
+      "purpose": "ISOLATED_AUDIT_REFUSAL",
+      "requester": "root:gate5:site",
+      "source_revision": 1,
+      "uses": [
+        "AUDIT"
+      ]
+    }
+  },
+  "transport": "INHERITED_PIPES"
+}

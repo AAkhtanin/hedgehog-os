@@ -1,0 +1,760 @@
+{
+  "phases": [
+    {
+      "duration": 0.014271584339439869,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_drs_generated_id_screen_v01.py::test_exact_generated_wrapper_all_locations",
+      "outcome": "passed",
+      "when": "setup"
+    },
+    {
+      "duration": 0.0008506663143634796,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_drs_generated_id_screen_v01.py::test_exact_generated_wrapper_all_locations",
+      "outcome": "passed",
+      "when": "call"
+    },
+    {
+      "duration": 4.579219967126846e-05,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_drs_generated_id_screen_v01.py::test_exact_generated_wrapper_all_locations",
+      "outcome": "passed",
+      "when": "teardown"
+    },
+    {
+      "duration": 9.812507778406143e-05,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_drs_generated_id_screen_v01.py::test_secret_near_misses_through_public_projection[request:drsmeaning_v01:a3b6b4727137283a9057070714634f5ff6ae158c7df7b4f999c12ddcd121eb3]",
+      "outcome": "passed",
+      "when": "setup"
+    },
+    {
+      "duration": 0.00035833287984132767,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_drs_generated_id_screen_v01.py::test_secret_near_misses_through_public_projection[request:drsmeaning_v01:a3b6b4727137283a9057070714634f5ff6ae158c7df7b4f999c12ddcd121eb3]",
+      "outcome": "passed",
+      "when": "call"
+    },
+    {
+      "duration": 4.558451473712921e-05,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_drs_generated_id_screen_v01.py::test_secret_near_misses_through_public_projection[request:drsmeaning_v01:a3b6b4727137283a9057070714634f5ff6ae158c7df7b4f999c12ddcd121eb3]",
+      "outcome": "passed",
+      "when": "teardown"
+    },
+    {
+      "duration": 7.5499527156353e-05,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_drs_generated_id_screen_v01.py::test_secret_near_misses_through_public_projection[request:drsmeaning_v01:a3b6b4727137283a9057070714634f5ff6ae158c7df7b4f999c12ddcd121eb33a]",
+      "outcome": "passed",
+      "when": "setup"
+    },
+    {
+      "duration": 0.0002564573660492897,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_drs_generated_id_screen_v01.py::test_secret_near_misses_through_public_projection[request:drsmeaning_v01:a3b6b4727137283a9057070714634f5ff6ae158c7df7b4f999c12ddcd121eb33a]",
+      "outcome": "passed",
+      "when": "call"
+    },
+    {
+      "duration": 4.1750259697437286e-05,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_drs_generated_id_screen_v01.py::test_secret_near_misses_through_public_projection[request:drsmeaning_v01:a3b6b4727137283a9057070714634f5ff6ae158c7df7b4f999c12ddcd121eb33a]",
+      "outcome": "passed",
+      "when": "teardown"
+    },
+    {
+      "duration": 6.516557186841965e-05,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_drs_generated_id_screen_v01.py::test_secret_near_misses_through_public_projection[request:drsmeaning_v01:A3B6B4727137283A9057070714634F5FF6AE158C7DF7B4F999C12DDCD121EB33]",
+      "outcome": "passed",
+      "when": "setup"
+    },
+    {
+      "duration": 0.00023583322763442993,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_drs_generated_id_screen_v01.py::test_secret_near_misses_through_public_projection[request:drsmeaning_v01:A3B6B4727137283A9057070714634F5FF6AE158C7DF7B4F999C12DDCD121EB33]",
+      "outcome": "passed",
+      "when": "call"
+    },
+    {
+      "duration": 4.058331251144409e-05,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_drs_generated_id_screen_v01.py::test_secret_near_misses_through_public_projection[request:drsmeaning_v01:A3B6B4727137283A9057070714634F5FF6AE158C7DF7B4F999C12DDCD121EB33]",
+      "outcome": "passed",
+      "when": "teardown"
+    },
+    {
+      "duration": 6.641726940870285e-05,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_drs_generated_id_screen_v01.py::test_secret_near_misses_through_public_projection[request:drsmeaning_v01:a3b6b4727137283a9057070714634f5ff6ae158c7df7b4f999c12ddcd121eb3g]",
+      "outcome": "passed",
+      "when": "setup"
+    },
+    {
+      "duration": 0.00023295823484659195,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_drs_generated_id_screen_v01.py::test_secret_near_misses_through_public_projection[request:drsmeaning_v01:a3b6b4727137283a9057070714634f5ff6ae158c7df7b4f999c12ddcd121eb3g]",
+      "outcome": "passed",
+      "when": "call"
+    },
+    {
+      "duration": 3.708247095346451e-05,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_drs_generated_id_screen_v01.py::test_secret_near_misses_through_public_projection[request:drsmeaning_v01:a3b6b4727137283a9057070714634f5ff6ae158c7df7b4f999c12ddcd121eb3g]",
+      "outcome": "passed",
+      "when": "teardown"
+    },
+    {
+      "duration": 6.279069930315018e-05,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_drs_generated_id_screen_v01.py::test_secret_near_misses_through_public_projection[request:other_v01:a3b6b4727137283a9057070714634f5ff6ae158c7df7b4f999c12ddcd121eb33]",
+      "outcome": "passed",
+      "when": "setup"
+    },
+    {
+      "duration": 0.00023120921105146408,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_drs_generated_id_screen_v01.py::test_secret_near_misses_through_public_projection[request:other_v01:a3b6b4727137283a9057070714634f5ff6ae158c7df7b4f999c12ddcd121eb33]",
+      "outcome": "passed",
+      "when": "call"
+    },
+    {
+      "duration": 3.9332546293735504e-05,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_drs_generated_id_screen_v01.py::test_secret_near_misses_through_public_projection[request:other_v01:a3b6b4727137283a9057070714634f5ff6ae158c7df7b4f999c12ddcd121eb33]",
+      "outcome": "passed",
+      "when": "teardown"
+    },
+    {
+      "duration": 6.666779518127441e-05,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_drs_generated_id_screen_v01.py::test_secret_near_misses_through_public_projection[request:request:drsmeaning_v01:a3b6b4727137283a9057070714634f5ff6ae158c7df7b4f999c12ddcd121eb33]",
+      "outcome": "passed",
+      "when": "setup"
+    },
+    {
+      "duration": 0.00023799948394298553,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_drs_generated_id_screen_v01.py::test_secret_near_misses_through_public_projection[request:request:drsmeaning_v01:a3b6b4727137283a9057070714634f5ff6ae158c7df7b4f999c12ddcd121eb33]",
+      "outcome": "passed",
+      "when": "call"
+    },
+    {
+      "duration": 3.637559711933136e-05,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_drs_generated_id_screen_v01.py::test_secret_near_misses_through_public_projection[request:request:drsmeaning_v01:a3b6b4727137283a9057070714634f5ff6ae158c7df7b4f999c12ddcd121eb33]",
+      "outcome": "passed",
+      "when": "teardown"
+    },
+    {
+      "duration": 6.070826202630997e-05,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_drs_generated_id_screen_v01.py::test_secret_near_misses_through_public_projection[leading request:drsmeaning_v01:a3b6b4727137283a9057070714634f5ff6ae158c7df7b4f999c12ddcd121eb33]",
+      "outcome": "passed",
+      "when": "setup"
+    },
+    {
+      "duration": 0.00022733304649591446,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_drs_generated_id_screen_v01.py::test_secret_near_misses_through_public_projection[leading request:drsmeaning_v01:a3b6b4727137283a9057070714634f5ff6ae158c7df7b4f999c12ddcd121eb33]",
+      "outcome": "passed",
+      "when": "call"
+    },
+    {
+      "duration": 3.854185342788696e-05,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_drs_generated_id_screen_v01.py::test_secret_near_misses_through_public_projection[leading request:drsmeaning_v01:a3b6b4727137283a9057070714634f5ff6ae158c7df7b4f999c12ddcd121eb33]",
+      "outcome": "passed",
+      "when": "teardown"
+    },
+    {
+      "duration": 6.320886313915253e-05,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_drs_generated_id_screen_v01.py::test_secret_near_misses_through_public_projection[request:drsmeaning_v01:a3b6b4727137283a9057070714634f5ff6ae158c7df7b4f999c12ddcd121eb33 tail]",
+      "outcome": "passed",
+      "when": "setup"
+    },
+    {
+      "duration": 0.00022725015878677368,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_drs_generated_id_screen_v01.py::test_secret_near_misses_through_public_projection[request:drsmeaning_v01:a3b6b4727137283a9057070714634f5ff6ae158c7df7b4f999c12ddcd121eb33 tail]",
+      "outcome": "passed",
+      "when": "call"
+    },
+    {
+      "duration": 3.7250109016895294e-05,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_drs_generated_id_screen_v01.py::test_secret_near_misses_through_public_projection[request:drsmeaning_v01:a3b6b4727137283a9057070714634f5ff6ae158c7df7b4f999c12ddcd121eb33 tail]",
+      "outcome": "passed",
+      "when": "teardown"
+    },
+    {
+      "duration": 6.120745092630386e-05,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_drs_generated_id_screen_v01.py::test_secret_near_misses_through_public_projection[request:drsmeaning_v01:a3b6b4727137283a9057070714634f5ff6ae158c7df7b4f999c12ddcd121eb33\\n]",
+      "outcome": "passed",
+      "when": "setup"
+    },
+    {
+      "duration": 0.00022741593420505524,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_drs_generated_id_screen_v01.py::test_secret_near_misses_through_public_projection[request:drsmeaning_v01:a3b6b4727137283a9057070714634f5ff6ae158c7df7b4f999c12ddcd121eb33\\n]",
+      "outcome": "passed",
+      "when": "call"
+    },
+    {
+      "duration": 3.541633486747742e-05,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_drs_generated_id_screen_v01.py::test_secret_near_misses_through_public_projection[request:drsmeaning_v01:a3b6b4727137283a9057070714634f5ff6ae158c7df7b4f999c12ddcd121eb33\\n]",
+      "outcome": "passed",
+      "when": "teardown"
+    },
+    {
+      "duration": 6.233341991901398e-05,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_drs_generated_id_screen_v01.py::test_secret_near_misses_through_public_projection[trace:drsmeaning_v01:a3b6b4727137283a9057070714634f5ff6ae158c7df7b4f999c12ddcd121eb33\\n]",
+      "outcome": "passed",
+      "when": "setup"
+    },
+    {
+      "duration": 0.00022454094141721725,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_drs_generated_id_screen_v01.py::test_secret_near_misses_through_public_projection[trace:drsmeaning_v01:a3b6b4727137283a9057070714634f5ff6ae158c7df7b4f999c12ddcd121eb33\\n]",
+      "outcome": "passed",
+      "when": "call"
+    },
+    {
+      "duration": 3.441702574491501e-05,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_drs_generated_id_screen_v01.py::test_secret_near_misses_through_public_projection[trace:drsmeaning_v01:a3b6b4727137283a9057070714634f5ff6ae158c7df7b4f999c12ddcd121eb33\\n]",
+      "outcome": "passed",
+      "when": "teardown"
+    },
+    {
+      "duration": 6.716698408126831e-05,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_drs_generated_id_screen_v01.py::test_secret_near_misses_through_public_projection[request:9057070714634]",
+      "outcome": "passed",
+      "when": "setup"
+    },
+    {
+      "duration": 0.00022179074585437775,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_drs_generated_id_screen_v01.py::test_secret_near_misses_through_public_projection[request:9057070714634]",
+      "outcome": "passed",
+      "when": "call"
+    },
+    {
+      "duration": 3.762543201446533e-05,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_drs_generated_id_screen_v01.py::test_secret_near_misses_through_public_projection[request:9057070714634]",
+      "outcome": "passed",
+      "when": "teardown"
+    },
+    {
+      "duration": 6.208382546901703e-05,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_drs_generated_id_screen_v01.py::test_secret_near_misses_through_public_projection[trace:9057070714634]",
+      "outcome": "passed",
+      "when": "setup"
+    },
+    {
+      "duration": 0.00021691713482141495,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_drs_generated_id_screen_v01.py::test_secret_near_misses_through_public_projection[trace:9057070714634]",
+      "outcome": "passed",
+      "when": "call"
+    },
+    {
+      "duration": 3.50000336766243e-05,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_drs_generated_id_screen_v01.py::test_secret_near_misses_through_public_projection[trace:9057070714634]",
+      "outcome": "passed",
+      "when": "teardown"
+    },
+    {
+      "duration": 6.262492388486862e-05,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_drs_generated_id_screen_v01.py::test_secret_near_misses_through_public_projection[request:drsmeaning_v01:a3b6b4727137283a9057070714634f5ff6ae158c7df7b4f999c12ddcd121eb33 password=synthetic]",
+      "outcome": "passed",
+      "when": "setup"
+    },
+    {
+      "duration": 0.00021641701459884644,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_drs_generated_id_screen_v01.py::test_secret_near_misses_through_public_projection[request:drsmeaning_v01:a3b6b4727137283a9057070714634f5ff6ae158c7df7b4f999c12ddcd121eb33 password=synthetic]",
+      "outcome": "passed",
+      "when": "call"
+    },
+    {
+      "duration": 3.624986857175827e-05,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_drs_generated_id_screen_v01.py::test_secret_near_misses_through_public_projection[request:drsmeaning_v01:a3b6b4727137283a9057070714634f5ff6ae158c7df7b4f999c12ddcd121eb33 password=synthetic]",
+      "outcome": "passed",
+      "when": "teardown"
+    },
+    {
+      "duration": 6.516650319099426e-05,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_drs_generated_id_screen_v01.py::test_secret_near_misses_through_public_projection[trace:drsmeaning_v01:a3b6b4727137283a9057070714634f5ff6ae158c7df7b4f999c12ddcd121eb33 Bearer synthetic]",
+      "outcome": "passed",
+      "when": "setup"
+    },
+    {
+      "duration": 0.0002264995127916336,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_drs_generated_id_screen_v01.py::test_secret_near_misses_through_public_projection[trace:drsmeaning_v01:a3b6b4727137283a9057070714634f5ff6ae158c7df7b4f999c12ddcd121eb33 Bearer synthetic]",
+      "outcome": "passed",
+      "when": "call"
+    },
+    {
+      "duration": 3.320816904306412e-05,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_drs_generated_id_screen_v01.py::test_secret_near_misses_through_public_projection[trace:drsmeaning_v01:a3b6b4727137283a9057070714634f5ff6ae158c7df7b4f999c12ddcd121eb33 Bearer synthetic]",
+      "outcome": "passed",
+      "when": "teardown"
+    },
+    {
+      "duration": 6.083399057388306e-05,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_drs_generated_id_screen_v01.py::test_secret_near_misses_through_public_projection[request:drsmeaning_v01:a3b6b4727137283a9057070714634f5ff6ae158c7df7b4f999c12ddcd121eb33 GB82 WEST 1234 5698 7654 32]",
+      "outcome": "passed",
+      "when": "setup"
+    },
+    {
+      "duration": 0.00022583268582820892,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_drs_generated_id_screen_v01.py::test_secret_near_misses_through_public_projection[request:drsmeaning_v01:a3b6b4727137283a9057070714634f5ff6ae158c7df7b4f999c12ddcd121eb33 GB82 WEST 1234 5698 7654 32]",
+      "outcome": "passed",
+      "when": "call"
+    },
+    {
+      "duration": 3.787502646446228e-05,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_drs_generated_id_screen_v01.py::test_secret_near_misses_through_public_projection[request:drsmeaning_v01:a3b6b4727137283a9057070714634f5ff6ae158c7df7b4f999c12ddcd121eb33 GB82 WEST 1234 5698 7654 32]",
+      "outcome": "passed",
+      "when": "teardown"
+    },
+    {
+      "duration": 6.104167550802231e-05,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_drs_generated_id_screen_v01.py::test_secret_near_misses_through_public_projection[trace:drsmeaning_v01:a3b6b4727137283a9057070714634f5ff6ae158c7df7b4f999c12ddcd121eb33 4111-1111-1111-1111]",
+      "outcome": "passed",
+      "when": "setup"
+    },
+    {
+      "duration": 0.00022541731595993042,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_drs_generated_id_screen_v01.py::test_secret_near_misses_through_public_projection[trace:drsmeaning_v01:a3b6b4727137283a9057070714634f5ff6ae158c7df7b4f999c12ddcd121eb33 4111-1111-1111-1111]",
+      "outcome": "passed",
+      "when": "call"
+    },
+    {
+      "duration": 3.370828926563263e-05,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_drs_generated_id_screen_v01.py::test_secret_near_misses_through_public_projection[trace:drsmeaning_v01:a3b6b4727137283a9057070714634f5ff6ae158c7df7b4f999c12ddcd121eb33 4111-1111-1111-1111]",
+      "outcome": "passed",
+      "when": "teardown"
+    },
+    {
+      "duration": 6.087496876716614e-05,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_drs_generated_id_screen_v01.py::test_secret_near_misses_through_public_projection[1111111111111]",
+      "outcome": "passed",
+      "when": "setup"
+    },
+    {
+      "duration": 0.00022750068455934525,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_drs_generated_id_screen_v01.py::test_secret_near_misses_through_public_projection[1111111111111]",
+      "outcome": "passed",
+      "when": "call"
+    },
+    {
+      "duration": 3.616698086261749e-05,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_drs_generated_id_screen_v01.py::test_secret_near_misses_through_public_projection[1111111111111]",
+      "outcome": "passed",
+      "when": "teardown"
+    },
+    {
+      "duration": 6.745848804712296e-05,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_drs_generated_id_screen_v01.py::test_secret_near_misses_through_public_projection[11111111111111]",
+      "outcome": "passed",
+      "when": "setup"
+    },
+    {
+      "duration": 0.0002300003543496132,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_drs_generated_id_screen_v01.py::test_secret_near_misses_through_public_projection[11111111111111]",
+      "outcome": "passed",
+      "when": "call"
+    },
+    {
+      "duration": 3.766734153032303e-05,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_drs_generated_id_screen_v01.py::test_secret_near_misses_through_public_projection[11111111111111]",
+      "outcome": "passed",
+      "when": "teardown"
+    },
+    {
+      "duration": 6.33755698800087e-05,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_drs_generated_id_screen_v01.py::test_secret_near_misses_through_public_projection[111111111111111]",
+      "outcome": "passed",
+      "when": "setup"
+    },
+    {
+      "duration": 0.0002222089096903801,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_drs_generated_id_screen_v01.py::test_secret_near_misses_through_public_projection[111111111111111]",
+      "outcome": "passed",
+      "when": "call"
+    },
+    {
+      "duration": 3.516674041748047e-05,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_drs_generated_id_screen_v01.py::test_secret_near_misses_through_public_projection[111111111111111]",
+      "outcome": "passed",
+      "when": "teardown"
+    },
+    {
+      "duration": 6.741750985383987e-05,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_drs_generated_id_screen_v01.py::test_secret_near_misses_through_public_projection[1111111111111111]",
+      "outcome": "passed",
+      "when": "setup"
+    },
+    {
+      "duration": 0.00021950062364339828,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_drs_generated_id_screen_v01.py::test_secret_near_misses_through_public_projection[1111111111111111]",
+      "outcome": "passed",
+      "when": "call"
+    },
+    {
+      "duration": 3.49581241607666e-05,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_drs_generated_id_screen_v01.py::test_secret_near_misses_through_public_projection[1111111111111111]",
+      "outcome": "passed",
+      "when": "teardown"
+    },
+    {
+      "duration": 6.104167550802231e-05,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_drs_generated_id_screen_v01.py::test_secret_near_misses_through_public_projection[11111111111111111]",
+      "outcome": "passed",
+      "when": "setup"
+    },
+    {
+      "duration": 0.0002148747444152832,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_drs_generated_id_screen_v01.py::test_secret_near_misses_through_public_projection[11111111111111111]",
+      "outcome": "passed",
+      "when": "call"
+    },
+    {
+      "duration": 3.416556864976883e-05,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_drs_generated_id_screen_v01.py::test_secret_near_misses_through_public_projection[11111111111111111]",
+      "outcome": "passed",
+      "when": "teardown"
+    },
+    {
+      "duration": 6.829015910625458e-05,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_drs_generated_id_screen_v01.py::test_secret_near_misses_through_public_projection[111111111111111111]",
+      "outcome": "passed",
+      "when": "setup"
+    },
+    {
+      "duration": 0.0002238750457763672,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_drs_generated_id_screen_v01.py::test_secret_near_misses_through_public_projection[111111111111111111]",
+      "outcome": "passed",
+      "when": "call"
+    },
+    {
+      "duration": 3.837514668703079e-05,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_drs_generated_id_screen_v01.py::test_secret_near_misses_through_public_projection[111111111111111111]",
+      "outcome": "passed",
+      "when": "teardown"
+    },
+    {
+      "duration": 5.987565964460373e-05,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_drs_generated_id_screen_v01.py::test_secret_near_misses_through_public_projection[1111111111111111111]",
+      "outcome": "passed",
+      "when": "setup"
+    },
+    {
+      "duration": 0.00021820887923240662,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_drs_generated_id_screen_v01.py::test_secret_near_misses_through_public_projection[1111111111111111111]",
+      "outcome": "passed",
+      "when": "call"
+    },
+    {
+      "duration": 3.862474113702774e-05,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_drs_generated_id_screen_v01.py::test_secret_near_misses_through_public_projection[1111111111111111111]",
+      "outcome": "passed",
+      "when": "teardown"
+    },
+    {
+      "duration": 6.533320993185043e-05,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_drs_generated_id_screen_v01.py::test_secret_near_misses_through_public_projection[4111 1111 1111 1111]",
+      "outcome": "passed",
+      "when": "setup"
+    },
+    {
+      "duration": 0.00021608266979455948,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_drs_generated_id_screen_v01.py::test_secret_near_misses_through_public_projection[4111 1111 1111 1111]",
+      "outcome": "passed",
+      "when": "call"
+    },
+    {
+      "duration": 3.60412523150444e-05,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_drs_generated_id_screen_v01.py::test_secret_near_misses_through_public_projection[4111 1111 1111 1111]",
+      "outcome": "passed",
+      "when": "teardown"
+    },
+    {
+      "duration": 6.087496876716614e-05,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_drs_generated_id_screen_v01.py::test_secret_near_misses_through_public_projection[4111-1111-1111-1111]",
+      "outcome": "passed",
+      "when": "setup"
+    },
+    {
+      "duration": 0.0002232920378446579,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_drs_generated_id_screen_v01.py::test_secret_near_misses_through_public_projection[4111-1111-1111-1111]",
+      "outcome": "passed",
+      "when": "call"
+    },
+    {
+      "duration": 3.291573375463486e-05,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_drs_generated_id_screen_v01.py::test_secret_near_misses_through_public_projection[4111-1111-1111-1111]",
+      "outcome": "passed",
+      "when": "teardown"
+    },
+    {
+      "duration": 6.804242730140686e-05,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_drs_generated_id_screen_v01.py::test_secret_near_misses_through_public_projection[password=synthetic]",
+      "outcome": "passed",
+      "when": "setup"
+    },
+    {
+      "duration": 0.0002221670001745224,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_drs_generated_id_screen_v01.py::test_secret_near_misses_through_public_projection[password=synthetic]",
+      "outcome": "passed",
+      "when": "call"
+    },
+    {
+      "duration": 3.879144787788391e-05,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_drs_generated_id_screen_v01.py::test_secret_near_misses_through_public_projection[password=synthetic]",
+      "outcome": "passed",
+      "when": "teardown"
+    },
+    {
+      "duration": 6.341654807329178e-05,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_drs_generated_id_screen_v01.py::test_secret_near_misses_through_public_projection[Bearer synthetic]",
+      "outcome": "passed",
+      "when": "setup"
+    },
+    {
+      "duration": 0.00021304190158843994,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_drs_generated_id_screen_v01.py::test_secret_near_misses_through_public_projection[Bearer synthetic]",
+      "outcome": "passed",
+      "when": "call"
+    },
+    {
+      "duration": 3.5332515835762024e-05,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_drs_generated_id_screen_v01.py::test_secret_near_misses_through_public_projection[Bearer synthetic]",
+      "outcome": "passed",
+      "when": "teardown"
+    },
+    {
+      "duration": 6.145797669887543e-05,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_drs_generated_id_screen_v01.py::test_each_identity_screen_rejects_secret_sibling[path0]",
+      "outcome": "passed",
+      "when": "setup"
+    },
+    {
+      "duration": 0.0009390413761138916,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_drs_generated_id_screen_v01.py::test_each_identity_screen_rejects_secret_sibling[path0]",
+      "outcome": "passed",
+      "when": "call"
+    },
+    {
+      "duration": 3.312528133392334e-05,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_drs_generated_id_screen_v01.py::test_each_identity_screen_rejects_secret_sibling[path0]",
+      "outcome": "passed",
+      "when": "teardown"
+    },
+    {
+      "duration": 6.195902824401855e-05,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_drs_generated_id_screen_v01.py::test_each_identity_screen_rejects_secret_sibling[path1]",
+      "outcome": "passed",
+      "when": "setup"
+    },
+    {
+      "duration": 0.0009678332135081291,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_drs_generated_id_screen_v01.py::test_each_identity_screen_rejects_secret_sibling[path1]",
+      "outcome": "passed",
+      "when": "call"
+    },
+    {
+      "duration": 3.32491472363472e-05,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_drs_generated_id_screen_v01.py::test_each_identity_screen_rejects_secret_sibling[path1]",
+      "outcome": "passed",
+      "when": "teardown"
+    },
+    {
+      "duration": 6.454158574342728e-05,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_drs_generated_id_screen_v01.py::test_each_identity_screen_rejects_secret_sibling[path2]",
+      "outcome": "passed",
+      "when": "setup"
+    },
+    {
+      "duration": 0.0009570829570293427,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_drs_generated_id_screen_v01.py::test_each_identity_screen_rejects_secret_sibling[path2]",
+      "outcome": "passed",
+      "when": "call"
+    },
+    {
+      "duration": 3.54573130607605e-05,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_drs_generated_id_screen_v01.py::test_each_identity_screen_rejects_secret_sibling[path2]",
+      "outcome": "passed",
+      "when": "teardown"
+    },
+    {
+      "duration": 6.241723895072937e-05,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_drs_generated_id_screen_v01.py::test_each_identity_screen_rejects_secret_sibling[path3]",
+      "outcome": "passed",
+      "when": "setup"
+    },
+    {
+      "duration": 0.0009070839732885361,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_drs_generated_id_screen_v01.py::test_each_identity_screen_rejects_secret_sibling[path3]",
+      "outcome": "passed",
+      "when": "call"
+    },
+    {
+      "duration": 4.120822995901108e-05,
+      "longrepr": null,
+      "nodeid": "tests/test_gate6_drs_generated_id_screen_v01.py::test_each_identity_screen_rejects_secret_sibling[path3]",
+      "outcome": "passed",
+      "when": "teardown"
+    },
+    {
+      "duration": 3.5041943192481995e-05,
+      "longrepr": null,
+      "nodeid": "tests/test_drs_semantic_address_reuse_certificate_g2_b_v01.py::test_g2b_raw_secret_payload_is_rejected_independent_of_key_name",
+      "outcome": "passed",
+      "when": "setup"
+    },
+    {
+      "duration": 1.8388965837657452,
+      "longrepr": null,
+      "nodeid": "tests/test_drs_semantic_address_reuse_certificate_g2_b_v01.py::test_g2b_raw_secret_payload_is_rejected_independent_of_key_name",
+      "outcome": "passed",
+      "when": "call"
+    },
+    {
+      "duration": 6.26659020781517e-05,
+      "longrepr": null,
+      "nodeid": "tests/test_drs_semantic_address_reuse_certificate_g2_b_v01.py::test_g2b_raw_secret_payload_is_rejected_independent_of_key_name",
+      "outcome": "passed",
+      "when": "teardown"
+    },
+    {
+      "duration": 6.516557186841965e-05,
+      "longrepr": null,
+      "nodeid": "tests/test_drs_semantic_address_reuse_certificate_g2_b_v01.py::test_g2b_legacy_projection_reports_every_preserved_synthesized_and_missing_field",
+      "outcome": "passed",
+      "when": "setup"
+    },
+    {
+      "duration": 0.010374832898378372,
+      "longrepr": null,
+      "nodeid": "tests/test_drs_semantic_address_reuse_certificate_g2_b_v01.py::test_g2b_legacy_projection_reports_every_preserved_synthesized_and_missing_field",
+      "outcome": "passed",
+      "when": "call"
+    },
+    {
+      "duration": 5.4333359003067017e-05,
+      "longrepr": null,
+      "nodeid": "tests/test_drs_semantic_address_reuse_certificate_g2_b_v01.py::test_g2b_legacy_projection_reports_every_preserved_synthesized_and_missing_field",
+      "outcome": "passed",
+      "when": "teardown"
+    },
+    {
+      "duration": 3.787502646446228e-05,
+      "longrepr": null,
+      "nodeid": "tests/test_drs_semantic_address_reuse_certificate_g2_b_v01.py::test_g2b_root_reviewed_writeback_creates_new_immutable_version",
+      "outcome": "passed",
+      "when": "setup"
+    },
+    {
+      "duration": 0.45076349936425686,
+      "longrepr": null,
+      "nodeid": "tests/test_drs_semantic_address_reuse_certificate_g2_b_v01.py::test_g2b_root_reviewed_writeback_creates_new_immutable_version",
+      "outcome": "passed",
+      "when": "call"
+    },
+    {
+      "duration": 5.229096859693527e-05,
+      "longrepr": null,
+      "nodeid": "tests/test_drs_semantic_address_reuse_certificate_g2_b_v01.py::test_g2b_root_reviewed_writeback_creates_new_immutable_version",
+      "outcome": "passed",
+      "when": "teardown"
+    },
+    {
+      "duration": 0.0085147088393569,
+      "longrepr": null,
+      "nodeid": "tests/test_drs_semantic_address_reuse_certificate_g2_b_v01.py::test_g2b_supersession_requires_root_provenance_reason_and_predecessor",
+      "outcome": "passed",
+      "when": "setup"
+    },
+    {
+      "duration": 0.8018563743680716,
+      "longrepr": null,
+      "nodeid": "tests/test_drs_semantic_address_reuse_certificate_g2_b_v01.py::test_g2b_supersession_requires_root_provenance_reason_and_predecessor",
+      "outcome": "passed",
+      "when": "call"
+    },
+    {
+      "duration": 7.183291018009186e-05,
+      "longrepr": null,
+      "nodeid": "tests/test_drs_semantic_address_reuse_certificate_g2_b_v01.py::test_g2b_supersession_requires_root_provenance_reason_and_predecessor",
+      "outcome": "passed",
+      "when": "teardown"
+    }
+  ]
+}

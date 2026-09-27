@@ -1,0 +1,24 @@
+Traceback (most recent call last):
+  File "/Users/admin/Projects/hedgehog-os-gate6-g6a4-p9f2we5q/clone/demo/gate3_scenario_packs_v01.py", line 35, in collect_pack_v01
+    f.validate_g35_source_v01(source)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "/Users/admin/Projects/hedgehog-os-gate6-g6a4-p9f2we5q/clone/hedgehog/outcome_feedback_v01.py", line 921, in validate_g35_source_v01
+    _require(next(Draft202012Validator(schema).iter_errors(source),None) is None,'g35_source_schema')
+    ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/admin/Projects/hedgehog-os-gate6-g6a4-p9f2we5q/clone/hedgehog/outcome_feedback_v01.py", line 58, in _require
+    raise ValueError(reason)
+ValueError: g35_source_schema
+Traceback (most recent call last):
+  File "<frozen runpy>", line 203, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/Users/admin/Projects/hedgehog-os-gate6-g6a4-p9f2we5q/clone/demo/run_gate6_reference_v01.py", line 689, in <module>
+    raise SystemExit(main())
+                     ~~~~^^
+  File "/Users/admin/Projects/hedgehog-os-gate6-g6a4-p9f2we5q/clone/demo/run_gate6_reference_v01.py", line 670, in main
+    result = execute_profile(name, args.output / name, inputs)
+  File "/Users/admin/Projects/hedgehog-os-gate6-g6a4-p9f2we5q/clone/demo/run_gate6_reference_v01.py", line 559, in execute_profile
+    value = module(PROFILES[name][0]).collect_pack_v01(data)
+  File "/Users/admin/Projects/hedgehog-os-gate6-g6a4-p9f2we5q/clone/demo/gate3_scenario_packs_v01.py", line 43, in collect_pack_v01
+    if failures:raise ValueError('g35_collection_incomplete:'+','.join(v['domain'] for v in failures))
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: g35_collection_incomplete:TESTFLIX

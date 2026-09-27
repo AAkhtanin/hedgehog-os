@@ -1,0 +1,61 @@
+{
+  "Architecture": "arm64",
+  "Comment": "buildkit.dockerfile.v0",
+  "Config": {
+    "Entrypoint": [
+      "python",
+      "-B",
+      "/runner/worker.py"
+    ],
+    "Env": [
+      "PATH=/usr/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+      "PYTHON_VERSION=3.14.7",
+      "PYTHON_SHA256=3b48dac8fb59f62eaa67ac83c1eb12bda1b7a08406dd286e252c11a66be27f81",
+      "PYTHONDONTWRITEBYTECODE=1",
+      "PYTHONUNBUFFERED=1",
+      "PYTHONPATH=/approved/source:/approved/example",
+      "HOME=/tmp"
+    ],
+    "User": "65532:65532",
+    "WorkingDir": "/out"
+  },
+  "Created": "2026-09-24T21:33:11.933533169Z",
+  "Descriptor": {
+    "digest": "sha256:f07e68671249ccaffda9529b14593c191ff9664a8b43b27f6b16570623f63a97",
+    "mediaType": "application/vnd.oci.image.index.v1+json",
+    "size": 856
+  },
+  "Id": "sha256:f07e68671249ccaffda9529b14593c191ff9664a8b43b27f6b16570623f63a97",
+  "Identity": {
+    "Build": [
+      {
+        "CreatedAt": "2026-09-24T21:33:12.690435003Z",
+        "Ref": "y0r9scvsbvaf3gfaaenmzm7z7"
+      }
+    ]
+  },
+  "Metadata": {
+    "LastTagTime": "2026-09-24T21:33:12.520521836Z"
+  },
+  "Os": "linux",
+  "RepoDigests": [
+    "radiolaria-g53r@sha256:f07e68671249ccaffda9529b14593c191ff9664a8b43b27f6b16570623f63a97"
+  ],
+  "RepoTags": [
+    "radiolaria-g53r:20260924"
+  ],
+  "RootFS": {
+    "Layers": [
+      "sha256:055ab12bd547e17a0630037f06a186cf405e3f61bb03a614562ca8f5ab52a8be",
+      "sha256:753e476ed7f12ee33c3133a60e1e8dbb43d4cc28159abd3f97defc4092025e77",
+      "sha256:092e7c3a12ec4da5f81a42cfbec9abba39d501faebb61baea4b8e9e6b8c4895e",
+      "sha256:ef2a4cea11ecc7d69fabf109d73edffce7c5139ada3c4a2da7e7ec3726e76885",
+      "sha256:aaa7328c74b018fde575a978801bf12ebcb40ba3cd59a8e568440e5255e60a89",
+      "sha256:31c9a969277c64f78a83ed44b4d11ee5e57b9f755c1a104b2dda4c2546959fc9",
+      "sha256:512502bb085f7dc22b7daccbe6e6e32c61e5a03af68b62e9f406f15213922bc5",
+      "sha256:ad4417ff3dc2a86e09f1ed7a272b29d723d1aa09e13607b2299b828aa3cd73df"
+    ],
+    "Type": "layers"
+  },
+  "Size": 250681445
+}

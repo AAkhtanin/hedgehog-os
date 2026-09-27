@@ -1,0 +1,432 @@
+{
+  "/Users/admin/Projects/hedgehog-os-gate6-g6a4r-bsu1xe8j/inputs/g6a4/campaign/FOOTBALL/receipts.json": {
+    "bytes": 941877,
+    "sha256": "6c1f7a74c23bac9740e49ae4d2c49647e19b5f2dd53630286f286c171d504d08",
+    "mode": 420
+  },
+  "/Users/admin/Projects/hedgehog-os-gate6-g6a4r-bsu1xe8j/retained/FOOTBALL/input_ledger.json": {
+    "bytes": 1184993,
+    "sha256": "80234b7664dd7a4ae44e171dbdea023accfb5f312f97c25f631011fa9400f048",
+    "mode": 420
+  },
+  "/Users/admin/Projects/hedgehog-os-gate6-g6a4r-bsu1xe8j/retained/FOOTBALL/continuation_supplied_1.json": {
+    "bytes": 7089,
+    "sha256": "6e6e7bda9287f670d592cec98c664ac4f638cdf910eae240b9915c80aecae04d",
+    "mode": 420
+  },
+  "/Users/admin/Projects/hedgehog-os-gate6-g6a4r-bsu1xe8j/retained/FOOTBALL/continuation_supplied_2.json": {
+    "bytes": 7089,
+    "sha256": "6e6e7bda9287f670d592cec98c664ac4f638cdf910eae240b9915c80aecae04d",
+    "mode": 420
+  },
+  "/Users/admin/Projects/hedgehog-os-gate6-g6a4r-bsu1xe8j/inputs/g6a4/campaign/FOOTBALL/FOOTBALL/continuation_supplied_1.json": {
+    "bytes": 7089,
+    "sha256": "588383c43c1be297185e97821817cac15a708591ea9d431e8887f92e16b443ee",
+    "mode": 420
+  },
+  "/Users/admin/Projects/hedgehog-os-gate6-g6a4r-bsu1xe8j/inputs/g6a4/campaign/FOOTBALL/FOOTBALL/continuation_supplied_2.json": {
+    "bytes": 7089,
+    "sha256": "588383c43c1be297185e97821817cac15a708591ea9d431e8887f92e16b443ee",
+    "mode": 420
+  },
+  "/Users/admin/Projects/hedgehog-os-gate6-g6a4r-bsu1xe8j/retained/FOOTBALL/foreign_audience_supplied_1.json": {
+    "bytes": 1912,
+    "sha256": "c52f60c418c29fd2e038fb69978220c7e6e8ec9d1b0b38ef9a858044dde8a203",
+    "mode": 420
+  },
+  "/Users/admin/Projects/hedgehog-os-gate6-g6a4r-bsu1xe8j/retained/FOOTBALL/foreign_audience_supplied_2.json": {
+    "bytes": 1912,
+    "sha256": "c52f60c418c29fd2e038fb69978220c7e6e8ec9d1b0b38ef9a858044dde8a203",
+    "mode": 420
+  },
+  "/Users/admin/Projects/hedgehog-os-gate6-g6a4r-bsu1xe8j/inputs/g6a4/campaign/FOOTBALL/FOOTBALL/foreign_audience_supplied_1.json": {
+    "bytes": 1912,
+    "sha256": "3aae154c6294e3ecf647155eeb751d2c4fe6285205f16970e588e09b186b0dc0",
+    "mode": 420
+  },
+  "/Users/admin/Projects/hedgehog-os-gate6-g6a4r-bsu1xe8j/inputs/g6a4/campaign/FOOTBALL/FOOTBALL/foreign_audience_supplied_2.json": {
+    "bytes": 1912,
+    "sha256": "3aae154c6294e3ecf647155eeb751d2c4fe6285205f16970e588e09b186b0dc0",
+    "mode": 420
+  },
+  "/Users/admin/Projects/hedgehog-os-gate6-g6a4r-bsu1xe8j/retained/FOOTBALL/long_overlap_supplied_1.json": {
+    "bytes": 2438,
+    "sha256": "f721ab233284e01fde09e62d01d4c31d5725ad668c1d2671ac14730f14f1484b",
+    "mode": 420
+  },
+  "/Users/admin/Projects/hedgehog-os-gate6-g6a4r-bsu1xe8j/retained/FOOTBALL/long_overlap_supplied_2.json": {
+    "bytes": 2438,
+    "sha256": "f721ab233284e01fde09e62d01d4c31d5725ad668c1d2671ac14730f14f1484b",
+    "mode": 420
+  },
+  "/Users/admin/Projects/hedgehog-os-gate6-g6a4r-bsu1xe8j/inputs/g6a4/campaign/FOOTBALL/FOOTBALL/long_overlap_supplied_1.json": {
+    "bytes": 2438,
+    "sha256": "1d0e11b9382cfefb30a2c7f0685db28217c7d6b513c45ffb43d17ed3a9add097",
+    "mode": 420
+  },
+  "/Users/admin/Projects/hedgehog-os-gate6-g6a4r-bsu1xe8j/inputs/g6a4/campaign/FOOTBALL/FOOTBALL/long_overlap_supplied_2.json": {
+    "bytes": 2438,
+    "sha256": "1d0e11b9382cfefb30a2c7f0685db28217c7d6b513c45ffb43d17ed3a9add097",
+    "mode": 420
+  },
+  "/Users/admin/Projects/hedgehog-os-gate6-g6a4r-bsu1xe8j/retained/FOOTBALL/low_budget_supplied_1.json": {
+    "bytes": 1429,
+    "sha256": "870a103991988fe60334467cb1687849068a3520c9c6a7d708b351833d8e9e51",
+    "mode": 420
+  },
+  "/Users/admin/Projects/hedgehog-os-gate6-g6a4r-bsu1xe8j/retained/FOOTBALL/low_budget_supplied_2.json": {
+    "bytes": 1429,
+    "sha256": "870a103991988fe60334467cb1687849068a3520c9c6a7d708b351833d8e9e51",
+    "mode": 420
+  },
+  "/Users/admin/Projects/hedgehog-os-gate6-g6a4r-bsu1xe8j/inputs/g6a4/campaign/FOOTBALL/FOOTBALL/low_budget_supplied_1.json": {
+    "bytes": 1429,
+    "sha256": "b8182a2d9d2383e48b4038a1e8f489ff0f824b4d7714b2379978b4278846f568",
+    "mode": 420
+  },
+  "/Users/admin/Projects/hedgehog-os-gate6-g6a4r-bsu1xe8j/inputs/g6a4/campaign/FOOTBALL/FOOTBALL/low_budget_supplied_2.json": {
+    "bytes": 1429,
+    "sha256": "b8182a2d9d2383e48b4038a1e8f489ff0f824b4d7714b2379978b4278846f568",
+    "mode": 420
+  },
+  "/Users/admin/Projects/hedgehog-os-gate6-g6a4r-bsu1xe8j/retained/FOOTBALL/main_supplied_1.json": {
+    "bytes": 4278,
+    "sha256": "1f15ca3fed7abe90429cf619d03f2f4c9b1827d69b4837a7957626e0104339db",
+    "mode": 420
+  },
+  "/Users/admin/Projects/hedgehog-os-gate6-g6a4r-bsu1xe8j/retained/FOOTBALL/main_supplied_2.json": {
+    "bytes": 4278,
+    "sha256": "1f15ca3fed7abe90429cf619d03f2f4c9b1827d69b4837a7957626e0104339db",
+    "mode": 420
+  },
+  "/Users/admin/Projects/hedgehog-os-gate6-g6a4r-bsu1xe8j/inputs/g6a4/campaign/FOOTBALL/FOOTBALL/main_supplied_1.json": {
+    "bytes": 4278,
+    "sha256": "7f9ffe4646f39b58d995ec5eeb95858d691a58922a2385886fedb2705941645a",
+    "mode": 420
+  },
+  "/Users/admin/Projects/hedgehog-os-gate6-g6a4r-bsu1xe8j/inputs/g6a4/campaign/FOOTBALL/FOOTBALL/main_supplied_2.json": {
+    "bytes": 4278,
+    "sha256": "7f9ffe4646f39b58d995ec5eeb95858d691a58922a2385886fedb2705941645a",
+    "mode": 420
+  },
+  "/Users/admin/Projects/hedgehog-os-gate6-g6a4r-bsu1xe8j/retained/FOOTBALL/missing_BOOK_supplied_1.json": {
+    "bytes": 3154,
+    "sha256": "58406caf711282f5d61e903c51b7e1022a24cd571399a8c20abc51a22703511c",
+    "mode": 420
+  },
+  "/Users/admin/Projects/hedgehog-os-gate6-g6a4r-bsu1xe8j/retained/FOOTBALL/missing_BOOK_supplied_2.json": {
+    "bytes": 3154,
+    "sha256": "58406caf711282f5d61e903c51b7e1022a24cd571399a8c20abc51a22703511c",
+    "mode": 420
+  },
+  "/Users/admin/Projects/hedgehog-os-gate6-g6a4r-bsu1xe8j/inputs/g6a4/campaign/FOOTBALL/FOOTBALL/missing_BOOK_supplied_1.json": {
+    "bytes": 3154,
+    "sha256": "a1b3cae8d9b0b8186e8ed1aba7a93a42c070bad3b2b7c3cce8cb9160aab8053d",
+    "mode": 420
+  },
+  "/Users/admin/Projects/hedgehog-os-gate6-g6a4r-bsu1xe8j/inputs/g6a4/campaign/FOOTBALL/FOOTBALL/missing_BOOK_supplied_2.json": {
+    "bytes": 3154,
+    "sha256": "a1b3cae8d9b0b8186e8ed1aba7a93a42c070bad3b2b7c3cce8cb9160aab8053d",
+    "mode": 420
+  },
+  "/Users/admin/Projects/hedgehog-os-gate6-g6a4r-bsu1xe8j/retained/FOOTBALL/missing_history_supplied_1.json": {
+    "bytes": 1205,
+    "sha256": "6baab78728d685a995fdae8f671c146b9b569d9be29c8b193fa57a521218c451",
+    "mode": 420
+  },
+  "/Users/admin/Projects/hedgehog-os-gate6-g6a4r-bsu1xe8j/retained/FOOTBALL/missing_history_supplied_2.json": {
+    "bytes": 1205,
+    "sha256": "6baab78728d685a995fdae8f671c146b9b569d9be29c8b193fa57a521218c451",
+    "mode": 420
+  },
+  "/Users/admin/Projects/hedgehog-os-gate6-g6a4r-bsu1xe8j/inputs/g6a4/campaign/FOOTBALL/FOOTBALL/missing_history_supplied_1.json": {
+    "bytes": 1205,
+    "sha256": "bf93e3496206ea3c28c794fedb7cafdf3a72ccede74ec69ac391d5c2f448f25e",
+    "mode": 420
+  },
+  "/Users/admin/Projects/hedgehog-os-gate6-g6a4r-bsu1xe8j/inputs/g6a4/campaign/FOOTBALL/FOOTBALL/missing_history_supplied_2.json": {
+    "bytes": 1205,
+    "sha256": "bf93e3496206ea3c28c794fedb7cafdf3a72ccede74ec69ac391d5c2f448f25e",
+    "mode": 420
+  },
+  "/Users/admin/Projects/hedgehog-os-gate6-g6a4r-bsu1xe8j/retained/FOOTBALL/occupancy_supplied_1.json": {
+    "bytes": 3165,
+    "sha256": "00345243e3d9f9c2742902a7984dab45c1e04163f99b0c2d05a773b83c5724e8",
+    "mode": 420
+  },
+  "/Users/admin/Projects/hedgehog-os-gate6-g6a4r-bsu1xe8j/retained/FOOTBALL/occupancy_supplied_2.json": {
+    "bytes": 3165,
+    "sha256": "00345243e3d9f9c2742902a7984dab45c1e04163f99b0c2d05a773b83c5724e8",
+    "mode": 420
+  },
+  "/Users/admin/Projects/hedgehog-os-gate6-g6a4r-bsu1xe8j/inputs/g6a4/campaign/FOOTBALL/FOOTBALL/occupancy_supplied_1.json": {
+    "bytes": 3165,
+    "sha256": "a69a35aa60f019019ed52856bce8ccb6ac49761c5de5946463f710eb031e0fb4",
+    "mode": 420
+  },
+  "/Users/admin/Projects/hedgehog-os-gate6-g6a4r-bsu1xe8j/inputs/g6a4/campaign/FOOTBALL/FOOTBALL/occupancy_supplied_2.json": {
+    "bytes": 3165,
+    "sha256": "a69a35aa60f019019ed52856bce8ccb6ac49761c5de5946463f710eb031e0fb4",
+    "mode": 420
+  },
+  "/Users/admin/Projects/hedgehog-os-gate6-g6a4r-bsu1xe8j/retained/FOOTBALL/permuted_main_supplied_1.json": {
+    "bytes": 4287,
+    "sha256": "4de33d28204a079b8153ca61a3cfb153a600f769c31c05b7ceeafcd4782254b3",
+    "mode": 420
+  },
+  "/Users/admin/Projects/hedgehog-os-gate6-g6a4r-bsu1xe8j/retained/FOOTBALL/permuted_main_supplied_2.json": {
+    "bytes": 4287,
+    "sha256": "4de33d28204a079b8153ca61a3cfb153a600f769c31c05b7ceeafcd4782254b3",
+    "mode": 420
+  },
+  "/Users/admin/Projects/hedgehog-os-gate6-g6a4r-bsu1xe8j/inputs/g6a4/campaign/FOOTBALL/FOOTBALL/permuted_main_supplied_1.json": {
+    "bytes": 4287,
+    "sha256": "6b3936beb2cbe42dc117b3bf310d1f80b6b6e62222a44b2c05cc0460958f965d",
+    "mode": 420
+  },
+  "/Users/admin/Projects/hedgehog-os-gate6-g6a4r-bsu1xe8j/inputs/g6a4/campaign/FOOTBALL/FOOTBALL/permuted_main_supplied_2.json": {
+    "bytes": 4287,
+    "sha256": "6b3936beb2cbe42dc117b3bf310d1f80b6b6e62222a44b2c05cc0460958f965d",
+    "mode": 420
+  },
+  "/Users/admin/Projects/hedgehog-os-gate6-g6a4r-bsu1xe8j/retained/FOOTBALL/release_denied_supplied_1.json": {
+    "bytes": 1996,
+    "sha256": "27d6737872ea3f6814137e7ab0775e78f562b62607af9c2a4e10f22ace2a9895",
+    "mode": 420
+  },
+  "/Users/admin/Projects/hedgehog-os-gate6-g6a4r-bsu1xe8j/retained/FOOTBALL/release_denied_supplied_2.json": {
+    "bytes": 1996,
+    "sha256": "27d6737872ea3f6814137e7ab0775e78f562b62607af9c2a4e10f22ace2a9895",
+    "mode": 420
+  },
+  "/Users/admin/Projects/hedgehog-os-gate6-g6a4r-bsu1xe8j/inputs/g6a4/campaign/FOOTBALL/FOOTBALL/release_denied_supplied_1.json": {
+    "bytes": 1996,
+    "sha256": "c1aa12a53ab48f872dedfb6d3fed87a2476a0b1df2f461ce8ec8c9ed1f5e0297",
+    "mode": 420
+  },
+  "/Users/admin/Projects/hedgehog-os-gate6-g6a4r-bsu1xe8j/inputs/g6a4/campaign/FOOTBALL/FOOTBALL/release_denied_supplied_2.json": {
+    "bytes": 1996,
+    "sha256": "c1aa12a53ab48f872dedfb6d3fed87a2476a0b1df2f461ce8ec8c9ed1f5e0297",
+    "mode": 420
+  },
+  "/Users/admin/Projects/hedgehog-os-gate6-g6a4r-bsu1xe8j/retained/FOOTBALL/revision_conflict_supplied_1.json": {
+    "bytes": 3205,
+    "sha256": "04339a6cf7efdabd3329b85879eb407503fbb1162e71855fe1e3e79158c30bdf",
+    "mode": 420
+  },
+  "/Users/admin/Projects/hedgehog-os-gate6-g6a4r-bsu1xe8j/retained/FOOTBALL/revision_conflict_supplied_2.json": {
+    "bytes": 3205,
+    "sha256": "04339a6cf7efdabd3329b85879eb407503fbb1162e71855fe1e3e79158c30bdf",
+    "mode": 420
+  },
+  "/Users/admin/Projects/hedgehog-os-gate6-g6a4r-bsu1xe8j/inputs/g6a4/campaign/FOOTBALL/FOOTBALL/revision_conflict_supplied_1.json": {
+    "bytes": 3205,
+    "sha256": "2bc78499ba701bba2bed9363b7e87a7743d0bbd3ed52955596e330a0fd722c39",
+    "mode": 420
+  },
+  "/Users/admin/Projects/hedgehog-os-gate6-g6a4r-bsu1xe8j/inputs/g6a4/campaign/FOOTBALL/FOOTBALL/revision_conflict_supplied_2.json": {
+    "bytes": 3205,
+    "sha256": "2bc78499ba701bba2bed9363b7e87a7743d0bbd3ed52955596e330a0fd722c39",
+    "mode": 420
+  },
+  "/Users/admin/Projects/hedgehog-os-gate6-g6a4r-bsu1xe8j/retained/FOOTBALL/revoked_source_supplied_1.json": {
+    "bytes": 3487,
+    "sha256": "8ab53182d7c3ef3f6ab2b12a64aedee6f55238cd09491f74b02d6b20fb6237f1",
+    "mode": 420
+  },
+  "/Users/admin/Projects/hedgehog-os-gate6-g6a4r-bsu1xe8j/retained/FOOTBALL/revoked_source_supplied_2.json": {
+    "bytes": 3487,
+    "sha256": "8ab53182d7c3ef3f6ab2b12a64aedee6f55238cd09491f74b02d6b20fb6237f1",
+    "mode": 420
+  },
+  "/Users/admin/Projects/hedgehog-os-gate6-g6a4r-bsu1xe8j/inputs/g6a4/campaign/FOOTBALL/FOOTBALL/revoked_source_supplied_1.json": {
+    "bytes": 3487,
+    "sha256": "cb4cb151e0ea54d7a1ef1bc64da0ba25e307b2fdfdfde45c582298bab784fdb0",
+    "mode": 420
+  },
+  "/Users/admin/Projects/hedgehog-os-gate6-g6a4r-bsu1xe8j/inputs/g6a4/campaign/FOOTBALL/FOOTBALL/revoked_source_supplied_2.json": {
+    "bytes": 3487,
+    "sha256": "cb4cb151e0ea54d7a1ef1bc64da0ba25e307b2fdfdfde45c582298bab784fdb0",
+    "mode": 420
+  },
+  "/Users/admin/Projects/hedgehog-os-gate6-g6a4r-bsu1xe8j/retained/FOOTBALL/same_key_changed_supplied_1.json": {
+    "bytes": 3787,
+    "sha256": "b85d4b05214ff1069495fea8f16bfd87900be2262adf3918d8911288cc08c44d",
+    "mode": 420
+  },
+  "/Users/admin/Projects/hedgehog-os-gate6-g6a4r-bsu1xe8j/retained/FOOTBALL/same_key_changed_supplied_2.json": {
+    "bytes": 3787,
+    "sha256": "b85d4b05214ff1069495fea8f16bfd87900be2262adf3918d8911288cc08c44d",
+    "mode": 420
+  },
+  "/Users/admin/Projects/hedgehog-os-gate6-g6a4r-bsu1xe8j/inputs/g6a4/campaign/FOOTBALL/FOOTBALL/same_key_changed_supplied_1.json": {
+    "bytes": 3787,
+    "sha256": "57f3d2858d0354fb4ee235422c22751633bbd6a92683a7be7a0aa6e04bc1798f",
+    "mode": 420
+  },
+  "/Users/admin/Projects/hedgehog-os-gate6-g6a4r-bsu1xe8j/inputs/g6a4/campaign/FOOTBALL/FOOTBALL/same_key_changed_supplied_2.json": {
+    "bytes": 3787,
+    "sha256": "57f3d2858d0354fb4ee235422c22751633bbd6a92683a7be7a0aa6e04bc1798f",
+    "mode": 420
+  },
+  "/Users/admin/Projects/hedgehog-os-gate6-g6a4r-bsu1xe8j/retained/FOOTBALL/second_team_supplied_1.json": {
+    "bytes": 4276,
+    "sha256": "b7fd7f335015f8285b9bb737844583b9a59c7d08ab1bb431f23000f030d06f28",
+    "mode": 420
+  },
+  "/Users/admin/Projects/hedgehog-os-gate6-g6a4r-bsu1xe8j/retained/FOOTBALL/second_team_supplied_2.json": {
+    "bytes": 4276,
+    "sha256": "b7fd7f335015f8285b9bb737844583b9a59c7d08ab1bb431f23000f030d06f28",
+    "mode": 420
+  },
+  "/Users/admin/Projects/hedgehog-os-gate6-g6a4r-bsu1xe8j/inputs/g6a4/campaign/FOOTBALL/FOOTBALL/second_team_supplied_1.json": {
+    "bytes": 4276,
+    "sha256": "4a013226fd059693f49d017ae0cf50ab8e6436606ec32c35571f3ee722e6bc3a",
+    "mode": 420
+  },
+  "/Users/admin/Projects/hedgehog-os-gate6-g6a4r-bsu1xe8j/inputs/g6a4/campaign/FOOTBALL/FOOTBALL/second_team_supplied_2.json": {
+    "bytes": 4276,
+    "sha256": "4a013226fd059693f49d017ae0cf50ab8e6436606ec32c35571f3ee722e6bc3a",
+    "mode": 420
+  },
+  "/Users/admin/Projects/hedgehog-os-gate6-g6a4r-bsu1xe8j/retained/FOOTBALL/variation_feedback_supplied_1.json": {
+    "bytes": 4292,
+    "sha256": "bad8f488d3d1b2ee02bf996757673ed431fefda9ef7ceca2077adcb714550d6d",
+    "mode": 420
+  },
+  "/Users/admin/Projects/hedgehog-os-gate6-g6a4r-bsu1xe8j/retained/FOOTBALL/variation_feedback_supplied_2.json": {
+    "bytes": 4292,
+    "sha256": "bad8f488d3d1b2ee02bf996757673ed431fefda9ef7ceca2077adcb714550d6d",
+    "mode": 420
+  },
+  "/Users/admin/Projects/hedgehog-os-gate6-g6a4r-bsu1xe8j/inputs/g6a4/campaign/FOOTBALL/FOOTBALL/variation_feedback_supplied_1.json": {
+    "bytes": 4292,
+    "sha256": "b21fdca2117a1dc91ffb5ed8d69bec5ed9b35041bb4cb7c4187e8d11acc654b2",
+    "mode": 420
+  },
+  "/Users/admin/Projects/hedgehog-os-gate6-g6a4r-bsu1xe8j/inputs/g6a4/campaign/FOOTBALL/FOOTBALL/variation_feedback_supplied_2.json": {
+    "bytes": 4292,
+    "sha256": "b21fdca2117a1dc91ffb5ed8d69bec5ed9b35041bb4cb7c4187e8d11acc654b2",
+    "mode": 420
+  },
+  "/Users/admin/Projects/hedgehog-os-gate6-g6a4r-bsu1xe8j/retained/FOOTBALL/variation_final_reserved_supplied_1.json": {
+    "bytes": 4298,
+    "sha256": "53f9f252394eee7344d423ed1973b95b2773092dc7701d0c8fa6976722423d45",
+    "mode": 420
+  },
+  "/Users/admin/Projects/hedgehog-os-gate6-g6a4r-bsu1xe8j/retained/FOOTBALL/variation_final_reserved_supplied_2.json": {
+    "bytes": 4298,
+    "sha256": "53f9f252394eee7344d423ed1973b95b2773092dc7701d0c8fa6976722423d45",
+    "mode": 420
+  },
+  "/Users/admin/Projects/hedgehog-os-gate6-g6a4r-bsu1xe8j/inputs/g6a4/campaign/FOOTBALL/FOOTBALL/variation_final_reserved_supplied_1.json": {
+    "bytes": 4298,
+    "sha256": "8db2a7b5d45e21618c7dd248de9fd9c493dae6d8d0525f97181a286018e4c9f0",
+    "mode": 420
+  },
+  "/Users/admin/Projects/hedgehog-os-gate6-g6a4r-bsu1xe8j/inputs/g6a4/campaign/FOOTBALL/FOOTBALL/variation_final_reserved_supplied_2.json": {
+    "bytes": 4298,
+    "sha256": "8db2a7b5d45e21618c7dd248de9fd9c493dae6d8d0525f97181a286018e4c9f0",
+    "mode": 420
+  },
+  "/Users/admin/Projects/hedgehog-os-gate6-g6a4r-bsu1xe8j/retained/FOOTBALL/observation.json": {
+    "bytes": 8122,
+    "sha256": "6d1a20b16b5790d72887118662593fec0bdff7170fa986c3daffea5b3aea294b",
+    "mode": 420
+  },
+  "/Users/admin/Projects/hedgehog-os-gate6-g6a4r-bsu1xe8j/inputs/g6a4/recorded_artifact_recovery.json": {
+    "bytes": 838081,
+    "sha256": "4cef2cdae88b81a063594bfa584bd03d6c9714062b61d20baa11acd251d4231a",
+    "mode": 420
+  },
+  "/Users/admin/Projects/hedgehog-os-gate6-g6a4r-bsu1xe8j/retained/G5_original/native/canonical_result.json": {
+    "bytes": 37389,
+    "sha256": "d2a25ed3b1ab123912e59d096808351dbcf18f59a16229b9abcaff9f647eacff",
+    "mode": 420
+  },
+  "/Users/admin/Projects/hedgehog-os-gate6-g6a4r-bsu1xe8j/clone/docs/gate5_reference_evidence_v01/closure/canonical_result.json": {
+    "bytes": 37389,
+    "sha256": "d2a25ed3b1ab123912e59d096808351dbcf18f59a16229b9abcaff9f647eacff",
+    "mode": 420
+  },
+  "/Users/admin/Projects/hedgehog-os-gate6-g6a4r-bsu1xe8j/retained/G5_original/native/d1.receipt.json": {
+    "bytes": 675,
+    "sha256": "e4e50c4cdc821a0e9ffd2111f80792856dc844fc60baddeb74f2574ad35ba0f8",
+    "mode": 420
+  },
+  "/Users/admin/Projects/hedgehog-os-gate6-g6a4r-bsu1xe8j/retained/G5_original/native/g52.receipt.json": {
+    "bytes": 1002,
+    "sha256": "39f60b35579df8da46263420828ac9c476d9dd31e8aba082586fa0f5c01457b0",
+    "mode": 420
+  },
+  "/Users/admin/Projects/hedgehog-os-gate6-g6a4r-bsu1xe8j/retained/G5_original/observation.json": {
+    "bytes": 7772,
+    "sha256": "c29db6dac92f2941edbc047e9ec47fc156b117dc69b7cf48cbe75972343046e4",
+    "mode": 420
+  },
+  "/Users/admin/Projects/hedgehog-os-gate6-g6a4r-bsu1xe8j/inputs/g6a4/campaign/MODEL/MODEL/summary.json": {
+    "bytes": 7882,
+    "sha256": "fa3ef23855e06cb23d9832bdfba3d99abccbbebd49d89d3d2e529ef4e1a58125",
+    "mode": 420
+  },
+  "/Users/admin/Projects/hedgehog-os-gate6-g6a4r-bsu1xe8j/inputs/g6a4/campaign/MODEL/MODEL/semantic_records.json": {
+    "bytes": 17574,
+    "sha256": "02ae60ae33765ecf273cb489059dd41fe4226b7a7a57d2d415f4a1171b269ef4",
+    "mode": 420
+  },
+  "/Users/admin/Projects/hedgehog-os-gate6-g6a4r-bsu1xe8j/inputs/g6a4/future_live_authorization.json": {
+    "bytes": 697,
+    "sha256": "329d50045a4883c042c5e0ad5d1cd090d2e7511463d3608b0fef750a0b577747",
+    "mode": 420
+  },
+  "/Users/admin/Projects/hedgehog-os-gate6-g6a4r-bsu1xe8j/inputs/g6a4/model_inputs.json": {
+    "bytes": 21453,
+    "sha256": "1664ccc83ed5384b7f071b6784a27bdff9bbdd2727e69dc6aff1e31c15e0fd54",
+    "mode": 420
+  },
+  "/Users/admin/Projects/hedgehog-os-gate6-g6a4r-bsu1xe8j/inputs/g6a4/campaign/MODEL/MODEL/budget/budget.jsonl": {
+    "bytes": 35957,
+    "sha256": "a14a23336cb1f5cd3b868efb92a321c50c9c99811088f50553da1e632bfd128e",
+    "mode": 420
+  },
+  "/Users/admin/Projects/hedgehog-os-gate6-g6a4r-bsu1xe8j/inputs/g6a4/campaign/MODEL/MODEL/adapter/response_01.json": {
+    "bytes": 2144,
+    "sha256": "e2ba43aa68b824d08c6fe0f7fa879062459c14fe51caaf641f2a652595ba8504",
+    "mode": 420
+  },
+  "/Users/admin/Projects/hedgehog-os-gate6-g6a4r-bsu1xe8j/inputs/g6a4/campaign/MODEL/MODEL/adapter/attempt_01.json": {
+    "bytes": 384,
+    "sha256": "f0035eec26351b2fad43c10e78c73f08dca09537cdbbf25061811a0f662315bc",
+    "mode": 420
+  },
+  "/Users/admin/Projects/hedgehog-os-gate6-g6a4r-bsu1xe8j/inputs/g6a4/campaign/MODEL/MODEL/adapter/response_02.json": {
+    "bytes": 3554,
+    "sha256": "bb26a512ea3dd8a48ae1de6b09ab1dcfee6d31d030b5345a2a1e47b8443f80ad",
+    "mode": 420
+  },
+  "/Users/admin/Projects/hedgehog-os-gate6-g6a4r-bsu1xe8j/inputs/g6a4/campaign/MODEL/MODEL/adapter/attempt_02.json": {
+    "bytes": 388,
+    "sha256": "6d2522571bfe5bf239723b60b89a712146a34a44eb11feacefbe83ec7139320d",
+    "mode": 420
+  },
+  "/Users/admin/Projects/hedgehog-os-gate6-g6a4r-bsu1xe8j/inputs/g6a4/campaign/MODEL/MODEL/adapter/response_03.json": {
+    "bytes": 4278,
+    "sha256": "e86ba69d3b0267b6c2419f74dde6c152e6d13aa1aa9b0da9f41773c370131f07",
+    "mode": 420
+  },
+  "/Users/admin/Projects/hedgehog-os-gate6-g6a4r-bsu1xe8j/inputs/g6a4/campaign/MODEL/MODEL/adapter/attempt_03.json": {
+    "bytes": 386,
+    "sha256": "f61e6df6cf667e6e79ed870d77496337b79544926b32cb0a2a5aefe1811349cb",
+    "mode": 420
+  },
+  "/Users/admin/Projects/hedgehog-os-gate6-g6a4r-bsu1xe8j/inputs/g6a4/campaign/MODEL/MODEL/adapter/response_04.json": {
+    "bytes": 4978,
+    "sha256": "52395a6c01729507f63aea4ee841f1f747e217f82c96cb039b81167899502024",
+    "mode": 420
+  },
+  "/Users/admin/Projects/hedgehog-os-gate6-g6a4r-bsu1xe8j/inputs/g6a4/campaign/MODEL/MODEL/adapter/attempt_04.json": {
+    "bytes": 383,
+    "sha256": "3a2b1f970686ba8e814f387299358c89f50b2280b3719ff970fea25e857db063",
+    "mode": 420
+  }
+}

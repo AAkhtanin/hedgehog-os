@@ -1,0 +1,2 @@
+{"phase": "native_source", "event": "START", "utc": 1790487012, "monotonic": 5819392.036503791}
+{"phase": "native_source", "event": "COMPLETE", "utc": 1790487013, "monotonic": 5819392.251699583, "work_seconds": 0.18165154196321964}

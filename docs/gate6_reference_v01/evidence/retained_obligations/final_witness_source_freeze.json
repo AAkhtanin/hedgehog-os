@@ -1,0 +1,22 @@
+{
+  "demo/run_gate6_retained_obligations_v01.py": {
+    "bytes": 63403,
+    "mode": 420,
+    "sha256": "3aa070f48b655aac28f67d9cfe6e1e2811944a7d691e507b77cfee4cf7b9a5fb"
+  },
+  "hedgehog/drs_g2b_compatibility_v01.py": {
+    "bytes": 48485,
+    "mode": 420,
+    "sha256": "5d4fb04cbf2e0819a0df5da17df724a0441747d2573fff924086dc9cfabaece1"
+  },
+  "tests/test_gate6_drs_generated_id_screen_v01.py": {
+    "bytes": 3265,
+    "mode": 420,
+    "sha256": "c87576b63fbaec5287f5b772d9d8fec4c67ae049cf931849b039c145aca4d307"
+  },
+  "tests/test_gate6_retained_obligations_v01.py": {
+    "bytes": 3879,
+    "mode": 420,
+    "sha256": "6e394e2006126721ab2cf05a17ce18b99094df6c59b68612036a6de1bc6a4732"
+  }
+}

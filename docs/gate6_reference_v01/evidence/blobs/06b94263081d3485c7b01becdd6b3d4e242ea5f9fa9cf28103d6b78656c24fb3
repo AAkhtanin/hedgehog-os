@@ -1,0 +1,44 @@
+{
+  "counts": {
+    "current_use": 0,
+    "history_query": 0,
+    "native_work": 2,
+    "peer_receive": 17,
+    "peer_send": 17,
+    "root_decision": 10,
+    "source_work": 2
+  },
+  "intervals": [
+    {
+      "deltas": {
+        "current_use": 0,
+        "history_query": 0,
+        "native_work": 1,
+        "peer_receive": 0,
+        "peer_send": 0,
+        "root_decision": 2,
+        "source_work": 0
+      },
+      "function": "source_work",
+      "returned": true,
+      "seconds": 0.21529016736894846
+    },
+    {
+      "deltas": {
+        "current_use": 0,
+        "history_query": 0,
+        "native_work": 1,
+        "peer_receive": 0,
+        "peer_send": 0,
+        "root_decision": 2,
+        "source_work": 0
+      },
+      "function": "source_work",
+      "returned": true,
+      "seconds": 0.1389477076008916
+    }
+  ],
+  "profile": "SELECTED_CODE_OBJECT_EVENTS_ONLY",
+  "seconds": 2.5564601253718138,
+  "unfinished": []
+}

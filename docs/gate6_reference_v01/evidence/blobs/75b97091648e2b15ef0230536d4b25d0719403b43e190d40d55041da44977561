@@ -1,0 +1,15 @@
+FROM python:3.14-slim-bookworm@sha256:82bc3c539b8813ada9d68c63b40158fa002f7f33de9bf3312a3dfdc0620dff56
+RUN apt-get update && mkdir /opt/deb && cd /opt/deb && \
+    apt-get download libseccomp2=2.5.4-1+deb12u1 && \
+    echo 'be675cf3b7778d88e8f6156c501d32fcbe77636b3dcf18bf2bc7e5daf3dde256  libseccomp2_2.5.4-1+deb12u1_arm64.deb' | sha256sum -c - && \
+    sha256sum *.deb > /opt/deb-sha256.txt && \
+    dpkg -i *.deb && dpkg-query -W libseccomp2 > /opt/seccomp-version.txt && \
+    rm -rf /opt/deb /var/lib/apt/lists/*
+COPY requirements.lock /opt/requirements.lock
+RUN python -m pip install --no-cache-dir --only-binary=:all: --require-hashes \
+    --report /opt/dependency-report.json -r /opt/requirements.lock && \
+    python -m pip freeze --all > /opt/requirements.resolved.txt
+ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 PYTHONPATH=/approved/source:/approved/example HOME=/tmp
+WORKDIR /out
+USER 65532:65532
+ENTRYPOINT ["python", "-B", "/runner/worker.py"]

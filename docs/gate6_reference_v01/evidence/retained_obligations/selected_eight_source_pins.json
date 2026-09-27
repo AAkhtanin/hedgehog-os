@@ -1,0 +1,12 @@
+{
+  "tests/test_drs_v02_local_lineage_reuse.py": {
+    "bytes": 24028,
+    "mode": 420,
+    "sha256": "5039967f169ac392eff71b78344e9c6ef50f2fdb0b5bc205a35bbe67b986e2fb"
+  },
+  "tests/test_testflix_semantic_roles_v01.py": {
+    "bytes": 14669,
+    "mode": 420,
+    "sha256": "1b23132270c7f8475fdb4717e87ab88ebbca10c5085121f263481854f3194993"
+  }
+}

@@ -1,0 +1,126 @@
+"""Prepared successor; never run on G54B1 attempt03 for retrospective acceptance.
+
+Business/ranking/boundary predicates remain the frozen examiner's functions.
+Trusted case/observation arguments must be held outside the candidate by the runner.
+"""
+from examiner import check_report, check_boundary_record, optimal_rank, selection_rank, need, canonical, sha, utc, overlap
+from hedgehog.external_drs import gate5_contracts_v01 as c
+from hedgehog.external_drs.gate5_body_profile_v01 import ReviewedBodyProfileV01, COMMON_BODY_FIELDS
+from hedgehog.external_drs.gate5_supplied_v01 import native_result
+from hedgehog.external_drs.gate5_lifecycle_supplied_v01 import root_record
+
+def body_shape(b):
+    c.shape(b['offer'],('request','fields','alternatives','slots','total_minor','currency','status','schedule_revision','offer_revision'))
+    need(b['request_sha256']==sha(b['offer']['request']),'body_request_hash')
+    need(b['source_revision']==b['offer']['offer_revision'],'body_revision')
+    need(b['source_work_ref'] in b['source_lineage_refs'],'work_lineage')
+
+def pointer_shape(p):
+    need(p['safe_summary']=='Synthetic full-size natural-grass venue offer metadata.','safe_pointer_summary')
+    need(p['allowed_use_classes']==['LOCAL_CONTEXT'] and p['forbidden_use_classes']==['ACTION'],'pointer_use')
+    need(p['semantic_address']['subject_class']=='venue_offer' and p['semantic_address']['intent_class']=='context_lookup','pointer_meaning')
+
+def body_policy(b,policy,p):
+    need((b['publisher'],b['recipient'])==(policy['peer_root'],policy['local_root']),'body_audience')
+    need(p['recipient_scope']==[policy['local_root']],'pointer_recipient')
+    need(b['offer']['request']==policy['request'] and b['booking'] is None,'find_original_request')
+
+PROFILE=ReviewedBodyProfileV01('FootballVenueOfferV01',COMMON_BODY_FIELDS+('publisher','recipient','request_sha256','offer','booking'),
+    ('domain','venue_ref','team_ref'),'accept_offers',body_shape,pointer_shape,body_policy)
+
+def source_semantics(E,case):
+    """Check supplied fields, never generate an offer for the author."""
+    req,inv=case['request'],case['inventory']
+    need(E['request']==req and E['schedule_revision']==inv['revision'],'original_source_identity')
+    fields={f['field_id']:f for f in inv['fields']}
+    need(len({f['field_id'] for f in E['fields']})==len(E['fields']),'source_field_uniqueness')
+    for field in E['fields']:
+        c.shape(field,('field_id','surface','full_size','price_minor'))
+        need(field['field_id'] in fields and all(fields[field['field_id']][k]==v for k,v in field.items()),'source_field_projection')
+    need(E['currency']==req['currency']==inv['currency'],'source_currency')
+    sessions={s['session_id']:s for s in req['sessions']}
+    need(type(E['alternatives']) is list and len(E['alternatives'])<=3,'alternative_bound')
+    need(len({a['session_id'] for a in E['alternatives']})==len(E['alternatives']),'alternative_uniqueness')
+    for alt in E['alternatives']:
+        c.shape(alt,('session_id','choices'))
+        need(alt['session_id'] in sessions and len(alt['choices'])<=2,'alternative_scope')
+        for row in alt['choices']:
+            c.shape(row,('session_id','venue_ref','field_id','start_utc','end_utc','price_minor'))
+            need(row['session_id']==alt['session_id'] and row['field_id'] in fields,'alternative_source')
+            f=fields[row['field_id']];s=sessions[row['session_id']]
+            start=utc(s['start'],req['timezone']);end=utc(s['end'],req['timezone'])
+            permitted=(0,1800) if s['allow_shift_minutes']==30 and req['owner_approval_ref'] and s['start'].startswith('2027-01-08T') else (0,)
+            need(all(type(row[k]) is int for k in ('start_utc','end_utc','price_minor')),'alternative_integer')
+            shift=row['start_utc']-start
+            need(shift in permitted and row['end_utc']==end+shift and end-start==5400,'alternative_time')
+            need(row['venue_ref']==req['venue_ref']==inv['venue_ref'] and f['surface']=='NATURAL_GRASS' and f['full_size'] is True,'alternative_hard_constraints')
+            need(row['price_minor']==f['price_minor']>=0,'alternative_price')
+            interval=(row['start_utc'],row['end_utc'])
+            need(any(a<=interval[0]<interval[1]<=b for a,b in f['available_utc']) and
+                 not any(overlap(interval,occupied) for occupied in f['occupied_utc']),'alternative_availability')
+
+def expected_context(case,proofs):
+    """Expected C from trusted case inputs and authenticated publisher material only."""
+    request,inventory=case['request'],case['inventory'];trusted=case['source_observation']
+    need(trusted['origin']=='TRUSTED_RUNNER_INPUTS_AND_CLOCK','source_observation_origin')
+    policy=trusted['policy'];used=trusted['use_time']
+    need(used==case['evaluation_time'],'independent_use_time')
+    need(policy['request']==request and policy['peer_keys']==trusted['publisher_public_keys'],'independent_policy_bootstrap')
+    need((policy['local_root'],policy['peer_root'])==('ActivePlanetRoot','VenueRoot'),'local_roots')
+    need(policy['max_source_age']<=300 and policy['max_validity_horizon']<=300,'bounded_local_policy')
+    material=proofs['publication'];b=material['bundle']['body'];p=material['descriptor']['value'];fetch=material['request']
+    need(fetch==trusted['fetch_request'],'independent_fetch_request')
+    for name in ('bundle','descriptor','request','status'):
+        need(sha(material[name])==trusted['publisher_wire_sha256'][name],'independent_publisher_wire:'+name)
+    need(b==proofs['offer_body'],'received_body')
+    source=proofs['venue_work']
+    output=native_result(source,'VenueRoot',dict(request_json=canonical(request).decode(),inventory_json=canonical(inventory).decode()))
+    need(set(output)=={'offer_json'},'source_output_fields')
+    E=c.decode(output['offer_json'].encode());source_semantics(E,case)
+    checked=c.check_bundle(material['bundle'],material['descriptor'],fetch,material['status'],policy,used,
+        trusted['highwater'],trusted['conflicts'],profile=PROFILE)
+    need(b['offer']==E,'payload_projection_not_E')
+    need(b['source_record_ref']==trusted['source_record_ref'] and b['source_revision']==trusted['source_revision'],'independent_source_revision')
+    work_ref=source['artifact']['artifact_id'];review=proofs['source_review']
+    need(b['source_work_ref']==work_ref,'source_work_ref')
+    need(b['source_review_ref']==review['result']['decision_id'],'source_review_ref')
+    claim=dict(request_sha256=sha(request),inventory_sha256=sha(inventory),consumed_offer=E,source_work_ref=work_ref,
+        booking=None,previous_source_ref=None,previous_review_ref=None)
+    # A trusted original observation pins the source decision selection; candidate
+    # IDs are not required to equal artifact IDs or to use a private naming recipe.
+    need(review['result']['decision_id']==trusted['source_review_id'],'independently_recorded_source_review')
+    root_record(review,'VenueRoot',trusted['source_selected_id'],claim,b['source_record_ref'])
+    need(canonical(b)==bytes.fromhex(trusted['published_body_hex']),'exact_published_bytes')
+    need(trusted['published_body_sha256']==sha(b),'published_byte_hash')
+    root_record(proofs['publication_review'],'VenueRoot',p['pointer_id'],dict(pointer=p,source_review_ref=b['source_review_ref']),b['source_record_ref'])
+    release=proofs['release_review']
+    need(material['bundle']['release']['value']['release_review_ref']==release['result']['decision_id'],'release_review_ref')
+    root_record(release,'VenueRoot',fetch['request_id'],dict(request=fetch,pointer_ref=p['pointer_id'],body_hash=sha(b),source_review_ref=b['source_review_ref']),p['pointer_id'])
+    v=material['status']['value'];t=b['time_envelope']
+    s=dict(publisher=policy['peer_root'],recipient=policy['local_root'],request_revision=request['revision'],schedule_revision=inventory['revision'],
+        offer_revision=b['source_revision'],observed_at=t['source_observed_at'],valid_from=t['valid_from'],valid_to=t['valid_to'],
+        ttl=t['ttl_seconds'],pt=t['pt_created_at'],status=checked['status_entry']['state'],status_checked=v['checked_at'],status_until=v['valid_until'])
+    # Validate the actual E selection against original inventory/ranking, without
+    # making an offer or borrowing the consumer's report as an expected result.
+    check_report(case,dict(version='g53.result.v01',request_ref=request['request_id'],request_revision=request['revision'],
+        team_ref=request['team_ref'],operation=request['operation'],status=E['status'],slots=E['slots'],total_minor=E['total_minor'],
+        currency=E['currency'],source=s,receipt_ref=None,counts=dict(search=1,dispatch=0,mutations=0),native_refs={}))
+    return dict(body=b,source_projection=s)
+
+def check_native(case,report,proofs,observed):
+    need(observed['classification']=='TRUSTED_RUNNER_OBSERVATION' and observed['request_sha256']==sha(case['request']),'independent_observation')
+    need(observed['candidate_source_sha256']==case['reviewed_candidate_source_sha256'],'reviewed_source')
+    check_report(case,report)
+    if case['request']['operation']=='FIND_OFFER' and (report['status']=='OFFER_READY' or 'venue_work' in proofs):
+        context=expected_context(case,proofs);requester=proofs['requester_work'];body=context['body']
+        result=native_result(requester,'ActivePlanetRoot',dict(request_json=canonical(case['request']).decode(),offer_json=canonical(context).decode()))
+        semantic={k:v for k,v in report.items() if k!='native_refs'}
+        need(result==dict(result_json=canonical(semantic).decode()),'requester_result_consumption')
+        need(report['source']==context['source_projection'],'reported_source_projection')
+        root_record(proofs['requester_review'],'ActivePlanetRoot',requester['artifact']['artifact_id'],
+            dict(request_sha256=sha(case['request']),offer_sha256=sha(body),result_sha256=sha(semantic)),body['source_record_ref'])
+        need(observed['venue_work']==observed['requester_work']==1,'observed_native_calls')
+    else:
+        need(observed['full_boundary_review']=='REVIEWED_WITH_RECEIPT_SOURCE_AND_READBACK','boundary_review_required')
+    need(observed['counts']==report['counts'],'observed_counters')
+    return dict(status='STRUCTURES_CHECKED_NOT_SELF_AWARDED_ADMISSION',live_boundary_review='REQUIRED')

@@ -1,0 +1,272 @@
+{
+  "AppArmorProfile": "",
+  "Args": [
+    "-B",
+    "/runner/action_runner_g54d.py",
+    "candidate"
+  ],
+  "Config": {
+    "AttachStderr": true,
+    "AttachStdin": false,
+    "AttachStdout": true,
+    "Cmd": [
+      "-B",
+      "/runner/action_runner_g54d.py",
+      "candidate"
+    ],
+    "Domainname": "",
+    "Entrypoint": [
+      "python"
+    ],
+    "Env": [
+      "PATH=/usr/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+      "PYTHON_VERSION=3.14.7",
+      "PYTHON_SHA256=3b48dac8fb59f62eaa67ac83c1eb12bda1b7a08406dd286e252c11a66be27f81",
+      "PYTHONDONTWRITEBYTECODE=1",
+      "PYTHONUNBUFFERED=1",
+      "PYTHONPATH=/approved/source:/approved/example",
+      "HOME=/tmp"
+    ],
+    "Hostname": "0e1f586980be",
+    "Image": "sha256:f07e68671249ccaffda9529b14593c191ff9664a8b43b27f6b16570623f63a97",
+    "Labels": {
+      "radiolaria.g6a3.task": "radiolaria-g6a3-737528fe6cfc4fa5bbfccc3bcdc1b25e",
+      "radiolaria.task": "G54D"
+    },
+    "OpenStdin": false,
+    "StdinOnce": false,
+    "Tty": false,
+    "User": "65532:65532",
+    "Volumes": null,
+    "WorkingDir": "/out"
+  },
+  "Created": "2026-09-27T05:32:17.511034514Z",
+  "Driver": "overlayfs",
+  "ExecIDs": null,
+  "HostConfig": {
+    "AutoRemove": false,
+    "Binds": null,
+    "BlkioDeviceReadBps": [],
+    "BlkioDeviceReadIOps": [],
+    "BlkioDeviceWriteBps": [],
+    "BlkioDeviceWriteIOps": [],
+    "BlkioWeight": 0,
+    "BlkioWeightDevice": [],
+    "CapAdd": null,
+    "CapDrop": [
+      "ALL"
+    ],
+    "Cgroup": "",
+    "CgroupParent": "",
+    "CgroupnsMode": "private",
+    "ConsoleSize": [
+      0,
+      0
+    ],
+    "ContainerIDFile": "",
+    "CpuCount": 0,
+    "CpuPercent": 0,
+    "CpuPeriod": 0,
+    "CpuQuota": 0,
+    "CpuRealtimePeriod": 0,
+    "CpuRealtimeRuntime": 0,
+    "CpuShares": 0,
+    "CpusetCpus": "",
+    "CpusetMems": "",
+    "DeviceCgroupRules": null,
+    "DeviceRequests": null,
+    "Devices": [],
+    "Dns": null,
+    "DnsOptions": [],
+    "DnsSearch": [],
+    "ExtraHosts": null,
+    "GroupAdd": null,
+    "IOMaximumBandwidth": 0,
+    "IOMaximumIOps": 0,
+    "IpcMode": "private",
+    "Isolation": "",
+    "Links": null,
+    "LogConfig": {
+      "Config": {},
+      "Type": "none"
+    },
+    "MaskedPaths": [
+      "/proc/acpi",
+      "/proc/asound",
+      "/proc/interrupts",
+      "/proc/kcore",
+      "/proc/keys",
+      "/proc/latency_stats",
+      "/proc/sched_debug",
+      "/proc/scsi",
+      "/proc/timer_list",
+      "/proc/timer_stats",
+      "/sys/devices/virtual/powercap",
+      "/sys/firmware"
+    ],
+    "Memory": 536870912,
+    "MemoryReservation": 0,
+    "MemorySwap": 536870912,
+    "MemorySwappiness": null,
+    "Mounts": [
+      {
+        "ReadOnly": true,
+        "Source": "/Users/admin/Projects/hedgehog-os-gate6-g6a4-p9f2we5q/campaign/football_work/AUTHOR_VISIBLE",
+        "Target": "/approved",
+        "Type": "bind"
+      },
+      {
+        "ReadOnly": true,
+        "Source": "/Users/admin/Projects/hedgehog-os-gate6-g6a4-p9f2we5q/campaign/football_work/DEPLOYMENT_G54D",
+        "Target": "/runner",
+        "Type": "bind"
+      },
+      {
+        "ReadOnly": true,
+        "Source": "/Users/admin/Projects/hedgehog-os-gate6-g6a4-p9f2we5q/campaign/football_work/RUNTIME_INPUTS/attempt_04/revision_conflict_repr",
+        "Target": "/inputs",
+        "Type": "bind"
+      },
+      {
+        "ReadOnly": true,
+        "Source": "/Users/admin/Projects/hedgehog-os-gate6-g6a4-p9f2we5q/campaign/football_work/candidate",
+        "Target": "/candidate",
+        "Type": "bind"
+      }
+    ],
+    "NanoCpus": 1000000000,
+    "NetworkMode": "none",
+    "OomKillDisable": false,
+    "OomScoreAdj": 0,
+    "PidMode": "",
+    "PidsLimit": 16,
+    "PortBindings": {},
+    "Privileged": false,
+    "PublishAllPorts": false,
+    "ReadonlyPaths": [
+      "/proc/bus",
+      "/proc/fs",
+      "/proc/irq",
+      "/proc/sys",
+      "/proc/sysrq-trigger"
+    ],
+    "ReadonlyRootfs": true,
+    "RestartPolicy": {
+      "MaximumRetryCount": 0,
+      "Name": "no"
+    },
+    "Runtime": "runc",
+    "SecurityOpt": [
+      "no-new-privileges"
+    ],
+    "ShmSize": 67108864,
+    "Tmpfs": {
+      "/out": "rw,noexec,nosuid,nodev,size=67108864,mode=1777",
+      "/tmp": "rw,noexec,nosuid,nodev,size=33554432,mode=1777"
+    },
+    "UTSMode": "",
+    "Ulimits": null,
+    "UsernsMode": "",
+    "VolumeDriver": "",
+    "VolumesFrom": null
+  },
+  "HostnamePath": "",
+  "HostsPath": "",
+  "Id": "0e1f586980bed2ad44ac40cacc37dcb84e9730bb51dae946efd5a1b004582231",
+  "Image": "sha256:f07e68671249ccaffda9529b14593c191ff9664a8b43b27f6b16570623f63a97",
+  "ImageManifestDescriptor": {
+    "digest": "sha256:b7ea0f72d1b4649aaac1af51c9e38825906972bfc25228a79d89b767d7c35f65",
+    "mediaType": "application/vnd.oci.image.manifest.v1+json",
+    "platform": {
+      "architecture": "arm64",
+      "os": "linux"
+    },
+    "size": 1813
+  },
+  "LogPath": "",
+  "MountLabel": "",
+  "Mounts": [
+    {
+      "Destination": "/approved",
+      "Mode": "",
+      "Propagation": "rprivate",
+      "RW": false,
+      "Source": "/Users/admin/Projects/hedgehog-os-gate6-g6a4-p9f2we5q/campaign/football_work/AUTHOR_VISIBLE",
+      "Type": "bind"
+    },
+    {
+      "Destination": "/candidate",
+      "Mode": "",
+      "Propagation": "rprivate",
+      "RW": false,
+      "Source": "/Users/admin/Projects/hedgehog-os-gate6-g6a4-p9f2we5q/campaign/football_work/candidate",
+      "Type": "bind"
+    },
+    {
+      "Destination": "/inputs",
+      "Mode": "",
+      "Propagation": "rprivate",
+      "RW": false,
+      "Source": "/Users/admin/Projects/hedgehog-os-gate6-g6a4-p9f2we5q/campaign/football_work/RUNTIME_INPUTS/attempt_04/revision_conflict_repr",
+      "Type": "bind"
+    },
+    {
+      "Destination": "/runner",
+      "Mode": "",
+      "Propagation": "rprivate",
+      "RW": false,
+      "Source": "/Users/admin/Projects/hedgehog-os-gate6-g6a4-p9f2we5q/campaign/football_work/DEPLOYMENT_G54D",
+      "Type": "bind"
+    }
+  ],
+  "Name": "/radiolaria-g6a3-737528fe6cfc4fa5bbfccc3bcdc1b25e",
+  "NetworkSettings": {
+    "Networks": {
+      "none": {
+        "Aliases": null,
+        "DNSNames": null,
+        "DriverOpts": null,
+        "EndpointID": "",
+        "Gateway": "",
+        "GlobalIPv6Address": "",
+        "GlobalIPv6PrefixLen": 0,
+        "GwPriority": 0,
+        "IPAMConfig": null,
+        "IPAddress": "",
+        "IPPrefixLen": 0,
+        "IPv6Gateway": "",
+        "Links": null,
+        "MacAddress": "",
+        "NetworkID": ""
+      }
+    },
+    "Ports": {},
+    "SandboxID": "",
+    "SandboxKey": ""
+  },
+  "Path": "python",
+  "Platform": "linux",
+  "ProcessLabel": "",
+  "ResolvConfPath": "",
+  "RestartCount": 0,
+  "State": {
+    "Dead": false,
+    "Error": "",
+    "ExitCode": 0,
+    "FinishedAt": "0001-01-01T00:00:00Z",
+    "OOMKilled": false,
+    "Paused": false,
+    "Pid": 0,
+    "Restarting": false,
+    "Running": false,
+    "StartedAt": "0001-01-01T00:00:00Z",
+    "Status": "created"
+  },
+  "Storage": {
+    "RootFS": {
+      "Snapshot": {
+        "Name": "overlayfs"
+      }
+    }
+  }
+}

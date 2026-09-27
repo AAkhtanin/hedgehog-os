@@ -1,0 +1,34 @@
+{
+  "basis": "Current compatibility successor; all other native/authority source unchanged.",
+  "rows": {
+    "N1-05": {
+      "negative": "Wrong typed Root and absent permission",
+      "oracle": "Typed AVF, independently checked Root claim and historical authorization, ABI receipt and state",
+      "predicate": "AVF score is not permission",
+      "seam": "Public Firewall builders, actual mock execution",
+      "unit": "one isolated mock effect"
+    },
+    "N4-04": {
+      "negative": "Changed input, expiry, wrong Root",
+      "oracle": "Arithmetic 27/3/1/1; explicit business scope; actual stored return",
+      "predicate": "Same business input avoids domain execution without action authority",
+      "seam": "Native calibration Work, LocalDRS, public informational shortcut",
+      "unit": "Domain Work cold1/warm0; warm two real Root decisions"
+    },
+    "N4-05": {
+      "negative": "Unexpired predecessor current use, rebound, restricted payload",
+      "oracle": "Validated closed two-record lineage, not record order",
+      "predicate": "Current, superseded, expired, restricted local memory",
+      "seam": "Exact Root-reviewed immutable writeback and public descent",
+      "unit": "one successor at 1790503617 from 1790503615 geometry"
+    },
+    "N4-07": {
+      "negative": "Private marker, changed upstream/capture/consumed binding",
+      "oracle": "Request allowlist and six previous actual contribution links",
+      "predicate": "Bounded privacy and non-authoritative lineage",
+      "seam": "Four retained LIVE projections plus eight existing controlled tests",
+      "unit": "No new model/network call; historical model prose not certified"
+    }
+  },
+  "trust": "Reviewed reference code and passive current-process observer; not a hostile in-process security boundary."
+}

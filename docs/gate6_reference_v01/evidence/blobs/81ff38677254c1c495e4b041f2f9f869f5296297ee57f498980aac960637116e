@@ -1,0 +1,238 @@
+{
+  "DIRECT": {
+    "classification": "RECORDED_G6A3_REUSED",
+    "status": "PASS"
+  },
+  "LIVING_G36": {
+    "status": "PASS",
+    "command": "/Users/admin/Projects/hedgehog-os-gate6-g6a4-p9f2we5q/evidence/commands/profile_LIVING_G36",
+    "process_receipt": {
+      "rc": 0,
+      "timeout": false,
+      "elapsed_seconds": 2226.768301125616,
+      "ended": "2026-09-27T06:21:09.181835+00:00",
+      "reaped": true,
+      "stdout": {
+        "bytes": 466,
+        "sha256": "401f8d98d4a4ad5e59e26f7315e65803462bda4539184e6256f9d02f144efad3",
+        "mode": 420
+      },
+      "stderr": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "mode": 420
+      }
+    },
+    "seconds": 2226.325478076935,
+    "classification": "FRESH_NATIVE"
+  },
+  "CONFORMANCE_G36": {
+    "status": "PASS",
+    "command": "/Users/admin/Projects/hedgehog-os-gate6-g6a4-p9f2we5q/evidence/commands/profile_CONFORMANCE_G36",
+    "process_receipt": {
+      "rc": 0,
+      "timeout": false,
+      "elapsed_seconds": 2198.9390113335103,
+      "ended": "2026-09-27T06:59:25.528159+00:00",
+      "reaped": true,
+      "stdout": {
+        "bytes": 461,
+        "sha256": "5b3adeaad236f6a7aad2368757943b519aeb5a3feefdb01a9ce0359935270c62",
+        "mode": 420
+      },
+      "stderr": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "mode": 420
+      }
+    },
+    "seconds": 2198.549877882004,
+    "classification": "FRESH_NATIVE_INDEPENDENT"
+  },
+  "G35": {
+    "status": "FAILED",
+    "command": "/Users/admin/Projects/hedgehog-os-gate6-g6a4-p9f2we5q/evidence/commands/profile_G35",
+    "process_receipt": {
+      "rc": 1,
+      "timeout": false,
+      "elapsed_seconds": 117.77531854249537,
+      "ended": "2026-09-27T05:39:48.557032+00:00",
+      "reaped": true,
+      "stdout": {
+        "bytes": 3590,
+        "sha256": "d1ffd4d44af64ecd9d2c8de0c528fdbff012081c976401d4d8181fa2e4138e5c",
+        "mode": 420
+      },
+      "stderr": {
+        "bytes": 1851,
+        "sha256": "b1876be00403b5cf4a2d353cabaf3c7273119eba67c5745c6d6a918c187ca9ad",
+        "mode": 420
+      }
+    },
+    "failure": {
+      "error": "ValueError('g35_collection_incomplete:TESTFLIX')",
+      "seconds": 117.54401111602783
+    }
+  },
+  "G4": {
+    "status": "PASS",
+    "command": "/Users/admin/Projects/hedgehog-os-gate6-g6a4-p9f2we5q/evidence/commands/profile_G4",
+    "process_receipt": {
+      "rc": 0,
+      "timeout": false,
+      "elapsed_seconds": 39.608419000171125,
+      "ended": "2026-09-27T05:43:05.288993+00:00",
+      "reaped": true,
+      "stdout": {
+        "bytes": 3515,
+        "sha256": "95420e7cff80cf4710ff4599543821d131ef5af49dbb0c68923d8fae1af45dbe",
+        "mode": 420
+      },
+      "stderr": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "mode": 420
+      }
+    },
+    "seconds": 39.18926930427551,
+    "classification": "FRESH_G4_WITH_TWO_PURE_TEST_PIN_CONSUMERS"
+  },
+  "G51": {
+    "status": "PASS",
+    "command": "/Users/admin/Projects/hedgehog-os-gate6-g6a4-p9f2we5q/evidence/commands/profile_G51",
+    "process_receipt": {
+      "rc": 0,
+      "timeout": false,
+      "elapsed_seconds": 2.3818895425647497,
+      "ended": "2026-09-27T05:29:39.758717+00:00",
+      "reaped": true,
+      "stdout": {
+        "bytes": 564,
+        "sha256": "aaf6f93c2754a08ca0b39c3bbed5c08161c95b18288a83198a053862f3540271",
+        "mode": 420
+      },
+      "stderr": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "mode": 420
+      }
+    },
+    "seconds": 2.040548086166382,
+    "classification": "FRESH_EXCHANGE"
+  },
+  "G52": {
+    "status": "PASS",
+    "command": "/Users/admin/Projects/hedgehog-os-gate6-g6a4-p9f2we5q/evidence/commands/profile_G52",
+    "process_receipt": {
+      "rc": 0,
+      "timeout": false,
+      "elapsed_seconds": 4.279184125363827,
+      "ended": "2026-09-27T05:30:15.517734+00:00",
+      "reaped": true,
+      "stdout": {
+        "bytes": 707,
+        "sha256": "0639c4a2c06b7cafa80d862b7fe44942b099b49341cbc8d1e381d4fae3da79b5",
+        "mode": 420
+      },
+      "stderr": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "mode": 420
+      }
+    },
+    "seconds": 3.9608118534088135,
+    "classification": "FRESH_RESTART"
+  },
+  "FOOTBALL": {
+    "status": "PASS",
+    "command": "/Users/admin/Projects/hedgehog-os-gate6-g6a4-p9f2we5q/evidence/commands/profile_FOOTBALL",
+    "process_receipt": {
+      "rc": 0,
+      "timeout": false,
+      "elapsed_seconds": 93.30923558399081,
+      "ended": "2026-09-27T05:33:20.103546+00:00",
+      "reaped": true,
+      "stdout": {
+        "bytes": 72004,
+        "sha256": "736dbf685736c2c6ef0a99b53fb1b348acc8cbebc01decff5cd5702c6aa93fe5",
+        "mode": 420
+      },
+      "stderr": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "mode": 420
+      }
+    },
+    "seconds": 92.31682991981506,
+    "classification": "ACCEPTED_PROGRAM_REEXECUTION"
+  },
+  "G44_RECORDED": {
+    "status": "PASS",
+    "command": "/Users/admin/Projects/hedgehog-os-gate6-g6a4-p9f2we5q/evidence/commands/profile_G44_RECORDED",
+    "process_receipt": {
+      "rc": 0,
+      "timeout": false,
+      "elapsed_seconds": 20.21537929214537,
+      "ended": "2026-09-27T05:30:55.497353+00:00",
+      "reaped": true,
+      "stdout": {
+        "bytes": 464,
+        "sha256": "5b8f4eee632749ae3309f65551b8a190fd4f8026ae24e137bc129dca316e50ef",
+        "mode": 420
+      },
+      "stderr": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "mode": 420
+      }
+    },
+    "seconds": 19.83903694152832,
+    "classification": "HISTORICAL_PURE_NOT_FRESH_G4"
+  },
+  "G5_RECORDED": {
+    "status": "PASS",
+    "command": "/Users/admin/Projects/hedgehog-os-gate6-g6a4-p9f2we5q/evidence/commands/profile_G5_RECORDED",
+    "process_receipt": {
+      "rc": 0,
+      "timeout": false,
+      "elapsed_seconds": 7.0164522072300315,
+      "ended": "2026-09-27T05:31:26.361306+00:00",
+      "reaped": true,
+      "stdout": {
+        "bytes": 628,
+        "sha256": "8bc4550a1f30d75d12b5621004ab8d360e7b7eef2bd9473a2ef9e14465762f9d",
+        "mode": 420
+      },
+      "stderr": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "mode": 420
+      }
+    },
+    "seconds": 5.3077051639556885,
+    "classification": "HISTORICAL_PURE_NOT_FRESH_NATIVE"
+  },
+  "MODEL": {
+    "status": "PASS",
+    "command": "/Users/admin/Projects/hedgehog-os-gate6-g6a4-p9f2we5q/evidence/commands/profile_MODEL",
+    "process_receipt": {
+      "rc": 0,
+      "timeout": false,
+      "elapsed_seconds": 127.83447350002825,
+      "ended": "2026-09-27T05:36:33.358014+00:00",
+      "reaped": true,
+      "stdout": {
+        "bytes": 471,
+        "sha256": "9aa607d1db0a27c60373cdeab8c5ea2ddbd0f8256d4705cbad51bce8faab0bd6",
+        "mode": 420
+      },
+      "stderr": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "mode": 420
+      }
+    },
+    "seconds": 127.40975999832153,
+    "classification": "LIVE_CONTRAST_COMPLETE"
+  }
+}

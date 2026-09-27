@@ -1,0 +1,77 @@
+{
+  "status": "ORIGINAL_FULL_HISTORICAL_PURE_PASS_RECONCILED",
+  "review": "REVIEW_PENDING",
+  "original_command": "019_retained_G5_original",
+  "original_command_rc": 1,
+  "wrapper_failure": "FileNotFoundError on omitted canonical_result locator AFTER the existing verifier completed.",
+  "corrected_locator": {
+    "bytes": 37389,
+    "sha256": "d2a25ed3b1ab123912e59d096808351dbcf18f59a16229b9abcaff9f647eacff",
+    "mode": 420,
+    "commit": "b6d11f5fcb619a10e877bbaaf6770881be315f16",
+    "git_path": "docs/gate5_reference_evidence_v01/closure/canonical_result.json",
+    "git_blob": "63ab37e4797ca34361ed70ed530ed4bd9c8243a3",
+    "recovery": "git show b6d11f5fcb619a10e877bbaaf6770881be315f16:docs/gate5_reference_evidence_v01/closure/canonical_result.json",
+    "classification": "EXACT_PUBLIC_HISTORICAL_BYTES_NOT_NEW_NATIVE_OUTPUT"
+  },
+  "actual_result": {
+    "bytes": 37389,
+    "sha256": "d2a25ed3b1ab123912e59d096808351dbcf18f59a16229b9abcaff9f647eacff",
+    "mode": 420
+  },
+  "original_equal": true,
+  "children": {
+    "d1": {
+      "argv": [
+        "/Users/admin/Projects/hedgehog-os-gate6-g6a1-g4nd6eiu/venv/bin/python",
+        "-B",
+        "/Users/admin/Projects/hedgehog-os-gate6-g6a4r-bsu1xe8j/retained/G5_original/native/g54d1/supplied_check_d1.py",
+        "/Users/admin/Projects/hedgehog-os-gate6-g6a4r-bsu1xe8j/retained/G5_original/native/d1_result.json"
+      ],
+      "cwd": "/Users/admin/Projects/hedgehog-os-gate6-g6a4r-bsu1xe8j/retained/G5_original/native/g54d1",
+      "elapsed_seconds": 3.4858544999733567,
+      "pid": 67836,
+      "rc": 0,
+      "reaped": true,
+      "streams": {
+        "stderr": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "bytes": 408,
+          "sha256": "c44185ab3308928ed391d53ef94eaa2823c842fdc107bc0505a7edb3e0612279"
+        }
+      }
+    },
+    "g52": {
+      "argv": [
+        "/Users/admin/Projects/hedgehog-os-gate6-g6a1-g4nd6eiu/venv/bin/python",
+        "-B",
+        "/Users/admin/Projects/hedgehog-os-gate6-g6a4r-bsu1xe8j/retained/G5_original/native/g52/helpers/run_supplied.py",
+        "/Users/admin/Projects/hedgehog-os-gate6-g6a4r-bsu1xe8j/retained/G5_original/native/g52/evidence/lifecycle_06",
+        "/Users/admin/Projects/hedgehog-os-gate6-g6a4r-bsu1xe8j/retained/G5_original/native/g52/evidence/expected_capture.json",
+        "/Users/admin/Projects/hedgehog-os-gate6-g6a4r-bsu1xe8j/retained/G5_original/native/g52_source",
+        "/Users/admin/Projects/hedgehog-os-gate6-g6a4r-bsu1xe8j/retained/G5_original/native/g52_result.json"
+      ],
+      "cwd": "/Users/admin/Projects/hedgehog-os-gate6-g6a4r-bsu1xe8j/retained/G5_original/native/g52",
+      "elapsed_seconds": 0.9005878744646907,
+      "pid": 67810,
+      "rc": 0,
+      "reaped": true,
+      "streams": {
+        "stderr": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "bytes": 357,
+          "sha256": "f3d9fb9ba3cb2744e0c153862bec0dbd64676691738069e2ad4ae6288f988ad7"
+        }
+      }
+    }
+  },
+  "successor_full_checker": "EXPECTED_REFUSAL_017: exact proof_input_freeze pins the original adapter; unchanged.",
+  "compatibility_scope": "Historical full source-bound verification, with separate source/dependency impact assessment. Not full original-checker verification on successor.",
+  "parent_observation_scope": "Current thread only; child raw observations are separate. No invented child counters."
+}

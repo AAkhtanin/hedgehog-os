@@ -1,0 +1,1 @@
+{"events":[{"event_id":"exact","status":"NO_COMPLETE_OFFER"},{"event_id":"shift","status":"OFFER_READY"},{"event_id":"book","status":"REFUSED"}],"executed_provider_calls":0,"role":"requester","wire":{"received":9,"received_bytes":23275,"sent":9,"sent_bytes":16991}}

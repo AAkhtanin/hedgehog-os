@@ -1,0 +1,140 @@
+{
+  "aggregate_16": "NOT_COMPLETED",
+  "authority": "CAPTURE_IS_EVIDENCE_NOT_RESTORED_HOST",
+  "observed_calls": {
+    "dispatch": 0,
+    "effect": 0,
+    "root": 0,
+    "sentinel": 1,
+    "work": 0
+  },
+  "refusal": null,
+  "result": {
+    "bookings": 1,
+    "case": "same_key_changed",
+    "classification": "REVIEWED_REFERENCE_NATIVE_PROOF",
+    "events": {
+      "book": {
+        "counts": {
+          "publisher": {
+            "CALLBACK": 1,
+            "DISPATCH": 1,
+            "EFFECT": 1,
+            "EXECUTOR": 1,
+            "PURE": 0,
+            "STATE_WRITE": 1
+          },
+          "requester": {
+            "CALLBACK": 0,
+            "DISPATCH": 0,
+            "EFFECT": 0,
+            "EXECUTOR": 0,
+            "PURE": 1,
+            "STATE_WRITE": 0
+          }
+        },
+        "state_sha256": "04dc5db6fa57172a586f61e22fe94c4a1eb489d158a1d35b4fa1dd18a02a01da",
+        "status": "MOCK_BOOKED",
+        "verdict": "PASS_NATIVE_THREE_SLOT_BOOKING"
+      },
+      "exact": {
+        "counts": {
+          "publisher": {
+            "CALLBACK": 0,
+            "DISPATCH": 0,
+            "EFFECT": 0,
+            "EXECUTOR": 0,
+            "PURE": 1,
+            "STATE_WRITE": 0
+          },
+          "requester": {
+            "CALLBACK": 0,
+            "DISPATCH": 0,
+            "EFFECT": 0,
+            "EXECUTOR": 0,
+            "PURE": 1,
+            "STATE_WRITE": 0
+          }
+        },
+        "state_sha256": "61fc425c423ad3de96c729a7386139ce1e32b2d4cee111404489ac3169c500da",
+        "status": "NO_COMPLETE_OFFER",
+        "verdict": {
+          "bundle_checks": 2,
+          "canonical_C_sha256": "50b6b5526c4e57b40d31e9c5cd0c44a726df9d155c2119e1836d641b8ebb05c4",
+          "event": "exact",
+          "native_consumer_work": 1,
+          "native_source_work": 1,
+          "root_release_join": true,
+          "source_selection": "NO_COMPLETE_OFFER",
+          "status": "PASS_COMPLETED_FIND_ONLY",
+          "total_minor": 0
+        }
+      },
+      "repeat": {
+        "counts": {
+          "publisher": {
+            "CALLBACK": 0,
+            "DISPATCH": 0,
+            "EFFECT": 0,
+            "EXECUTOR": 0,
+            "PURE": 0,
+            "STATE_WRITE": 0
+          },
+          "requester": {
+            "CALLBACK": 0,
+            "DISPATCH": 0,
+            "EFFECT": 0,
+            "EXECUTOR": 0,
+            "PURE": 0,
+            "STATE_WRITE": 0
+          }
+        },
+        "state_sha256": "04dc5db6fa57172a586f61e22fe94c4a1eb489d158a1d35b4fa1dd18a02a01da",
+        "status": "REFUSED",
+        "verdict": [
+          {
+            "causes": [
+              "CHANGED_PAYLOAD"
+            ],
+            "classification": "CHECKED_REFUSAL"
+          }
+        ]
+      },
+      "shift": {
+        "counts": {
+          "publisher": {
+            "CALLBACK": 0,
+            "DISPATCH": 0,
+            "EFFECT": 0,
+            "EXECUTOR": 0,
+            "PURE": 1,
+            "STATE_WRITE": 0
+          },
+          "requester": {
+            "CALLBACK": 0,
+            "DISPATCH": 0,
+            "EFFECT": 0,
+            "EXECUTOR": 0,
+            "PURE": 1,
+            "STATE_WRITE": 0
+          }
+        },
+        "state_sha256": "61fc425c423ad3de96c729a7386139ce1e32b2d4cee111404489ac3169c500da",
+        "status": "OFFER_READY",
+        "verdict": {
+          "bundle_checks": 2,
+          "canonical_C_sha256": "66c17fdc76528946b1d163ac03220aa7eb9d6e1931d3de56f8e83a9cbb5a3189",
+          "event": "shift",
+          "native_consumer_work": 1,
+          "native_source_work": 1,
+          "root_release_join": true,
+          "source_selection": "OFFER_READY",
+          "status": "PASS_COMPLETED_FIND_ONLY",
+          "total_minor": 6300
+        }
+      }
+    },
+    "slots": 3
+  },
+  "status": "PASS_PER_CASE_PURE"
+}

@@ -1,0 +1,9 @@
+
+==================================== ERRORS ====================================
+_______ ERROR collecting tests/test_gate6_g35_request_projection_v01.py ________
+'request' is a reserved word for fixtures, use another name:
+  /Users/admin/Projects/hedgehog-os-gate6-g6a4r-bsu1xe8j/clone/tests/test_gate6_g35_request_projection_v01.py:19
+=========================== short test summary info ============================
+ERROR tests/test_gate6_g35_request_projection_v01.py - Failed: 'request' is a...
+!!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!!
+1 error in 0.61s

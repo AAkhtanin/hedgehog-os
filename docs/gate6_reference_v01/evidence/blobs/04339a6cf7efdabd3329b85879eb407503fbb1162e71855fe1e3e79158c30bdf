@@ -1,0 +1,118 @@
+{
+  "status": "PASS_PER_CASE_PURE",
+  "result": {
+    "classification": "REVIEWED_REFERENCE_NATIVE_PROOF",
+    "case": "revision_conflict",
+    "events": {
+      "exact": {
+        "verdict": {
+          "event": "exact",
+          "status": "PASS_COMPLETED_FIND_ONLY",
+          "source_selection": "NO_COMPLETE_OFFER",
+          "total_minor": 0,
+          "native_source_work": 1,
+          "native_consumer_work": 1,
+          "bundle_checks": 2,
+          "root_release_join": true,
+          "canonical_C_sha256": "c122302c5b12eec74678b9fc59e57ebbad02c079607ecee69ea154161edab00e"
+        },
+        "status": "NO_COMPLETE_OFFER",
+        "counts": {
+          "publisher": {
+            "PURE": 1,
+            "DISPATCH": 0,
+            "EFFECT": 0,
+            "EXECUTOR": 0,
+            "CALLBACK": 0,
+            "STATE_WRITE": 0
+          },
+          "requester": {
+            "PURE": 1,
+            "DISPATCH": 0,
+            "EFFECT": 0,
+            "EXECUTOR": 0,
+            "CALLBACK": 0,
+            "STATE_WRITE": 0
+          }
+        },
+        "state_sha256": "61fc425c423ad3de96c729a7386139ce1e32b2d4cee111404489ac3169c500da"
+      },
+      "shift": {
+        "verdict": {
+          "event": "shift",
+          "status": "PASS_COMPLETED_FIND_ONLY",
+          "source_selection": "OFFER_READY",
+          "total_minor": 6300,
+          "native_source_work": 1,
+          "native_consumer_work": 1,
+          "bundle_checks": 2,
+          "root_release_join": true,
+          "canonical_C_sha256": "1f1e653fe5b9548c78a7d6927355ee285096d12b3117fae84c8186b81b356abb"
+        },
+        "status": "OFFER_READY",
+        "counts": {
+          "publisher": {
+            "PURE": 1,
+            "DISPATCH": 0,
+            "EFFECT": 0,
+            "EXECUTOR": 0,
+            "CALLBACK": 0,
+            "STATE_WRITE": 0
+          },
+          "requester": {
+            "PURE": 1,
+            "DISPATCH": 0,
+            "EFFECT": 0,
+            "EXECUTOR": 0,
+            "CALLBACK": 0,
+            "STATE_WRITE": 0
+          }
+        },
+        "state_sha256": "61fc425c423ad3de96c729a7386139ce1e32b2d4cee111404489ac3169c500da"
+      },
+      "book": {
+        "verdict": [
+          {
+            "classification": "CHECKED_REFUSAL",
+            "causes": [
+              "STALE_SCHEDULE",
+              "CURRENT_OCCUPANCY_CONFLICT"
+            ]
+          }
+        ],
+        "status": "REFUSED",
+        "counts": {
+          "publisher": {
+            "PURE": 0,
+            "DISPATCH": 0,
+            "EFFECT": 0,
+            "EXECUTOR": 0,
+            "CALLBACK": 0,
+            "STATE_WRITE": 0
+          },
+          "requester": {
+            "PURE": 0,
+            "DISPATCH": 0,
+            "EFFECT": 0,
+            "EXECUTOR": 0,
+            "CALLBACK": 0,
+            "STATE_WRITE": 0
+          }
+        },
+        "state_sha256": "61fc425c423ad3de96c729a7386139ce1e32b2d4cee111404489ac3169c500da"
+      }
+    },
+    "bookings": 0,
+    "slots": 0
+  },
+  "refusal": null,
+  "observed_calls": {
+    "root": 0,
+    "dispatch": 0,
+    "work": 0,
+    "effect": 0,
+    "sentinel": 1
+  },
+  "aggregate_16": "NOT_COMPLETED",
+  "authority": "CAPTURE_IS_EVIDENCE_NOT_RESTORED_HOST"
+}

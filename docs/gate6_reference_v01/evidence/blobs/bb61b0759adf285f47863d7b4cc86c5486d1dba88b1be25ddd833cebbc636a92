@@ -1,0 +1,95 @@
+{
+  "events": [
+    {
+      "event_id": "exact",
+      "request": {
+        "budget_minor": 7000,
+        "currency": "EUR",
+        "operation": "FIND_OFFER",
+        "owner_approval_ref": null,
+        "request_id": "request:exam:one",
+        "revision": 1,
+        "sessions": [
+          {
+            "allow_shift_minutes": 0,
+            "end": "2027-01-07T18:00:00",
+            "session_id": "session:7",
+            "start": "2027-01-07T16:30:00"
+          },
+          {
+            "allow_shift_minutes": 0,
+            "end": "2027-01-08T12:30:00",
+            "session_id": "session:8",
+            "start": "2027-01-08T11:00:00"
+          },
+          {
+            "allow_shift_minutes": 0,
+            "end": "2027-01-09T12:30:00",
+            "session_id": "session:9",
+            "start": "2027-01-09T11:00:00"
+          }
+        ],
+        "team_ref": "team:one",
+        "timezone": "Europe/Tirane",
+        "venue_ref": "venue:synthetic"
+      }
+    },
+    {
+      "event_id": "long_overlap",
+      "request": {
+        "budget_minor": 7000,
+        "currency": "EUR",
+        "operation": "FIND_OFFER",
+        "owner_approval_ref": "consent:jan8-only",
+        "request_id": "request:exam:one",
+        "revision": 2,
+        "sessions": [
+          {
+            "allow_shift_minutes": 0,
+            "end": "2027-01-07T18:00:00",
+            "session_id": "session:7",
+            "start": "2027-01-07T16:30:00"
+          },
+          {
+            "allow_shift_minutes": 30,
+            "end": "2027-01-08T12:30:00",
+            "session_id": "session:8",
+            "start": "2027-01-08T11:00:00"
+          },
+          {
+            "allow_shift_minutes": 0,
+            "end": "2027-01-09T12:30:00",
+            "session_id": "session:9",
+            "start": "2027-01-09T11:00:00"
+          }
+        ],
+        "team_ref": "team:one",
+        "timezone": "Europe/Tirane",
+        "venue_ref": "venue:synthetic"
+      }
+    }
+  ],
+  "policy": {
+    "accept_football": true,
+    "book_approvals": [],
+    "local_root": "ActivePlanetRoot",
+    "max_source_age": 300,
+    "peer_root": "VenueRoot",
+    "publish_enabled": true,
+    "recipients": [
+      "VenueRoot"
+    ],
+    "release_enabled": true,
+    "shift_approvals": [
+      {
+        "approval_ref": "consent:jan8-only",
+        "previous_request_sha256": "785cf3b0568f2b365786ebc2a66928d86af0be286a6980d3fca4322de67ac02f",
+        "request_sha256": "41fc59596b47d6dadc7d85b11cb6238fb308c916bdc686df6acb43a7e11fe294"
+      }
+    ],
+    "status": "ACTIVE",
+    "ttl_seconds": 300
+  },
+  "role": "requester",
+  "version": "g54.peer_input.v01"
+}

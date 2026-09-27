@@ -1,0 +1,15 @@
+Traceback (most recent call last):
+  File "/private/tmp/RADIOLARIA_G6A4R_OPERATOR.20260927/retained.py", line 144, in <module>
+    result=check()
+  File "/private/tmp/RADIOLARIA_G6A4R_OPERATOR.20260927/retained.py", line 125, in check
+    prior=consume_file(old/'campaign/G5_RECORDED/G5_RECORDED/native/canonical_result.json')
+  File "/private/tmp/RADIOLARIA_G6A4R_OPERATOR.20260927/retained.py", line 23, in consume_file
+    p=Path(path);inputs[str(p)]=work.identity(p);return read(p)
+                                ~~~~~~~~~~~~~^^^
+  File "/private/tmp/RADIOLARIA_G6A4R_OPERATOR.20260927/work.py", line 28, in identity
+    p = Path(path); s = p.lstat()
+                        ~~~~~~~^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.5/Frameworks/Python.framework/Versions/3.14/lib/python3.14/pathlib/__init__.py", line 661, in lstat
+    return os.lstat(self)
+           ~~~~~~~~^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/Users/admin/Projects/hedgehog-os-gate6-g6a4r-bsu1xe8j/inputs/g6a4/campaign/G5_RECORDED/G5_RECORDED/native/canonical_result.json'

@@ -1,0 +1,213 @@
+"""Independent source-layout adapter. No candidate import or restored authority."""
+import copy
+import hashlib
+import json
+from pathlib import Path
+import sys
+import traceback
+from review_finds import (W,read,load,need,sha,canonical,c,PROFILE,expected_policy,
+    check_find,one,events,counts,cross_root,cross_work,native_result,root_record,
+    producer_consumer,release_root_join)
+from examiner_g54d_core_v01 import gather
+from hedgehog.kernel import abi_v01 as abi,effect_firewall_v01 as firewall
+from boundary_g54d_v01 import check_refusal
+
+def transport(cap,v,original):
+    r=v['event']['request'];rows=v['rows'];proof=v['proofs'];material={};requests={}
+    policy=expected_policy(cap['parent']['parent_inputs']['requester']['policy'],cap['keys']['publisher'],r,original,cap['source_recipe'])
+    for wire in v['wire']:
+        msg=wire['message']
+        if wire['sender']=='requester':
+            req=msg['value']['value'];req=c.verify(msg['value'],cap['keys']['requester'],'REQUEST',req['trust_profile_hash']);c.validate('request',req)
+            need(req['op'] not in requests,'unique_request');requests[req['op']]=req
+            need(req['issued_at']<=int(wire['utc'])<req['deadline'],'wire_current')
+        else:material[msg['kind']]=msg['value']
+    close=requests['CLOSE'];closed=c.verify(material['CLOSED'],cap['keys']['publisher'],'CLOSE',close['trust_profile_hash'])
+    need(closed==dict(request_ref=close['request_id'],session=v['event']['event_id']),'close')
+    if 'BUNDLE' not in material:return None,material,requests
+    if material['BUNDLE']['body'] is None:
+        need(material['BUNDLE']['manifest'] is None,'refused_release_no_manifest')
+        pointer=material['POINTER']['value'];fetch=requests['FETCH'];signed=material['BUNDLE']['release']
+        release=c.verify(signed,cap['keys']['publisher'],'RELEASE',pointer['artifact_manifest_ref'].split(':')[1])
+        c.validate('release',release)
+        need(release['state']=='REFUSED' and release['request_ref']==fetch['request_id'] and release['nonce']==fetch['nonce'] and release['pointer_ref']==pointer['pointer_id'],'refused_release_binding')
+        rev=proof['publisher']['release_review'];cross_root(rev,rows['publisher'])
+        claim=dict(request=fetch,pointer_ref=pointer['pointer_id'],body_hash=pointer['body_sha256'],source_review_ref=pointer['source_review_ref'])
+        root_record(rev,'VenueRoot',None,claim,pointer['pointer_id'],accepted=False)
+        release_root_join(release,rev)
+        return None,material,requests
+    need(list(requests)==['DESCRIBE','STATUS','FETCH','CLOSE'],'retrieval_sequence')
+    need(proof['requester']['local_policy']==policy,'policy_from_operator')
+    starts=events(rows['requester'],'BUNDLE_CHECK','START');ends=events(rows['requester'],'BUNDLE_CHECK','RETURN')
+    need(len(starts)==len(ends)==2,'two_real_bundle_checks')
+    for start,end in zip(starts,ends):
+        args=start['material'];need(0<=start['utc']-args['now']<2,'actual_use_clock')
+        required=dict(bundle=material['BUNDLE'],pointer_envelope=material['POINTER'],request=requests['FETCH'],status=material['STATUS'],policy=policy)
+        need(all(args[k]==x for k,x in required.items()),'actual_wire_consumed')
+        checked=c.check_bundle(**args,profile=PROFILE);need(checked==end['checked'],'checked_bundle_return')
+    body=checked['body'];env=body['time_envelope'];E=body['offer'];sv=material['STATUS']['value']
+    S=dict(publisher=body['publisher'],recipient=body['recipient'],request_revision=E['request']['revision'],
+        schedule_revision=E['schedule_revision'],offer_revision=body['source_revision'],observed_at=env['source_observed_at'],
+        valid_from=env['valid_from'],valid_to=env['valid_to'],ttl=env['ttl_seconds'],pt=env['pt_created_at'],
+        status=checked['status_entry']['state'],status_checked=sv['checked_at'],status_until=sv['valid_until'])
+    return dict(body=body,S=S,pointer=material['POINTER']['value'],fetch=requests['FETCH']),material,requests
+
+def action(cap,v,selected,context):
+    rows=v['rows']['publisher'];p=v['proofs']['publisher'];r=v['event']['request'];body=context['body'];E=body['offer']
+    for kind in ('DISPATCH','EFFECT','EXECUTOR','CALLBACK','STATE_WRITE'):one(rows,kind,'START')
+    dispatch=one(rows,'DISPATCH','START');returned=one(rows,'DISPATCH','RETURN');effect=one(rows,'EFFECT','START');effect_return=one(rows,'EFFECT','RETURN')
+    callback=one(rows,'CALLBACK','RETURN');write=one(rows,'STATE_WRITE','START');written=one(rows,'STATE_WRITE','RETURN')
+    need(dispatch['sequence']<effect['sequence']<one(rows,'EXECUTOR','START')['sequence']<one(rows,'CALLBACK','START')['sequence']<write['sequence']<written['sequence']<callback['sequence']<effect_return['sequence']<returned['sequence'],'stage_order')
+    bound=dispatch['host']['root_bound'];ca=bound['canonical_projection'];packet=bound['packet_identity']['packet_id']
+    nr=bound['root_decision_projection'];direct=dict(kernel=nr['root_decision_kernel'],inputs=nr['root_decision_input'],result=nr['root_decision_result'])
+    need(any(x['record']==direct for x in events(rows,'NATIVE_ROOT','RETURN')),'actual_action_root')
+    root_record(direct,'VenueRoot',ca['authorization_candidate']['root_packet_authorization_candidate_id'])
+    payload=dict(request=r,offer_sha256=sha(selected['body']),schedule_revision=E['schedule_revision'],inventory_sha256=sha(v['event']['inventory']),slots=E['slots'],total_minor=E['total_minor'],currency=E['currency'])
+    invocation=effect['invocation'];iv={x['parameter_name']:x['value'] for x in invocation['inputs']}
+    need(json.loads(iv['payload_json'])==payload and iv['device_ref']==r['venue_ref'],'actual_payload')
+    need(invocation['packet_id']==packet==dispatch['arguments']['packet_id'] and invocation['owning_root_id']=='VenueRoot','packet_root')
+    need(invocation['task_id']==dispatch['arguments']['task_id'],'task_binding')
+    need(one(rows,'EXECUTOR','START')['invocation']==one(rows,'CALLBACK','START')['invocation']==invocation,'actual_callback_invocation')
+    key=ca['idempotency_identity']['idempotency_key'];need(effect['request']['idempotency_key']==key and effect['request']['target_root_id']=='VenueRoot','firewall_owner_key')
+    need(effect['admission_id']==invocation['admission_id'],'admission')
+    before=one(rows,'EVENT','START')['registry'];after=one(rows,'EVENT','END')['registry'];expected=copy.deepcopy(before)
+    obj='booking:'+sha({k:r[k] for k in ('request_id','team_ref','venue_ref')})
+    need(key not in before['idempotency'],'fresh_key')
+    expected['records']+=E['slots'];expected['idempotency'][key]=dict(payload_sha256=sha(payload),packet_ref=packet,object_ref=obj,slots=E['slots'],request_sha256=sha(r))
+    need(dispatch['registry']==write['registry']==before,'before_effect_readback')
+    need(write['proposed']==written['registry']==callback['registry']==returned['registry']==after==expected,'atomic_three_slot_delta')
+    receipt=p['receipt'];need(receipt==effect_return['receipt']==returned['attempt']['receipt'],'actual_receipt')
+    art=abi.build_kernel_artifact_v01(**dict(receipt,trace_refs=tuple(receipt['trace_refs']),parent_refs=tuple(receipt['parent_refs'])))
+    need(not abi.validate_kernel_artifact_v01(art),'receipt_structure')
+    ev=firewall.native_execution_evidence_from_plain_data_v01(receipt['payload']['execution_evidence'])
+    need(not firewall.validate_native_execution_evidence_v01(ev),'execution_structure')
+    native=receipt['payload']['execution_evidence'];need(native['invocation']==invocation and native['result']['output']==callback['output'],'receipt_invocation_output')
+    need(native['result']['outcome']=='SUCCEEDED' and native['admission']['definition']==effect['definition'],'completed_admitted_effect')
+    for code in native['admission']['code_sources']:
+        module=code['public_symbol'].rsplit('.',1)[0].replace('.','/')+'.py'
+        need(hashlib.sha256(code['source_utf8'].encode()).hexdigest()==code['source_sha256']==cap['receipt']['inputs']['candidate/'+module],'callback_source')
+    booking=dict(state='COMMITTED',receipt_ref=receipt['artifact_id'],packet_ref=packet,payload_sha256=sha(payload),snapshot_sha256=sha(after),slots=E['slots'],request_sha256=sha(r))
+    need(body['booking']==booking and receipt['owner_root_id']=='VenueRoot' and p['state_readback']==after,'booking_receipt_readback')
+    need(dispatch['arguments']['expected_revision']==dispatch['host']['revision'],'host_revision')
+    need(dispatch['arguments']['evaluation_time']==1014 and dispatch['arguments']['evaluation_time_source']=='u1.controlled_utc','native_clock_separate')
+    need(any(x['evaluation_time']==1014 for x in events(rows,'REFRESH','RETURN')),'actual_refresh')
+    need(any(x['inspection']['present_executable'] is True for x in events(rows,'ELIGIBILITY','RETURN')),'actual_eligibility')
+    need(any(x[0]=='DISPATCH_OUTCOME' and x[3]=='CONSUMED' for x in returned['host']['events']),'actual_consumption')
+    t=selected['body']['time_envelope'];need(t['valid_from']<=int(dispatch['utc'])<min(t['valid_to'],t['pt_created_at']+t['ttl_seconds'],t['source_observed_at']+300),'source_current_at_dispatch')
+    op=cap['parent']['parent_inputs']['publisher']['policy']
+    approval=dict(approval_ref=r['owner_approval_ref'],request_sha256=sha(r),offer_request_sha256=sha(E['request']))
+    need(op['status']=='ACTIVE' and op['release_enabled'] and approval in op['book_approvals'],'actual_BOOK_consent')
+    rev=p['consent_review'];cross_root(rev,rows)
+    root_record(rev,'VenueRoot','candidate:football:consent:'+sha(payload),dict(request=r,offer_sha256=sha(selected['body']),payload_sha256=sha(payload),inventory_sha256=sha(v['event']['inventory'])),obj)
+    return dict(body=body,registry=after,receipt=receipt,key=key,request=r,selected_body=selected['body'])
+
+def confirm(cap,v,selected):
+    need(selected is not None,'original_selection_present');r=v['event']['request'];p=v['proofs'];rows=v['rows']
+    ctx,material,_=transport(cap,v,selected['body']['offer']['request']);need(ctx is not None,'confirmation_retrieved')
+    body=ctx['body'];E=body['offer'];old=selected['body']
+    need(E==old['offer'] and body['time_envelope']==old['time_envelope'] and body['source_work_ref']==old['source_work_ref'],'original_E_time_work_unchanged')
+    need(p['publisher']['venue_work']==selected['work'] and not events(rows['publisher'],'PURE','RETURN'),'no_producer_rerun')
+    need(body['source_lineage_refs']==[old['source_record_ref'],old['source_review_ref'],old['source_work_ref']],'causal_history')
+    need(v['event']['inventory']==selected['event']['inventory'],'confirmation_current_inventory')
+    claim=dict(request_sha256=sha(r),inventory_sha256=sha(v['event']['inventory']),consumed_offer=E,source_work_ref=old['source_work_ref'],booking=body['booking'],previous_source_ref=old['source_record_ref'],previous_review_ref=old['source_review_ref'])
+    sr=p['publisher']['source_review'];cross_root(sr,rows['publisher']);root_record(sr,'VenueRoot',sr['result']['selected_candidate_id'],claim,body['source_record_ref'])
+    need(body['source_review_ref']==sr['result']['decision_id'],'source_review_join')
+    for name,chosen,claim2,subject in (
+        ('publication_review',ctx['pointer']['pointer_id'],dict(pointer=ctx['pointer'],source_review_ref=body['source_review_ref']),body['source_record_ref']),
+        ('release_review',ctx['fetch']['request_id'],dict(request=ctx['fetch'],pointer_ref=ctx['pointer']['pointer_id'],body_hash=sha(body),source_review_ref=body['source_review_ref']),ctx['pointer']['pointer_id'])):
+        proof=p['publisher'][name];cross_root(proof,rows['publisher']);root_record(proof,'VenueRoot',chosen,claim2,subject)
+    release_root_join(material['BUNDLE']['release']['value'],p['publisher']['release_review'])
+    C=dict(body=body,source_projection=ctx['S']);report=p['requester']['report'];semantic={k:x for k,x in report.items() if k!='native_refs'}
+    work=p['requester']['requester_work'];cross_work(work,rows['requester'])
+    need(native_result(work,'ActivePlanetRoot',dict(request_json=canonical(r).decode(),offer_json=canonical(C).decode()))==dict(result_json=canonical(semantic).decode()),'actual_confirmation_consumer')
+    need(p['requester']['consumption_context']==C and report['source']==ctx['S'],'canonical_confirmation_C')
+    producer_consumer(E,report,r['operation'])
+    rev=p['requester']['requester_review'];cross_root(rev,rows['requester'])
+    root_record(rev,'ActivePlanetRoot',work['artifact']['artifact_id'],dict(request_sha256=sha(r),offer_sha256=sha(body),result_sha256=sha(semantic)),r['request_id'])
+    return action(cap,v,selected,ctx)
+
+def history(cap,v,booked):
+    rows=v['rows'];p=v['proofs'];r=v['event']['request'];ctx,material,requests=transport(cap,v,booked['body']['offer']['request'])
+    need(ctx is None and list(requests)==['DESCRIBE','CLOSE'],'history_no_fetch')
+    req=requests['DESCRIBE'];value=c.verify(material['UNAVAILABLE'],cap['keys']['publisher'],'UNAVAILABLE',req['trust_profile_hash'])
+    need(value['request_ref']==req['request_id'] and value['request_sha256']==sha(req),'signed_history_request')
+    before=one(rows['publisher'],'EVENT','START')['registry'];after=one(rows['publisher'],'EVENT','END')['registry']
+    need(before==after==booked['registry'],'unchanged_history_readback')
+    for role in rows:need(all(n==0 for n in counts(rows[role]).values()),'history_zero_work_effect')
+    booking=booked['body']['booking'];projection=dict(booking=booking,entry=after['idempotency'][booked['key']],native_key=booked['key'],readback_sha256=sha(after),body_sha256=sha(booked['selected_body']),receipt_ref=booked['receipt']['artifact_id'],request_sha256=sha(booked['request']))
+    need(value['history']==projection,'actual_history_projection')
+    need(p['publisher']['history']['saved_receipt']==booked['receipt'] and p['publisher']['history']['readback']==after,'saved_receipt_unchanged')
+    need(p['requester']['history']['projection']==projection,'received_history')
+    for role in rows:
+        report=p[role]['report'];producer_consumer(booked['body']['offer'],report,r['operation'],history=True)
+        need(report['receipt_ref']==booked['receipt']['artifact_id'],'history_receipt_join')
+    return 'PASS_HISTORY_ZERO_WORK_EFFECT'
+
+def refusal(cap,v,selected,booked,case):
+    rows=v['rows'];p=v['proofs'];r=v['event']['request'];op=cap['parent']['parent_inputs']['publisher']['policy']
+    before=one(rows['publisher'],'EVENT','START')['registry'];after=one(rows['publisher'],'EVENT','END')['registry']
+    for role in rows:
+        need(counts(rows[role])['EXECUTOR']==counts(rows[role])['STATE_WRITE']==0,'refusal_no_executor_or_mutation')
+        report=p[role]['report'];need(report['status'] in ('REFUSED','CURRENT_STATUS_UNKNOWN','NEEDS_CONFIRMATION','CLARIFY') and not report['slots'] and report['receipt_ref'] is None,'refusal_no_fabricated_success')
+    need(before==after,'refusal_unchanged_state')
+    original=selected['body']['offer']['request'] if selected else r
+    ctx,material,requests=transport(cap,v,original);need(ctx is None,'refusal_no_released_body')
+    if 'UNAVAILABLE' in material:
+        req=next(x for x in requests.values() if x['request_id']==material['UNAVAILABLE']['value']['request_ref'])
+        value=c.verify(material['UNAVAILABLE'],cap['keys']['publisher'],'UNAVAILABLE',req['trust_profile_hash'])
+        need(value['request_sha256']==sha(req),'unavailable_original_request')
+    if not op['release_enabled'] and material.get('BUNDLE',{}).get('body') is None and 'BUNDLE' in material:
+        # This genuine refusal Root owns the FETCH claim, not the football request.
+        # transport() has checked that actual Root, signature and exact release join.
+        need(requests['FETCH']['task_ref']=='task:football:'+sha(r),'denied_fetch_original_task')
+        need(counts(rows['requester'])['PURE']==0,'denied_release_no_consumer')
+        return [dict(classification='CHECKED_REFUSAL',causes=['RELEASE_ALLOWED'],root='actual_release_review')]
+    actual=[(role,p[role]['refusal_review']) for role in rows if 'refusal_review' in p[role]]
+    need(actual,'genuine_refusal_root')
+    facts=dict(origin='FROZEN_PARENT_INPUT_AND_INDEPENDENT_NATIVE_READBACK',operation=r['operation'],required_input_missing=False,
+        book_consent=not(case=='missing_BOOK' and r['operation']=='CONFIRM_MOCK_BOOKING'),release_allowed=op['release_enabled'],
+        recipient_allowed=op['peer_root'] in op['recipients'],request_binding=True,owner_binding=True,known_capability=True,source_code_unchanged=True,
+        source_state=op['status'],source_end=None,status_end=None,use_time=int(one(rows['publisher'],'EVENT','START')['utc']),
+        selected_revision=selected['body']['offer']['schedule_revision'] if selected and r['operation']=='CONFIRM_MOCK_BOOKING' else None,
+        current_revision=v['event']['inventory']['revision'],occupancy_conflict=bool(selected and r['operation']=='CONFIRM_MOCK_BOOKING' and any(
+            slot['field_id']==field['field_id'] and slot['start_utc']<end and start<slot['end_utc']
+            for slot in selected['body']['offer']['slots'] for field in v['event']['inventory']['fields'] for start,end in field['occupied_utc'])),same_key_payload_changed=booked is not None and r!=booked['request'],
+        matching_history=booked is not None,malformed_producer=False,request=r)
+    conclusions=[]
+    for role,proof in actual:
+        cross_root(proof,rows[role]);local=dict(facts,local_root=cap['parent']['parent_inputs'][role]['policy']['local_root'])
+        obs=dict(root_record=proof,executor_starts=counts(rows[role])['EXECUTOR'],mutations=counts(rows[role])['STATE_WRITE'],before=before,after=after,
+            host_attempts=counts(rows[role])['DISPATCH'],firewall_entries=counts(rows[role])['EFFECT'],released_bodies=int(material.get('BUNDLE',{}).get('body') is not None),
+            consumer_works=counts(rows['requester'])['PURE'],source_works=counts(rows['publisher'])['PURE'])
+        conclusions.append(check_refusal(local,obs,p[role]['report'],proof))
+    return conclusions
+
+def examine(folder,case):
+    cap=load(folder);need(cap['receipt']['rc']==0 and all(x['exit_code']==0 and x['reaped'] for x in cap['parent']['waits']) and cap['parent']['limit_error'] is None,'native_process_completed')
+    values=gather(cap);selected=None;booked=None;last=dict(records=[],idempotency={});result={}
+    for label,v in values.items():
+        p=v['proofs'];rows=v['rows'];r=v['event']['request']
+        for role in rows:
+            need(one(rows[role],'EVENT','RETURN')['report']==p[role]['report'],'actual_report')
+            need(p[role]['report']['counts']['dispatch']==counts(rows[role])['DISPATCH'] and p[role]['report']['counts']['mutations']==counts(rows[role])['STATE_WRITE'],'honest_stage_counts')
+        before=one(rows['publisher'],'EVENT','START')['registry'];after=one(rows['publisher'],'EVENT','END')['registry'];need(before==last,'continuous_state');last=after
+        status=p['requester']['report']['status']
+        if r['operation']=='FIND_OFFER' and status in ('OFFER_READY','NO_COMPLETE_OFFER'):
+            verdict=check_find(cap,v['event'])
+            if status=='OFFER_READY':selected=dict(body=p['publisher']['offer_body'],work=p['publisher']['venue_work'],event=v['event'])
+        elif r['operation']=='CONFIRM_MOCK_BOOKING' and status=='MOCK_BOOKED' and booked is None:
+            booked=confirm(cap,v,selected);verdict='PASS_NATIVE_THREE_SLOT_BOOKING'
+        elif booked and status in ('VERIFIED','MOCK_BOOKED'):verdict=history(cap,v,booked)
+        else:verdict=refusal(cap,v,selected,booked,case)
+        result[label]=dict(verdict=verdict,status=status,counts={role:counts(rows[role]) for role in rows},state_sha256=sha(after))
+    need(last==cap['parent']['runner_final_source_state'],'final_state_readback')
+    return dict(classification='REVIEWED_REFERENCE_NATIVE_PROOF',case=case,events=result,bookings=len(last['idempotency']),slots=len(last['records']))
+
+def main():
+    folder=Path(sys.argv[1]);case=sys.argv[2]
+    try:result=examine(folder,case);result['status']='PASS'
+    except Exception as exc:result=dict(status='FAIL',case=case,error=str(exc),traceback=traceback.format_exc())
+    result['reviewer_sha256']=hashlib.sha256(Path(__file__).read_bytes()).hexdigest()
+    (folder/'independent_flow_review.json').write_text(json.dumps(result,sort_keys=True,indent=2)+'\n')
+    print(json.dumps(result,indent=2));return result['status']!='PASS'
+if __name__=='__main__':raise SystemExit(main())

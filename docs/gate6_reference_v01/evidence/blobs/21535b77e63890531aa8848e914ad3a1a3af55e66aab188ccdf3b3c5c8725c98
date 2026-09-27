@@ -1,0 +1,82 @@
+"""C4 refinement: independent refusal triggers and explicit uncertain-outcome handling.
+
+Pure successor consumes the unchanged v01 frozen native capture. No new runtime,
+candidate, interface or authority. It adds checks; it never drops v01 predicates.
+"""
+import copy
+import examiner_g54d_core_v01 as base
+from boundary_g54d_v01 import check_refusal, check_uncertain as check_observed_uncertain
+from examiner import need, overlap, sha
+
+VERSION='g54d.reviewed_reference.v01'
+
+def availability_failure(slots,inventory):
+    fields={f['field_id']:f for f in inventory['fields']}
+    return any(s['field_id'] not in fields or fields[s['field_id']]['surface']!='NATURAL_GRASS'
+        or fields[s['field_id']]['full_size'] is not True or fields[s['field_id']]['price_minor']!=s['price_minor']
+        or not any(a<=s['start_utc']<s['end_utc']<=b for a,b in fields[s['field_id']]['available_utc'])
+        or any(overlap((s['start_utc'],s['end_utc']),p) for p in fields[s['field_id']]['occupied_utc']) for s in slots)
+
+def validate_refusal_triggers(capture,values):
+    selected=None;checks={}
+    for label,value in values.items():
+        req=value['event']['request'];pub=value['proofs']['publisher'];requester=value['proofs']['requester']
+        if req['operation']=='FIND_OFFER' and pub['report']['status']=='OFFER_READY':selected=pub['offer_body']['offer']
+        if not any(p['report']['status'] in ('REFUSED','NEEDS_CONFIRMATION','CURRENT_STATUS_UNKNOWN','CLARIFY') for p in (pub,requester)):continue
+        if req['operation']=='FIND_OFFER' and 'BUNDLE' in {r['message']['kind'] for r in value['wire']}:
+            continue  # A complete no-offer response is checked by the independent finite oracle.
+        triggers=[]
+        if req['operation']=='CLARIFY':triggers.append('EXPLICIT_CLARIFY_REQUEST')
+        for role in base.ROLES:
+            op=capture['parent']['parent_inputs'][role]['policy']
+            if req['operation']=='CONFIRM_MOCK_BOOKING' and (not op['booking_enabled'] or
+                dict(approval_ref=req['owner_approval_ref'],scope='BOOK',request_sha256=sha(req)) not in op['approvals']):triggers.append(role+':BOOK_CONSENT_ABSENT')
+            if op['status']!='ACTIVE':triggers.append(role+':NONACTIVE_OPERATOR_STATUS')
+        if req['operation']=='CONFIRM_MOCK_BOOKING' and selected is not None:
+            old={k:v for k,v in selected['request'].items() if k not in ('operation','owner_approval_ref')}
+            new={k:v for k,v in req.items() if k not in ('operation','owner_approval_ref')}
+            if old!=new:triggers.append('CURRENT_REQUEST_CHANGED_FROM_SELECTED_HISTORY')
+            if availability_failure(selected['slots'],value['event']['inventory']):triggers.append('CURRENT_INVENTORY_CONFLICT')
+        need(bool(triggers),'independent_refusal_trigger_missing')
+        for role,proofs in value['proofs'].items():
+            if 'refusal_review' in proofs:
+                proof=proofs['refusal_review']
+                claim=base.root_record(proof,dict(publisher='VenueRoot',requester='ActivePlanetRoot')[role],None,accepted=False)
+                need(claim['request']==req and claim['phase']=='EVENT_REFUSAL' and claim['reason']==proofs['refusal']['reason'],'actual_refusal_request_reason')
+        checks[label]=triggers
+    return checks
+
+def check_uncertain(rows,before,after,report):
+    """Finite uncertainty branch, not a new native race or injected failure."""
+    starts=base.events(rows,'EXECUTOR','START');unwinds=[r for r in rows if r.get('phase')=='UNWIND' and r['kind'] in ('DISPATCH','EFFECT','CALLBACK')]
+    need(bool(unwinds),'uncertain_unwind_missing')
+    need(report['status']=='CURRENT_STATUS_UNKNOWN' and report['retry_dispatch'] is False,'uncertain_no_success_or_retry')
+    need(report['observed_before']==before and report['observed_after']==after,'uncertain_actual_readback')
+    if not starts:need(after==before,'mutation_without_executor')
+    else:
+        need(len(starts)==1 and len(base.events(rows,'DISPATCH','START'))==1,'uncertain_no_blind_second_attempt')
+        writes=base.events(rows,'STATE_WRITE','RETURN')
+        need((writes[-1]['registry'] if writes else before)==after,'uncertain_write_readback')
+    return 'UNKNOWN_PRESERVED_NOT_ACTION_SUCCESS'
+
+def examine(capture,values):
+    triggers=validate_refusal_triggers(capture,values)
+    for value in values.values():
+        bundles=[r['message']['value'] for r in value['wire'] if r['sender']=='publisher' and r['message']['kind']=='BUNDLE']
+        if bundles and bundles[0]['body'] is not None:
+            for role in base.ROLES:
+                need(value['proofs'][role]['offer_body']==bundles[0]['body'],'declared_body_actual_wire')
+    result=base.examine(capture,values)
+    result.update(version=VERSION,independent_refusal_triggers=triggers)
+    return result
+
+def examine_projected_boundary(original, observed, report, actual_root=None):
+    """Frozen boundary route for a source-reviewed new-layout projection.
+
+    The separately pinned supervisor adapter supplies original input facts and
+    actual state/stages, never candidate PASS flags. Success must still traverse
+    the complete native action examiner, never this refusal/uncertainty branch.
+    """
+    if observed['actual_exceptions'] and observed['executor_starts']:
+        return check_observed_uncertain(original,observed,report)
+    return check_refusal(original,observed,report,actual_root)

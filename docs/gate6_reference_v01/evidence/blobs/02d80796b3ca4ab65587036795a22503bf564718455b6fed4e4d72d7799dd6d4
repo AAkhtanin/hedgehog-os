@@ -1,0 +1,17 @@
+{
+  "pid": 61095,
+  "public_keys": {
+    "algorithm": "Ed25519",
+    "key_ids": [
+      "13e5841dc68f1d6d04380a448a394ac958ab9dcf2c82f83d9dba580c8878e04d"
+    ],
+    "key_set_id": "4152c0fbe584590deb448de5a3f66932c2a4bd9d79cff746dc8857a8b5612e02",
+    "key_set_version": "v0.1",
+    "public_key_hexes": [
+      "9fad0fdd6e4b121fba98a8d3ffd1ab7add77cde272e9b323d3c27bda2771db5a"
+    ],
+    "root_ids": [
+      "root:gate5:site"
+    ]
+  }
+}

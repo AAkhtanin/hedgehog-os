@@ -1,0 +1,39 @@
+{
+  "result": "G6A4R_G35_REPAIRED_AND_SUCCESSOR_EVIDENCE_READY_FOR_REVIEW",
+  "independent_review": "PENDING",
+  "source_admission": "UNADMITTED",
+  "historical_G6A4": "INCOMPLETE",
+  "fresh_profiles": [
+    "DIRECT",
+    "G35"
+  ],
+  "retained_profiles": [
+    "LIVING_G36",
+    "CONFORMANCE_G36",
+    "G4",
+    "G51",
+    "G52",
+    "FOOTBALL",
+    "G44_RECORDED",
+    "G5_RECORDED",
+    "MODEL"
+  ],
+  "gate6a_technical_ready": false,
+  "gate6_closed": false,
+  "owner_unchanged": true,
+  "model_calls": 0,
+  "countTokens": 0,
+  "QPU": 0,
+  "author_calls": 0,
+  "commit": false,
+  "push": false,
+  "next_stage_started": false,
+  "permission_qualification": "26 original owner/ordinary-clone local POSIX differences, disclosed; no candidate permission change after initial clone or owner permission mutation. Git modes and unmodified bytes preserved.",
+  "observer_qualification": "Per-code/current-process/current-thread observations, no unsupported zero assertions for unobserved children.",
+  "remaining": [
+    "Independent review of exact proposal and retained evidence compatibility",
+    "D15/O-ARCH and technical packaging",
+    "Exact R1 preparation and later authorized landing"
+  ],
+  "all_verification_processes_final": true
+}

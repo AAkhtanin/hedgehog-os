@@ -1,0 +1,51 @@
+{
+  "content": {
+    "adaptation_ref": "g5adaptation:29a239ba4a576d42c6f6f0b7ac151fd7d2c0f1b193971bded4efc56566fb4c29",
+    "assessment": "WITHIN_REFERENCE_LIMIT",
+    "drs_hit_is_authority": false,
+    "drs_record_is_truth": false,
+    "drs_reuse_candidate_is_action_permission": false,
+    "outputs": {
+      "corrected_den": 1,
+      "corrected_num": 96,
+      "mean_den": 1,
+      "mean_num": 106
+    },
+    "semantic_keys": [
+      "calibrated",
+      "historical_result"
+    ],
+    "source_ref": "source:gate5:calibration:one"
+  },
+  "domain": "CALIBRATION_USE",
+  "layer": "work",
+  "provenance": {
+    "created_by": "root_orchestrator",
+    "request_id": "req:g5result:a522fe44c408d50b23c90e7c20a4b3f2ee7414ed062a0966280ff8616f3e412f",
+    "trace_refs": [
+      {
+        "kind": "local_drs_resolver",
+        "trace_id": "trace:g5result:a522fe44c408d50b23c90e7c20a4b3f2ee7414ed062a0966280ff8616f3e412f"
+      }
+    ]
+  },
+  "record_id": "g5result:a522fe44c408d50b23c90e7c20a4b3f2ee7414ed062a0966280ff8616f3e412f",
+  "status": "active",
+  "time_envelope": {
+    "ct_session_anchor": "sess_real_local_drs_resolver_v01",
+    "et_observed_at": null,
+    "freshness_class": "normal",
+    "kt_asof": "2026-09-27T05:29:38.978337+00:00",
+    "pt_created_at": "2026-09-27T05:29:38.978337+00:00",
+    "ttl_seconds": 2592000,
+    "valid_from": "2026-09-27T05:29:38.978337+00:00",
+    "valid_to": null
+  },
+  "trace_refs": [
+    {
+      "kind": "local_drs_resolver",
+      "trace_id": "trace:g5result:a522fe44c408d50b23c90e7c20a4b3f2ee7414ed062a0966280ff8616f3e412f"
+    }
+  ],
+  "type": "generic"
+}

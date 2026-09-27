@@ -1,0 +1,156 @@
+{
+  "aggregate_16": "NOT_COMPLETED",
+  "authority": "CAPTURE_IS_EVIDENCE_NOT_RESTORED_HOST",
+  "observed_calls": {
+    "dispatch": 0,
+    "effect": 0,
+    "root": 0,
+    "sentinel": 1,
+    "work": 0
+  },
+  "refusal": null,
+  "result": {
+    "bookings": 1,
+    "case": "second_team",
+    "classification": "REVIEWED_REFERENCE_NATIVE_PROOF",
+    "events": {
+      "book": {
+        "counts": {
+          "publisher": {
+            "CALLBACK": 1,
+            "DISPATCH": 1,
+            "EFFECT": 1,
+            "EXECUTOR": 1,
+            "PURE": 0,
+            "STATE_WRITE": 1
+          },
+          "requester": {
+            "CALLBACK": 0,
+            "DISPATCH": 0,
+            "EFFECT": 0,
+            "EXECUTOR": 0,
+            "PURE": 1,
+            "STATE_WRITE": 0
+          }
+        },
+        "state_sha256": "471e598ba99275b9eb2de72f5d0f1a08745c763616d24d403072b43484f10f7b",
+        "status": "MOCK_BOOKED",
+        "verdict": "PASS_NATIVE_THREE_SLOT_BOOKING"
+      },
+      "exact": {
+        "counts": {
+          "publisher": {
+            "CALLBACK": 0,
+            "DISPATCH": 0,
+            "EFFECT": 0,
+            "EXECUTOR": 0,
+            "PURE": 1,
+            "STATE_WRITE": 0
+          },
+          "requester": {
+            "CALLBACK": 0,
+            "DISPATCH": 0,
+            "EFFECT": 0,
+            "EXECUTOR": 0,
+            "PURE": 1,
+            "STATE_WRITE": 0
+          }
+        },
+        "state_sha256": "61fc425c423ad3de96c729a7386139ce1e32b2d4cee111404489ac3169c500da",
+        "status": "OFFER_READY",
+        "verdict": {
+          "bundle_checks": 2,
+          "canonical_C_sha256": "58f198cecbed74b0f6498fd154255d9529cee522084f03435037319a4f26d2e2",
+          "event": "exact",
+          "native_consumer_work": 1,
+          "native_source_work": 1,
+          "root_release_join": true,
+          "source_selection": "OFFER_READY",
+          "status": "PASS_COMPLETED_FIND_ONLY",
+          "total_minor": 6414
+        }
+      },
+      "repeat": {
+        "counts": {
+          "publisher": {
+            "CALLBACK": 0,
+            "DISPATCH": 0,
+            "EFFECT": 0,
+            "EXECUTOR": 0,
+            "PURE": 0,
+            "STATE_WRITE": 0
+          },
+          "requester": {
+            "CALLBACK": 0,
+            "DISPATCH": 0,
+            "EFFECT": 0,
+            "EXECUTOR": 0,
+            "PURE": 0,
+            "STATE_WRITE": 0
+          }
+        },
+        "state_sha256": "471e598ba99275b9eb2de72f5d0f1a08745c763616d24d403072b43484f10f7b",
+        "status": "MOCK_BOOKED",
+        "verdict": "PASS_HISTORY_ZERO_WORK_EFFECT"
+      },
+      "shift": {
+        "counts": {
+          "publisher": {
+            "CALLBACK": 0,
+            "DISPATCH": 0,
+            "EFFECT": 0,
+            "EXECUTOR": 0,
+            "PURE": 1,
+            "STATE_WRITE": 0
+          },
+          "requester": {
+            "CALLBACK": 0,
+            "DISPATCH": 0,
+            "EFFECT": 0,
+            "EXECUTOR": 0,
+            "PURE": 1,
+            "STATE_WRITE": 0
+          }
+        },
+        "state_sha256": "61fc425c423ad3de96c729a7386139ce1e32b2d4cee111404489ac3169c500da",
+        "status": "OFFER_READY",
+        "verdict": {
+          "bundle_checks": 2,
+          "canonical_C_sha256": "17a1a0daef1d4740242d36844b3e3cf0a8f45c1e2ccdb94322fc3061e4719cf4",
+          "event": "shift",
+          "native_consumer_work": 1,
+          "native_source_work": 1,
+          "root_release_join": true,
+          "source_selection": "OFFER_READY",
+          "status": "PASS_COMPLETED_FIND_ONLY",
+          "total_minor": 6414
+        }
+      },
+      "verify": {
+        "counts": {
+          "publisher": {
+            "CALLBACK": 0,
+            "DISPATCH": 0,
+            "EFFECT": 0,
+            "EXECUTOR": 0,
+            "PURE": 0,
+            "STATE_WRITE": 0
+          },
+          "requester": {
+            "CALLBACK": 0,
+            "DISPATCH": 0,
+            "EFFECT": 0,
+            "EXECUTOR": 0,
+            "PURE": 0,
+            "STATE_WRITE": 0
+          }
+        },
+        "state_sha256": "471e598ba99275b9eb2de72f5d0f1a08745c763616d24d403072b43484f10f7b",
+        "status": "VERIFIED",
+        "verdict": "PASS_HISTORY_ZERO_WORK_EFFECT"
+      }
+    },
+    "slots": 3
+  },
+  "status": "PASS_PER_CASE_PURE"
+}

@@ -1,0 +1,6 @@
+{
+  "matches": 0,
+  "private_material_excluded": true,
+  "public_files": 84,
+  "scope": "OBSERVED_BOOTSTRAP_WIRE_DESCRIPTORS_BODY_NATIVE_REPORTS_AND_PUBLIC_STATE; NO_CANARY_HASH_EXPORTED"
+}

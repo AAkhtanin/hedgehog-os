@@ -1,0 +1,509 @@
+{
+  "rows": [
+    {
+      "domain": "AIRLINE",
+      "source_revision": "fda3fa3dd7ffc5fbbe87ed7e424699d765e1a37058c805cff19761b984734575",
+      "occurrences": [
+        {
+          "occurrence": 0,
+          "metrics": {
+            "attempts": 1,
+            "brier": {
+              "N": 0,
+              "denominator": null,
+              "numerator": null,
+              "state": "UNKNOWN"
+            },
+            "consumed_drs_records": [],
+            "deliveries": 1,
+            "domain": "AIRLINE",
+            "enforcement": "ALLOWED_AS_REQUIRED",
+            "lane": "CONTROLLED_RUNTIME",
+            "lawful_effects": 0,
+            "not_scorable": [
+              "NO_PROSPECTIVE_COMPARABLE_EXPECTATION"
+            ],
+            "prior": "NOT_APPLICABLE",
+            "quality": "NOT_SCORABLE",
+            "rating": "NOT_APPLICABLE",
+            "refusals": 0,
+            "root": "root:client_os_001",
+            "scorable_count": 0,
+            "task": "COMPLETED",
+            "trust": "NOT_APPLICABLE",
+            "unexpected_effects": 0,
+            "unique_occurrences": 1,
+            "work_invocations": 0
+          },
+          "receipt_refs": [
+            "mock_purchase_receipt:client_001:001"
+          ]
+        },
+        {
+          "occurrence": 1,
+          "metrics": {
+            "attempts": 1,
+            "brier": {
+              "N": 0,
+              "denominator": null,
+              "numerator": null,
+              "state": "UNKNOWN"
+            },
+            "consumed_drs_records": [],
+            "deliveries": 1,
+            "domain": "AIRLINE",
+            "enforcement": "ALLOWED_AS_REQUIRED",
+            "lane": "CONTROLLED_RUNTIME",
+            "lawful_effects": 0,
+            "not_scorable": [
+              "NO_PROSPECTIVE_COMPARABLE_EXPECTATION"
+            ],
+            "prior": "NOT_APPLICABLE",
+            "quality": "NOT_SCORABLE",
+            "rating": "NOT_APPLICABLE",
+            "refusals": 0,
+            "root": "root:mock_airline_al",
+            "scorable_count": 0,
+            "task": "COMPLETED",
+            "trust": "NOT_APPLICABLE",
+            "unexpected_effects": 0,
+            "unique_occurrences": 1,
+            "work_invocations": 0
+          },
+          "receipt_refs": [
+            "mock_ticket_receipt:mock_airline_al:001"
+          ]
+        },
+        {
+          "occurrence": 2,
+          "metrics": {
+            "attempts": 1,
+            "brier": {
+              "N": 0,
+              "denominator": null,
+              "numerator": null,
+              "state": "UNKNOWN"
+            },
+            "consumed_drs_records": [],
+            "deliveries": 1,
+            "domain": "AIRLINE",
+            "enforcement": "ALLOWED_AS_REQUIRED",
+            "lane": "CONTROLLED_RUNTIME",
+            "lawful_effects": 0,
+            "not_scorable": [
+              "NO_PROSPECTIVE_COMPARABLE_EXPECTATION"
+            ],
+            "prior": "NOT_APPLICABLE",
+            "quality": "NOT_SCORABLE",
+            "rating": "NOT_APPLICABLE",
+            "refusals": 0,
+            "root": "root:mock_bank_a",
+            "scorable_count": 0,
+            "task": "COMPLETED",
+            "trust": "NOT_APPLICABLE",
+            "unexpected_effects": 0,
+            "unique_occurrences": 1,
+            "work_invocations": 0
+          },
+          "receipt_refs": [
+            "payment_authorization_receipt:mock_bank_a:001"
+          ]
+        }
+      ]
+    },
+    {
+      "domain": "SUPPLIER_WATER_FILTER",
+      "source_revision": "e64d0e5b20eb576b8edfe60ff25ab8ee720011b9da61a69d2bb117a246f1aca2",
+      "occurrences": [
+        {
+          "occurrence": 0,
+          "metrics": {
+            "attempts": 1,
+            "brier": {
+              "N": 0,
+              "denominator": null,
+              "numerator": null,
+              "state": "UNKNOWN"
+            },
+            "consumed_drs_records": [],
+            "deliveries": 1,
+            "domain": "SUPPLIER_WATER_FILTER",
+            "enforcement": "BLOCKED_AS_REQUIRED",
+            "lane": "CONTROLLED_RUNTIME",
+            "lawful_effects": 0,
+            "not_scorable": [
+              "NO_PROSPECTIVE_COMPARABLE_EXPECTATION"
+            ],
+            "prior": "NOT_APPLICABLE",
+            "quality": "UNSAFE",
+            "rating": "NOT_APPLICABLE",
+            "refusals": 1,
+            "root": "root:gate3:supplier:bank",
+            "scorable_count": 0,
+            "task": "SAFE_NO_DEAL",
+            "trust": "NOT_APPLICABLE",
+            "unexpected_effects": 0,
+            "unique_occurrences": 1,
+            "work_invocations": 0
+          },
+          "receipt_refs": []
+        },
+        {
+          "occurrence": 1,
+          "metrics": {
+            "attempts": 1,
+            "brier": {
+              "N": 0,
+              "denominator": null,
+              "numerator": null,
+              "state": "UNKNOWN"
+            },
+            "consumed_drs_records": [],
+            "deliveries": 1,
+            "domain": "SUPPLIER_WATER_FILTER",
+            "enforcement": "ALLOWED_AS_REQUIRED",
+            "lane": "CONTROLLED_RUNTIME",
+            "lawful_effects": 1,
+            "not_scorable": [
+              "NO_PROSPECTIVE_COMPARABLE_EXPECTATION"
+            ],
+            "prior": "NOT_APPLICABLE",
+            "quality": "NOT_SCORABLE",
+            "rating": "NOT_APPLICABLE",
+            "refusals": 0,
+            "root": "root:gate3:supplier:bank",
+            "scorable_count": 0,
+            "task": "COMPLETED",
+            "trust": "NOT_APPLICABLE",
+            "unexpected_effects": 0,
+            "unique_occurrences": 1,
+            "work_invocations": 0
+          },
+          "receipt_refs": [
+            "effect_receipt_v01:b6fd1e95c722f273daf2232ce4322947ee573fff13d74fff3d59b19ab3e6046b"
+          ]
+        }
+      ]
+    },
+    {
+      "domain": "TESTFLIX",
+      "source_revision": "c979f15b8dc093a9924060efc5db05917ccf20c86d55b1a50b738ac4fa25bde6",
+      "occurrences": [
+        {
+          "occurrence": 0,
+          "metrics": {
+            "attempts": 1,
+            "brier": {
+              "N": 0,
+              "denominator": null,
+              "numerator": null,
+              "state": "UNKNOWN"
+            },
+            "consumed_drs_records": [],
+            "deliveries": 1,
+            "domain": "TESTFLIX",
+            "enforcement": "ALLOWED_AS_REQUIRED",
+            "lane": "CONTROLLED_RUNTIME",
+            "lawful_effects": 0,
+            "not_scorable": [
+              "NO_PROSPECTIVE_COMPARABLE_EXPECTATION"
+            ],
+            "prior": "NOT_APPLICABLE",
+            "quality": "NOT_SCORABLE",
+            "rating": "NOT_APPLICABLE",
+            "refusals": 0,
+            "root": "root:testflix:user",
+            "scorable_count": 0,
+            "task": "COMPLETED",
+            "trust": "NOT_APPLICABLE",
+            "unexpected_effects": 0,
+            "unique_occurrences": 1,
+            "work_invocations": 2
+          },
+          "receipt_refs": []
+        },
+        {
+          "occurrence": 1,
+          "metrics": {
+            "attempts": 1,
+            "brier": {
+              "N": 0,
+              "denominator": null,
+              "numerator": null,
+              "state": "UNKNOWN"
+            },
+            "consumed_drs_records": [],
+            "deliveries": 1,
+            "domain": "TESTFLIX",
+            "enforcement": "BLOCKED_AS_REQUIRED",
+            "lane": "CONTROLLED_RUNTIME",
+            "lawful_effects": 0,
+            "not_scorable": [
+              "NO_PROSPECTIVE_COMPARABLE_EXPECTATION"
+            ],
+            "prior": "NOT_APPLICABLE",
+            "quality": "NOT_SCORABLE",
+            "rating": "NOT_APPLICABLE",
+            "refusals": 1,
+            "root": "root:testflix:user",
+            "scorable_count": 0,
+            "task": "NEEDS_INPUT",
+            "trust": "NOT_APPLICABLE",
+            "unexpected_effects": 0,
+            "unique_occurrences": 1,
+            "work_invocations": 0
+          },
+          "receipt_refs": []
+        },
+        {
+          "occurrence": 2,
+          "metrics": {
+            "attempts": 1,
+            "brier": {
+              "N": 0,
+              "denominator": null,
+              "numerator": null,
+              "state": "UNKNOWN"
+            },
+            "consumed_drs_records": [],
+            "deliveries": 1,
+            "domain": "TESTFLIX",
+            "enforcement": "ALLOWED_AS_REQUIRED",
+            "lane": "CONTROLLED_RUNTIME",
+            "lawful_effects": 1,
+            "not_scorable": [
+              "NO_PROSPECTIVE_COMPARABLE_EXPECTATION"
+            ],
+            "prior": "NOT_APPLICABLE",
+            "quality": "NOT_SCORABLE",
+            "rating": "NOT_APPLICABLE",
+            "refusals": 0,
+            "root": "root:testflix:bank",
+            "scorable_count": 0,
+            "task": "COMPLETED",
+            "trust": "NOT_APPLICABLE",
+            "unexpected_effects": 0,
+            "unique_occurrences": 1,
+            "work_invocations": 0
+          },
+          "receipt_refs": [
+            "effect_receipt_v01:b553e56c17b5b4e9af7cb2e8a61e32c09418ed4337485a7a0324aa145cf0dba5"
+          ]
+        },
+        {
+          "occurrence": 3,
+          "metrics": {
+            "attempts": 1,
+            "brier": {
+              "N": 0,
+              "denominator": null,
+              "numerator": null,
+              "state": "UNKNOWN"
+            },
+            "consumed_drs_records": [],
+            "deliveries": 1,
+            "domain": "TESTFLIX",
+            "enforcement": "BLOCKED_AS_REQUIRED",
+            "lane": "CONTROLLED_RUNTIME",
+            "lawful_effects": 0,
+            "not_scorable": [
+              "NO_PROSPECTIVE_COMPARABLE_EXPECTATION"
+            ],
+            "prior": "NOT_APPLICABLE",
+            "quality": "NOT_SCORABLE",
+            "rating": "NOT_APPLICABLE",
+            "refusals": 1,
+            "root": "root:testflix:bank",
+            "scorable_count": 0,
+            "task": "SAFE_NO_DEAL",
+            "trust": "NOT_APPLICABLE",
+            "unexpected_effects": 0,
+            "unique_occurrences": 1,
+            "work_invocations": 0
+          },
+          "receipt_refs": []
+        },
+        {
+          "occurrence": 4,
+          "metrics": {
+            "attempts": 1,
+            "brier": {
+              "N": 0,
+              "denominator": null,
+              "numerator": null,
+              "state": "UNKNOWN"
+            },
+            "consumed_drs_records": [],
+            "deliveries": 1,
+            "domain": "TESTFLIX",
+            "enforcement": "ALLOWED_AS_REQUIRED",
+            "lane": "CONTROLLED_RUNTIME",
+            "lawful_effects": 1,
+            "not_scorable": [
+              "NO_PROSPECTIVE_COMPARABLE_EXPECTATION"
+            ],
+            "prior": "NOT_APPLICABLE",
+            "quality": "NOT_SCORABLE",
+            "rating": "NOT_APPLICABLE",
+            "refusals": 0,
+            "root": "root:testflix:bank",
+            "scorable_count": 0,
+            "task": "COMPLETED",
+            "trust": "NOT_APPLICABLE",
+            "unexpected_effects": 0,
+            "unique_occurrences": 1,
+            "work_invocations": 0
+          },
+          "receipt_refs": [
+            "effect_receipt_v01:05acc9103fa1d9d894c7b2733ae351d7004d143a8fd359ea5e65e5fc9581997d"
+          ]
+        }
+      ]
+    },
+    {
+      "domain": "EPHEMERAL_WORKSPACE",
+      "source_revision": "a46a0e422a36d65673df229116d2137c14efd7cf7c90552c703b55ec00e77099",
+      "occurrences": [
+        {
+          "occurrence": 0,
+          "metrics": {
+            "attempts": 1,
+            "brier": {
+              "N": 0,
+              "denominator": null,
+              "numerator": null,
+              "state": "UNKNOWN"
+            },
+            "consumed_drs_records": [],
+            "deliveries": 1,
+            "domain": "EPHEMERAL_WORKSPACE",
+            "enforcement": "ALLOWED_AS_REQUIRED",
+            "lane": "CONTROLLED_RUNTIME",
+            "lawful_effects": 0,
+            "not_scorable": [
+              "NO_PROSPECTIVE_COMPARABLE_EXPECTATION"
+            ],
+            "prior": "NOT_APPLICABLE",
+            "quality": "NOT_SCORABLE",
+            "rating": "NOT_APPLICABLE",
+            "refusals": 0,
+            "root": "root:ews:personal:pldonfohndoaomac",
+            "scorable_count": 0,
+            "task": "COMPLETED",
+            "trust": "NOT_APPLICABLE",
+            "unexpected_effects": 0,
+            "unique_occurrences": 1,
+            "work_invocations": 2
+          },
+          "receipt_refs": []
+        },
+        {
+          "occurrence": 1,
+          "metrics": {
+            "attempts": 1,
+            "brier": {
+              "N": 0,
+              "denominator": null,
+              "numerator": null,
+              "state": "UNKNOWN"
+            },
+            "consumed_drs_records": [],
+            "deliveries": 1,
+            "domain": "EPHEMERAL_WORKSPACE",
+            "enforcement": "BLOCKED_AS_REQUIRED",
+            "lane": "CONTROLLED_RUNTIME",
+            "lawful_effects": 0,
+            "not_scorable": [
+              "NO_PROSPECTIVE_COMPARABLE_EXPECTATION"
+            ],
+            "prior": "NOT_APPLICABLE",
+            "quality": "NOT_SCORABLE",
+            "rating": "NOT_APPLICABLE",
+            "refusals": 1,
+            "root": "root:ews:personal:pldonfohndoaomac",
+            "scorable_count": 0,
+            "task": "SAFE_NO_DEAL",
+            "trust": "NOT_APPLICABLE",
+            "unexpected_effects": 0,
+            "unique_occurrences": 1,
+            "work_invocations": 0
+          },
+          "receipt_refs": []
+        }
+      ]
+    },
+    {
+      "domain": "LANDSLIDE_SENTINEL",
+      "source_revision": "886199bd3ca337463027490fa8d126bc08af12e2144b9d57d52d4f11449ca8b4",
+      "occurrences": [
+        {
+          "occurrence": 0,
+          "metrics": {
+            "attempts": 1,
+            "brier": {
+              "N": 0,
+              "denominator": null,
+              "numerator": null,
+              "state": "UNKNOWN"
+            },
+            "consumed_drs_records": [],
+            "deliveries": 1,
+            "domain": "LANDSLIDE_SENTINEL",
+            "enforcement": "ALLOWED_AS_REQUIRED",
+            "lane": "CONTROLLED_RUNTIME",
+            "lawful_effects": 0,
+            "not_scorable": [
+              "NO_PROSPECTIVE_COMPARABLE_EXPECTATION"
+            ],
+            "prior": "NOT_APPLICABLE",
+            "quality": "NOT_SCORABLE",
+            "rating": "NOT_APPLICABLE",
+            "refusals": 0,
+            "root": "SiteSafetyRoot:sentinel:yhsitapuijsh",
+            "scorable_count": 0,
+            "task": "COMPLETED",
+            "trust": "NOT_APPLICABLE",
+            "unexpected_effects": 0,
+            "unique_occurrences": 1,
+            "work_invocations": 2
+          },
+          "receipt_refs": []
+        },
+        {
+          "occurrence": 1,
+          "metrics": {
+            "attempts": 1,
+            "brier": {
+              "N": 0,
+              "denominator": null,
+              "numerator": null,
+              "state": "UNKNOWN"
+            },
+            "consumed_drs_records": [],
+            "deliveries": 1,
+            "domain": "LANDSLIDE_SENTINEL",
+            "enforcement": "BLOCKED_AS_REQUIRED",
+            "lane": "CONTROLLED_RUNTIME",
+            "lawful_effects": 0,
+            "not_scorable": [
+              "NO_PROSPECTIVE_COMPARABLE_EXPECTATION"
+            ],
+            "prior": "NOT_APPLICABLE",
+            "quality": "NOT_SCORABLE",
+            "rating": "NOT_APPLICABLE",
+            "refusals": 1,
+            "root": "SiteSafetyRoot:sentinel:yhsitapuijsh",
+            "scorable_count": 0,
+            "task": "NEEDS_INPUT",
+            "trust": "NOT_APPLICABLE",
+            "unexpected_effects": 0,
+            "unique_occurrences": 1,
+            "work_invocations": 0
+          },
+          "receipt_refs": []
+        }
+      ]
+    }
+  ],
+  "scope": "Existing report metrics and receipt refs, not an invented universal OS event count. See selected-code observer and raw branch readbacks."
+}

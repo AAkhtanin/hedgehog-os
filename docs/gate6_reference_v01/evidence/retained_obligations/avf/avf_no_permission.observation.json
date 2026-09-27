@@ -1,0 +1,78 @@
+{
+  "backend": "LOCAL_START_RETURN_FILTERED_GLOBAL_UNWIND",
+  "children": "UNOBSERVED_NOT_ZERO",
+  "counts": {
+    "build_firewall": 1,
+    "sentinel": 1
+  },
+  "direct_owners": {
+    "build_firewall": 1,
+    "sentinel": 1
+  },
+  "entered": 1790507295.8290539,
+  "events": [
+    {
+      "event": "call",
+      "label": "sentinel",
+      "nested": false,
+      "parents": [],
+      "time": 5839675.008572916
+    },
+    {
+      "event": "return",
+      "label": "sentinel",
+      "time": 5839675.00857375
+    },
+    {
+      "event": "call",
+      "label": "build_firewall",
+      "nested": false,
+      "parents": [],
+      "time": 5839675.008577583
+    },
+    {
+      "event": "unwind",
+      "label": "build_firewall",
+      "time": 5839675.012354166
+    }
+  ],
+  "exited": 1790507295.833267,
+  "identities": {
+    "authorize": {
+      "bytes": 128809,
+      "file": "/private/tmp/RADIOLARIA_G6A5R1.53l3ouws/clone/hedgehog/kernel/effect_firewall_v01.py",
+      "line": 628,
+      "sha256": "46a453e0ef98565f0de59ab062b307eff6549a716973268a034592a5f98463bd",
+      "symbol": "authorize_effect_request_v01"
+    },
+    "build_firewall": {
+      "bytes": 128809,
+      "file": "/private/tmp/RADIOLARIA_G6A5R1.53l3ouws/clone/hedgehog/kernel/effect_firewall_v01.py",
+      "line": 362,
+      "sha256": "46a453e0ef98565f0de59ab062b307eff6549a716973268a034592a5f98463bd",
+      "symbol": "build_effect_firewall_v01"
+    },
+    "build_request": {
+      "bytes": 128809,
+      "file": "/private/tmp/RADIOLARIA_G6A5R1.53l3ouws/clone/hedgehog/kernel/effect_firewall_v01.py",
+      "line": 450,
+      "sha256": "46a453e0ef98565f0de59ab062b307eff6549a716973268a034592a5f98463bd",
+      "symbol": "build_effect_request_v01"
+    },
+    "effect": {
+      "bytes": 128809,
+      "file": "/private/tmp/RADIOLARIA_G6A5R1.53l3ouws/clone/hedgehog/kernel/effect_firewall_v01.py",
+      "line": 812,
+      "sha256": "46a453e0ef98565f0de59ab062b307eff6549a716973268a034592a5f98463bd",
+      "symbol": "execute_mock_effect_v01"
+    }
+  },
+  "nested": {},
+  "phase": "avf_no_permission",
+  "pid": 83153,
+  "rationale": "Same-family nested wrappers are one owner; D5 inside E5 is visible nested work, not another direct D5.",
+  "restored": true,
+  "scope": "CURRENT_PROCESS_CURRENT_THREAD_ONLY",
+  "sentinel_live": true,
+  "thread": 8409947520
+}

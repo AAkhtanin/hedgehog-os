@@ -1,0 +1,208 @@
+{
+  "schema": "gate6_explanatory_geometry_v01",
+  "entities": [
+    "UserEvent",
+    "Root",
+    "Orchestrator",
+    "WorldStateTemporalDRS",
+    "CandidateVectorsAVF",
+    "BSEP",
+    "SemanticArchitect",
+    "RuntimeTopology",
+    "WorkChild",
+    "ResultProposal",
+    "PostVV",
+    "TerminalGT",
+    "ActionPacket",
+    "Host",
+    "Firewall",
+    "Receipt",
+    "LedgerSealReplay",
+    "OutcomeHistory"
+  ],
+  "relations": [
+    {
+      "source": "UserEvent",
+      "target": "Root",
+      "relation": "intake",
+      "evidence": [
+        "contract_index.json",
+        "specs/current_architecture_lock_v01.md"
+      ]
+    },
+    {
+      "source": "Root",
+      "target": "Orchestrator",
+      "relation": "bounded_request",
+      "evidence": [
+        "contract_index.json",
+        "specs/current_architecture_lock_v01.md"
+      ]
+    },
+    {
+      "source": "Orchestrator",
+      "target": "WorldStateTemporalDRS",
+      "relation": "retrieval",
+      "evidence": [
+        "contract_index.json",
+        "specs/current_architecture_lock_v01.md"
+      ]
+    },
+    {
+      "source": "WorldStateTemporalDRS",
+      "target": "CandidateVectorsAVF",
+      "relation": "evidence",
+      "evidence": [
+        "contract_index.json",
+        "specs/current_architecture_lock_v01.md"
+      ]
+    },
+    {
+      "source": "CandidateVectorsAVF",
+      "target": "Root",
+      "relation": "advisory_route",
+      "evidence": [
+        "contract_index.json",
+        "specs/current_architecture_lock_v01.md"
+      ]
+    },
+    {
+      "source": "Root",
+      "target": "BSEP",
+      "relation": "accepted_projection",
+      "evidence": [
+        "contract_index.json",
+        "specs/current_architecture_lock_v01.md"
+      ]
+    },
+    {
+      "source": "BSEP",
+      "target": "SemanticArchitect",
+      "relation": "semantic_membrane",
+      "evidence": [
+        "contract_index.json",
+        "specs/current_architecture_lock_v01.md"
+      ]
+    },
+    {
+      "source": "SemanticArchitect",
+      "target": "RuntimeTopology",
+      "relation": "proposal_not_ownership",
+      "evidence": [
+        "contract_index.json",
+        "specs/current_architecture_lock_v01.md"
+      ]
+    },
+    {
+      "source": "RuntimeTopology",
+      "target": "WorkChild",
+      "relation": "runtime_owned_execution",
+      "evidence": [
+        "contract_index.json",
+        "specs/current_architecture_lock_v01.md"
+      ]
+    },
+    {
+      "source": "WorkChild",
+      "target": "ResultProposal",
+      "relation": "proposal",
+      "evidence": [
+        "contract_index.json",
+        "specs/current_architecture_lock_v01.md"
+      ]
+    },
+    {
+      "source": "ResultProposal",
+      "target": "PostVV",
+      "relation": "validation",
+      "evidence": [
+        "contract_index.json",
+        "specs/current_architecture_lock_v01.md"
+      ]
+    },
+    {
+      "source": "PostVV",
+      "target": "TerminalGT",
+      "relation": "validated_evidence",
+      "evidence": [
+        "contract_index.json",
+        "specs/current_architecture_lock_v01.md"
+      ]
+    },
+    {
+      "source": "TerminalGT",
+      "target": "Root",
+      "relation": "advisory_only",
+      "evidence": [
+        "contract_index.json",
+        "specs/current_architecture_lock_v01.md"
+      ]
+    },
+    {
+      "source": "Root",
+      "target": "ActionPacket",
+      "relation": "sole_local_creation",
+      "evidence": [
+        "contract_index.json",
+        "specs/current_architecture_lock_v01.md"
+      ]
+    },
+    {
+      "source": "ActionPacket",
+      "target": "Host",
+      "relation": "current_source_capture",
+      "evidence": [
+        "contract_index.json",
+        "specs/current_architecture_lock_v01.md"
+      ]
+    },
+    {
+      "source": "Host",
+      "target": "Firewall",
+      "relation": "bounded_dispatch",
+      "evidence": [
+        "contract_index.json",
+        "specs/current_architecture_lock_v01.md"
+      ]
+    },
+    {
+      "source": "Firewall",
+      "target": "Receipt",
+      "relation": "exclusive_effect_evidence",
+      "evidence": [
+        "contract_index.json",
+        "specs/current_architecture_lock_v01.md"
+      ]
+    },
+    {
+      "source": "Receipt",
+      "target": "LedgerSealReplay",
+      "relation": "integrity_not_permission",
+      "evidence": [
+        "contract_index.json",
+        "specs/current_architecture_lock_v01.md"
+      ]
+    },
+    {
+      "source": "LedgerSealReplay",
+      "target": "OutcomeHistory",
+      "relation": "evidence_writeback",
+      "evidence": [
+        "contract_index.json",
+        "specs/current_architecture_lock_v01.md"
+      ]
+    },
+    {
+      "source": "OutcomeHistory",
+      "target": "Root",
+      "relation": "new_review_not_old_authority",
+      "evidence": [
+        "contract_index.json",
+        "specs/current_architecture_lock_v01.md"
+      ]
+    }
+  ],
+  "owner": "Runtime owns topology; each Root owns its independent decision; Firewall owns effects",
+  "not_a_runtime_registry": true,
+  "rendered_atlas": "G6B_NOT_STARTED"
+}

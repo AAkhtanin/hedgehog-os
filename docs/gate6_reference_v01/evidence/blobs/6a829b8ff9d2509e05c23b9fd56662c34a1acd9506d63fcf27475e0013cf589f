@@ -1,0 +1,2 @@
+{"phase": "exchange", "event": "START", "utc": 1790486978, "monotonic": 5819357.860051041}
+{"phase": "exchange", "event": "COMPLETE", "utc": 1790486978, "monotonic": 5819358.198340208, "assessment": "WITHIN_REFERENCE_LIMIT"}

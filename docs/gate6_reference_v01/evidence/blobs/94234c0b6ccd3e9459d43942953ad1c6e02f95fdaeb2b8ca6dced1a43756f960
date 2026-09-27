@@ -1,0 +1,16 @@
+{
+  "source": {
+    "bytes": 946420,
+    "sha256": "378d7c1db5240b3e2cdba866a357b1e4fb01a31a92c79d121208a9273e495c44",
+    "mode": 420
+  },
+  "schema": {
+    "bytes": 357296,
+    "sha256": "9272dd580aa7514a4e807aaec28abfccf415d250159d4648d8329cfee2375e1b",
+    "mode": 420
+  },
+  "errors": [],
+  "new_collections": 0,
+  "new_effects": 0,
+  "interpretation": "Existing schema applied only to saved public JSON; not a native rerun."
+}

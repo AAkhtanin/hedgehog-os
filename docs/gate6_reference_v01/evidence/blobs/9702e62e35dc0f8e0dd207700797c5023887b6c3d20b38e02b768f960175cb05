@@ -1,0 +1,203 @@
+{
+  "events": [
+    {
+      "event_id": "exact",
+      "inventory": {
+        "currency": "EUR",
+        "fields": [
+          {
+            "available_utc": [
+              [
+                1799308800,
+                1799348400
+              ],
+              [
+                1799395200,
+                1799434800
+              ],
+              [
+                1799481600,
+                1799521200
+              ]
+            ],
+            "field_id": "field:cheap",
+            "full_size": true,
+            "occupied_utc": [],
+            "price_minor": 1,
+            "surface": "artificial"
+          },
+          {
+            "available_utc": [
+              [
+                1799308800,
+                1799348400
+              ],
+              [
+                1799395200,
+                1799434800
+              ],
+              [
+                1799481600,
+                1799521200
+              ]
+            ],
+            "field_id": "field:elm",
+            "full_size": true,
+            "occupied_utc": [
+              [
+                1799402400,
+                1799404200
+              ]
+            ],
+            "price_minor": 2100,
+            "surface": "natural_grass"
+          }
+        ],
+        "revision": 4,
+        "venue_ref": "venue:synthetic"
+      },
+      "request": {
+        "budget_minor": 7000,
+        "currency": "EUR",
+        "operation": "FIND_OFFER",
+        "owner_approval_ref": null,
+        "request_id": "request:exam:one",
+        "revision": 1,
+        "sessions": [
+          {
+            "allow_shift_minutes": 0,
+            "end": "2027-01-07T18:00:00",
+            "session_id": "session:7",
+            "start": "2027-01-07T16:30:00"
+          },
+          {
+            "allow_shift_minutes": 0,
+            "end": "2027-01-08T12:30:00",
+            "session_id": "session:8",
+            "start": "2027-01-08T11:00:00"
+          },
+          {
+            "allow_shift_minutes": 0,
+            "end": "2027-01-09T12:30:00",
+            "session_id": "session:9",
+            "start": "2027-01-09T11:00:00"
+          }
+        ],
+        "team_ref": "team:one",
+        "timezone": "Europe/Tirane",
+        "venue_ref": "venue:synthetic"
+      }
+    },
+    {
+      "event_id": "shift",
+      "inventory": {
+        "currency": "EUR",
+        "fields": [
+          {
+            "available_utc": [
+              [
+                1799308800,
+                1799348400
+              ],
+              [
+                1799395200,
+                1799434800
+              ],
+              [
+                1799481600,
+                1799521200
+              ]
+            ],
+            "field_id": "field:cheap",
+            "full_size": true,
+            "occupied_utc": [],
+            "price_minor": 1,
+            "surface": "artificial"
+          },
+          {
+            "available_utc": [
+              [
+                1799308800,
+                1799348400
+              ],
+              [
+                1799395200,
+                1799434800
+              ],
+              [
+                1799481600,
+                1799521200
+              ]
+            ],
+            "field_id": "field:elm",
+            "full_size": true,
+            "occupied_utc": [
+              [
+                1799402400,
+                1799404200
+              ]
+            ],
+            "price_minor": 2100,
+            "surface": "natural_grass"
+          }
+        ],
+        "revision": 4,
+        "venue_ref": "venue:synthetic"
+      },
+      "request": {
+        "budget_minor": 7000,
+        "currency": "EUR",
+        "operation": "FIND_OFFER",
+        "owner_approval_ref": "consent:jan8-only",
+        "request_id": "request:exam:one",
+        "revision": 2,
+        "sessions": [
+          {
+            "allow_shift_minutes": 0,
+            "end": "2027-01-07T18:00:00",
+            "session_id": "session:7",
+            "start": "2027-01-07T16:30:00"
+          },
+          {
+            "allow_shift_minutes": 30,
+            "end": "2027-01-08T12:30:00",
+            "session_id": "session:8",
+            "start": "2027-01-08T11:00:00"
+          },
+          {
+            "allow_shift_minutes": 0,
+            "end": "2027-01-09T12:30:00",
+            "session_id": "session:9",
+            "start": "2027-01-09T11:00:00"
+          }
+        ],
+        "team_ref": "team:one",
+        "timezone": "Europe/Tirane",
+        "venue_ref": "venue:synthetic"
+      }
+    }
+  ],
+  "policy": {
+    "accept_football": true,
+    "book_approvals": [],
+    "local_root": "VenueRoot",
+    "max_source_age": 300,
+    "peer_root": "ActivePlanetRoot",
+    "publish_enabled": true,
+    "recipients": [
+      "ActivePlanetRoot"
+    ],
+    "release_enabled": false,
+    "shift_approvals": [
+      {
+        "approval_ref": "consent:jan8-only",
+        "previous_request_sha256": "785cf3b0568f2b365786ebc2a66928d86af0be286a6980d3fca4322de67ac02f",
+        "request_sha256": "41fc59596b47d6dadc7d85b11cb6238fb308c916bdc686df6acb43a7e11fe294"
+      }
+    ],
+    "status": "ACTIVE",
+    "ttl_seconds": 300
+  },
+  "role": "publisher",
+  "version": "g54.peer_input.v01"
+}

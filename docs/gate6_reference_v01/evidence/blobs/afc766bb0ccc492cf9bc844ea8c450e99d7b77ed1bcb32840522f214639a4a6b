@@ -1,0 +1,129 @@
+{
+  "canary": "RECORDED_PUBLIC_SCAN_NOT_FRESH_PRIVATE_SCAN",
+  "claims": [
+    {
+      "adaptation_ref": "g5adaptation:d5f25ce201c4cbe59f10bb499058eee9c5d501a0cda5f5aa2c1ff58facbd7d01",
+      "assessment": "WITHIN_REFERENCE_LIMIT",
+      "body_hash": "210075b73a8bf44eac2cfed73d6110a9aef66f9afe146537a77cb973349567e2",
+      "dependency_fingerprint": "6e4b1049a0917f65843d1d1284881a095eed13fe9bd26d59f7b6b3a44e433266",
+      "limit": 100,
+      "local_request_ref": "g5request:25a20ba14430b709ae7f44ee66730cf2c62c24e3c2e6be15f7e65ad9f9df4eca",
+      "outputs": {
+        "corrected_den": 1,
+        "corrected_num": 96,
+        "mean_den": 1,
+        "mean_num": 106
+      },
+      "policy_hash": "b0a98591b1a73ea95aee3ec159a39d158a92f9052fa9a4c5c1b018d747e2cc50",
+      "source_ref": "source:gate5:calibration:one",
+      "source_revision": 1,
+      "work_result_ref": "work_results:4c1a42cbd52dc3e07a8eaf7e119995cf94d8f05f3b21702220b25a2652245ab8"
+    },
+    {
+      "adaptation_ref": "g5adaptation:34bed0585972354d5e5a7c239d6a75eaece2c249fa16c545d91fbf3a9673532a",
+      "assessment": "REVIEW_REQUIRED",
+      "body_hash": "c0a3313ff5f9bbf2871fc02d29e573d7264ec4d7b2327e39662bebabe78c4187",
+      "dependency_fingerprint": "99d5666e2b1c46484d9e2a7a7ed294f7ac6341553e4873e8a77d2f61957953e7",
+      "limit": 100,
+      "local_request_ref": "g5request:b15c0843b5048e8d2ad494afee46024700a4b8b92bb78d9a0f3c776e4a5cc649",
+      "outputs": {
+        "corrected_den": 1,
+        "corrected_num": 102,
+        "mean_den": 1,
+        "mean_num": 106
+      },
+      "policy_hash": "b0a98591b1a73ea95aee3ec159a39d158a92f9052fa9a4c5c1b018d747e2cc50",
+      "source_ref": "source:gate5:calibration:one",
+      "source_revision": 2,
+      "work_result_ref": "work_results:797bf13b35a22f3e91d7dbd075ff69fb13c9f60b204a6424f0f43b9b4b149aa0"
+    }
+  ],
+  "credit": 0,
+  "deduplicated_sources": 2,
+  "drs_writes": 0,
+  "effects": 0,
+  "fetch": 0,
+  "history_immutable": true,
+  "host_dispatch": 0,
+  "new_root_decisions": 0,
+  "new_work": 0,
+  "restarted": true,
+  "scope": "PUBLIC_CRYPTO_PURE_WORK_AND_ROOT_INPUT_RESULT_STRUCTURES_WITH_EXACT_RECORDED_CLAIMS; NOT_FULL_NATIVE_REPLAY_OR_CURRENT_AUTHORITY",
+  "source_budget": {
+    "task:gate5:exchange": {
+      "attempts": 12,
+      "bodies": 2,
+      "body_bytes": 2146,
+      "denied": 2,
+      "disclosures": [
+        "g5request:25a20ba14430b709ae7f44ee66730cf2c62c24e3c2e6be15f7e65ad9f9df4eca",
+        "g5request:856f6e19e082b7ae0421db04b3fa7f948b67e8c9705691fa75d0696d44233c95"
+      ],
+      "metadata": 8,
+      "payload": 2,
+      "refused_responses": 2,
+      "released_responses": 2,
+      "request_ids": [
+        "g5request:42f041009aab3a639f76298aec75456d0b0985790e5d2cba5002a2a075c9611b",
+        "g5request:718867a1a5f60753912f04cfd6ae3dfc61c243d53df3ec7f405ad32b72198a0d",
+        "g5request:25a20ba14430b709ae7f44ee66730cf2c62c24e3c2e6be15f7e65ad9f9df4eca",
+        "g5request:36be4a1206952e5cb5c268baad0d610c680873408eb01580db0c875e45749ced",
+        "g5request:856f6e19e082b7ae0421db04b3fa7f948b67e8c9705691fa75d0696d44233c95",
+        "g5request:3e5ef5a7f7357190fa09e43d525b45aa177dae6fdd29e4fc21deca4f8e05ea58",
+        "g5request:81aa0afe2269e538f54097100e616012b0343c6462c18d3f29e3007d2ea24b1a",
+        "g5request:cf11ebd1b66473a07a88c4c5a9a42b175f6c226f9dcaa2e36aeac88e1ea91d46",
+        "g5request:4b47fa09c2ce3c6f2bb7517dfe1a1548b624e6fef74fb27c5f0be8ddb10f4d5c",
+        "g5request:a227639d8b530784e8749f84b18e10790075bc5d4da6243edc2358561a7abebf"
+      ]
+    },
+    "task:gate5:revision-two": {
+      "attempts": 4,
+      "bodies": 1,
+      "body_bytes": 1152,
+      "denied": 0,
+      "disclosures": [
+        "g5request:b15c0843b5048e8d2ad494afee46024700a4b8b92bb78d9a0f3c776e4a5cc649"
+      ],
+      "metadata": 3,
+      "payload": 1,
+      "refused_responses": 0,
+      "released_responses": 1,
+      "request_ids": [
+        "g5request:550a2980752656186afb9537192dd5d3848a9f18cb24d0625f36a61d13974098",
+        "g5request:34f56a0981908e167f88106b694ae31a03ae0991b19fd4585ac721192a49b8c0",
+        "g5request:b15c0843b5048e8d2ad494afee46024700a4b8b92bb78d9a0f3c776e4a5cc649",
+        "g5request:cbd055dd04520453c4cbde88a0d27e61b87ee11016bd9e0086eadc1c1bc51823"
+      ]
+    },
+    "task:gate5:scope-refusal": {
+      "attempts": 1,
+      "bodies": 0,
+      "body_bytes": 0,
+      "denied": 0,
+      "disclosures": [],
+      "metadata": 0,
+      "payload": 1,
+      "refused_responses": 1,
+      "released_responses": 0,
+      "request_ids": [
+        "g5request:fd6518e294995154c6e9e96d10327efc52236e564f1c437fea3c2b5b2b011997"
+      ]
+    }
+  },
+  "status": "PASS_NARROW_G52_SUPPLIED",
+  "terminal_preserved": true,
+  "wire": [
+    {
+      "received": 12,
+      "received_bytes": 25319,
+      "sent": 12,
+      "sent_bytes": 21905
+    },
+    {
+      "received": 5,
+      "received_bytes": 11618,
+      "sent": 5,
+      "sent_bytes": 9056
+    }
+  ]
+}

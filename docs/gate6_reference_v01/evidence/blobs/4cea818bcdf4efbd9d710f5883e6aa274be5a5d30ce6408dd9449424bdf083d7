@@ -1,0 +1,83 @@
+{
+  "content": {
+    "drs_hit_is_authority": false,
+    "drs_record_is_truth": false,
+    "drs_reuse_candidate_is_action_permission": false,
+    "semantic_keys": [
+      "calibration",
+      "source"
+    ],
+    "source": {
+      "correction": {
+        "den": 1,
+        "num": -10
+      },
+      "n": 3,
+      "observations": [
+        110,
+        110,
+        110
+      ],
+      "quantity_id": "reference_quantity_v01",
+      "reference": 100,
+      "source_lineage_refs": [
+        "work_results:dde1b09b9d1922487d007f5a12bf72feaa673460b14438fee41a9437c1b4ace8"
+      ],
+      "source_record_ref": "source:gate5:calibration:one",
+      "source_review_ref": "d2454b024aeb9960271d79f039c81b668944314f3ad7e19e79edd1717072e3d2",
+      "source_revision": 1,
+      "source_work_ref": "work_results:dde1b09b9d1922487d007f5a12bf72feaa673460b14438fee41a9437c1b4ace8",
+      "time_envelope": {
+        "ct_context_anchor": 1790487012,
+        "et_observed_at": 1790487012,
+        "freshness_policy_id": "freshness:gate5:source",
+        "kt_as_of": 1790487012,
+        "pt_created_at": 1790487012,
+        "source_observed_at": 1790487012,
+        "source_reported_at": 1790487012,
+        "system_ingested_at": 1790487012,
+        "system_verified_at": 1790487012,
+        "time_envelope_id": "drstime_v01:a19564c599b1eb9a7364bf5c42433c62b4c331be477fee77ae467dba766235e6",
+        "time_envelope_version": "v0.1",
+        "ttl_seconds": 300,
+        "valid_from": 1790487012,
+        "valid_to": 1790487312
+      },
+      "total": 330,
+      "ttl_base": "pt_created_at",
+      "unit_id": "synthetic_unit_v01",
+      "version": "g51.body.v01"
+    }
+  },
+  "domain": "CALIBRATION",
+  "layer": "work",
+  "provenance": {
+    "created_by": "root_orchestrator",
+    "request_id": "req:source:gate5:calibration:one",
+    "trace_refs": [
+      {
+        "kind": "local_drs_resolver",
+        "trace_id": "trace:source:gate5:calibration:one"
+      }
+    ]
+  },
+  "record_id": "source:gate5:calibration:one",
+  "status": "active",
+  "time_envelope": {
+    "ct_session_anchor": "sess_real_local_drs_resolver_v01",
+    "et_observed_at": null,
+    "freshness_class": "normal",
+    "kt_asof": "2026-09-27T05:30:13.031566+00:00",
+    "pt_created_at": "2026-09-27T05:30:13.031566+00:00",
+    "ttl_seconds": 2592000,
+    "valid_from": "2026-09-27T05:30:13.031566+00:00",
+    "valid_to": null
+  },
+  "trace_refs": [
+    {
+      "kind": "local_drs_resolver",
+      "trace_id": "trace:source:gate5:calibration:one"
+    }
+  ],
+  "type": "generic"
+}

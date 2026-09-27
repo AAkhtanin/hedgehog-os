@@ -1,0 +1,5 @@
+{
+  "pid": 62130,
+  "supervisor_pid": 62129,
+  "identity": "  PID  PPID STARTED                      COMMAND\n62130 62129 Sun Sep 27 07:43:24 2026     /Users/admin/Projects/hedgehog-os-gate6-g6a1-g4nd6eiu/venv/bin/python -B /private/tmp/RADIOLARIA_G6A4_OPERATOR.EO2dTe/diagnose_g35.py\n"
+}

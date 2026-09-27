@@ -1,0 +1,511 @@
+{
+  "schema": "gate6_dependency_inventory_v01",
+  "python": "3.14.5 (main, May 10 2026, 10:21:34) [Clang 21.0.0 (clang-2100.0.123.102)]",
+  "executable": "/Users/admin/Projects/hedgehog-os-gate6-g6a1-g4nd6eiu/venv/bin/python",
+  "platform": "macOS-26.5.2-arm64-arm-64bit-Mach-O",
+  "machine": "arm64",
+  "declared_project": {
+    "name": "hedgehog-os-demo",
+    "version": "0.1.0",
+    "requires-python": ">=3.11",
+    "license": "AGPL-3.0-only",
+    "license-files": [
+      "LICENSE"
+    ],
+    "dependencies": [
+      "jsonschema",
+      "pytest",
+      "pyTelegramBotAPI",
+      "google-genai",
+      "cryptography==48.0.0",
+      "referencing",
+      "httpx",
+      "httpcore",
+      "Pillow",
+      "python-pptx",
+      "pypdf",
+      "reportlab",
+      "wasmtime==48.0.0"
+    ]
+  },
+  "dependencies": [
+    {
+      "requirement": "jsonschema",
+      "installed": "4.26.0",
+      "satisfies": true,
+      "license": "MIT",
+      "license_files": [
+        {
+          "path": "jsonschema-4.26.0.dist-info/licenses/COPYING",
+          "bytes": 1057,
+          "sha256": "4f92a015a13c4d1a040bef018aa13430b4f1bc73b41b16bb846c346766de7439",
+          "mode": 420
+        }
+      ],
+      "metadata_origin": "/Users/admin/Projects/hedgehog-os-gate6-g6a1-g4nd6eiu/venv/lib/python3.14/site-packages/jsonschema-4.26.0.dist-info",
+      "project_urls": [
+        "Homepage, https://github.com/python-jsonschema/jsonschema",
+        "Documentation, https://python-jsonschema.readthedocs.io/",
+        "Issues, https://github.com/python-jsonschema/jsonschema/issues/",
+        "Funding, https://github.com/sponsors/Julian",
+        "Tidelift, https://tidelift.com/subscription/pkg/pypi-jsonschema?utm_source=pypi-jsonschema&utm_medium=referral&utm_campaign=pypi-link",
+        "Changelog, https://github.com/python-jsonschema/jsonschema/blob/main/CHANGELOG.rst",
+        "Source, https://github.com/python-jsonschema/jsonschema"
+      ],
+      "dependency_requires": [
+        "attrs>=22.2.0",
+        "jsonschema-specifications>=2023.03.6",
+        "referencing>=0.28.4",
+        "rpds-py>=0.25.0",
+        "fqdn; extra == 'format'",
+        "idna; extra == 'format'",
+        "isoduration; extra == 'format'",
+        "jsonpointer>1.13; extra == 'format'",
+        "rfc3339-validator; extra == 'format'",
+        "rfc3987; extra == 'format'",
+        "uri-template; extra == 'format'",
+        "webcolors>=1.11; extra == 'format'",
+        "fqdn; extra == 'format-nongpl'",
+        "idna; extra == 'format-nongpl'",
+        "isoduration; extra == 'format-nongpl'",
+        "jsonpointer>1.13; extra == 'format-nongpl'",
+        "rfc3339-validator; extra == 'format-nongpl'",
+        "rfc3986-validator>0.1.0; extra == 'format-nongpl'",
+        "rfc3987-syntax>=1.1.0; extra == 'format-nongpl'",
+        "uri-template; extra == 'format-nongpl'",
+        "webcolors>=24.6.0; extra == 'format-nongpl'"
+      ]
+    },
+    {
+      "requirement": "pytest",
+      "installed": "9.1.1",
+      "satisfies": true,
+      "license": "MIT",
+      "license_files": [
+        {
+          "path": "pytest-9.1.1.dist-info/licenses/LICENSE",
+          "bytes": 1091,
+          "sha256": "ca836a5f9ecca3b2f350230faa20a48fb8b145653b5568d784862df864706b9b",
+          "mode": 420
+        }
+      ],
+      "metadata_origin": "/Users/admin/Projects/hedgehog-os-gate6-g6a1-g4nd6eiu/venv/lib/python3.14/site-packages/pytest-9.1.1.dist-info",
+      "project_urls": [
+        "Changelog, https://docs.pytest.org/en/stable/changelog.html",
+        "Contact, https://docs.pytest.org/en/stable/contact.html",
+        "Funding, https://docs.pytest.org/en/stable/sponsor.html",
+        "Homepage, https://docs.pytest.org/en/latest/",
+        "Source, https://github.com/pytest-dev/pytest",
+        "Tracker, https://github.com/pytest-dev/pytest/issues"
+      ],
+      "dependency_requires": [
+        "colorama>=0.4; sys_platform == \"win32\"",
+        "exceptiongroup>=1; python_version < \"3.11\"",
+        "iniconfig>=1.0.1",
+        "packaging>=22",
+        "pluggy<2,>=1.5",
+        "pygments>=2.7.2",
+        "tomli>=1; python_version < \"3.11\"",
+        "argcomplete; extra == \"dev\"",
+        "attrs>=19.2; extra == \"dev\"",
+        "hypothesis>=3.56; extra == \"dev\"",
+        "mock; extra == \"dev\"",
+        "requests; extra == \"dev\"",
+        "setuptools; extra == \"dev\"",
+        "xmlschema; extra == \"dev\""
+      ]
+    },
+    {
+      "requirement": "pyTelegramBotAPI",
+      "installed": "4.37.0",
+      "satisfies": true,
+      "license": "GPL2",
+      "license_files": [
+        {
+          "path": "pytelegrambotapi-4.37.0.dist-info/licenses/LICENSE",
+          "bytes": 18387,
+          "sha256": "ab3fe34d3c62e3348015a4dd0128b09a5da2024d1467a478311003373c18a3f0",
+          "mode": 420
+        }
+      ],
+      "metadata_origin": "/Users/admin/Projects/hedgehog-os-gate6-g6a1-g4nd6eiu/venv/lib/python3.14/site-packages/pytelegrambotapi-4.37.0.dist-info",
+      "project_urls": [
+        "Homepage, https://github.com/eternnoir/pyTelegramBotAPI",
+        "Documentation, https://pytba.readthedocs.org",
+        "Repository, https://github.com/eternnoir/pyTelegramBotAPI",
+        "Issues, https://github.com/eternnoir/pyTelegramBotAPI/issues"
+      ],
+      "dependency_requires": [
+        "aiohttp",
+        "requests",
+        "coloredlogs; extra == 'coloredlogs'",
+        "fastapi; extra == 'fastapi'",
+        "ujson; extra == 'json'",
+        "pillow; extra == 'pil'",
+        "psutil; extra == 'psutil'",
+        "redis>=3.4.1; extra == 'redis'",
+        "uvicorn; extra == 'uvicorn'",
+        "watchdog; extra == 'watchdog'"
+      ]
+    },
+    {
+      "requirement": "google-genai",
+      "installed": "2.25.0",
+      "satisfies": true,
+      "license": "Apache-2.0",
+      "license_files": [
+        {
+          "path": "google_genai-2.25.0.dist-info/licenses/LICENSE",
+          "bytes": 11358,
+          "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+          "mode": 420
+        }
+      ],
+      "metadata_origin": "/Users/admin/Projects/hedgehog-os-gate6-g6a1-g4nd6eiu/venv/lib/python3.14/site-packages/google_genai-2.25.0.dist-info",
+      "project_urls": [
+        "Homepage, https://github.com/googleapis/python-genai"
+      ],
+      "dependency_requires": [
+        "anyio<5.0.0,>=4.8.0",
+        "google-auth[requests]<3.0.0,>=2.56.0",
+        "httpx<1.0.0,>=0.28.1",
+        "pydantic<3.0.0,>=2.12.5",
+        "requests<3.0.0,>=2.28.1",
+        "tenacity<9.2.0,>=8.2.3",
+        "websockets<17.0,>=13.0.0",
+        "typing-extensions<5.0.0,>=4.14.0",
+        "distro<2,>=1.7.0",
+        "sniffio",
+        "aiohttp<4.0.0,>=3.10.11; extra == \"aiohttp\"",
+        "sentencepiece>=0.2.0; extra == \"local-tokenizer\"",
+        "protobuf; extra == \"local-tokenizer\"",
+        "pillow; extra == \"local-tokenizer\"",
+        "torch; extra == \"local-tokenizer\"",
+        "torchvision; extra == \"local-tokenizer\"",
+        "transformers; extra == \"local-tokenizer\"",
+        "pyopenssl; extra == \"pyopenssl\""
+      ]
+    },
+    {
+      "requirement": "cryptography==48.0.0",
+      "installed": "48.0.0",
+      "satisfies": true,
+      "license": "Apache-2.0 OR BSD-3-Clause",
+      "license_files": [
+        {
+          "path": "cryptography-48.0.0.dist-info/licenses/LICENSE",
+          "bytes": 197,
+          "sha256": "3e0c7c091a948b82533ba98fd7cbb40432d6f1a9acbf85f5922d2f99a93ae6bb",
+          "mode": 420
+        },
+        {
+          "path": "cryptography-48.0.0.dist-info/licenses/LICENSE.APACHE",
+          "bytes": 11360,
+          "sha256": "aac73b3148f6d1d7111dbca32099f68d26c644c6813ae1e4f05f6579aa2663fe",
+          "mode": 420
+        },
+        {
+          "path": "cryptography-48.0.0.dist-info/licenses/LICENSE.BSD",
+          "bytes": 1532,
+          "sha256": "602c4c7482de6479dd2e9793cda275e5e63d773dacd1eca689232ab7008fb4fb",
+          "mode": 420
+        }
+      ],
+      "metadata_origin": "/Users/admin/Projects/hedgehog-os-gate6-g6a1-g4nd6eiu/venv/lib/python3.14/site-packages/cryptography-48.0.0.dist-info",
+      "project_urls": [
+        "changelog, https://cryptography.io/en/latest/changelog/",
+        "documentation, https://cryptography.io/",
+        "homepage, https://github.com/pyca/cryptography",
+        "issues, https://github.com/pyca/cryptography/issues",
+        "source, https://github.com/pyca/cryptography/"
+      ],
+      "dependency_requires": [
+        "cffi>=2.0.0 ; platform_python_implementation != 'PyPy'",
+        "typing-extensions>=4.13.2 ; python_full_version < '3.11'",
+        "bcrypt>=3.1.5 ; extra == 'ssh'"
+      ]
+    },
+    {
+      "requirement": "referencing",
+      "installed": "0.37.0",
+      "satisfies": true,
+      "license": "MIT",
+      "license_files": [
+        {
+          "path": "referencing-0.37.0.dist-info/licenses/COPYING",
+          "bytes": 1057,
+          "sha256": "42dcd63495f87b4eb7c7757afa379bb55a53f94afd7a5f657d9adf57236e515c",
+          "mode": 420
+        }
+      ],
+      "metadata_origin": "/Users/admin/Projects/hedgehog-os-gate6-g6a1-g4nd6eiu/venv/lib/python3.14/site-packages/referencing-0.37.0.dist-info",
+      "project_urls": [
+        "Documentation, https://referencing.readthedocs.io/",
+        "Homepage, https://github.com/python-jsonschema/referencing",
+        "Issues, https://github.com/python-jsonschema/referencing/issues/",
+        "Funding, https://github.com/sponsors/Julian",
+        "Tidelift, https://tidelift.com/subscription/pkg/pypi-referencing?utm_source=pypi-referencing&utm_medium=referral&utm_campaign=pypi-link",
+        "Changelog, https://referencing.readthedocs.io/en/stable/changes/",
+        "Source, https://github.com/python-jsonschema/referencing"
+      ],
+      "dependency_requires": [
+        "attrs>=22.2.0",
+        "rpds-py>=0.7.0",
+        "typing-extensions>=4.4.0; python_version < '3.13'"
+      ]
+    },
+    {
+      "requirement": "httpx",
+      "installed": "0.28.1",
+      "satisfies": true,
+      "license": "BSD-3-Clause",
+      "license_files": [
+        {
+          "path": "httpx-0.28.1.dist-info/licenses/LICENSE.md",
+          "bytes": 1508,
+          "sha256": "4ec59d544f12b5f539a3a716fd321ac58ccd8030b465221f2c880200cdf28d8d",
+          "mode": 420
+        }
+      ],
+      "metadata_origin": "/Users/admin/Projects/hedgehog-os-gate6-g6a1-g4nd6eiu/venv/lib/python3.14/site-packages/httpx-0.28.1.dist-info",
+      "project_urls": [
+        "Changelog, https://github.com/encode/httpx/blob/master/CHANGELOG.md",
+        "Documentation, https://www.python-httpx.org",
+        "Homepage, https://github.com/encode/httpx",
+        "Source, https://github.com/encode/httpx"
+      ],
+      "dependency_requires": [
+        "anyio",
+        "certifi",
+        "httpcore==1.*",
+        "idna",
+        "brotli; (platform_python_implementation == 'CPython') and extra == 'brotli'",
+        "brotlicffi; (platform_python_implementation != 'CPython') and extra == 'brotli'",
+        "click==8.*; extra == 'cli'",
+        "pygments==2.*; extra == 'cli'",
+        "rich<14,>=10; extra == 'cli'",
+        "h2<5,>=3; extra == 'http2'",
+        "socksio==1.*; extra == 'socks'",
+        "zstandard>=0.18.0; extra == 'zstd'"
+      ]
+    },
+    {
+      "requirement": "httpcore",
+      "installed": "1.0.9",
+      "satisfies": true,
+      "license": "BSD-3-Clause",
+      "license_files": [
+        {
+          "path": "httpcore-1.0.9.dist-info/licenses/LICENSE.md",
+          "bytes": 1518,
+          "sha256": "fdcb59154c74cbaba16a11242f7740bea9f23d6feb5547917d8c5f94a80392a5",
+          "mode": 420
+        }
+      ],
+      "metadata_origin": "/Users/admin/Projects/hedgehog-os-gate6-g6a1-g4nd6eiu/venv/lib/python3.14/site-packages/httpcore-1.0.9.dist-info",
+      "project_urls": [
+        "Documentation, https://www.encode.io/httpcore",
+        "Homepage, https://www.encode.io/httpcore/",
+        "Source, https://github.com/encode/httpcore"
+      ],
+      "dependency_requires": [
+        "certifi",
+        "h11>=0.16",
+        "anyio<5.0,>=4.0; extra == 'asyncio'",
+        "h2<5,>=3; extra == 'http2'",
+        "socksio==1.*; extra == 'socks'",
+        "trio<1.0,>=0.22.0; extra == 'trio'"
+      ]
+    },
+    {
+      "requirement": "Pillow",
+      "installed": "12.3.0",
+      "satisfies": true,
+      "license": "MIT-CMU",
+      "license_files": [
+        {
+          "path": "pillow-12.3.0.dist-info/licenses/LICENSE",
+          "bytes": 70307,
+          "sha256": "dda12a98c1979cf3d94df1cff45d27a4cb3f04a60c76f76902ac54cac03ec0ce",
+          "mode": 420
+        }
+      ],
+      "metadata_origin": "/Users/admin/Projects/hedgehog-os-gate6-g6a1-g4nd6eiu/venv/lib/python3.14/site-packages/pillow-12.3.0.dist-info",
+      "project_urls": [
+        "Release notes, https://pillow.readthedocs.io/en/stable/releasenotes/index.html",
+        "Changelog, https://github.com/python-pillow/Pillow/releases",
+        "Documentation, https://pillow.readthedocs.io",
+        "Funding, https://tidelift.com/subscription/pkg/pypi-pillow?utm_source=pypi-pillow&utm_medium=pypi",
+        "Homepage, https://python-pillow.github.io",
+        "Mastodon, https://fosstodon.org/@pillow",
+        "Source, https://github.com/python-pillow/Pillow"
+      ],
+      "dependency_requires": [
+        "furo; extra == \"docs\"",
+        "olefile; extra == \"docs\"",
+        "sphinx>=8.2; extra == \"docs\"",
+        "sphinx-autobuild; extra == \"docs\"",
+        "sphinx-copybutton; extra == \"docs\"",
+        "sphinx-inline-tabs; extra == \"docs\"",
+        "sphinxext-opengraph; extra == \"docs\"",
+        "olefile; extra == \"fpx\"",
+        "olefile; extra == \"mic\"",
+        "arro3-compute; extra == \"test-arrow\"",
+        "arro3-core; extra == \"test-arrow\"",
+        "nanoarrow; extra == \"test-arrow\"",
+        "pyarrow; extra == \"test-arrow\"",
+        "coverage>=7.4.2; extra == \"tests\"",
+        "defusedxml; extra == \"tests\"",
+        "markdown2; extra == \"tests\"",
+        "olefile; extra == \"tests\"",
+        "packaging; extra == \"tests\"",
+        "pytest; extra == \"tests\"",
+        "pytest-cov; extra == \"tests\"",
+        "pytest-timeout; extra == \"tests\"",
+        "pytest-xdist; extra == \"tests\"",
+        "setuptools; extra == \"tests\"",
+        "trove-classifiers>=2024.10.12; extra == \"tests\"",
+        "defusedxml; extra == \"xmp\""
+      ]
+    },
+    {
+      "requirement": "python-pptx",
+      "installed": "1.0.2",
+      "satisfies": true,
+      "license": "MIT",
+      "license_files": [
+        {
+          "path": "python_pptx-1.0.2.dist-info/LICENSE",
+          "bytes": 1104,
+          "sha256": "7652f271e46d0d533e9dc463f3b5fcbdcacf4d6a9c8d6b554d15efd0f37f6132",
+          "mode": 420
+        }
+      ],
+      "metadata_origin": "/Users/admin/Projects/hedgehog-os-gate6-g6a1-g4nd6eiu/venv/lib/python3.14/site-packages/python_pptx-1.0.2.dist-info",
+      "project_urls": [
+        "Changelog, https://github.com/scanny/python-pptx/blob/master/HISTORY.rst",
+        "Documentation, https://python-pptx.readthedocs.io/en/latest/",
+        "Homepage, https://github.com/scanny/python-pptx",
+        "Repository, https://github.com/scanny/python-pptx"
+      ],
+      "dependency_requires": [
+        "Pillow >=3.3.2",
+        "XlsxWriter >=0.5.7",
+        "lxml >=3.1.0",
+        "typing-extensions >=4.9.0"
+      ]
+    },
+    {
+      "requirement": "pypdf",
+      "installed": "6.19.0",
+      "satisfies": true,
+      "license": "BSD-3-Clause",
+      "license_files": [
+        {
+          "path": "pypdf-6.19.0.dist-info/licenses/LICENSE",
+          "bytes": 1605,
+          "sha256": "a97ac230e5f33ef10a5367a850eb01f91f1a0b064e34742c7794d2294557f524",
+          "mode": 420
+        }
+      ],
+      "metadata_origin": "/Users/admin/Projects/hedgehog-os-gate6-g6a1-g4nd6eiu/venv/lib/python3.14/site-packages/pypdf-6.19.0.dist-info",
+      "project_urls": [
+        "Bug Reports, https://github.com/py-pdf/pypdf/issues",
+        "Changelog, https://pypdf.readthedocs.io/en/latest/meta/CHANGELOG.html",
+        "Documentation, https://pypdf.readthedocs.io/en/latest/",
+        "Source, https://github.com/py-pdf/pypdf"
+      ],
+      "dependency_requires": [
+        "typing_extensions >= 4.0; python_version < '3.11'",
+        "cryptography>3.0 ; extra == \"crypto\"",
+        "PyCryptodome ; extra == \"cryptodome\"",
+        "flit ; extra == \"dev\"",
+        "pip-tools ; extra == \"dev\"",
+        "pre-commit ; extra == \"dev\"",
+        "pytest-cov ; extra == \"dev\"",
+        "pytest-socket ; extra == \"dev\"",
+        "pytest-timeout ; extra == \"dev\"",
+        "pytest-xdist ; extra == \"dev\"",
+        "wheel ; extra == \"dev\"",
+        "myst_parser ; extra == \"docs\"",
+        "sphinx ; extra == \"docs\"",
+        "sphinx_rtd_theme ; extra == \"docs\"",
+        "fonttools ; extra == \"fonts\"",
+        "arabic-reshaper ; extra == \"full\"",
+        "cryptography>3.0 ; extra == \"full\"",
+        "fonttools ; extra == \"full\"",
+        "Pillow>=8.0.0 ; extra == \"full\"",
+        "python-bidi ; extra == \"full\"",
+        "Pillow>=8.0.0 ; extra == \"image\"",
+        "arabic-reshaper ; extra == \"rtl-text\"",
+        "python-bidi ; extra == \"rtl-text\""
+      ]
+    },
+    {
+      "requirement": "reportlab",
+      "installed": "5.0.1",
+      "satisfies": true,
+      "license": "BSD license (see license.txt for details), Copyright (c) 2000-2025, ReportLab Inc.",
+      "license_files": [
+        {
+          "path": "reportlab-5.0.1.dist-info/licenses/LICENSE",
+          "bytes": 1707,
+          "sha256": "ef831761646313921375fc2cb888e8eeaf7da213d0b92852c10c42f3a0b4d138",
+          "mode": 420
+        }
+      ],
+      "metadata_origin": "/Users/admin/Projects/hedgehog-os-gate6-g6a1-g4nd6eiu/venv/lib/python3.14/site-packages/reportlab-5.0.1.dist-info",
+      "project_urls": [],
+      "dependency_requires": [
+        "pillow>=9.0.0",
+        "charset-normalizer",
+        "rl_accel<1.1,>=0.9.0; extra == \"accel\"",
+        "rlPyCairo<1,>=0.2.0; extra == \"pycairo\"",
+        "freetype-py<2.4,>=2.3.0; extra == \"pycairo\"",
+        "rlbidi; extra == \"bidi\"",
+        "uharfbuzz; extra == \"shaping\""
+      ]
+    },
+    {
+      "requirement": "wasmtime==48.0.0",
+      "installed": "48.0.0",
+      "satisfies": true,
+      "license": "Apache-2.0 WITH LLVM-exception",
+      "license_files": [
+        {
+          "path": "wasmtime-48.0.0.dist-info/licenses/LICENSE",
+          "bytes": 12243,
+          "sha256": "268872b9816f90fd8e85db5a28d33f8150ebb8dd016653fb39ef1f94f2686bc5",
+          "mode": 420
+        }
+      ],
+      "metadata_origin": "/Users/admin/Projects/hedgehog-os-gate6-g6a1-g4nd6eiu/venv/lib/python3.14/site-packages/wasmtime-48.0.0.dist-info",
+      "project_urls": [
+        "Homepage, https://github.com/bytecodealliance/wasmtime-py",
+        "Bug Tracker, https://github.com/bytecodealliance/wasmtime-py/issues",
+        "Documentation, https://bytecodealliance.github.io/wasmtime-py/",
+        "Source Code, https://github.com/bytecodealliance/wasmtime-py"
+      ],
+      "dependency_requires": [
+        "coverage; extra == \"testing\"",
+        "pycparser; extra == \"testing\"",
+        "pytest-mypy; extra == \"testing\"",
+        "pytest; extra == \"testing\""
+      ]
+    }
+  ],
+  "pyproject_pin": {
+    "bytes": 866,
+    "sha256": "86485a92ac1bdaa3a73743190e70eda2ac37d66cb4d7653f69fb81d70f319ee6",
+    "mode": 420
+  },
+  "repository_license": {
+    "bytes": 34523,
+    "sha256": "0d96a4ff68ad6d4b6f1f30f713b18d5184912ba8dd389f86aa7710db079abcb0",
+    "mode": 420
+  },
+  "installed_read_only": true,
+  "fresh_install": "NOT_TESTED",
+  "legal_opinion": false,
+  "license_clearance": "NOT_CLAIMED"
+}

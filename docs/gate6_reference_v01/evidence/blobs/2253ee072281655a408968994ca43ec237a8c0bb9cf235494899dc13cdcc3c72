@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/private/tmp/RADIOLARIA_G6A4R_OPERATOR.20260927/package_stage.py", line 93, in <module>
+    assert data==derived
+           ^^^^^^^^^^^^^
+AssertionError

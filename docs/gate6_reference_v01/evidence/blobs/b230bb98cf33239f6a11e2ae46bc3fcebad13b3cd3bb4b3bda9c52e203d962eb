@@ -1,0 +1,473 @@
+{
+  "events": [
+    {
+      "event_id": "exact",
+      "inventory": {
+        "currency": "EUR",
+        "fields": [
+          {
+            "available_utc": [
+              [
+                1799308800,
+                1799348400
+              ],
+              [
+                1799395200,
+                1799434800
+              ],
+              [
+                1799481600,
+                1799521200
+              ]
+            ],
+            "field_id": "field:elm",
+            "full_size": true,
+            "occupied_utc": [
+              [
+                1799402400,
+                1799404200
+              ]
+            ],
+            "price_minor": 2100,
+            "surface": "natural_grass"
+          },
+          {
+            "available_utc": [
+              [
+                1799308800,
+                1799348400
+              ],
+              [
+                1799395200,
+                1799434800
+              ],
+              [
+                1799481600,
+                1799521200
+              ]
+            ],
+            "field_id": "field:cheap",
+            "full_size": true,
+            "occupied_utc": [],
+            "price_minor": 1,
+            "surface": "artificial"
+          }
+        ],
+        "revision": 4,
+        "venue_ref": "venue:synthetic"
+      },
+      "request": {
+        "budget_minor": 7000,
+        "currency": "EUR",
+        "operation": "FIND_OFFER",
+        "owner_approval_ref": null,
+        "request_id": "request:exam:one",
+        "revision": 1,
+        "sessions": [
+          {
+            "allow_shift_minutes": 0,
+            "end": "2027-01-09T12:30:00",
+            "session_id": "session:9",
+            "start": "2027-01-09T11:00:00"
+          },
+          {
+            "allow_shift_minutes": 0,
+            "end": "2027-01-08T12:30:00",
+            "session_id": "session:8",
+            "start": "2027-01-08T11:00:00"
+          },
+          {
+            "allow_shift_minutes": 0,
+            "end": "2027-01-07T18:00:00",
+            "session_id": "session:7",
+            "start": "2027-01-07T16:30:00"
+          }
+        ],
+        "team_ref": "team:one",
+        "timezone": "Europe/Tirane",
+        "venue_ref": "venue:synthetic"
+      }
+    },
+    {
+      "event_id": "shift",
+      "inventory": {
+        "currency": "EUR",
+        "fields": [
+          {
+            "available_utc": [
+              [
+                1799308800,
+                1799348400
+              ],
+              [
+                1799395200,
+                1799434800
+              ],
+              [
+                1799481600,
+                1799521200
+              ]
+            ],
+            "field_id": "field:elm",
+            "full_size": true,
+            "occupied_utc": [
+              [
+                1799402400,
+                1799404200
+              ]
+            ],
+            "price_minor": 2100,
+            "surface": "natural_grass"
+          },
+          {
+            "available_utc": [
+              [
+                1799308800,
+                1799348400
+              ],
+              [
+                1799395200,
+                1799434800
+              ],
+              [
+                1799481600,
+                1799521200
+              ]
+            ],
+            "field_id": "field:cheap",
+            "full_size": true,
+            "occupied_utc": [],
+            "price_minor": 1,
+            "surface": "artificial"
+          }
+        ],
+        "revision": 4,
+        "venue_ref": "venue:synthetic"
+      },
+      "request": {
+        "budget_minor": 7000,
+        "currency": "EUR",
+        "operation": "FIND_OFFER",
+        "owner_approval_ref": "consent:jan8-only",
+        "request_id": "request:exam:one",
+        "revision": 2,
+        "sessions": [
+          {
+            "allow_shift_minutes": 0,
+            "end": "2027-01-09T12:30:00",
+            "session_id": "session:9",
+            "start": "2027-01-09T11:00:00"
+          },
+          {
+            "allow_shift_minutes": 30,
+            "end": "2027-01-08T12:30:00",
+            "session_id": "session:8",
+            "start": "2027-01-08T11:00:00"
+          },
+          {
+            "allow_shift_minutes": 0,
+            "end": "2027-01-07T18:00:00",
+            "session_id": "session:7",
+            "start": "2027-01-07T16:30:00"
+          }
+        ],
+        "team_ref": "team:one",
+        "timezone": "Europe/Tirane",
+        "venue_ref": "venue:synthetic"
+      }
+    },
+    {
+      "event_id": "book",
+      "inventory": {
+        "currency": "EUR",
+        "fields": [
+          {
+            "available_utc": [
+              [
+                1799308800,
+                1799348400
+              ],
+              [
+                1799395200,
+                1799434800
+              ],
+              [
+                1799481600,
+                1799521200
+              ]
+            ],
+            "field_id": "field:elm",
+            "full_size": true,
+            "occupied_utc": [
+              [
+                1799402400,
+                1799404200
+              ]
+            ],
+            "price_minor": 2100,
+            "surface": "natural_grass"
+          },
+          {
+            "available_utc": [
+              [
+                1799308800,
+                1799348400
+              ],
+              [
+                1799395200,
+                1799434800
+              ],
+              [
+                1799481600,
+                1799521200
+              ]
+            ],
+            "field_id": "field:cheap",
+            "full_size": true,
+            "occupied_utc": [],
+            "price_minor": 1,
+            "surface": "artificial"
+          }
+        ],
+        "revision": 4,
+        "venue_ref": "venue:synthetic"
+      },
+      "request": {
+        "budget_minor": 7000,
+        "currency": "EUR",
+        "operation": "CONFIRM_MOCK_BOOKING",
+        "owner_approval_ref": "consent:controlled:booking",
+        "request_id": "request:exam:one",
+        "revision": 2,
+        "sessions": [
+          {
+            "allow_shift_minutes": 0,
+            "end": "2027-01-09T12:30:00",
+            "session_id": "session:9",
+            "start": "2027-01-09T11:00:00"
+          },
+          {
+            "allow_shift_minutes": 30,
+            "end": "2027-01-08T12:30:00",
+            "session_id": "session:8",
+            "start": "2027-01-08T11:00:00"
+          },
+          {
+            "allow_shift_minutes": 0,
+            "end": "2027-01-07T18:00:00",
+            "session_id": "session:7",
+            "start": "2027-01-07T16:30:00"
+          }
+        ],
+        "team_ref": "team:one",
+        "timezone": "Europe/Tirane",
+        "venue_ref": "venue:synthetic"
+      }
+    },
+    {
+      "event_id": "repeat",
+      "inventory": {
+        "currency": "EUR",
+        "fields": [
+          {
+            "available_utc": [
+              [
+                1799308800,
+                1799348400
+              ],
+              [
+                1799395200,
+                1799434800
+              ],
+              [
+                1799481600,
+                1799521200
+              ]
+            ],
+            "field_id": "field:elm",
+            "full_size": true,
+            "occupied_utc": [
+              [
+                1799402400,
+                1799404200
+              ]
+            ],
+            "price_minor": 2100,
+            "surface": "natural_grass"
+          },
+          {
+            "available_utc": [
+              [
+                1799308800,
+                1799348400
+              ],
+              [
+                1799395200,
+                1799434800
+              ],
+              [
+                1799481600,
+                1799521200
+              ]
+            ],
+            "field_id": "field:cheap",
+            "full_size": true,
+            "occupied_utc": [],
+            "price_minor": 1,
+            "surface": "artificial"
+          }
+        ],
+        "revision": 4,
+        "venue_ref": "venue:synthetic"
+      },
+      "request": {
+        "budget_minor": 7000,
+        "currency": "EUR",
+        "operation": "CONFIRM_MOCK_BOOKING",
+        "owner_approval_ref": "consent:controlled:booking",
+        "request_id": "request:exam:one",
+        "revision": 2,
+        "sessions": [
+          {
+            "allow_shift_minutes": 0,
+            "end": "2027-01-09T12:30:00",
+            "session_id": "session:9",
+            "start": "2027-01-09T11:00:00"
+          },
+          {
+            "allow_shift_minutes": 30,
+            "end": "2027-01-08T12:30:00",
+            "session_id": "session:8",
+            "start": "2027-01-08T11:00:00"
+          },
+          {
+            "allow_shift_minutes": 0,
+            "end": "2027-01-07T18:00:00",
+            "session_id": "session:7",
+            "start": "2027-01-07T16:30:00"
+          }
+        ],
+        "team_ref": "team:one",
+        "timezone": "Europe/Tirane",
+        "venue_ref": "venue:synthetic"
+      }
+    },
+    {
+      "event_id": "verify",
+      "inventory": {
+        "currency": "EUR",
+        "fields": [
+          {
+            "available_utc": [
+              [
+                1799308800,
+                1799348400
+              ],
+              [
+                1799395200,
+                1799434800
+              ],
+              [
+                1799481600,
+                1799521200
+              ]
+            ],
+            "field_id": "field:elm",
+            "full_size": true,
+            "occupied_utc": [
+              [
+                1799402400,
+                1799404200
+              ]
+            ],
+            "price_minor": 2100,
+            "surface": "natural_grass"
+          },
+          {
+            "available_utc": [
+              [
+                1799308800,
+                1799348400
+              ],
+              [
+                1799395200,
+                1799434800
+              ],
+              [
+                1799481600,
+                1799521200
+              ]
+            ],
+            "field_id": "field:cheap",
+            "full_size": true,
+            "occupied_utc": [],
+            "price_minor": 1,
+            "surface": "artificial"
+          }
+        ],
+        "revision": 4,
+        "venue_ref": "venue:synthetic"
+      },
+      "request": {
+        "budget_minor": 7000,
+        "currency": "EUR",
+        "operation": "VERIFY_EXISTING",
+        "owner_approval_ref": "consent:controlled:booking",
+        "request_id": "request:exam:one",
+        "revision": 2,
+        "sessions": [
+          {
+            "allow_shift_minutes": 0,
+            "end": "2027-01-09T12:30:00",
+            "session_id": "session:9",
+            "start": "2027-01-09T11:00:00"
+          },
+          {
+            "allow_shift_minutes": 30,
+            "end": "2027-01-08T12:30:00",
+            "session_id": "session:8",
+            "start": "2027-01-08T11:00:00"
+          },
+          {
+            "allow_shift_minutes": 0,
+            "end": "2027-01-07T18:00:00",
+            "session_id": "session:7",
+            "start": "2027-01-07T16:30:00"
+          }
+        ],
+        "team_ref": "team:one",
+        "timezone": "Europe/Tirane",
+        "venue_ref": "venue:synthetic"
+      }
+    }
+  ],
+  "policy": {
+    "accept_football": true,
+    "book_approvals": [
+      {
+        "approval_ref": "consent:controlled:booking",
+        "offer_request_sha256": "d71b64d06c88b2c57f82f755ee4ba87de2e2960cabc6619b7bd159e4b038b782",
+        "request_sha256": "51c480be7b8c146e63828ab610236d2a6b0b960a0935889e9e41e3f7f5c2483d"
+      }
+    ],
+    "local_root": "VenueRoot",
+    "max_source_age": 300,
+    "peer_root": "ActivePlanetRoot",
+    "publish_enabled": true,
+    "recipients": [
+      "ActivePlanetRoot"
+    ],
+    "release_enabled": true,
+    "shift_approvals": [
+      {
+        "approval_ref": "consent:jan8-only",
+        "previous_request_sha256": "a442d3cff57b8b9d3a26a43829bdf0db9ef346aa704bafe400d0c8ee410efc9f",
+        "request_sha256": "d71b64d06c88b2c57f82f755ee4ba87de2e2960cabc6619b7bd159e4b038b782"
+      }
+    ],
+    "status": "ACTIVE",
+    "ttl_seconds": 300
+  },
+  "role": "publisher",
+  "version": "g54.peer_input.v01"
+}

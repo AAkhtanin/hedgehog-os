@@ -1,0 +1,12 @@
+Traceback (most recent call last):
+  File "/private/tmp/RADIOLARIA_G6A4R_OPERATOR.20260927/retained.py", line 144, in <module>
+    result=check()
+  File "/private/tmp/RADIOLARIA_G6A4R_OPERATOR.20260927/retained.py", line 123, in check
+    verifier.main()
+    ~~~~~~~~~~~~~^^
+  File "/Users/admin/Projects/hedgehog-os-gate6-g6a4r-bsu1xe8j/clone/demo/verify_gate5_reference_v01.py", line 129, in main
+    require(digest(b) == pin['sha256'] and len(b) == pin['bytes'], 'input freeze: ' + name)
+    ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/admin/Projects/hedgehog-os-gate6-g6a4r-bsu1xe8j/clone/demo/verify_gate5_reference_v01.py", line 19, in require
+    raise ValueError(message)
+ValueError: input freeze: hedgehog/domains/testflix/outcome_feedback_adapter_v01.py

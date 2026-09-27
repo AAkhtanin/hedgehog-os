@@ -1,0 +1,22 @@
+{
+  "no_expected_correction_or_answer_in_bootstrap": true,
+  "root_ownership": {
+    "A": "root:gate5:calibration",
+    "B": "root:gate5:site"
+  },
+  "scenarios": {
+    "A": "402afda4624721295185698e9ec917dfa6de535bb14afa388d8b6b2441b80bf1",
+    "B": "0cbe2dc10cc91b5fd13643527584d37c4f881b8c53688dc4a60084f5050f218c"
+  },
+  "source_pins": {
+    "contracts": "db7602a402f67e7acea8dc4f566568b0a58004451ae95e64c999e553d6a02a8f",
+    "exchange": "dfc22ae7beb39be05e7433bac7ceff9f2704e81c2638d0fe4727b2aa3eb36b07",
+    "native": "bba423e434d9fb9d5695b649191e9f31a2743b7bbe9327c80c0ce8b34162e3ec"
+  },
+  "tasks": [
+    "positive_current_use",
+    "B_local_policy_negative",
+    "A_authenticated_AUDIT_refusal"
+  ],
+  "transport": "INHERITED_OS_PIPES"
+}

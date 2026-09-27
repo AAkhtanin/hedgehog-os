@@ -1,0 +1,2999 @@
+{
+  "schema": "gate6_explanatory_contract_index_v01",
+  "authority": "EXPLANATORY_NOT_NORMATIVE",
+  "authority_index": "specs/document_authority_index_v01.json",
+  "contracts": [
+    {
+      "profile": "ABI v0.1",
+      "source": {
+        "path": "hedgehog/kernel/abi_v01.py",
+        "bytes": 43017,
+        "sha256": "cc1a660a3cdceb5c30728b27016e99a752561969d744744d55b18ce0af398d31",
+        "mode": 420
+      },
+      "normative_contract": "specs/current_architecture_lock_v01.md",
+      "schema": "schemas/kernel_artifact_v01.schema.json",
+      "symbols": [
+        {
+          "symbol": "KernelArtifactV01",
+          "line": 203,
+          "end_line": 216,
+          "signature": "class",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "CausalConsumptionRefV01",
+          "line": 220,
+          "end_line": 229,
+          "signature": "class",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "ActionPacketLifecycleProfileV01",
+          "line": 233,
+          "end_line": 237,
+          "signature": "class",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "build_action_packet_lifecycle_profile_v01",
+          "line": 240,
+          "end_line": 251,
+          "signature": "",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "validate_action_packet_lifecycle_profile_v01",
+          "line": 254,
+          "end_line": 293,
+          "signature": "profile: object",
+          "role": "consumer"
+        },
+        {
+          "symbol": "action_packet_lifecycle_profile_to_plain_dict_v01",
+          "line": 296,
+          "end_line": 313,
+          "signature": "profile: ActionPacketLifecycleProfileV01",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "build_kernel_artifact_v01",
+          "line": 326,
+          "end_line": 374,
+          "signature": "*, abi_version: str, artifact_id: str, artifact_type: str, schema_version: str, transaction_id: str, owner_root_id: str, source_component: str, authority_class: str, lifecycle_state: str, payload: object, trace_refs: tuple[str, ...], parent_refs: tuple[str, ...], time_envelope: object",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "validate_kernel_artifact_v01",
+          "line": 377,
+          "end_line": 383,
+          "signature": "artifact: object",
+          "role": "consumer"
+        },
+        {
+          "symbol": "validate_kernel_artifact_bundle_v01",
+          "line": 386,
+          "end_line": 433,
+          "signature": "*, artifacts: object",
+          "role": "consumer"
+        },
+        {
+          "symbol": "kernel_artifact_to_plain_dict_v01",
+          "line": 436,
+          "end_line": 446,
+          "signature": "artifact: KernelArtifactV01",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "kernel_artifacts_to_plain_list_v01",
+          "line": 449,
+          "end_line": 459,
+          "signature": "artifacts: tuple[KernelArtifactV01, ...]",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "kernel_artifact_to_canonical_ref_v01",
+          "line": 462,
+          "end_line": 480,
+          "signature": "artifact: KernelArtifactV01",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "build_causal_consumption_ref_v01",
+          "line": 483,
+          "end_line": 515,
+          "signature": "*, producer_actor_id: str, source_artifact_id: str, output_field: str, consumer_component: str, downstream_artifact_id: str, decision_effect: str, disposition: str, reason_code: str, trace_refs: tuple[str, ...]",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "validate_causal_consumption_ref_v01",
+          "line": 518,
+          "end_line": 524,
+          "signature": "causal_ref: object",
+          "role": "consumer"
+        },
+        {
+          "symbol": "validate_causal_consumption_bundle_v01",
+          "line": 527,
+          "end_line": 581,
+          "signature": "*, artifacts: object, causal_refs: object",
+          "role": "consumer"
+        },
+        {
+          "symbol": "validate_causal_counterfactual_v01",
+          "line": 584,
+          "end_line": 681,
+          "signature": "*, causal_ref: object, baseline_source_artifact: object, mutated_source_artifact: object, baseline_downstream_artifact: object, mutated_downstream_artifact: object, baseline_authority_state: object, mutated_authority_state: object",
+          "role": "consumer"
+        },
+        {
+          "symbol": "causal_consumption_ref_to_plain_dict_v01",
+          "line": 684,
+          "end_line": 694,
+          "signature": "causal_ref: CausalConsumptionRefV01",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "causal_consumption_refs_to_plain_list_v01",
+          "line": 697,
+          "end_line": 716,
+          "signature": "causal_refs: tuple[CausalConsumptionRefV01, ...]",
+          "role": "producer_or_value"
+        }
+      ],
+      "required_evidence": "CONFORMANCE_G36",
+      "limitations": "Exact named version and accepted finite reference scope; no authority from this index"
+    },
+    {
+      "profile": "Root v0.1",
+      "source": {
+        "path": "hedgehog/kernel/root_decision_v01.py",
+        "bytes": 43352,
+        "sha256": "cae47026ba5c8a52ca25b2774e7ac8e92eb4e312c2eb5d1776c3a16ee276409c",
+        "mode": 420
+      },
+      "normative_contract": "specs/current_architecture_lock_v01.md",
+      "schema": null,
+      "symbols": [
+        {
+          "symbol": "RootDecisionInputV01",
+          "line": 119,
+          "end_line": 130,
+          "signature": "class",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "RootDecisionResultV01",
+          "line": 134,
+          "end_line": 150,
+          "signature": "class",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "RootDecisionKernelV01",
+          "line": 154,
+          "end_line": 160,
+          "signature": "class",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "build_root_decision_kernel_v01",
+          "line": 163,
+          "end_line": 181,
+          "signature": "",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "validate_root_decision_kernel_v01",
+          "line": 184,
+          "end_line": 188,
+          "signature": "kernel: object",
+          "role": "consumer"
+        },
+        {
+          "symbol": "build_root_decision_input_v01",
+          "line": 191,
+          "end_line": 252,
+          "signature": "*, transaction_id: str, target_root_id: str, root_review_packet: _RootReviewPacketV01, post_vv_bundle: object, gt_advisory: object, policy_state: object, permission_state: object, temporal_state: object, conflict_state: object, prior_root_state: object",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "validate_root_decision_input_v01",
+          "line": 255,
+          "end_line": 265,
+          "signature": "*, kernel: object, decision_input: object",
+          "role": "consumer"
+        },
+        {
+          "symbol": "decide_root_v01",
+          "line": 268,
+          "end_line": 287,
+          "signature": "*, kernel: object, decision_input: object",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "validate_root_decision_result_v01",
+          "line": 290,
+          "end_line": 340,
+          "signature": "*, kernel: object, decision_input: object, result: object",
+          "role": "consumer"
+        },
+        {
+          "symbol": "root_decision_kernel_to_plain_dict_v01",
+          "line": 343,
+          "end_line": 353,
+          "signature": "kernel: RootDecisionKernelV01",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "root_decision_input_to_plain_dict_v01",
+          "line": 356,
+          "end_line": 366,
+          "signature": "decision_input: RootDecisionInputV01",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "root_decision_result_to_plain_dict_v01",
+          "line": 369,
+          "end_line": 387,
+          "signature": "result: RootDecisionResultV01",
+          "role": "producer_or_value"
+        }
+      ],
+      "required_evidence": "DIRECT",
+      "limitations": "Exact named version and accepted finite reference scope; no authority from this index"
+    },
+    {
+      "profile": "Action/Firewall v0.1",
+      "source": {
+        "path": "hedgehog/work_execution_host_v01.py",
+        "bytes": 52262,
+        "sha256": "56b7ba85e8612df517d566418fa60a2512bcf9f6707877618a3d846010e6071b",
+        "mode": 420
+      },
+      "normative_contract": "docs/common_action_and_dynamic_composition_contract_v01.md",
+      "schema": null,
+      "symbols": [
+        {
+          "symbol": "TrustedWorkSourceSnapshotV01",
+          "line": 23,
+          "end_line": 29,
+          "signature": "class",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "ActionSourceCaptureV01",
+          "line": 33,
+          "end_line": 47,
+          "signature": "class",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "ObservedWorkAttemptV01",
+          "line": 51,
+          "end_line": 59,
+          "signature": "class",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "WorkTaskPolicyV01",
+          "line": 63,
+          "end_line": 77,
+          "signature": "class",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "WorkTaskUsageV01",
+          "line": 81,
+          "end_line": 86,
+          "signature": "class",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "WorkTaskSnapshotV01",
+          "line": 90,
+          "end_line": 98,
+          "signature": "class",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "observe_local_capability_code_v01",
+          "line": 101,
+          "end_line": 122,
+          "signature": "public_callable",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "admit_local_capability_v01",
+          "line": 125,
+          "end_line": 130,
+          "signature": "*, definition, input_validator, output_validator, executor, catalogue_revision, host_instance_ref",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "RootWorkExecutionHostV01",
+          "line": 146,
+          "end_line": 485,
+          "signature": "class",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "build_root_work_execution_host_v01",
+          "line": 488,
+          "end_line": 493,
+          "signature": "*, owning_root_id, registry, catalogue, packet_bindings, current_dependency_observations, logical_time_bridge, trusted_source, task_policies=(), pure_need_permissions=()",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "dispatch_current_action_v01",
+          "line": 496,
+          "end_line": 504,
+          "signature": "host, *, packet_id, task_id, expected_revision, evaluation_time, evaluation_time_source, evaluation_context_id, work_instance_id=None",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "accept_current_revocation_v01",
+          "line": 507,
+          "end_line": 516,
+          "signature": "host, *, packet_id, expected_revision, revocation_candidate, revocation_root_projection, accepted_revocation_binding, invalidation_evidence, transition_event",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "inspect_current_action_v01",
+          "line": 519,
+          "end_line": 541,
+          "signature": "host, *, packet_id, expected_revision, evaluation_time, evaluation_time_source, evaluation_context_id",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "capture_current_action_source_v01",
+          "line": 712,
+          "end_line": 736,
+          "signature": "host, *, packet_id, expected_revision, evaluation_time, evaluation_time_source, evaluation_context_id",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "validate_retained_action_source_capture_v01",
+          "line": 739,
+          "end_line": 765,
+          "signature": "host, capture, *, require_current=False",
+          "role": "consumer"
+        },
+        {
+          "symbol": "execute_admitted_pure_work_v01",
+          "line": 768,
+          "end_line": 833,
+          "signature": "host, *, admission_id, task_id, work_instance_id, inputs, expected_revision",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "reserve_pure_need_work_v01",
+          "line": 836,
+          "end_line": 871,
+          "signature": "host, *, need, kind, byte_count, expected_revision",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "inspect_pure_need_resources_v01",
+          "line": 874,
+          "end_line": 878,
+          "signature": "host, *, task_id",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "install_admitted_pure_capability_v01",
+          "line": 892,
+          "end_line": 921,
+          "signature": "host, *, package, need, expected_revision",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "install_current_action_v01",
+          "line": 924,
+          "end_line": 978,
+          "signature": "host, *, root_bound, corridor, corridor_step, admission_id, inputs, transition_events, disposition_event, expected_revision, evaluation_time, evaluation_time_source, evaluation_context_id",
+          "role": "producer_or_value"
+        }
+      ],
+      "required_evidence": "DIRECT",
+      "limitations": "Exact named version and accepted finite reference scope; no authority from this index"
+    },
+    {
+      "profile": "D v0.2",
+      "source": {
+        "path": "hedgehog/kernel/fractal_runtime_v02.py",
+        "bytes": 947221,
+        "sha256": "ac946801b15c7464dd228034f64f0849c9567a71328ba50f3df314fe433dd0ba",
+        "mode": 420
+      },
+      "normative_contract": "docs/fractal_runtime_v0_2_g2_d_post_acceptance_contract_addendum_v01.md",
+      "schema": "schemas/fractal_runtime_v02.schema.json",
+      "symbols": [
+        {
+          "symbol": "FractalRuntimePolicyV02",
+          "line": 356,
+          "end_line": 384,
+          "signature": "class",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "FractalRuntimeBudgetV02",
+          "line": 388,
+          "end_line": 426,
+          "signature": "class",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "RuntimeTopologySourceBindingV02",
+          "line": 430,
+          "end_line": 465,
+          "signature": "class",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "RuntimeTopologySeedV02",
+          "line": 469,
+          "end_line": 488,
+          "signature": "class",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "RuntimeTopologyNodeV02",
+          "line": 492,
+          "end_line": 515,
+          "signature": "class",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "RuntimeTopologyEdgeV02",
+          "line": 519,
+          "end_line": 531,
+          "signature": "class",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "RuntimeAssignmentV02",
+          "line": 535,
+          "end_line": 554,
+          "signature": "class",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "RuntimeExecutionTopologyV02",
+          "line": 558,
+          "end_line": 590,
+          "signature": "class",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "ParentChildScopeProjectionV02",
+          "line": 594,
+          "end_line": 620,
+          "signature": "class",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "FractalCellInputV02",
+          "line": 624,
+          "end_line": 656,
+          "signature": "class",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "FractalCellQueueEntryV02",
+          "line": 660,
+          "end_line": 691,
+          "signature": "class",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "FractalReviseObservationV02",
+          "line": 695,
+          "end_line": 716,
+          "signature": "class",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "FractalPartialFailureRecordV02",
+          "line": 720,
+          "end_line": 743,
+          "signature": "class",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "FractalBackpressureStateV02",
+          "line": 747,
+          "end_line": 766,
+          "signature": "class",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "FractalCellResultV02",
+          "line": 770,
+          "end_line": 802,
+          "signature": "class",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "FractalRuntimeTraceV02",
+          "line": 806,
+          "end_line": 829,
+          "signature": "class",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "FractalRuntimeReportV02",
+          "line": 833,
+          "end_line": 875,
+          "signature": "class",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "FractalRuntimeValidationReportV02",
+          "line": 879,
+          "end_line": 894,
+          "signature": "class",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "FractalRuntimeSourceContextV02",
+          "line": 898,
+          "end_line": 921,
+          "signature": "class",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "FractalRuntimeExecutionBundleV02",
+          "line": 925,
+          "end_line": 957,
+          "signature": "class",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "RuntimeObservedWorkContextV02",
+          "line": 961,
+          "end_line": 994,
+          "signature": "class",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "RetainedFieldBindingV01",
+          "line": 998,
+          "end_line": 1003,
+          "signature": "class",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "FractalRetainedWorkEvidenceV01",
+          "line": 1007,
+          "end_line": 1014,
+          "signature": "class",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "FractalRetainedPlanReviewV01",
+          "line": 1018,
+          "end_line": 1028,
+          "signature": "class",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "FractalCurrentTemporalBindingV01",
+          "line": 1032,
+          "end_line": 1043,
+          "signature": "class",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "FractalRetainedWorkAdmissionV01",
+          "line": 1047,
+          "end_line": 1060,
+          "signature": "class",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "FractalRetainedWorkConsumptionV01",
+          "line": 1064,
+          "end_line": 1071,
+          "signature": "class",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "FractalRetainedWorkPrefixV01",
+          "line": 1075,
+          "end_line": 1117,
+          "signature": "class",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "FractalRetainedWorkExecutionBundleV01",
+          "line": 1121,
+          "end_line": 1167,
+          "signature": "class",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "build_fractal_runtime_policy_v02",
+          "line": 3063,
+          "end_line": 3101,
+          "signature": "*, required_downstream_capability_ids: tuple[str, ...], permitted_child_scope_refs: tuple[str, ...]",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "validate_fractal_runtime_policy_v02",
+          "line": 3104,
+          "end_line": 3105,
+          "signature": "value: object",
+          "role": "consumer"
+        },
+        {
+          "symbol": "fractal_runtime_policy_to_plain_data_v02",
+          "line": 3108,
+          "end_line": 3109,
+          "signature": "value: FractalRuntimePolicyV02",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "rebuild_fractal_runtime_policy_identity_v02",
+          "line": 3112,
+          "end_line": 3113,
+          "signature": "value: FractalRuntimePolicyV02",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "build_fractal_runtime_budget_v02",
+          "line": 3217,
+          "end_line": 3388,
+          "signature": "*, policy: FractalRuntimePolicyV02, topology_seed: RuntimeTopologySeedV02, allocation_parent_budget: FractalRuntimeBudgetV02 | None, predecessor_budget: FractalRuntimeBudgetV02 | None, owning_cell_id: str, budget_scope: str, budget_state: str, budget_event_kind: str, budget_context_input: FractalCellInputV02 | None, canonical_child_index: int | None, allocation_queue_entries: tuple[FractalCellQueueEntryV02, ...], transition_decision: TransitionDecisionV01 | None, paired_cell_budget: FractalRuntimeBudgetV02 | None, child_result: FractalCellResultV02 | None",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "validate_fractal_runtime_budget_v02",
+          "line": 3391,
+          "end_line": 3392,
+          "signature": "value: object",
+          "role": "consumer"
+        },
+        {
+          "symbol": "fractal_runtime_budget_to_plain_data_v02",
+          "line": 3395,
+          "end_line": 3396,
+          "signature": "value: FractalRuntimeBudgetV02",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "rebuild_fractal_runtime_budget_identity_v02",
+          "line": 3399,
+          "end_line": 3400,
+          "signature": "value: FractalRuntimeBudgetV02",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "build_runtime_topology_source_binding_v02",
+          "line": 3403,
+          "end_line": 3467,
+          "signature": "*, source_context: FractalRuntimeSourceContextV02",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "validate_runtime_topology_source_binding_v02",
+          "line": 3470,
+          "end_line": 3471,
+          "signature": "value: object",
+          "role": "consumer"
+        },
+        {
+          "symbol": "runtime_topology_source_binding_to_plain_data_v02",
+          "line": 3474,
+          "end_line": 3475,
+          "signature": "value: RuntimeTopologySourceBindingV02",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "rebuild_runtime_topology_source_binding_identity_v02",
+          "line": 3478,
+          "end_line": 3479,
+          "signature": "value: RuntimeTopologySourceBindingV02",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "build_runtime_topology_seed_v02",
+          "line": 3539,
+          "end_line": 3596,
+          "signature": "source_binding: RuntimeTopologySourceBindingV02, policy: FractalRuntimePolicyV02, *, root_cell_id: str",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "validate_runtime_topology_seed_v02",
+          "line": 3599,
+          "end_line": 3600,
+          "signature": "value: object",
+          "role": "consumer"
+        },
+        {
+          "symbol": "runtime_topology_seed_to_plain_data_v02",
+          "line": 3603,
+          "end_line": 3604,
+          "signature": "value: RuntimeTopologySeedV02",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "rebuild_runtime_topology_seed_identity_v02",
+          "line": 3607,
+          "end_line": 3608,
+          "signature": "value: RuntimeTopologySeedV02",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "build_runtime_topology_node_v02",
+          "line": 3611,
+          "end_line": 3680,
+          "signature": "seed: RuntimeTopologySeedV02, source_binding: RuntimeTopologySourceBindingV02, policy: FractalRuntimePolicyV02, *, canonical_index: int, node_kind: str, depth: int, scope_ref: str, cell_binding_class: str, scope_binding_class: str, budget_binding_class: str, required_capability_ids: tuple[str, ...], input_ref_derivation_class: str",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "validate_runtime_topology_node_v02",
+          "line": 3683,
+          "end_line": 3684,
+          "signature": "value: object",
+          "role": "consumer"
+        },
+        {
+          "symbol": "runtime_topology_node_to_plain_data_v02",
+          "line": 3687,
+          "end_line": 3688,
+          "signature": "value: RuntimeTopologyNodeV02",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "rebuild_runtime_topology_node_identity_v02",
+          "line": 3691,
+          "end_line": 3692,
+          "signature": "value: RuntimeTopologyNodeV02",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "build_runtime_topology_edge_v02",
+          "line": 3695,
+          "end_line": 3729,
+          "signature": "seed: RuntimeTopologySeedV02, source_node: RuntimeTopologyNodeV02, target_node: RuntimeTopologyNodeV02, *, edge_kind: str, canonical_index: int, cell_projection_class: str",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "validate_runtime_topology_edge_v02",
+          "line": 3732,
+          "end_line": 3733,
+          "signature": "value: object",
+          "role": "consumer"
+        },
+        {
+          "symbol": "runtime_topology_edge_to_plain_data_v02",
+          "line": 3736,
+          "end_line": 3737,
+          "signature": "value: RuntimeTopologyEdgeV02",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "rebuild_runtime_topology_edge_identity_v02",
+          "line": 3740,
+          "end_line": 3741,
+          "signature": "value: RuntimeTopologyEdgeV02",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "build_runtime_assignment_v02",
+          "line": 3744,
+          "end_line": 3790,
+          "signature": "seed: RuntimeTopologySeedV02, node: RuntimeTopologyNodeV02, *, assignment_kind: str, executor_component_id: str, capability_ids: tuple[str, ...], cell_binding_class: str, scope_binding_class: str, budget_binding_class: str",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "validate_runtime_assignment_v02",
+          "line": 3793,
+          "end_line": 3794,
+          "signature": "value: object",
+          "role": "consumer"
+        },
+        {
+          "symbol": "runtime_assignment_to_plain_data_v02",
+          "line": 3797,
+          "end_line": 3798,
+          "signature": "value: RuntimeAssignmentV02",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "rebuild_runtime_assignment_identity_v02",
+          "line": 3801,
+          "end_line": 3802,
+          "signature": "value: RuntimeAssignmentV02",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "build_runtime_execution_topology_v02",
+          "line": 3805,
+          "end_line": 3956,
+          "signature": "source_binding: RuntimeTopologySourceBindingV02, seed: RuntimeTopologySeedV02, policy: FractalRuntimePolicyV02, *, nodes: tuple[RuntimeTopologyNodeV02, ...], edges: tuple[RuntimeTopologyEdgeV02, ...], assignments: tuple[RuntimeAssignmentV02, ...], root_cell_id: str, global_budget: FractalRuntimeBudgetV02, time_envelope_ref: str",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "validate_runtime_execution_topology_v02",
+          "line": 3959,
+          "end_line": 3960,
+          "signature": "value: object",
+          "role": "consumer"
+        },
+        {
+          "symbol": "runtime_execution_topology_to_plain_data_v02",
+          "line": 3963,
+          "end_line": 3964,
+          "signature": "value: RuntimeExecutionTopologyV02",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "rebuild_runtime_execution_topology_identity_v02",
+          "line": 3967,
+          "end_line": 3968,
+          "signature": "value: RuntimeExecutionTopologyV02",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "build_parent_child_scope_projection_v02",
+          "line": 3971,
+          "end_line": 4060,
+          "signature": "topology: RuntimeExecutionTopologyV02, source_binding: RuntimeTopologySourceBindingV02, *, parent_cell_id: str, child_cell_id: str, parent_scope_ref: str, child_scope_ref: str, parent_allowed_capability_ids: tuple[str, ...], child_allowed_capability_ids: tuple[str, ...], parent_forbidden_claims: tuple[str, ...], child_forbidden_claims: tuple[str, ...], parent_ttl_units: int, child_ttl_units: int, parent_budget: FractalRuntimeBudgetV02, child_budget: FractalRuntimeBudgetV02, global_budget: FractalRuntimeBudgetV02, child_depth: int",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "validate_parent_child_scope_projection_v02",
+          "line": 4063,
+          "end_line": 4064,
+          "signature": "value: object",
+          "role": "consumer"
+        },
+        {
+          "symbol": "parent_child_scope_projection_to_plain_data_v02",
+          "line": 4067,
+          "end_line": 4068,
+          "signature": "value: ParentChildScopeProjectionV02",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "rebuild_parent_child_scope_projection_identity_v02",
+          "line": 4071,
+          "end_line": 4072,
+          "signature": "value: ParentChildScopeProjectionV02",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "build_fractal_cell_input_v02",
+          "line": 4075,
+          "end_line": 4171,
+          "signature": "topology: RuntimeExecutionTopologyV02, *, cell_id: str, parent_cell_id: str | None, scope_projection: ParentChildScopeProjectionV02 | None, scope_ref: str, cell_budget: FractalRuntimeBudgetV02, global_budget: FractalRuntimeBudgetV02, initial_queue_entries: tuple[FractalCellQueueEntryV02, ...], required_queue_entries: tuple[FractalCellQueueEntryV02, ...], cell_depth: int, requested_child_count: int, ordered_planned_child_cell_ids: tuple[str, ...], ordered_nodes: tuple[RuntimeTopologyNodeV02, ...], evidence_refs: tuple[str, ...], context_refs: tuple[str, ...], time_envelope_ref: str",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "validate_fractal_cell_input_v02",
+          "line": 4174,
+          "end_line": 4175,
+          "signature": "value: object",
+          "role": "consumer"
+        },
+        {
+          "symbol": "fractal_cell_input_to_plain_data_v02",
+          "line": 4178,
+          "end_line": 4179,
+          "signature": "value: FractalCellInputV02",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "rebuild_fractal_cell_input_identity_v02",
+          "line": 4182,
+          "end_line": 4183,
+          "signature": "value: FractalCellInputV02",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "build_fractal_cell_queue_entry_v02",
+          "line": 4205,
+          "end_line": 4332,
+          "signature": "topology: RuntimeExecutionTopologyV02, seed: RuntimeTopologySeedV02, cell_input: FractalCellInputV02 | None, node: RuntimeTopologyNodeV02, cell_budget: FractalRuntimeBudgetV02, global_budget: FractalRuntimeBudgetV02, *, cell_id: str, parent_cell_id: str | None, planned_child_cell_id: str | None, cell_depth: int, scope_ref: str, predecessor: FractalCellQueueEntryV02 | None, transition_decision: TransitionDecisionV01, activation_parent_artifact: KernelArtifactV01 | None, local_child_result: FractalCellResultV02 | None, local_child_result_artifact: KernelArtifactV01 | None, cell_instantiation_order: tuple[str, ...], projected_node_ids: tuple[str, ...], round_start_queue_entries: tuple[FractalCellQueueEntryV02, ...], queue_reason_codes: tuple[str, ...], observed_output_refs: tuple[str, ...], observed_evidence_refs: tuple[str, ...], advisory_refs: tuple[str, ...]",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "validate_fractal_cell_queue_entry_v02",
+          "line": 4335,
+          "end_line": 4336,
+          "signature": "value: object",
+          "role": "consumer"
+        },
+        {
+          "symbol": "fractal_cell_queue_entry_to_plain_data_v02",
+          "line": 4339,
+          "end_line": 4340,
+          "signature": "value: FractalCellQueueEntryV02",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "rebuild_fractal_cell_queue_entry_identity_v02",
+          "line": 4343,
+          "end_line": 4344,
+          "signature": "value: FractalCellQueueEntryV02",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "build_fractal_revise_observation_v02",
+          "line": 4347,
+          "end_line": 4401,
+          "signature": "topology: RuntimeExecutionTopologyV02, cell_input: FractalCellInputV02, queue_entry: FractalCellQueueEntryV02, validation_report: FractalRuntimeValidationReportV02, *, revision_index: int, newly_validated_evidence_count: int, newly_resolved_constraints_count: int, newly_accepted_outputs_count: int, newly_introduced_conflicts_count: int, consecutive_non_positive_count: int, max_consecutive_non_positive_count: int, cell_budget_before: FractalRuntimeBudgetV02, global_budget_before: FractalRuntimeBudgetV02",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "validate_fractal_revise_observation_v02",
+          "line": 4404,
+          "end_line": 4405,
+          "signature": "value: object",
+          "role": "consumer"
+        },
+        {
+          "symbol": "fractal_revise_observation_to_plain_data_v02",
+          "line": 4408,
+          "end_line": 4409,
+          "signature": "value: FractalReviseObservationV02",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "rebuild_fractal_revise_observation_identity_v02",
+          "line": 4412,
+          "end_line": 4413,
+          "signature": "value: FractalReviseObservationV02",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "build_fractal_partial_failure_record_v02",
+          "line": 4416,
+          "end_line": 4500,
+          "signature": "topology: RuntimeExecutionTopologyV02, parent_input: FractalCellInputV02, child_result: FractalCellResultV02, *, failure_stage: str, reason_codes: tuple[str, ...], source_reason_codes: tuple[str, ...], evidence_refs: tuple[str, ...], allocated_cell_budget: FractalRuntimeBudgetV02, final_cell_budget: FractalRuntimeBudgetV02, global_budget: FractalRuntimeBudgetV02, required_child: bool, sibling_independent: bool",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "validate_fractal_partial_failure_record_v02",
+          "line": 4503,
+          "end_line": 4504,
+          "signature": "value: object",
+          "role": "consumer"
+        },
+        {
+          "symbol": "fractal_partial_failure_record_to_plain_data_v02",
+          "line": 4507,
+          "end_line": 4508,
+          "signature": "value: FractalPartialFailureRecordV02",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "rebuild_fractal_partial_failure_record_identity_v02",
+          "line": 4511,
+          "end_line": 4512,
+          "signature": "value: FractalPartialFailureRecordV02",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "build_fractal_backpressure_state_v02",
+          "line": 4515,
+          "end_line": 4563,
+          "signature": "topology: RuntimeExecutionTopologyV02, policy: FractalRuntimePolicyV02, global_budget: FractalRuntimeBudgetV02, *, queue_entries: tuple[FractalCellQueueEntryV02, ...], evaluated_round: int",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "validate_fractal_backpressure_state_v02",
+          "line": 4566,
+          "end_line": 4567,
+          "signature": "value: object",
+          "role": "consumer"
+        },
+        {
+          "symbol": "fractal_backpressure_state_to_plain_data_v02",
+          "line": 4570,
+          "end_line": 4571,
+          "signature": "value: FractalBackpressureStateV02",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "rebuild_fractal_backpressure_state_identity_v02",
+          "line": 4574,
+          "end_line": 4575,
+          "signature": "value: FractalBackpressureStateV02",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "build_fractal_cell_result_v02",
+          "line": 4622,
+          "end_line": 4726,
+          "signature": "topology: RuntimeExecutionTopologyV02, cell_input: FractalCellInputV02, terminal_queue_entries: tuple[FractalCellQueueEntryV02, ...], child_results: tuple[FractalCellResultV02, ...], *, accepted_output_refs: tuple[str, ...], evidence_refs: tuple[str, ...], pre_result_validation_report: FractalRuntimeValidationReportV02, post_vv_report: dict[str, object], gt_advisory_report: dict[str, object], partial_failures: tuple[FractalPartialFailureRecordV02, ...], allocated_cell_budget: FractalRuntimeBudgetV02, final_cell_budget: FractalRuntimeBudgetV02, global_budget: FractalRuntimeBudgetV02",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "validate_fractal_cell_result_v02",
+          "line": 4729,
+          "end_line": 4730,
+          "signature": "value: object",
+          "role": "consumer"
+        },
+        {
+          "symbol": "fractal_cell_result_to_plain_data_v02",
+          "line": 4733,
+          "end_line": 4734,
+          "signature": "value: FractalCellResultV02",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "rebuild_fractal_cell_result_identity_v02",
+          "line": 4737,
+          "end_line": 4738,
+          "signature": "value: FractalCellResultV02",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "build_fractal_runtime_trace_v02",
+          "line": 4747,
+          "end_line": 4769,
+          "signature": "topology: RuntimeExecutionTopologyV02, source_binding: RuntimeTopologySourceBindingV02, *, topology_artifact: KernelArtifactV01, queue_entries: tuple[FractalCellQueueEntryV02, ...], queue_artifacts: tuple[KernelArtifactV01, ...], state_transition_decisions: tuple[TransitionDecisionV01, ...], cell_inputs: tuple[FractalCellInputV02, ...], cell_results: tuple[FractalCellResultV02, ...], result_artifacts: tuple[KernelArtifactV01, ...], runtime_abi_artifacts: tuple[KernelArtifactV01, ...], scope_projections: tuple[ParentChildScopeProjectionV02, ...], revise_observations: tuple[FractalReviseObservationV02, ...], partial_failures: tuple[FractalPartialFailureRecordV02, ...], backpressure_states: tuple[FractalBackpressureStateV02, ...], budgets: tuple[FractalRuntimeBudgetV02, ...], topology_transition_decision: TransitionDecisionV01, parent_return_transition_decision: TransitionDecisionV01, root_result_artifact: KernelArtifactV01, retained_prefix: FractalRetainedWorkPrefixV01 | None=None",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "validate_fractal_runtime_trace_v02",
+          "line": 4866,
+          "end_line": 4867,
+          "signature": "value: object",
+          "role": "consumer"
+        },
+        {
+          "symbol": "fractal_runtime_trace_to_plain_data_v02",
+          "line": 4870,
+          "end_line": 4871,
+          "signature": "value: FractalRuntimeTraceV02",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "rebuild_fractal_runtime_trace_identity_v02",
+          "line": 4874,
+          "end_line": 4875,
+          "signature": "value: FractalRuntimeTraceV02",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "build_fractal_runtime_report_v02",
+          "line": 4878,
+          "end_line": 4892,
+          "signature": "topology: RuntimeExecutionTopologyV02, topology_artifact: KernelArtifactV01, source_binding: RuntimeTopologySourceBindingV02, *, ordered_cell_results: tuple[FractalCellResultV02, ...], queue_entries: tuple[FractalCellQueueEntryV02, ...], backpressure_states: tuple[FractalBackpressureStateV02, ...], runtime_trace: FractalRuntimeTraceV02, final_budget: FractalRuntimeBudgetV02, parent_return_transition_decision: TransitionDecisionV01, root_result_artifact: KernelArtifactV01, retained_prefix: FractalRetainedWorkPrefixV01 | None=None",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "validate_fractal_runtime_report_v02",
+          "line": 4991,
+          "end_line": 4992,
+          "signature": "value: object",
+          "role": "consumer"
+        },
+        {
+          "symbol": "fractal_runtime_report_to_plain_data_v02",
+          "line": 4995,
+          "end_line": 4996,
+          "signature": "value: FractalRuntimeReportV02",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "rebuild_fractal_runtime_report_identity_v02",
+          "line": 4999,
+          "end_line": 5000,
+          "signature": "value: FractalRuntimeReportV02",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "build_fractal_runtime_validation_report_v02",
+          "line": 5003,
+          "end_line": 5052,
+          "signature": "*, validation_target: str, validated_object_id: str | None, failure_stage: str, reason_codes: tuple[str, ...], source_reason_codes: tuple[str, ...]",
+          "role": "consumer"
+        },
+        {
+          "symbol": "validate_fractal_runtime_validation_report_v02",
+          "line": 5055,
+          "end_line": 5059,
+          "signature": "value: object",
+          "role": "consumer"
+        },
+        {
+          "symbol": "fractal_runtime_validation_report_to_plain_data_v02",
+          "line": 5062,
+          "end_line": 5066,
+          "signature": "value: FractalRuntimeValidationReportV02",
+          "role": "consumer"
+        },
+        {
+          "symbol": "rebuild_fractal_runtime_validation_report_identity_v02",
+          "line": 5069,
+          "end_line": 5072,
+          "signature": "value: FractalRuntimeValidationReportV02",
+          "role": "consumer"
+        },
+        {
+          "symbol": "derive_fractal_root_cell_id_v02",
+          "line": 5075,
+          "end_line": 5091,
+          "signature": "*, source_binding_id: str, runtime_policy_id: str, accepted_mode: str, accepted_scope_ref: str",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "derive_fractal_child_cell_id_v02",
+          "line": 5094,
+          "end_line": 5135,
+          "signature": "*, topology_seed_id: str, parent_cell_id: str, canonical_child_index: int, accepted_mode: str, selected_local_mode_profile_id: str, source_mode_profile_set_id: str, child_scope_ref: str, runtime_policy_id: str, required_capability_ids: tuple[str, ...], forbidden_claims: tuple[str, ...], child_depth: int",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "build_fractal_runtime_source_context_v02",
+          "line": 5400,
+          "end_line": 5446,
+          "signature": "*, transition_registry: TransitionRegistryV01, g2c_source_context: ExecutionModeSourceContextV01, router_input: ExecutionModeRouterInputV01, proposal: ExecutionModeProposalV01, proposal_artifact: KernelArtifactV01, proposal_transition_decision: TransitionDecisionV01, review_input: RootExecutionModeReviewInputV01, decision: RootExecutionModeDecisionV01, root_kernel: RootDecisionKernelV01, root_decision_input: RootDecisionInputV01, root_decision_result: RootDecisionResultV01, decision_artifact: KernelArtifactV01, root_route_transition_decision: TransitionDecisionV01, route_eligibility_artifact: KernelArtifactV01, runtime_policy: FractalRuntimePolicyV02, current_temporal_binding: FractalCurrentTemporalBindingV01 | None=None, current_temporal_verification: object=None, current_observed_work_context: RuntimeObservedWorkContextV02 | None=None",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "validate_fractal_runtime_source_context_v02",
+          "line": 5449,
+          "end_line": 5453,
+          "signature": "value: object",
+          "role": "consumer"
+        },
+        {
+          "symbol": "validate_runtime_topology_source_binding_against_g2c_v02",
+          "line": 7185,
+          "end_line": 7216,
+          "signature": "value: object, *, source_context: FractalRuntimeSourceContextV02",
+          "role": "consumer"
+        },
+        {
+          "symbol": "construct_runtime_execution_topology_v02",
+          "line": 7329,
+          "end_line": 7340,
+          "signature": "source_context: FractalRuntimeSourceContextV02",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "validate_runtime_execution_topology_against_sources_v02",
+          "line": 7343,
+          "end_line": 7374,
+          "signature": "value: object, *, source_context: FractalRuntimeSourceContextV02",
+          "role": "consumer"
+        },
+        {
+          "symbol": "project_runtime_execution_topology_kernel_artifact_v02",
+          "line": 7440,
+          "end_line": 7467,
+          "signature": "topology: RuntimeExecutionTopologyV02, *, source_context: FractalRuntimeSourceContextV02, topology_transition_decision: TransitionDecisionV01",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "evaluate_route_eligibility_to_topology_transition_v02",
+          "line": 7470,
+          "end_line": 7514,
+          "signature": "*, source_context: FractalRuntimeSourceContextV02, topology: RuntimeExecutionTopologyV02, transition_registry: TransitionRegistryV01",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "admit_runtime_execution_topology_v02",
+          "line": 10275,
+          "end_line": 10497,
+          "signature": "*, source_context: FractalRuntimeSourceContextV02, topology: RuntimeExecutionTopologyV02, topology_artifact: KernelArtifactV01, topology_transition_decision: TransitionDecisionV01, cell_id: str, parent_cell_id: str | None, parent_slot_artifact: KernelArtifactV01 | None, cell_depth: int, scope_ref: str, cell_budget: FractalRuntimeBudgetV02, global_budget: FractalRuntimeBudgetV02, projected_nodes: tuple[RuntimeTopologyNodeV02, ...], planned_child_cell_ids: tuple[str, ...], admission_decisions: tuple[TransitionDecisionV01, ...], cell_instantiation_order: tuple[str, ...], settled_budget_log: tuple[FractalRuntimeBudgetV02, ...], settled_queue_entry_log: tuple[FractalCellQueueEntryV02, ...], settled_queue_artifact_log: tuple[KernelArtifactV01, ...], settled_cell_inputs: tuple[FractalCellInputV02, ...], settled_scope_projections: tuple[ParentChildScopeProjectionV02, ...], settled_revise_observations: tuple[FractalReviseObservationV02, ...], settled_backpressure_states: tuple[FractalBackpressureStateV02, ...], settled_validation_reports: tuple[FractalRuntimeValidationReportV02, ...], observed_work_context: RuntimeObservedWorkContextV02 | None=None",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "advance_fractal_cell_queue_v02",
+          "line": 10500,
+          "end_line": 10686,
+          "signature": "*, source_context: FractalRuntimeSourceContextV02, topology: RuntimeExecutionTopologyV02, current_entry: FractalCellQueueEntryV02, node: RuntimeTopologyNodeV02, cell_input: FractalCellInputV02, transition_decision: TransitionDecisionV01, cell_budget_after: FractalRuntimeBudgetV02, global_budget_after: FractalRuntimeBudgetV02, dependencies: tuple[FractalCellQueueEntryV02, ...], local_child_result: FractalCellResultV02 | None, local_child_result_artifact: KernelArtifactV01 | None, cell_instantiation_order: tuple[str, ...], projected_node_ids: tuple[str, ...], round_start_queue_entries: tuple[FractalCellQueueEntryV02, ...], queue_reason_codes: tuple[str, ...], observed_output_refs: tuple[str, ...], observed_evidence_refs: tuple[str, ...], advisory_refs: tuple[str, ...], settled_budget_log: tuple[FractalRuntimeBudgetV02, ...], settled_queue_entry_log: tuple[FractalCellQueueEntryV02, ...], settled_queue_artifact_log: tuple[KernelArtifactV01, ...], settled_cell_inputs: tuple[FractalCellInputV02, ...], settled_scope_projections: tuple[ParentChildScopeProjectionV02, ...], settled_revise_observations: tuple[FractalReviseObservationV02, ...], settled_backpressure_states: tuple[FractalBackpressureStateV02, ...], settled_validation_reports: tuple[FractalRuntimeValidationReportV02, ...], observed_work_context: RuntimeObservedWorkContextV02 | None=None",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "project_parent_child_scope_v02",
+          "line": 10689,
+          "end_line": 10771,
+          "signature": "*, source_context: FractalRuntimeSourceContextV02, topology: RuntimeExecutionTopologyV02, parent_input: FractalCellInputV02, child_cell_id: str, child_scope_ref: str, parent_budget: FractalRuntimeBudgetV02, child_budget: FractalRuntimeBudgetV02, global_budget: FractalRuntimeBudgetV02",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "validate_parent_child_scope_against_sources_v02",
+          "line": 10774,
+          "end_line": 10817,
+          "signature": "value: object, *, source_context: FractalRuntimeSourceContextV02, topology: RuntimeExecutionTopologyV02, parent_input: FractalCellInputV02, parent_budget: FractalRuntimeBudgetV02, child_budget: FractalRuntimeBudgetV02, global_budget: FractalRuntimeBudgetV02",
+          "role": "consumer"
+        },
+        {
+          "symbol": "build_fractal_cell_input_from_queue_v02",
+          "line": 11050,
+          "end_line": 11146,
+          "signature": "*, source_context: FractalRuntimeSourceContextV02, topology: RuntimeExecutionTopologyV02, topology_artifact: KernelArtifactV01, cell_id: str, parent_cell_id: str | None, parent_input: FractalCellInputV02 | None, parent_slot_artifact: KernelArtifactV01 | None, scope_projection: ParentChildScopeProjectionV02 | None, cell_budget: FractalRuntimeBudgetV02, global_budget: FractalRuntimeBudgetV02, initial_queue_entries: tuple[FractalCellQueueEntryV02, ...], initial_queue_artifacts: tuple[KernelArtifactV01, ...], ordered_planned_child_cell_ids: tuple[str, ...], settled_budget_log: tuple[FractalRuntimeBudgetV02, ...], settled_queue_entry_log: tuple[FractalCellQueueEntryV02, ...], settled_queue_artifact_log: tuple[KernelArtifactV01, ...], settled_cell_inputs: tuple[FractalCellInputV02, ...], settled_scope_projections: tuple[ParentChildScopeProjectionV02, ...], settled_revise_observations: tuple[FractalReviseObservationV02, ...], settled_backpressure_states: tuple[FractalBackpressureStateV02, ...], settled_validation_reports: tuple[FractalRuntimeValidationReportV02, ...], observed_work_context: RuntimeObservedWorkContextV02 | None=None",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "validate_fractal_cell_input_against_sources_v02",
+          "line": 11149,
+          "end_line": 11219,
+          "signature": "value: object, *, source_context: FractalRuntimeSourceContextV02, topology: RuntimeExecutionTopologyV02, topology_artifact: KernelArtifactV01, parent_input: FractalCellInputV02 | None, parent_slot_artifact: KernelArtifactV01 | None, scope_projection: ParentChildScopeProjectionV02 | None, cell_budget: FractalRuntimeBudgetV02, global_budget: FractalRuntimeBudgetV02, queue_entries: tuple[FractalCellQueueEntryV02, ...], queue_artifacts: tuple[KernelArtifactV01, ...], settled_budget_log: tuple[FractalRuntimeBudgetV02, ...], settled_queue_entry_log: tuple[FractalCellQueueEntryV02, ...], settled_queue_artifact_log: tuple[KernelArtifactV01, ...], settled_cell_inputs: tuple[FractalCellInputV02, ...], settled_scope_projections: tuple[ParentChildScopeProjectionV02, ...], settled_revise_observations: tuple[FractalReviseObservationV02, ...], settled_backpressure_states: tuple[FractalBackpressureStateV02, ...], settled_validation_reports: tuple[FractalRuntimeValidationReportV02, ...], observed_work_context: RuntimeObservedWorkContextV02 | None=None",
+          "role": "consumer"
+        },
+        {
+          "symbol": "evaluate_fractal_backpressure_v02",
+          "line": 11762,
+          "end_line": 11933,
+          "signature": "*, source_context: FractalRuntimeSourceContextV02, topology: RuntimeExecutionTopologyV02, policy: FractalRuntimePolicyV02, global_budget: FractalRuntimeBudgetV02, queue_entries: tuple[FractalCellQueueEntryV02, ...], admission_round: int, settled_budget_log: tuple[FractalRuntimeBudgetV02, ...], settled_queue_entry_log: tuple[FractalCellQueueEntryV02, ...], settled_queue_artifact_log: tuple[KernelArtifactV01, ...], settled_cell_inputs: tuple[FractalCellInputV02, ...], settled_scope_projections: tuple[ParentChildScopeProjectionV02, ...], settled_revise_observations: tuple[FractalReviseObservationV02, ...], settled_backpressure_states: tuple[FractalBackpressureStateV02, ...], settled_validation_reports: tuple[FractalRuntimeValidationReportV02, ...], observed_work_context: RuntimeObservedWorkContextV02 | None=None",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "project_fractal_cell_queue_entry_kernel_artifact_v02",
+          "line": 11936,
+          "end_line": 12073,
+          "signature": "queue_entry: FractalCellQueueEntryV02, *, topology_artifact: KernelArtifactV01, predecessor_artifact: KernelArtifactV01 | None, activation_parent_artifact: KernelArtifactV01 | None, local_child_result_artifact: KernelArtifactV01 | None, source_context: FractalRuntimeSourceContextV02, settled_budget_log: tuple[FractalRuntimeBudgetV02, ...], settled_queue_entry_log: tuple[FractalCellQueueEntryV02, ...], settled_queue_artifact_log: tuple[KernelArtifactV01, ...], settled_cell_inputs: tuple[FractalCellInputV02, ...], settled_scope_projections: tuple[ParentChildScopeProjectionV02, ...], settled_revise_observations: tuple[FractalReviseObservationV02, ...], settled_backpressure_states: tuple[FractalBackpressureStateV02, ...], settled_validation_reports: tuple[FractalRuntimeValidationReportV02, ...], observed_work_context: RuntimeObservedWorkContextV02 | None=None",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "evaluate_fractal_runtime_state_transition_v02",
+          "line": 12843,
+          "end_line": 12935,
+          "signature": "*, source_context: FractalRuntimeSourceContextV02, topology: RuntimeExecutionTopologyV02, source_artifact: KernelArtifactV01, current_entry: FractalCellQueueEntryV02 | None, node: RuntimeTopologyNodeV02, cell_input: FractalCellInputV02 | None, cell_id: str, parent_cell_id: str | None, planned_child_cell_id: str | None, cell_depth: int, scope_ref: str, cell_budget_before: FractalRuntimeBudgetV02, global_budget_before: FractalRuntimeBudgetV02, dependencies: tuple[FractalCellQueueEntryV02, ...], queue_reason_codes: tuple[str, ...], observed_output_refs: tuple[str, ...], observed_evidence_refs: tuple[str, ...], advisory_refs: tuple[str, ...], local_child_result: FractalCellResultV02 | None, local_child_result_artifact: KernelArtifactV01 | None, validation_report: FractalRuntimeValidationReportV02 | None, parent_return_pre_post_vv_terminal_queue_entries: tuple[FractalCellQueueEntryV02, ...], parent_return_child_results: tuple[FractalCellResultV02, ...], parent_return_partial_failures: tuple[FractalPartialFailureRecordV02, ...], parent_return_result_proposal: dict[str, object] | None, parent_return_post_vv_report: dict[str, object] | None, parent_return_gt_advisory_report: dict[str, object] | None, parent_return_validation_reports: tuple[FractalRuntimeValidationReportV02, ...], revise_observation: FractalReviseObservationV02 | None, backpressure_state: FractalBackpressureStateV02 | None, transition_registry: TransitionRegistryV01, settled_budget_log: tuple[FractalRuntimeBudgetV02, ...], settled_queue_entry_log: tuple[FractalCellQueueEntryV02, ...], settled_queue_artifact_log: tuple[KernelArtifactV01, ...], settled_cell_inputs: tuple[FractalCellInputV02, ...], settled_scope_projections: tuple[ParentChildScopeProjectionV02, ...], settled_revise_observations: tuple[FractalReviseObservationV02, ...], settled_backpressure_states: tuple[FractalBackpressureStateV02, ...], settled_validation_reports: tuple[FractalRuntimeValidationReportV02, ...], observed_work_context: RuntimeObservedWorkContextV02 | None=None, retained_consumption: FractalRetainedWorkConsumptionV01 | None=None, retained_prefix: FractalRetainedWorkPrefixV01 | None=None, temporal_binding: FractalCurrentTemporalBindingV01 | None=None, temporal_verification: object=None",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "build_fractal_runtime_execution_bundle_v02",
+          "line": 14014,
+          "end_line": 14078,
+          "signature": "*, source_context: FractalRuntimeSourceContextV02, source_binding: RuntimeTopologySourceBindingV02, topology_seed: RuntimeTopologySeedV02, budgets: tuple[FractalRuntimeBudgetV02, ...], topology_nodes: tuple[RuntimeTopologyNodeV02, ...], topology_edges: tuple[RuntimeTopologyEdgeV02, ...], runtime_assignments: tuple[RuntimeAssignmentV02, ...], topology: RuntimeExecutionTopologyV02, topology_artifact: KernelArtifactV01, queue_entries: tuple[FractalCellQueueEntryV02, ...], queue_artifacts: tuple[KernelArtifactV01, ...], scope_projections: tuple[ParentChildScopeProjectionV02, ...], cell_inputs: tuple[FractalCellInputV02, ...], revise_observations: tuple[FractalReviseObservationV02, ...], partial_failures: tuple[FractalPartialFailureRecordV02, ...], backpressure_states: tuple[FractalBackpressureStateV02, ...], validation_reports: tuple[FractalRuntimeValidationReportV02, ...], result_proposals: tuple[dict[str, object], ...], post_vv_reports: tuple[dict[str, object], ...], gt_advisory_reports: tuple[dict[str, object], ...], cell_results: tuple[FractalCellResultV02, ...], result_artifacts: tuple[KernelArtifactV01, ...], runtime_trace: FractalRuntimeTraceV02, runtime_report: FractalRuntimeReportV02, report_artifact: KernelArtifactV01, transition_decisions: tuple[TransitionDecisionV01, ...], causal_consumption_refs: tuple[CausalConsumptionRefV01, ...], observed_work_context: RuntimeObservedWorkContextV02 | None=None",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "validate_fractal_runtime_execution_bundle_v02",
+          "line": 14081,
+          "end_line": 14293,
+          "signature": "value: object",
+          "role": "consumer"
+        },
+        {
+          "symbol": "build_fractal_cell_result_proposal_v02",
+          "line": 14388,
+          "end_line": 14420,
+          "signature": "*, source_context: FractalRuntimeSourceContextV02, topology: RuntimeExecutionTopologyV02, cell_input: FractalCellInputV02, pre_post_vv_terminal_queue_entries: tuple[FractalCellQueueEntryV02, ...], child_results: tuple[FractalCellResultV02, ...], partial_failures: tuple[FractalPartialFailureRecordV02, ...], accepted_output_refs: tuple[str, ...], evidence_refs: tuple[str, ...]",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "validate_fractal_cell_result_proposal_v02",
+          "line": 14423,
+          "end_line": 14468,
+          "signature": "value: object, *, source_context: FractalRuntimeSourceContextV02, topology: RuntimeExecutionTopologyV02, cell_input: FractalCellInputV02, pre_post_vv_terminal_queue_entries: tuple[FractalCellQueueEntryV02, ...], child_results: tuple[FractalCellResultV02, ...], partial_failures: tuple[FractalPartialFailureRecordV02, ...]",
+          "role": "consumer"
+        },
+        {
+          "symbol": "validate_fractal_post_vv_report_v02",
+          "line": 14471,
+          "end_line": 14502,
+          "signature": "value: object, *, result_proposal: dict[str, object], source_context: FractalRuntimeSourceContextV02",
+          "role": "consumer"
+        },
+        {
+          "symbol": "validate_fractal_gt_advisory_v02",
+          "line": 14505,
+          "end_line": 14534,
+          "signature": "value: object, *, post_vv_report: dict[str, object], source_context: FractalRuntimeSourceContextV02",
+          "role": "consumer"
+        },
+        {
+          "symbol": "evaluate_fractal_revise_observation_v02",
+          "line": 14626,
+          "end_line": 14654,
+          "signature": "*, topology: RuntimeExecutionTopologyV02, cell_input: FractalCellInputV02, queue_entry: FractalCellQueueEntryV02, validation_report: FractalRuntimeValidationReportV02, cell_budget_before: FractalRuntimeBudgetV02, global_budget_before: FractalRuntimeBudgetV02, revision_index: int, newly_validated_evidence_count: int, newly_resolved_constraints_count: int, newly_accepted_outputs_count: int, newly_introduced_conflicts_count: int, consecutive_non_positive_count: int",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "record_fractal_partial_failure_v02",
+          "line": 14657,
+          "end_line": 14688,
+          "signature": "*, topology: RuntimeExecutionTopologyV02, parent_input: FractalCellInputV02, child_result: FractalCellResultV02, failure_stage: str, reason_codes: tuple[str, ...], source_reason_codes: tuple[str, ...], evidence_refs: tuple[str, ...], allocated_cell_budget: FractalRuntimeBudgetV02, final_cell_budget: FractalRuntimeBudgetV02, global_budget: FractalRuntimeBudgetV02, required_child: bool, sibling_independent: bool",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "validate_fractal_cell_result_against_input_v02",
+          "line": 14691,
+          "end_line": 14786,
+          "signature": "*, source_context: FractalRuntimeSourceContextV02, topology: RuntimeExecutionTopologyV02, cell_input: FractalCellInputV02, terminal_queue_entries: tuple[FractalCellQueueEntryV02, ...], child_results: tuple[FractalCellResultV02, ...], partial_failures: tuple[FractalPartialFailureRecordV02, ...], result_proposal: dict[str, object], post_vv_report: dict[str, object], gt_advisory_report: dict[str, object], cell_budget: FractalRuntimeBudgetV02, global_budget: FractalRuntimeBudgetV02",
+          "role": "consumer"
+        },
+        {
+          "symbol": "aggregate_fractal_runtime_report_v02",
+          "line": 14789,
+          "end_line": 14803,
+          "signature": "*, topology: RuntimeExecutionTopologyV02, topology_artifact: KernelArtifactV01, source_binding: RuntimeTopologySourceBindingV02, cell_results: tuple[FractalCellResultV02, ...], queue_entries: tuple[FractalCellQueueEntryV02, ...], backpressure_states: tuple[FractalBackpressureStateV02, ...], runtime_trace: FractalRuntimeTraceV02, final_global_budget: FractalRuntimeBudgetV02, parent_return_transition_decision: TransitionDecisionV01, root_result_artifact: KernelArtifactV01, retained_prefix: FractalRetainedWorkPrefixV01 | None=None",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "run_fractal_runtime_v02",
+          "line": 14837,
+          "end_line": 14923,
+          "signature": "source_context: FractalRuntimeSourceContextV02, *, observed_work_context: RuntimeObservedWorkContextV02 | None=None",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "validate_fractal_runtime_report_against_sources_v02",
+          "line": 14926,
+          "end_line": 14942,
+          "signature": "value: object, *, source_context: FractalRuntimeSourceContextV02, source_binding: RuntimeTopologySourceBindingV02, topology: RuntimeExecutionTopologyV02, topology_artifact: KernelArtifactV01, cell_results: tuple[FractalCellResultV02, ...], queue_entries: tuple[FractalCellQueueEntryV02, ...], backpressure_states: tuple[FractalBackpressureStateV02, ...], runtime_trace: FractalRuntimeTraceV02, final_global_budget: FractalRuntimeBudgetV02, parent_return_transition_decision: TransitionDecisionV01, root_result_artifact: KernelArtifactV01, retained_prefix: FractalRetainedWorkPrefixV01 | None=None",
+          "role": "consumer"
+        },
+        {
+          "symbol": "project_fractal_cell_result_kernel_artifact_v02",
+          "line": 15011,
+          "end_line": 15100,
+          "signature": "result: FractalCellResultV02, *, topology_artifact: KernelArtifactV01, terminal_queue_artifacts: tuple[KernelArtifactV01, ...], child_result_artifacts: tuple[KernelArtifactV01, ...], source_context: FractalRuntimeSourceContextV02, temporal_binding: FractalCurrentTemporalBindingV01 | None=None, temporal_verification: object=None",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "project_fractal_runtime_report_kernel_artifact_v02",
+          "line": 15140,
+          "end_line": 15219,
+          "signature": "report: FractalRuntimeReportV02, *, topology_artifact: KernelArtifactV01, result_artifacts: tuple[KernelArtifactV01, ...], source_context: FractalRuntimeSourceContextV02, temporal_binding: FractalCurrentTemporalBindingV01 | None=None, temporal_verification: object=None",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "validate_fractal_runtime_stage_bundle_v02",
+          "line": 15336,
+          "end_line": 15353,
+          "signature": "*, stage: str, artifacts: tuple[KernelArtifactV01, ...], source_context: FractalRuntimeSourceContextV02, topology: RuntimeExecutionTopologyV02, topology_artifact: KernelArtifactV01, runtime_trace: FractalRuntimeTraceV02, queue_entries: tuple[FractalCellQueueEntryV02, ...], queue_artifacts: tuple[KernelArtifactV01, ...], cell_results: tuple[FractalCellResultV02, ...], result_artifacts: tuple[KernelArtifactV01, ...], runtime_report: FractalRuntimeReportV02 | None, report_artifact: KernelArtifactV01 | None, observed_work_context: RuntimeObservedWorkContextV02 | None=None, retained_prefix: FractalRetainedWorkPrefixV01 | None=None",
+          "role": "consumer"
+        },
+        {
+          "symbol": "validate_fractal_runtime_abi_profile_v02",
+          "line": 15522,
+          "end_line": 15538,
+          "signature": "value: tuple[KernelArtifactV01, ...], *, source_context: FractalRuntimeSourceContextV02, topology: RuntimeExecutionTopologyV02, topology_artifact: KernelArtifactV01, runtime_trace: FractalRuntimeTraceV02, queue_entries: tuple[FractalCellQueueEntryV02, ...], queue_artifacts: tuple[KernelArtifactV01, ...], cell_results: tuple[FractalCellResultV02, ...], result_artifacts: tuple[KernelArtifactV01, ...], runtime_report: FractalRuntimeReportV02, report_artifact: KernelArtifactV01, observed_work_context: RuntimeObservedWorkContextV02 | None=None, retained_prefix: FractalRetainedWorkPrefixV01 | None=None",
+          "role": "consumer"
+        },
+        {
+          "symbol": "evaluate_fractal_parent_return_transition_v02",
+          "line": 15618,
+          "end_line": 15654,
+          "signature": "*, source_context: FractalRuntimeSourceContextV02, root_result: FractalCellResultV02, root_result_artifact: KernelArtifactV01, ordered_cell_results: tuple[FractalCellResultV02, ...], transition_registry: TransitionRegistryV01",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "build_fractal_runtime_causal_consumption_refs_v02",
+          "line": 15685,
+          "end_line": 15701,
+          "signature": "*, source_context: FractalRuntimeSourceContextV02, topology: RuntimeExecutionTopologyV02, topology_artifact: KernelArtifactV01, runtime_assignments: tuple[RuntimeAssignmentV02, ...], queue_entries: tuple[FractalCellQueueEntryV02, ...], queue_artifacts: tuple[KernelArtifactV01, ...], cell_results: tuple[FractalCellResultV02, ...], result_artifacts: tuple[KernelArtifactV01, ...], runtime_trace: FractalRuntimeTraceV02, runtime_report: FractalRuntimeReportV02, report_artifact: KernelArtifactV01, observed_work_context: RuntimeObservedWorkContextV02 | None=None, retained_prefix: FractalRetainedWorkPrefixV01 | None=None",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "validate_fractal_runtime_causal_consumption_refs_v02",
+          "line": 16082,
+          "end_line": 16100,
+          "signature": "value: tuple[CausalConsumptionRefV01, ...], *, source_context: FractalRuntimeSourceContextV02, topology: RuntimeExecutionTopologyV02, topology_artifact: KernelArtifactV01, runtime_assignments: tuple[RuntimeAssignmentV02, ...], queue_entries: tuple[FractalCellQueueEntryV02, ...], queue_artifacts: tuple[KernelArtifactV01, ...], cell_results: tuple[FractalCellResultV02, ...], result_artifacts: tuple[KernelArtifactV01, ...], runtime_trace: FractalRuntimeTraceV02, runtime_report: FractalRuntimeReportV02, report_artifact: KernelArtifactV01, stage_d_c_artifacts: tuple[KernelArtifactV01, ...], observed_work_context: RuntimeObservedWorkContextV02 | None=None, retained_prefix: FractalRetainedWorkPrefixV01 | None=None",
+          "role": "consumer"
+        },
+        {
+          "symbol": "validate_fractal_runtime_causal_counterfactual_v02",
+          "line": 16198,
+          "end_line": 16291,
+          "signature": "*, execution_bundle: FractalRuntimeExecutionBundleV02, causal_ref: CausalConsumptionRefV01, mutated_source_artifact: KernelArtifactV01",
+          "role": "consumer"
+        },
+        {
+          "symbol": "project_runtime_observed_work_binding_kernel_artifact_v02",
+          "line": 16294,
+          "end_line": 16316,
+          "signature": "*, baseline_execution_bundle: FractalRuntimeExecutionBundleV02, node: RuntimeTopologyNodeV02, cell_input: FractalCellInputV02, baseline_source_artifact: KernelArtifactV01, observed_source_artifact: KernelArtifactV01, changed_full_artifact_pointers: tuple[str, ...], execution_scope: str, whole_run_escalation_reason: str | None=None, whole_run_escalation_policy_id: str | None=None",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "build_runtime_observed_work_context_v02",
+          "line": 16319,
+          "end_line": 16337,
+          "signature": "*, baseline_execution_bundle: FractalRuntimeExecutionBundleV02, direct_source_artifacts: tuple[KernelArtifactV01, ...], supporting_artifacts: tuple[KernelArtifactV01, ...], binding_artifacts: tuple[KernelArtifactV01, ...], execution_scope: str, whole_run_escalation_reason: str | None=None, whole_run_escalation_policy_id: str | None=None",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "validate_runtime_observed_work_context_v02",
+          "line": 16340,
+          "end_line": 16343,
+          "signature": "value: object",
+          "role": "consumer"
+        },
+        {
+          "symbol": "runtime_observed_work_context_to_plain_data_v02",
+          "line": 16346,
+          "end_line": 16349,
+          "signature": "value: RuntimeObservedWorkContextV02",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "validate_runtime_observed_work_context_against_sources_v02",
+          "line": 16352,
+          "end_line": 16366,
+          "signature": "value: object, *, baseline_execution_bundle: FractalRuntimeExecutionBundleV02, direct_source_artifacts: tuple[KernelArtifactV01, ...], supporting_artifacts: tuple[KernelArtifactV01, ...], binding_artifacts: tuple[KernelArtifactV01, ...]",
+          "role": "consumer"
+        },
+        {
+          "symbol": "validate_runtime_observed_work_counterfactual_v02",
+          "line": 16454,
+          "end_line": 16922,
+          "signature": "*, execution_bundle: FractalRuntimeExecutionBundleV02, observed_work_causal_ref: CausalConsumptionRefV01, mutated_observed_source_artifact: KernelArtifactV01",
+          "role": "consumer"
+        },
+        {
+          "symbol": "fractal_runtime_execution_bundle_to_plain_data_v02",
+          "line": 19309,
+          "end_line": 19318,
+          "signature": "value: FractalRuntimeExecutionBundleV02",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "build_fractal_retained_work_evidence_v01",
+          "line": 19350,
+          "end_line": 19353,
+          "signature": "*, historical_bundle: FractalRuntimeExecutionBundleV02, historical_cell_id: str",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "validate_fractal_retained_work_evidence_v01",
+          "line": 19356,
+          "end_line": 19366,
+          "signature": "value: object",
+          "role": "consumer"
+        },
+        {
+          "symbol": "fractal_retained_work_evidence_to_plain_data_v01",
+          "line": 19369,
+          "end_line": 19374,
+          "signature": "value: FractalRetainedWorkEvidenceV01",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "build_fractal_retained_work_admission_v01",
+          "line": 19819,
+          "end_line": 19828,
+          "signature": "*, evidence: FractalRetainedWorkEvidenceV01, current_source_context: FractalRuntimeSourceContextV02, current_observed_work_context: RuntimeObservedWorkContextV02, plan_review: FractalRetainedPlanReviewV01, current_parent_input: FractalCellInputV02, parent_slot_node_id: str, current_prefix: FractalRetainedWorkPrefixV01",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "validate_fractal_retained_work_admission_v01",
+          "line": 19831,
+          "end_line": 19844,
+          "signature": "value: object, *, current_prefix: FractalRetainedWorkPrefixV01",
+          "role": "consumer"
+        },
+        {
+          "symbol": "consume_fractal_retained_work_v01",
+          "line": 19852,
+          "end_line": 19858,
+          "signature": "*, admission: FractalRetainedWorkAdmissionV01, running_parent_slot: FractalCellQueueEntryV02, running_slot_artifact: KernelArtifactV01, current_prefix: FractalRetainedWorkPrefixV01",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "validate_fractal_retained_work_consumption_v01",
+          "line": 19890,
+          "end_line": 19903,
+          "signature": "value: object, *, current_prefix: FractalRetainedWorkPrefixV01",
+          "role": "consumer"
+        },
+        {
+          "symbol": "project_fractal_retained_work_consumption_kernel_artifact_v01",
+          "line": 19929,
+          "end_line": 19934,
+          "signature": "value: FractalRetainedWorkConsumptionV01, *, source_context: FractalRuntimeSourceContextV02, current_prefix: FractalRetainedWorkPrefixV01",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "fractal_retained_work_admission_to_plain_data_v01",
+          "line": 19937,
+          "end_line": 19940,
+          "signature": "value: FractalRetainedWorkAdmissionV01",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "fractal_retained_work_consumption_to_plain_data_v01",
+          "line": 19943,
+          "end_line": 19946,
+          "signature": "value: FractalRetainedWorkConsumptionV01",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "rebuild_fractal_retained_work_admission_identity_v01",
+          "line": 19949,
+          "end_line": 19951,
+          "signature": "value: FractalRetainedWorkAdmissionV01",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "rebuild_fractal_retained_work_consumption_identity_v01",
+          "line": 19954,
+          "end_line": 19956,
+          "signature": "value: FractalRetainedWorkConsumptionV01",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "rebuild_fractal_retained_work_evidence_identity_v01",
+          "line": 19959,
+          "end_line": 19961,
+          "signature": "value: FractalRetainedWorkEvidenceV01",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "build_fractal_retained_work_prefix_v01",
+          "line": 20138,
+          "end_line": 20165,
+          "signature": "*, source_context: FractalRuntimeSourceContextV02, source_binding: RuntimeTopologySourceBindingV02, topology_seed: RuntimeTopologySeedV02, budgets: tuple[FractalRuntimeBudgetV02, ...], topology_nodes: tuple[RuntimeTopologyNodeV02, ...], topology_edges: tuple[RuntimeTopologyEdgeV02, ...], runtime_assignments: tuple[RuntimeAssignmentV02, ...], topology: RuntimeExecutionTopologyV02, topology_artifact: KernelArtifactV01, queue_entries: tuple[FractalCellQueueEntryV02, ...], queue_artifacts: tuple[KernelArtifactV01, ...], scope_projections: tuple[ParentChildScopeProjectionV02, ...], cell_inputs: tuple[FractalCellInputV02, ...], revise_observations: tuple[FractalReviseObservationV02, ...], partial_failures: tuple[FractalPartialFailureRecordV02, ...], backpressure_states: tuple[FractalBackpressureStateV02, ...], validation_reports: tuple[FractalRuntimeValidationReportV02, ...], result_proposals: tuple[dict[str, object], ...], post_vv_reports: tuple[dict[str, object], ...], gt_advisory_reports: tuple[dict[str, object], ...], cell_results: tuple[FractalCellResultV02, ...], result_artifacts: tuple[KernelArtifactV01, ...], observed_work_context: RuntimeObservedWorkContextV02, retained_profile: str, plan_review: FractalRetainedPlanReviewV01, retained_evidence: tuple[FractalRetainedWorkEvidenceV01, ...], retained_admissions: tuple[FractalRetainedWorkAdmissionV01, ...], retained_consumptions: tuple[FractalRetainedWorkConsumptionV01, ...], retained_consumption_artifacts: tuple[KernelArtifactV01, ...], queue_transition_decisions: tuple[TransitionDecisionV01, ...], temporal_binding: FractalCurrentTemporalBindingV01 | None=None, temporal_verification: object=None",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "validate_fractal_retained_work_prefix_v01",
+          "line": 20168,
+          "end_line": 20175,
+          "signature": "value: object",
+          "role": "consumer"
+        },
+        {
+          "symbol": "build_fractal_retained_work_execution_bundle_v01",
+          "line": 20178,
+          "end_line": 20209,
+          "signature": "*, source_context: FractalRuntimeSourceContextV02, observed_work_context: RuntimeObservedWorkContextV02, plan_review: FractalRetainedPlanReviewV01, retained_evidence: tuple[FractalRetainedWorkEvidenceV01, ...], temporal_binding: FractalCurrentTemporalBindingV01 | None=None, temporal_verification: object=None",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "validate_fractal_retained_work_execution_bundle_v01",
+          "line": 20397,
+          "end_line": 20404,
+          "signature": "value: object",
+          "role": "consumer"
+        },
+        {
+          "symbol": "fractal_retained_work_execution_bundle_to_plain_data_v01",
+          "line": 20407,
+          "end_line": 20409,
+          "signature": "value: FractalRetainedWorkExecutionBundleV01",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "build_fractal_current_temporal_binding_v01",
+          "line": 20413,
+          "end_line": 20420,
+          "signature": "*, host: object, capture: object",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "validate_fractal_current_temporal_binding_v01",
+          "line": 20424,
+          "end_line": 20441,
+          "signature": "value: object, *, source_context: FractalRuntimeSourceContextV02, temporal_verification: object, require_current: bool=False",
+          "role": "consumer"
+        }
+      ],
+      "required_evidence": "LIVING_G36",
+      "limitations": "Exact named version and accepted finite reference scope; no authority from this index"
+    },
+    {
+      "profile": "E v0.1",
+      "source": {
+        "path": "hedgehog/kernel/continuous_delta_runtime_v01.py",
+        "bytes": 554433,
+        "sha256": "879abad289ebae13b65cd0d2c5858e89f55fb059fecb111cde61d37f575a6af0",
+        "mode": 420
+      },
+      "normative_contract": "docs/continuous_delta_runtime_v0_1_g2_e_post_acceptance_contract_addendum_v01.md",
+      "schema": "schemas/continuous_delta_runtime_v01.schema.json",
+      "symbols": [
+        {
+          "symbol": "DeltaSourceBindingV01",
+          "line": 296,
+          "end_line": 325,
+          "signature": "class",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "ChangedFieldBindingV01",
+          "line": 329,
+          "end_line": 337,
+          "signature": "class",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "ChangedArtifactBindingV01",
+          "line": 341,
+          "end_line": 355,
+          "signature": "class",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "WorldStateDeltaV01",
+          "line": 359,
+          "end_line": 393,
+          "signature": "class",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "DependencyFingerprintProfileV01",
+          "line": 397,
+          "end_line": 405,
+          "signature": "class",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "DeltaDependencyEdgeV01",
+          "line": 409,
+          "end_line": 422,
+          "signature": "class",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "DependencyGraphIndexV01",
+          "line": 426,
+          "end_line": 447,
+          "signature": "class",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "AffectedSetRequestV01",
+          "line": 451,
+          "end_line": 465,
+          "signature": "class",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "AffectedSetResultV01",
+          "line": 469,
+          "end_line": 486,
+          "signature": "class",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "ArtifactInvalidationRecordV01",
+          "line": 490,
+          "end_line": 508,
+          "signature": "class",
+          "role": "consumer"
+        },
+        {
+          "symbol": "InvalidationReportV01",
+          "line": 512,
+          "end_line": 531,
+          "signature": "class",
+          "role": "consumer"
+        },
+        {
+          "symbol": "PreservationProofV01",
+          "line": 535,
+          "end_line": 553,
+          "signature": "class",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "SelectiveRecomputationPlanV01",
+          "line": 557,
+          "end_line": 579,
+          "signature": "class",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "RetainedSelectiveRecomputationPlanV01",
+          "line": 583,
+          "end_line": 606,
+          "signature": "class",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "RetainedWorkPreservationProofV01",
+          "line": 610,
+          "end_line": 623,
+          "signature": "class",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "RecomputedArtifactBindingV01",
+          "line": 627,
+          "end_line": 641,
+          "signature": "class",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "SelectiveRecomputationResultV01",
+          "line": 645,
+          "end_line": 671,
+          "signature": "class",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "ContinuousDeltaRuntimeTraceV01",
+          "line": 675,
+          "end_line": 697,
+          "signature": "class",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "ContinuousDeltaRuntimeReportV01",
+          "line": 701,
+          "end_line": 740,
+          "signature": "class",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "ContinuousDeltaValidationReportV01",
+          "line": 744,
+          "end_line": 760,
+          "signature": "class",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "ContinuousDeltaSourceContextV01",
+          "line": 764,
+          "end_line": 788,
+          "signature": "class",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "ContinuousDeltaExecutionBundleV01",
+          "line": 792,
+          "end_line": 828,
+          "signature": "class",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "build_delta_source_binding_v01",
+          "line": 2849,
+          "end_line": 2908,
+          "signature": "*, request_id: str, transaction_id: str, owning_root_id: str, domain_id: str, baseline_source_artifact_id: str, baseline_source_artifact_type: str, baseline_source_artifact_sha256: str, baseline_source_payload_sha256: str, observed_source_artifact_id: str, observed_source_artifact_type: str, observed_source_artifact_sha256: str, observed_source_payload_sha256: str, baseline_report_id: str, baseline_graph_id: str, baseline_graph_version: str, baseline_policy_version: str, observed_policy_version: str, baseline_schema_versions: tuple[str, ...], observed_schema_versions: tuple[str, ...], baseline_source_history_hash: str, observed_source_history_hash: str, valid_from_utc: str, valid_to_utc: str, trace_refs: tuple[str, ...]",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "validate_delta_source_binding_v01",
+          "line": 2911,
+          "end_line": 2912,
+          "signature": "value: object",
+          "role": "consumer"
+        },
+        {
+          "symbol": "delta_source_binding_to_plain_data_v01",
+          "line": 2915,
+          "end_line": 2916,
+          "signature": "value: DeltaSourceBindingV01",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "rebuild_delta_source_binding_identity_v01",
+          "line": 2919,
+          "end_line": 2920,
+          "signature": "value: DeltaSourceBindingV01",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "build_changed_field_binding_v01",
+          "line": 2923,
+          "end_line": 2944,
+          "signature": "*, source_binding_id: str, json_pointer: str, prior_value_sha256: str, observed_value_sha256: str, change_class: str, observed_at_utc: str, trace_refs: tuple[str, ...]",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "validate_changed_field_binding_v01",
+          "line": 2947,
+          "end_line": 2948,
+          "signature": "value: object",
+          "role": "consumer"
+        },
+        {
+          "symbol": "changed_field_binding_to_plain_data_v01",
+          "line": 2951,
+          "end_line": 2952,
+          "signature": "value: ChangedFieldBindingV01",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "rebuild_changed_field_binding_identity_v01",
+          "line": 2955,
+          "end_line": 2956,
+          "signature": "value: ChangedFieldBindingV01",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "build_changed_artifact_binding_v01",
+          "line": 2959,
+          "end_line": 2991,
+          "signature": "*, source_binding_id: str, baseline_artifact_id: str, baseline_artifact_type: str, baseline_payload_sha256: str, observed_artifact_id: str, observed_artifact_type: str, observed_payload_sha256: str, baseline_dependency_fingerprint: str, observed_dependency_fingerprint: str, change_class: str, observed_at_utc: str, trace_refs: tuple[str, ...]",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "validate_changed_artifact_binding_v01",
+          "line": 2994,
+          "end_line": 2995,
+          "signature": "value: object",
+          "role": "consumer"
+        },
+        {
+          "symbol": "changed_artifact_binding_to_plain_data_v01",
+          "line": 2998,
+          "end_line": 2999,
+          "signature": "value: ChangedArtifactBindingV01",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "rebuild_changed_artifact_binding_identity_v01",
+          "line": 3002,
+          "end_line": 3003,
+          "signature": "value: ChangedArtifactBindingV01",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "build_world_state_delta_v01",
+          "line": 3006,
+          "end_line": 3068,
+          "signature": "*, ordered_source_binding_ids: tuple[str, ...], request_id: str, transaction_id: str, owning_root_id: str, domain_id: str, baseline_report_id: str, baseline_graph_id: str, baseline_graph_version: str, observed_at_utc: str, valid_from_utc: str, valid_to_utc: str, baseline_policy_version: str, observed_policy_version: str, baseline_schema_versions: tuple[str, ...], observed_schema_versions: tuple[str, ...], baseline_source_history_hash: str, observed_source_history_hash: str, ordered_changed_field_binding_ids: tuple[str, ...], ordered_changed_artifact_binding_ids: tuple[str, ...], dependency_fingerprint_before: str, dependency_fingerprint_after: str, trace_refs: tuple[str, ...]",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "validate_world_state_delta_v01",
+          "line": 3071,
+          "end_line": 3072,
+          "signature": "value: object",
+          "role": "consumer"
+        },
+        {
+          "symbol": "world_state_delta_to_plain_data_v01",
+          "line": 3075,
+          "end_line": 3076,
+          "signature": "value: WorldStateDeltaV01",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "rebuild_world_state_delta_identity_v01",
+          "line": 3079,
+          "end_line": 3080,
+          "signature": "value: WorldStateDeltaV01",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "build_dependency_fingerprint_profile_v01",
+          "line": 3083,
+          "end_line": 3095,
+          "signature": "",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "validate_dependency_fingerprint_profile_v01",
+          "line": 3098,
+          "end_line": 3099,
+          "signature": "value: object",
+          "role": "consumer"
+        },
+        {
+          "symbol": "dependency_fingerprint_profile_to_plain_data_v01",
+          "line": 3102,
+          "end_line": 3103,
+          "signature": "value: DependencyFingerprintProfileV01",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "rebuild_dependency_fingerprint_profile_identity_v01",
+          "line": 3106,
+          "end_line": 3107,
+          "signature": "value: DependencyFingerprintProfileV01",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "build_continuous_delta_validation_report_v01",
+          "line": 3110,
+          "end_line": 3132,
+          "signature": "*, validation_target: str, validated_object_id: str | None, failure_stage: str, reason_codes: tuple[str, ...], source_reason_codes: tuple[str, ...], return_to_root_required: bool, root_review_required: bool",
+          "role": "consumer"
+        },
+        {
+          "symbol": "validate_continuous_delta_validation_report_v01",
+          "line": 3135,
+          "end_line": 3136,
+          "signature": "value: object",
+          "role": "consumer"
+        },
+        {
+          "symbol": "continuous_delta_validation_report_to_plain_data_v01",
+          "line": 3139,
+          "end_line": 3140,
+          "signature": "value: ContinuousDeltaValidationReportV01",
+          "role": "consumer"
+        },
+        {
+          "symbol": "rebuild_continuous_delta_validation_report_identity_v01",
+          "line": 3143,
+          "end_line": 3144,
+          "signature": "value: ContinuousDeltaValidationReportV01",
+          "role": "consumer"
+        },
+        {
+          "symbol": "build_delta_dependency_edge_v01",
+          "line": 3147,
+          "end_line": 3180,
+          "signature": "*, graph_basis_sha256: str, graph_version: str, dependent_artifact_id: str, dependency_artifact_id: str, dependency_field_pointers: tuple[str, ...], edge_class: str, transaction_id: str, owning_root_id: str, domain_id: str, canonical_order: int, source_replay_edge_sha256: str, trace_refs: tuple[str, ...]",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "validate_delta_dependency_edge_v01",
+          "line": 3183,
+          "end_line": 3191,
+          "signature": "value: object",
+          "role": "consumer"
+        },
+        {
+          "symbol": "delta_dependency_edge_to_plain_data_v01",
+          "line": 3194,
+          "end_line": 3199,
+          "signature": "value: DeltaDependencyEdgeV01",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "rebuild_delta_dependency_edge_identity_v01",
+          "line": 3202,
+          "end_line": 3205,
+          "signature": "value: DeltaDependencyEdgeV01",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "build_dependency_graph_index_v01",
+          "line": 3208,
+          "end_line": 3350,
+          "signature": "*, graph_basis_sha256: str, graph_version: str, manifest: ArtifactManifestV01, replay: ReplayVerificationResultV01, source_artifacts: tuple[KernelArtifactV01, ...], dependency_edges: tuple[DeltaDependencyEdgeV01, ...], transaction_id: str, owning_root_id: str, domain_id: str, policy_version: str, schema_versions: tuple[str, ...], source_history_hash: str, trace_refs: tuple[str, ...]",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "validate_dependency_graph_index_v01",
+          "line": 3353,
+          "end_line": 3361,
+          "signature": "value: object",
+          "role": "consumer"
+        },
+        {
+          "symbol": "dependency_graph_index_to_plain_data_v01",
+          "line": 3364,
+          "end_line": 3369,
+          "signature": "value: DependencyGraphIndexV01",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "rebuild_dependency_graph_index_identity_v01",
+          "line": 3372,
+          "end_line": 3375,
+          "signature": "value: DependencyGraphIndexV01",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "build_affected_set_request_v01",
+          "line": 3378,
+          "end_line": 3417,
+          "signature": "*, delta: WorldStateDeltaV01, graph: DependencyGraphIndexV01, trace_refs: tuple[str, ...]",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "validate_affected_set_request_v01",
+          "line": 3420,
+          "end_line": 3428,
+          "signature": "value: object",
+          "role": "consumer"
+        },
+        {
+          "symbol": "affected_set_request_to_plain_data_v01",
+          "line": 3431,
+          "end_line": 3436,
+          "signature": "value: AffectedSetRequestV01",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "rebuild_affected_set_request_identity_v01",
+          "line": 3439,
+          "end_line": 3442,
+          "signature": "value: AffectedSetRequestV01",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "build_affected_set_result_v01",
+          "line": 3445,
+          "end_line": 3476,
+          "signature": "*, affected_request_id: str, delta_id: str, graph_id: str, graph_version: str, ordered_changed_node_ids: tuple[str, ...], ordered_directly_affected_ids: tuple[str, ...], ordered_transitively_affected_ids: tuple[str, ...], ordered_affected_ids: tuple[str, ...], ordered_unaffected_ids: tuple[str, ...], visited_rows: tuple[tuple[str, int, str | None], ...], traversed_edge_count: int, maximum_observed_hops: int, trace_refs: tuple[str, ...]",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "validate_affected_set_result_v01",
+          "line": 3479,
+          "end_line": 3487,
+          "signature": "value: object",
+          "role": "consumer"
+        },
+        {
+          "symbol": "affected_set_result_to_plain_data_v01",
+          "line": 3490,
+          "end_line": 3495,
+          "signature": "value: AffectedSetResultV01",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "rebuild_affected_set_result_identity_v01",
+          "line": 3498,
+          "end_line": 3501,
+          "signature": "value: AffectedSetResultV01",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "build_dependency_fingerprint_v01",
+          "line": 3504,
+          "end_line": 3562,
+          "signature": "*, profile: DependencyFingerprintProfileV01, graph: DependencyGraphIndexV01, dependency_edges: tuple[DeltaDependencyEdgeV01, ...], source_artifacts: tuple[KernelArtifactV01, ...], policy_version: str, schema_versions: tuple[str, ...], source_history_hash: str",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "validate_dependency_fingerprint_against_sources_v01",
+          "line": 3565,
+          "end_line": 3601,
+          "signature": "value: str, *, profile: DependencyFingerprintProfileV01, graph: DependencyGraphIndexV01, dependency_edges: tuple[DeltaDependencyEdgeV01, ...], source_artifacts: tuple[KernelArtifactV01, ...], policy_version: str, schema_versions: tuple[str, ...], source_history_hash: str",
+          "role": "consumer"
+        },
+        {
+          "symbol": "project_integrity_replay_dependency_edges_v01",
+          "line": 3604,
+          "end_line": 3739,
+          "signature": "*, manifest: ArtifactManifestV01, replay: ReplayVerificationResultV01, source_artifacts: tuple[KernelArtifactV01, ...], graph_version: str, transaction_id: str, owning_root_id: str, domain_id: str, policy_version: str, schema_versions: tuple[str, ...], source_history_hash: str, edge_projection_bindings: tuple[tuple[str, str, tuple[str, ...], str], ...]",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "compute_affected_set_v01",
+          "line": 3742,
+          "end_line": 3788,
+          "signature": "*, request: AffectedSetRequestV01, delta: WorldStateDeltaV01, graph: DependencyGraphIndexV01, source_bindings: tuple[DeltaSourceBindingV01, ...], changed_field_bindings: tuple[ChangedFieldBindingV01, ...], changed_artifact_bindings: tuple[ChangedArtifactBindingV01, ...], dependency_edges: tuple[DeltaDependencyEdgeV01, ...], baseline_source_artifacts: tuple[KernelArtifactV01, ...], observed_source_artifacts: tuple[KernelArtifactV01, ...]",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "validate_affected_set_against_graph_v01",
+          "line": 3791,
+          "end_line": 3883,
+          "signature": "value: AffectedSetResultV01, *, request: AffectedSetRequestV01, delta: WorldStateDeltaV01, graph: DependencyGraphIndexV01, source_bindings: tuple[DeltaSourceBindingV01, ...], changed_field_bindings: tuple[ChangedFieldBindingV01, ...], changed_artifact_bindings: tuple[ChangedArtifactBindingV01, ...], dependency_edges: tuple[DeltaDependencyEdgeV01, ...], baseline_source_artifacts: tuple[KernelArtifactV01, ...], observed_source_artifacts: tuple[KernelArtifactV01, ...]",
+          "role": "consumer"
+        },
+        {
+          "symbol": "build_artifact_invalidation_record_v01",
+          "line": 5363,
+          "end_line": 5403,
+          "signature": "*, affected_set_id: str, artifact_id: str, artifact_type: str, invalidation_reason_class: str, triggering_delta_id: str, triggering_binding_ids: tuple[str, ...], predecessor_artifact_id: str, g2a_packet_relation: str, g2b_reuse_relation: str, g2c_route_relation: str, root_review_required: bool, trace_refs: tuple[str, ...]",
+          "role": "consumer"
+        },
+        {
+          "symbol": "validate_artifact_invalidation_record_v01",
+          "line": 5406,
+          "end_line": 5414,
+          "signature": "value: object",
+          "role": "consumer"
+        },
+        {
+          "symbol": "artifact_invalidation_record_to_plain_data_v01",
+          "line": 5417,
+          "end_line": 5424,
+          "signature": "value: ArtifactInvalidationRecordV01",
+          "role": "consumer"
+        },
+        {
+          "symbol": "rebuild_artifact_invalidation_record_identity_v01",
+          "line": 5427,
+          "end_line": 5430,
+          "signature": "value: ArtifactInvalidationRecordV01",
+          "role": "consumer"
+        },
+        {
+          "symbol": "build_invalidation_report_v01",
+          "line": 5433,
+          "end_line": 5503,
+          "signature": "*, affected_set_id: str, records: tuple[ArtifactInvalidationRecordV01, ...], ordered_unresolved_artifact_ids: tuple[str, ...]",
+          "role": "consumer"
+        },
+        {
+          "symbol": "validate_invalidation_report_v01",
+          "line": 5506,
+          "end_line": 5514,
+          "signature": "value: object",
+          "role": "consumer"
+        },
+        {
+          "symbol": "invalidation_report_to_plain_data_v01",
+          "line": 5517,
+          "end_line": 5524,
+          "signature": "value: InvalidationReportV01",
+          "role": "consumer"
+        },
+        {
+          "symbol": "rebuild_invalidation_report_identity_v01",
+          "line": 5527,
+          "end_line": 5530,
+          "signature": "value: InvalidationReportV01",
+          "role": "consumer"
+        },
+        {
+          "symbol": "build_preservation_proof_v01",
+          "line": 5533,
+          "end_line": 5581,
+          "signature": "*, baseline_graph_id: str, affected_set_id: str, ordered_preserved_artifact_ids: tuple[str, ...], ordered_before_artifact_sha256: tuple[str, ...], ordered_after_artifact_sha256: tuple[str, ...], ordered_before_payload_sha256: tuple[str, ...], ordered_after_payload_sha256: tuple[str, ...], ordered_before_identity_ids: tuple[str, ...], ordered_after_identity_ids: tuple[str, ...]",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "validate_preservation_proof_v01",
+          "line": 5584,
+          "end_line": 5592,
+          "signature": "value: object",
+          "role": "consumer"
+        },
+        {
+          "symbol": "preservation_proof_to_plain_data_v01",
+          "line": 5595,
+          "end_line": 5602,
+          "signature": "value: PreservationProofV01",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "rebuild_preservation_proof_identity_v01",
+          "line": 5605,
+          "end_line": 5608,
+          "signature": "value: PreservationProofV01",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "build_continuous_delta_source_context_v01",
+          "line": 5611,
+          "end_line": 5662,
+          "signature": "*, integrity_manifest, integrity_replay, baseline_source_artifacts: tuple[KernelArtifactV01, ...], observed_source_artifacts: tuple[KernelArtifactV01, ...], g2a_registry, g2a_packet: action_commit_packet.SupplierRootBoundActionCommitPacketV02ProjectionV01 | action_commit_packet.NativeRootBoundActionCommitPacketV01, g2a_dependency_candidate, g2a_current_observations, g2a_root_invalidation_material, g2b_resolution_report, g2b_reuse_certificate, g2b_writeback_evidence, g2c_source_context, baseline_g2c_route_eligibility_artifact, baseline_g2d_execution_bundle: FractalRuntimeExecutionBundleV02, root_kernel, post_vv_profile, gt_profile, current_source_host=None, current_source_capture=None",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "validate_continuous_delta_source_context_v01",
+          "line": 5665,
+          "end_line": 5678,
+          "signature": "value: object",
+          "role": "consumer"
+        },
+        {
+          "symbol": "derive_invalidation_report_v01",
+          "line": 5681,
+          "end_line": 5721,
+          "signature": "*, affected_set: AffectedSetResultV01, delta: WorldStateDeltaV01, source_context: ContinuousDeltaSourceContextV01, source_bindings: tuple[DeltaSourceBindingV01, ...], changed_field_bindings: tuple[ChangedFieldBindingV01, ...], changed_artifact_bindings: tuple[ChangedArtifactBindingV01, ...], dependency_edges: tuple[DeltaDependencyEdgeV01, ...], dependency_graph: DependencyGraphIndexV01",
+          "role": "consumer"
+        },
+        {
+          "symbol": "validate_invalidation_report_against_sources_v01",
+          "line": 5724,
+          "end_line": 5779,
+          "signature": "value: InvalidationReportV01, *, records: tuple[ArtifactInvalidationRecordV01, ...], affected_set: AffectedSetResultV01, delta: WorldStateDeltaV01, source_context: ContinuousDeltaSourceContextV01, source_bindings: tuple[DeltaSourceBindingV01, ...], changed_field_bindings: tuple[ChangedFieldBindingV01, ...], changed_artifact_bindings: tuple[ChangedArtifactBindingV01, ...], dependency_edges: tuple[DeltaDependencyEdgeV01, ...], dependency_graph: DependencyGraphIndexV01",
+          "role": "consumer"
+        },
+        {
+          "symbol": "prove_unaffected_artifact_preservation_v01",
+          "line": 5782,
+          "end_line": 5906,
+          "signature": "*, affected_set: AffectedSetResultV01, invalidation_records: tuple[ArtifactInvalidationRecordV01, ...], source_context: ContinuousDeltaSourceContextV01, recomputed_g2d_execution_bundle: FractalRuntimeExecutionBundleV02, recomputed_bindings: tuple[RecomputedArtifactBindingV01, ...]",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "build_retained_selective_recomputation_plan_v01",
+          "line": 5938,
+          "end_line": 5950,
+          "signature": "*, base_plan: SelectiveRecomputationPlanV01, source_context: ContinuousDeltaSourceContextV01, affected_set: AffectedSetResultV01",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "validate_retained_selective_recomputation_plan_v01",
+          "line": 5953,
+          "end_line": 5966,
+          "signature": "value: object, *, source_context: ContinuousDeltaSourceContextV01, affected_set: AffectedSetResultV01",
+          "role": "consumer"
+        },
+        {
+          "symbol": "retained_selective_recomputation_plan_to_plain_data_v01",
+          "line": 5969,
+          "end_line": 5972,
+          "signature": "value: RetainedSelectiveRecomputationPlanV01",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "prove_retained_work_preservation_v01",
+          "line": 6050,
+          "end_line": 6092,
+          "signature": "*, source_context: ContinuousDeltaSourceContextV01, affected_set: AffectedSetResultV01, plan: RetainedSelectiveRecomputationPlanV01, recomputed_bundle: g2d_runtime.FractalRetainedWorkExecutionBundleV01, recomputed_bindings: tuple[RecomputedArtifactBindingV01, ...]",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "validate_retained_work_preservation_v01",
+          "line": 6095,
+          "end_line": 6110,
+          "signature": "value: object, *, source_context: ContinuousDeltaSourceContextV01, affected_set: AffectedSetResultV01, plan: RetainedSelectiveRecomputationPlanV01, recomputed_bundle: g2d_runtime.FractalRetainedWorkExecutionBundleV01, recomputed_bindings: tuple[RecomputedArtifactBindingV01, ...]",
+          "role": "consumer"
+        },
+        {
+          "symbol": "retained_work_preservation_to_plain_data_v01",
+          "line": 6113,
+          "end_line": 6116,
+          "signature": "value: RetainedWorkPreservationProofV01",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "build_selective_recomputation_plan_v01",
+          "line": 6154,
+          "end_line": 6205,
+          "signature": "*, delta_id: str, affected_set_id: str, invalidation_report_id: str, source_route_eligibility_artifact_id: str, source_topology_id: str, accepted_mode: str, accepted_scope_ref: str, ordered_affected_cell_ids: tuple[str, ...], ordered_affected_artifact_ids: tuple[str, ...], ordered_work_node_ids: tuple[str, ...], ordered_preserved_artifact_ids: tuple[str, ...], max_work_items: int, max_queue_entries: int, max_wall_time_units: int, max_token_budget: int, max_provider_calls: int, transition_profile_id: str, root_review_required: bool, plan_status: str, reason_codes: tuple[str, ...], trace_refs: tuple[str, ...]",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "validate_selective_recomputation_plan_v01",
+          "line": 6208,
+          "end_line": 6216,
+          "signature": "value: object",
+          "role": "consumer"
+        },
+        {
+          "symbol": "selective_recomputation_plan_to_plain_data_v01",
+          "line": 6219,
+          "end_line": 6226,
+          "signature": "value: SelectiveRecomputationPlanV01",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "rebuild_selective_recomputation_plan_identity_v01",
+          "line": 6229,
+          "end_line": 6232,
+          "signature": "value: SelectiveRecomputationPlanV01",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "build_recomputed_artifact_binding_v01",
+          "line": 6235,
+          "end_line": 6270,
+          "signature": "*, recomputation_plan_id: str, prior_artifact_id: str, prior_payload_sha256: str, new_artifact_id: str, new_payload_sha256: str, predecessor_relation: str, supersession_relation: str, derivation_refs: tuple[str, ...], source_cell_id: str, source_queue_entry_id: str, g2d_cell_result_ref: str, g2d_runtime_report_ref: str, trace_refs: tuple[str, ...]",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "validate_recomputed_artifact_binding_v01",
+          "line": 6273,
+          "end_line": 6281,
+          "signature": "value: object",
+          "role": "consumer"
+        },
+        {
+          "symbol": "recomputed_artifact_binding_to_plain_data_v01",
+          "line": 6284,
+          "end_line": 6291,
+          "signature": "value: RecomputedArtifactBindingV01",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "rebuild_recomputed_artifact_binding_identity_v01",
+          "line": 6294,
+          "end_line": 6297,
+          "signature": "value: RecomputedArtifactBindingV01",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "build_selective_recomputation_result_v01",
+          "line": 6300,
+          "end_line": 6359,
+          "signature": "*, recomputation_plan_id: str, baseline_runtime_report_id: str, recomputed_runtime_report_id: str, preservation_proof_id: str, ordered_recomputed_binding_ids: tuple[str, ...], ordered_invalidated_downstream_ids: tuple[str, ...], ordered_recomputed_artifact_ids: tuple[str, ...], ordered_preserved_artifact_ids: tuple[str, ...], ordered_unresolved_artifact_ids: tuple[str, ...], ordered_partial_failure_ids: tuple[str, ...], parent_return_transition_decision_id: str, result_status: str, reason_codes: tuple[str, ...], provider_calls: int, model_calls: int, network_calls: int, connector_calls: int, external_drs_calls: int, action_commit_packets_created: int, permissions_created: int, receipts_created: int, final_outputs_created: int, drs_writes: int, authority_created_count: int, real_world_effects_count: int",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "validate_selective_recomputation_result_v01",
+          "line": 6362,
+          "end_line": 6370,
+          "signature": "value: object",
+          "role": "consumer"
+        },
+        {
+          "symbol": "selective_recomputation_result_to_plain_data_v01",
+          "line": 6373,
+          "end_line": 6380,
+          "signature": "value: SelectiveRecomputationResultV01",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "rebuild_selective_recomputation_result_identity_v01",
+          "line": 6383,
+          "end_line": 6386,
+          "signature": "value: SelectiveRecomputationResultV01",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "build_continuous_delta_runtime_trace_v01",
+          "line": 6389,
+          "end_line": 6440,
+          "signature": "*, delta_id: str, graph_id: str, affected_set_id: str, invalidation_report_id: str, preservation_proof_id: str, recomputation_plan_id: str, recomputation_result_id: str, plan_root_decision_input_id: str, plan_root_decision_id: str, final_root_decision_input_id: str, final_root_decision_id: str, ordered_transition_decision_ids: tuple[str, ...], ordered_causal_ref_ids: tuple[str, ...], ordered_source_artifact_ids: tuple[str, ...], ordered_downstream_artifact_ids: tuple[str, ...], provider_calls: int, model_calls: int, network_calls: int, connector_calls: int, external_drs_calls: int, real_world_effects_count: int",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "validate_continuous_delta_runtime_trace_v01",
+          "line": 6443,
+          "end_line": 6451,
+          "signature": "value: object",
+          "role": "consumer"
+        },
+        {
+          "symbol": "continuous_delta_runtime_trace_to_plain_data_v01",
+          "line": 6454,
+          "end_line": 6461,
+          "signature": "value: ContinuousDeltaRuntimeTraceV01",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "rebuild_continuous_delta_runtime_trace_identity_v01",
+          "line": 6464,
+          "end_line": 6467,
+          "signature": "value: ContinuousDeltaRuntimeTraceV01",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "build_continuous_delta_runtime_report_v01",
+          "line": 6470,
+          "end_line": 6555,
+          "signature": "*, report_version: str, profile_id: str, ordered_source_binding_ids: tuple[str, ...], baseline_report_id: str, delta_id: str, graph_id: str, affected_set_id: str, invalidation_report_id: str, preservation_proof_id: str, recomputation_plan_id: str, recomputation_result_id: str, trace_id: str, plan_root_decision_input_id: str, plan_root_decision_id: str, final_root_decision_input_id: str, final_root_decision_id: str, changed_count: int, directly_affected_count: int, transitively_affected_count: int, invalidated_count: int, recomputed_count: int, preserved_count: int, unresolved_count: int, report_status: str, reason_codes: tuple[str, ...], root_review_required: bool, provider_calls: int, model_calls: int, network_calls: int, connector_calls: int, external_drs_calls: int, action_commit_packets_created: int, permissions_created: int, receipts_created: int, final_outputs_created: int, drs_writes: int, authority_created_count: int, real_world_effects_count: int",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "validate_continuous_delta_runtime_report_v01",
+          "line": 6558,
+          "end_line": 6566,
+          "signature": "value: object",
+          "role": "consumer"
+        },
+        {
+          "symbol": "continuous_delta_runtime_report_to_plain_data_v01",
+          "line": 6569,
+          "end_line": 6576,
+          "signature": "value: ContinuousDeltaRuntimeReportV01",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "rebuild_continuous_delta_runtime_report_identity_v01",
+          "line": 6579,
+          "end_line": 6582,
+          "signature": "value: ContinuousDeltaRuntimeReportV01",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "build_continuous_delta_execution_bundle_v01",
+          "line": 7002,
+          "end_line": 7079,
+          "signature": "*, source_context: ContinuousDeltaSourceContextV01, source_bindings: tuple[DeltaSourceBindingV01, ...], changed_field_bindings: tuple[ChangedFieldBindingV01, ...], changed_artifact_bindings: tuple[ChangedArtifactBindingV01, ...], delta: WorldStateDeltaV01, dependency_edges: tuple[DeltaDependencyEdgeV01, ...], dependency_graph: DependencyGraphIndexV01, affected_request: AffectedSetRequestV01, affected_result: AffectedSetResultV01, invalidation_records: tuple[ArtifactInvalidationRecordV01, ...], invalidation_report: InvalidationReportV01, delta_source_proposed_artifact: KernelArtifactV01, delta_source_artifact: KernelArtifactV01, dependency_graph_artifact: KernelArtifactV01, affected_set_artifact: KernelArtifactV01, invalidation_report_artifact: KernelArtifactV01, recomputation_plan: SelectiveRecomputationPlanV01 | RetainedSelectiveRecomputationPlanV01, plan_proposed_artifact: KernelArtifactV01, plan_root_decision_input: RootDecisionInputV01, plan_root_decision_result: RootDecisionResultV01, plan_root_decision_artifact: KernelArtifactV01, plan_accepted_artifact: KernelArtifactV01, recomputed_g2d_execution_bundle: FractalRuntimeExecutionBundleV02 | g2d_runtime.FractalRetainedWorkExecutionBundleV01, recomputed_bindings: tuple[RecomputedArtifactBindingV01, ...], preservation_proof: PreservationProofV01 | RetainedWorkPreservationProofV01, preservation_proof_artifact: KernelArtifactV01, recomputation_result: SelectiveRecomputationResultV01, g2e_validation_reports: tuple[ContinuousDeltaValidationReportV01, ...], g2e_transition_decisions: tuple[TransitionDecisionV01, ...], g2e_causal_consumption_refs: tuple[CausalConsumptionRefV01, ...], final_root_decision_input: RootDecisionInputV01, final_root_decision_result: RootDecisionResultV01, final_root_decision_artifact: KernelArtifactV01, runtime_trace: ContinuousDeltaRuntimeTraceV01, runtime_report: ContinuousDeltaRuntimeReportV01, runtime_report_artifact: KernelArtifactV01",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "validate_continuous_delta_execution_bundle_v01",
+          "line": 7091,
+          "end_line": 7103,
+          "signature": "value: object",
+          "role": "consumer"
+        },
+        {
+          "symbol": "build_selective_recomputation_plan_from_affected_set_v01",
+          "line": 7575,
+          "end_line": 7599,
+          "signature": "*, delta: WorldStateDeltaV01, affected_set: AffectedSetResultV01, invalidation_records: tuple[ArtifactInvalidationRecordV01, ...], invalidation_report: InvalidationReportV01, source_context: ContinuousDeltaSourceContextV01, source_bindings: tuple[DeltaSourceBindingV01, ...], changed_field_bindings: tuple[ChangedFieldBindingV01, ...], changed_artifact_bindings: tuple[ChangedArtifactBindingV01, ...], dependency_edges: tuple[DeltaDependencyEdgeV01, ...], dependency_graph: DependencyGraphIndexV01",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "validate_selective_recomputation_plan_against_sources_v01",
+          "line": 7602,
+          "end_line": 7647,
+          "signature": "value: SelectiveRecomputationPlanV01 | RetainedSelectiveRecomputationPlanV01, *, delta: WorldStateDeltaV01, affected_set: AffectedSetResultV01, invalidation_records: tuple[ArtifactInvalidationRecordV01, ...], invalidation_report: InvalidationReportV01, source_context: ContinuousDeltaSourceContextV01, source_bindings: tuple[DeltaSourceBindingV01, ...], changed_field_bindings: tuple[ChangedFieldBindingV01, ...], changed_artifact_bindings: tuple[ChangedArtifactBindingV01, ...], dependency_edges: tuple[DeltaDependencyEdgeV01, ...], dependency_graph: DependencyGraphIndexV01",
+          "role": "consumer"
+        },
+        {
+          "symbol": "execute_selective_recomputation_v01",
+          "line": 12304,
+          "end_line": 13208,
+          "signature": "*, plan: SelectiveRecomputationPlanV01 | RetainedSelectiveRecomputationPlanV01, source_context: ContinuousDeltaSourceContextV01, source_bindings: tuple[DeltaSourceBindingV01, ...], changed_field_bindings: tuple[ChangedFieldBindingV01, ...], changed_artifact_bindings: tuple[ChangedArtifactBindingV01, ...], delta: WorldStateDeltaV01, dependency_edges: tuple[DeltaDependencyEdgeV01, ...], dependency_graph: DependencyGraphIndexV01, affected_request: AffectedSetRequestV01, affected_result: AffectedSetResultV01, invalidation_records: tuple[ArtifactInvalidationRecordV01, ...], invalidation_report: InvalidationReportV01",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "validate_selective_recomputation_result_against_plan_v01",
+          "line": 13212,
+          "end_line": 13254,
+          "signature": "value: SelectiveRecomputationResultV01, *, plan: SelectiveRecomputationPlanV01 | RetainedSelectiveRecomputationPlanV01, source_context: ContinuousDeltaSourceContextV01, delta_source_proposed_artifact: KernelArtifactV01, delta_source_artifact: KernelArtifactV01, dependency_graph_artifact: KernelArtifactV01, affected_set_artifact: KernelArtifactV01, invalidation_report_artifact: KernelArtifactV01, plan_proposed_artifact: KernelArtifactV01, plan_root_decision_input: RootDecisionInputV01, plan_root_decision_result: RootDecisionResultV01, plan_root_decision_artifact: KernelArtifactV01, plan_accepted_artifact: KernelArtifactV01, recomputed_g2d_execution_bundle: FractalRuntimeExecutionBundleV02 | g2d_runtime.FractalRetainedWorkExecutionBundleV01, recomputed_bindings: tuple[RecomputedArtifactBindingV01, ...], preservation_proof: PreservationProofV01 | RetainedWorkPreservationProofV01, preservation_proof_artifact: KernelArtifactV01, g2e_transition_decisions: tuple[TransitionDecisionV01, ...], g2e_causal_consumption_refs: tuple[CausalConsumptionRefV01, ...]",
+          "role": "consumer"
+        },
+        {
+          "symbol": "run_continuous_delta_runtime_v01",
+          "line": 13257,
+          "end_line": 13331,
+          "signature": "*, source_context: ContinuousDeltaSourceContextV01, source_bindings: tuple[DeltaSourceBindingV01, ...], changed_field_bindings: tuple[ChangedFieldBindingV01, ...], changed_artifact_bindings: tuple[ChangedArtifactBindingV01, ...], delta: WorldStateDeltaV01, dependency_edges: tuple[DeltaDependencyEdgeV01, ...], dependency_graph: DependencyGraphIndexV01, retained_profile: str | None=None",
+          "role": "producer_or_value"
+        }
+      ],
+      "required_evidence": "CONFORMANCE_G36",
+      "limitations": "Exact named version and accepted finite reference scope; no authority from this index"
+    },
+    {
+      "profile": "G3 calibration",
+      "source": {
+        "path": "hedgehog/outcome_calibration_v01.py",
+        "bytes": 57704,
+        "sha256": "ce4a29c7dfe0f536b53fce8435ac584509681bf1cef4511d46ac0bfd48e05079",
+        "mode": 420
+      },
+      "normative_contract": "docs/gate3_outcome_feedback_contract_v01.md",
+      "schema": "schemas/outcome_feedback_v01.schema.json",
+      "symbols": [
+        {
+          "symbol": "round_half_even_rational_v01",
+          "line": 334,
+          "end_line": 342,
+          "signature": "numerator: int, denominator: int",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "SourceBoundGTEventV01",
+          "line": 361,
+          "end_line": 381,
+          "signature": "class",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "bind_outcome_feedback_event_v01",
+          "line": 384,
+          "end_line": 408,
+          "signature": "value: feedback_v01.OutcomeFeedbackEnvelopeV01, *, source_bundle: dict | feedback_v01.NativeOutcomeSourceContextV01, profile: str",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "GTNumericalEventV01",
+          "line": 476,
+          "end_line": 480,
+          "signature": "class",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "build_numerical_reference_event_v01",
+          "line": 483,
+          "end_line": 539,
+          "signature": "*, subject_key: dict, original_occurrence: dict, feedback_id: str, event_time: int, causal_sequence: int, expected_fp: int | None, observed_result_fp: int | None, proposal_assessment: str, enforcement_outcome: str, update_eligibility: str, pre_decision_expectation_ref: str, advice_ref: str, advice_created_at: int, advice_valid_from: int, advice_valid_to: int, advice_ttl_seconds: int, regret_status: str, regret_norm_fp: int | None, regret_source_ref: str, safety_status: str, producer_source_closure_ref: str, source_refs: tuple[str, ...]",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "GTTrustUpdateV01",
+          "line": 696,
+          "end_line": 703,
+          "signature": "class",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "evaluate_gt_trust_update_v01",
+          "line": 734,
+          "end_line": 748,
+          "signature": "event: SourceBoundGTEventV01 | GTNumericalEventV01, *, predecessor: GTTrustUpdateV01 | None=None, evaluated_at: int",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "GTEventFoldV01",
+          "line": 836,
+          "end_line": 849,
+          "signature": "class",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "bounded_gt_event_fold_v01",
+          "line": 852,
+          "end_line": 967,
+          "signature": "events: tuple[SourceBoundGTEventV01 | GTNumericalEventV01, ...], *, evaluated_at: int, initial_rating_fp: int=Q // 2",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "GTTrustAtV01",
+          "line": 1124,
+          "end_line": 1131,
+          "signature": "class",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "evaluate_gt_decay_value_v01",
+          "line": 1150,
+          "end_line": 1161,
+          "signature": "rating_fp: int, *, age_seconds: int, half_life_seconds: int",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "evaluate_review_pressure_v01",
+          "line": 1164,
+          "end_line": 1183,
+          "signature": "*, trust_status: str, trust_at_time_fp: int | None",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "evaluate_gt_trust_at_v01",
+          "line": 1186,
+          "end_line": 1292,
+          "signature": "update: GTTrustUpdateV01 | None, *, evaluation_time: int, advice_ref: str | None=None, advice_created_at: int | None=None, advice_valid_from: int | None=None, advice_valid_to: int | None=None, advice_ttl_seconds: int | None=None",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "validate_calibration_against_sources_v01",
+          "line": 1295,
+          "end_line": 1376,
+          "signature": "value: GTTrustUpdateV01 | GTEventFoldV01 | GTTrustAtV01, *, events: tuple[SourceBoundGTEventV01 | GTNumericalEventV01, ...], fold_evaluated_at: int, initial_rating_fp: int=Q // 2, evaluation_time: int | None=None, advice_window: dict | None=None",
+          "role": "consumer"
+        },
+        {
+          "symbol": "AVFHistoryPriorV01",
+          "line": 1380,
+          "end_line": 1403,
+          "signature": "class",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "fold_avf_history_prior_v01",
+          "line": 1406,
+          "end_line": 1435,
+          "signature": "events, *, evaluated_at",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "adjusted_avf_score_v01",
+          "line": 1438,
+          "end_line": 1442,
+          "signature": "base_score_fp, prior_fp",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "validate_avf_prior_against_sources_v01",
+          "line": 1445,
+          "end_line": 1451,
+          "signature": "value, *, events, evaluated_at",
+          "role": "consumer"
+        }
+      ],
+      "required_evidence": "G35",
+      "limitations": "Exact named version and accepted finite reference scope; no authority from this index"
+    },
+    {
+      "profile": "G4 reference",
+      "source": {
+        "path": "hedgehog/gate4_reference_contracts_v01.py",
+        "bytes": 15842,
+        "sha256": "706bea8631d769b4a29ea60bd7a0f0634bcf83b70494d4c7cc5e8c522188bb42",
+        "mode": 420
+      },
+      "normative_contract": "docs/gate4_reference_contract_v01.md",
+      "schema": null,
+      "symbols": [
+        {
+          "symbol": "require",
+          "line": 21,
+          "end_line": 23,
+          "signature": "condition, reason",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "digest",
+          "line": 26,
+          "end_line": 27,
+          "signature": "value",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "identity",
+          "line": 30,
+          "end_line": 31,
+          "signature": "kind, value",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "reference_schema_v01",
+          "line": 179,
+          "end_line": 184,
+          "signature": "",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "ReferenceValueV01",
+          "line": 281,
+          "end_line": 305,
+          "signature": "class",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "checked",
+          "line": 308,
+          "end_line": 309,
+          "signature": "kind, value",
+          "role": "consumer"
+        },
+        {
+          "symbol": "bind_context",
+          "line": 312,
+          "end_line": 316,
+          "signature": "actual, expected",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "validate_supplied",
+          "line": 319,
+          "end_line": 322,
+          "signature": "kind, supplied, expected",
+          "role": "consumer"
+        }
+      ],
+      "required_evidence": "G4",
+      "limitations": "Exact named version and accepted finite reference scope; no authority from this index"
+    },
+    {
+      "profile": "G5 DRS lifecycle",
+      "source": {
+        "path": "hedgehog/external_drs/gate5_contracts_v01.py",
+        "bytes": 24167,
+        "sha256": "db7602a402f67e7acea8dc4f566568b0a58004451ae95e64c999e553d6a02a8f",
+        "mode": 420
+      },
+      "normative_contract": "docs/gate5_reference_contract_v01.md",
+      "schema": null,
+      "symbols": [
+        {
+          "symbol": "require",
+          "line": 17,
+          "end_line": 19,
+          "signature": "condition, reason",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "integer",
+          "line": 22,
+          "end_line": 24,
+          "signature": "value",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "add",
+          "line": 27,
+          "end_line": 28,
+          "signature": "a, b",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "mul",
+          "line": 31,
+          "end_line": 32,
+          "signature": "a, b",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "rational",
+          "line": 35,
+          "end_line": 38,
+          "signature": "num, den",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "ratio",
+          "line": 41,
+          "end_line": 44,
+          "signature": "value",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "total",
+          "line": 47,
+          "end_line": 52,
+          "signature": "values",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "calibration",
+          "line": 55,
+          "end_line": 57,
+          "signature": "reference, observations",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "corrected",
+          "line": 60,
+          "end_line": 63,
+          "signature": "readings, offset",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "canonical",
+          "line": 66,
+          "end_line": 67,
+          "signature": "value",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "sha",
+          "line": 70,
+          "end_line": 71,
+          "signature": "value",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "walk",
+          "line": 74,
+          "end_line": 87,
+          "signature": "value, depth=0",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "decode",
+          "line": 90,
+          "end_line": 106,
+          "signature": "data, limit=WIRE_MAX",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "shape",
+          "line": 109,
+          "end_line": 110,
+          "signature": "value, names",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "ref",
+          "line": 113,
+          "end_line": 114,
+          "signature": "value",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "label",
+          "line": 117,
+          "end_line": 118,
+          "signature": "value",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "hash_value",
+          "line": 121,
+          "end_line": 122,
+          "signature": "value",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "sequence",
+          "line": 125,
+          "end_line": 127,
+          "signature": "values, maximum=16",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "identifier",
+          "line": 130,
+          "end_line": 131,
+          "signature": "prefix, value, field",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "with_id",
+          "line": 134,
+          "end_line": 136,
+          "signature": "kind, value",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "time_shape",
+          "line": 155,
+          "end_line": 164,
+          "signature": "value",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "validate",
+          "line": 167,
+          "end_line": 256,
+          "signature": "kind, value, *, profile=None",
+          "role": "consumer"
+        },
+        {
+          "symbol": "BoundedContractV01",
+          "line": 260,
+          "end_line": 269,
+          "signature": "class",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "contract",
+          "line": 272,
+          "end_line": 273,
+          "signature": "kind, value",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "keyset",
+          "line": 276,
+          "end_line": 279,
+          "signature": "value",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "sign",
+          "line": 282,
+          "end_line": 287,
+          "signature": "cap, keys, purpose, value, manifest_hash",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "verify",
+          "line": 290,
+          "end_line": 298,
+          "signature": "envelope, pinned_keys, purpose, manifest_hash",
+          "role": "consumer"
+        },
+        {
+          "symbol": "temporal",
+          "line": 301,
+          "end_line": 306,
+          "signature": "value, now, policy",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "authenticate_status",
+          "line": 309,
+          "end_line": 325,
+          "signature": "envelope, pointer, request, policy, now, history",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "check_status",
+          "line": 328,
+          "end_line": 331,
+          "signature": "envelope, pointer, request, policy, now, history",
+          "role": "consumer"
+        },
+        {
+          "symbol": "check_route",
+          "line": 334,
+          "end_line": 340,
+          "signature": "pointer, policy, *, visited=(), depth=0, endpoint=None",
+          "role": "consumer"
+        },
+        {
+          "symbol": "check_pointer",
+          "line": 343,
+          "end_line": 353,
+          "signature": "envelope, policy, now, *, profile=None",
+          "role": "consumer"
+        },
+        {
+          "symbol": "check_bundle",
+          "line": 356,
+          "end_line": 386,
+          "signature": "bundle, pointer_envelope, request, status, policy, now, history, conflicts, *, profile=None",
+          "role": "consumer"
+        }
+      ],
+      "required_evidence": "G52",
+      "limitations": "Exact named version and accepted finite reference scope; no authority from this index"
+    },
+    {
+      "profile": "Football authoring kit",
+      "source": {
+        "path": "tools/run_gate6_football_reference_v01.py",
+        "bytes": 20399,
+        "sha256": "7886cc9e9378766cf0741e13ff4f736b701c8ab60d808696722c5398cbe535af",
+        "mode": 420
+      },
+      "normative_contract": "docs/gate5_authoring_kit_v01/EXECUTION_CONTRACT.md",
+      "schema": null,
+      "symbols": [
+        {
+          "symbol": "require",
+          "line": 44,
+          "end_line": 46,
+          "signature": "ok, reason",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "read",
+          "line": 49,
+          "end_line": 50,
+          "signature": "path",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "pin",
+          "line": 53,
+          "end_line": 57,
+          "signature": "path",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "save",
+          "line": 60,
+          "end_line": 63,
+          "signature": "path, value",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "safe_path",
+          "line": 66,
+          "end_line": 69,
+          "signature": "name",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "source_inventory",
+          "line": 72,
+          "end_line": 91,
+          "signature": "root",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "prepare",
+          "line": 94,
+          "end_line": 139,
+          "signature": "root, work, recipe",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "check_prepared",
+          "line": 142,
+          "end_line": 148,
+          "signature": "work",
+          "role": "consumer"
+        },
+        {
+          "symbol": "command_environment",
+          "line": 151,
+          "end_line": 155,
+          "signature": "",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "docker_prefix",
+          "line": 158,
+          "end_line": 163,
+          "signature": "executable, endpoint, config",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "check_configuration",
+          "line": 166,
+          "end_line": 174,
+          "signature": "value",
+          "role": "consumer"
+        },
+        {
+          "symbol": "load_module",
+          "line": 177,
+          "end_line": 181,
+          "signature": "name, path",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "finalize_case",
+          "line": 184,
+          "end_line": 229,
+          "signature": "receipt, folder, streams, proc, cli",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "execute_case",
+          "line": 232,
+          "end_line": 319,
+          "signature": "work, case, *, docker, endpoint, config",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "supplied",
+          "line": 322,
+          "end_line": 354,
+          "signature": "work, case",
+          "role": "producer_or_value"
+        },
+        {
+          "symbol": "main",
+          "line": 357,
+          "end_line": 387,
+          "signature": "argv=None",
+          "role": "producer_or_value"
+        }
+      ],
+      "required_evidence": "FOOTBALL",
+      "limitations": "Exact named version and accepted finite reference scope; no authority from this index"
+    }
+  ],
+  "retired": "Historical passports/retired schemas remain non-authoritative; no revival."
+}

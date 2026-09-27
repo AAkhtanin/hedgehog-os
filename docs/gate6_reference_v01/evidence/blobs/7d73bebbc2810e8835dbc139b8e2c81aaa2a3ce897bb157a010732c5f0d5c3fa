@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/private/tmp/RADIOLARIA_G6A4R_OPERATOR.20260927/retained.py", line 153, in <module>
+    assert Path(p).resolve().is_relative_to(source),('mixed_import',module_name,p)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+AssertionError: ('mixed_import', 'demo.work_composition_mock_capabilities_v01', '/Users/admin/Projects/hedgehog-os-gate6-g6a4-p9f2we5q/campaign/football_work/AUTHOR_VISIBLE/source/demo/work_composition_mock_capabilities_v01.py')

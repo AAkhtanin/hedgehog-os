@@ -1,0 +1,51 @@
+{
+  "status": "PASS_PER_CASE_PURE",
+  "result": {
+    "classification": "REVIEWED_REFERENCE_NATIVE_PROOF",
+    "case": "missing_history",
+    "events": {
+      "unknown_history": {
+        "verdict": [
+          {
+            "classification": "CHECKED_REFUSAL",
+            "causes": [
+              "MISSING_OR_INCONSISTENT_HISTORY"
+            ]
+          }
+        ],
+        "status": "CURRENT_STATUS_UNKNOWN",
+        "counts": {
+          "publisher": {
+            "PURE": 0,
+            "DISPATCH": 0,
+            "EFFECT": 0,
+            "EXECUTOR": 0,
+            "CALLBACK": 0,
+            "STATE_WRITE": 0
+          },
+          "requester": {
+            "PURE": 0,
+            "DISPATCH": 0,
+            "EFFECT": 0,
+            "EXECUTOR": 0,
+            "CALLBACK": 0,
+            "STATE_WRITE": 0
+          }
+        },
+        "state_sha256": "61fc425c423ad3de96c729a7386139ce1e32b2d4cee111404489ac3169c500da"
+      }
+    },
+    "bookings": 0,
+    "slots": 0
+  },
+  "refusal": null,
+  "observed_calls": {
+    "root": 0,
+    "dispatch": 0,
+    "work": 0,
+    "effect": 0,
+    "sentinel": 1
+  },
+  "aggregate_16": "NOT_COMPLETED",
+  "authority": "CAPTURE_IS_EVIDENCE_NOT_RESTORED_HOST"
+}

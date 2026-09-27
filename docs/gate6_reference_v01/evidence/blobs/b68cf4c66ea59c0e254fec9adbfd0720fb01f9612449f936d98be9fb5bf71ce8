@@ -1,0 +1,473 @@
+{
+  "events": [
+    {
+      "event_id": "exact",
+      "inventory": {
+        "currency": "EUR",
+        "fields": [
+          {
+            "available_utc": [
+              [
+                1799308800,
+                1799348400
+              ],
+              [
+                1799395200,
+                1799434800
+              ],
+              [
+                1799481600,
+                1799521200
+              ]
+            ],
+            "field_id": "field:J",
+            "full_size": true,
+            "occupied_utc": [
+              [
+                1799402400,
+                1799404200
+              ]
+            ],
+            "price_minor": 2174,
+            "surface": "natural_grass"
+          },
+          {
+            "available_utc": [
+              [
+                1799308800,
+                1799348400
+              ],
+              [
+                1799395200,
+                1799434800
+              ],
+              [
+                1799481600,
+                1799521200
+              ]
+            ],
+            "field_id": "field:K",
+            "full_size": true,
+            "occupied_utc": [],
+            "price_minor": 38,
+            "surface": "artificial"
+          }
+        ],
+        "revision": 4,
+        "venue_ref": "venue:challenge"
+      },
+      "request": {
+        "budget_minor": 99999,
+        "currency": "EUR",
+        "operation": "FIND_OFFER",
+        "owner_approval_ref": null,
+        "request_id": "request:variation_feedback",
+        "revision": 1,
+        "sessions": [
+          {
+            "allow_shift_minutes": 0,
+            "end": "2027-01-09T12:30:00",
+            "session_id": "session:X",
+            "start": "2027-01-09T11:00:00"
+          },
+          {
+            "allow_shift_minutes": 0,
+            "end": "2027-01-08T12:30:00",
+            "session_id": "session:Y",
+            "start": "2027-01-08T11:00:00"
+          },
+          {
+            "allow_shift_minutes": 0,
+            "end": "2027-01-07T18:00:00",
+            "session_id": "session:Z",
+            "start": "2027-01-07T16:30:00"
+          }
+        ],
+        "team_ref": "team:variation_feedback",
+        "timezone": "Europe/Tirane",
+        "venue_ref": "venue:challenge"
+      }
+    },
+    {
+      "event_id": "shift",
+      "inventory": {
+        "currency": "EUR",
+        "fields": [
+          {
+            "available_utc": [
+              [
+                1799308800,
+                1799348400
+              ],
+              [
+                1799395200,
+                1799434800
+              ],
+              [
+                1799481600,
+                1799521200
+              ]
+            ],
+            "field_id": "field:J",
+            "full_size": true,
+            "occupied_utc": [
+              [
+                1799402400,
+                1799404200
+              ]
+            ],
+            "price_minor": 2174,
+            "surface": "natural_grass"
+          },
+          {
+            "available_utc": [
+              [
+                1799308800,
+                1799348400
+              ],
+              [
+                1799395200,
+                1799434800
+              ],
+              [
+                1799481600,
+                1799521200
+              ]
+            ],
+            "field_id": "field:K",
+            "full_size": true,
+            "occupied_utc": [],
+            "price_minor": 38,
+            "surface": "artificial"
+          }
+        ],
+        "revision": 4,
+        "venue_ref": "venue:challenge"
+      },
+      "request": {
+        "budget_minor": 99999,
+        "currency": "EUR",
+        "operation": "FIND_OFFER",
+        "owner_approval_ref": "consent:jan8-only",
+        "request_id": "request:variation_feedback",
+        "revision": 2,
+        "sessions": [
+          {
+            "allow_shift_minutes": 0,
+            "end": "2027-01-09T12:30:00",
+            "session_id": "session:X",
+            "start": "2027-01-09T11:00:00"
+          },
+          {
+            "allow_shift_minutes": 30,
+            "end": "2027-01-08T12:30:00",
+            "session_id": "session:Y",
+            "start": "2027-01-08T11:00:00"
+          },
+          {
+            "allow_shift_minutes": 0,
+            "end": "2027-01-07T18:00:00",
+            "session_id": "session:Z",
+            "start": "2027-01-07T16:30:00"
+          }
+        ],
+        "team_ref": "team:variation_feedback",
+        "timezone": "Europe/Tirane",
+        "venue_ref": "venue:challenge"
+      }
+    },
+    {
+      "event_id": "book",
+      "inventory": {
+        "currency": "EUR",
+        "fields": [
+          {
+            "available_utc": [
+              [
+                1799308800,
+                1799348400
+              ],
+              [
+                1799395200,
+                1799434800
+              ],
+              [
+                1799481600,
+                1799521200
+              ]
+            ],
+            "field_id": "field:J",
+            "full_size": true,
+            "occupied_utc": [
+              [
+                1799402400,
+                1799404200
+              ]
+            ],
+            "price_minor": 2174,
+            "surface": "natural_grass"
+          },
+          {
+            "available_utc": [
+              [
+                1799308800,
+                1799348400
+              ],
+              [
+                1799395200,
+                1799434800
+              ],
+              [
+                1799481600,
+                1799521200
+              ]
+            ],
+            "field_id": "field:K",
+            "full_size": true,
+            "occupied_utc": [],
+            "price_minor": 38,
+            "surface": "artificial"
+          }
+        ],
+        "revision": 4,
+        "venue_ref": "venue:challenge"
+      },
+      "request": {
+        "budget_minor": 99999,
+        "currency": "EUR",
+        "operation": "CONFIRM_MOCK_BOOKING",
+        "owner_approval_ref": "consent:controlled:booking",
+        "request_id": "request:variation_feedback",
+        "revision": 2,
+        "sessions": [
+          {
+            "allow_shift_minutes": 0,
+            "end": "2027-01-09T12:30:00",
+            "session_id": "session:X",
+            "start": "2027-01-09T11:00:00"
+          },
+          {
+            "allow_shift_minutes": 30,
+            "end": "2027-01-08T12:30:00",
+            "session_id": "session:Y",
+            "start": "2027-01-08T11:00:00"
+          },
+          {
+            "allow_shift_minutes": 0,
+            "end": "2027-01-07T18:00:00",
+            "session_id": "session:Z",
+            "start": "2027-01-07T16:30:00"
+          }
+        ],
+        "team_ref": "team:variation_feedback",
+        "timezone": "Europe/Tirane",
+        "venue_ref": "venue:challenge"
+      }
+    },
+    {
+      "event_id": "repeat",
+      "inventory": {
+        "currency": "EUR",
+        "fields": [
+          {
+            "available_utc": [
+              [
+                1799308800,
+                1799348400
+              ],
+              [
+                1799395200,
+                1799434800
+              ],
+              [
+                1799481600,
+                1799521200
+              ]
+            ],
+            "field_id": "field:J",
+            "full_size": true,
+            "occupied_utc": [
+              [
+                1799402400,
+                1799404200
+              ]
+            ],
+            "price_minor": 2174,
+            "surface": "natural_grass"
+          },
+          {
+            "available_utc": [
+              [
+                1799308800,
+                1799348400
+              ],
+              [
+                1799395200,
+                1799434800
+              ],
+              [
+                1799481600,
+                1799521200
+              ]
+            ],
+            "field_id": "field:K",
+            "full_size": true,
+            "occupied_utc": [],
+            "price_minor": 38,
+            "surface": "artificial"
+          }
+        ],
+        "revision": 4,
+        "venue_ref": "venue:challenge"
+      },
+      "request": {
+        "budget_minor": 99999,
+        "currency": "EUR",
+        "operation": "CONFIRM_MOCK_BOOKING",
+        "owner_approval_ref": "consent:controlled:booking",
+        "request_id": "request:variation_feedback",
+        "revision": 2,
+        "sessions": [
+          {
+            "allow_shift_minutes": 0,
+            "end": "2027-01-09T12:30:00",
+            "session_id": "session:X",
+            "start": "2027-01-09T11:00:00"
+          },
+          {
+            "allow_shift_minutes": 30,
+            "end": "2027-01-08T12:30:00",
+            "session_id": "session:Y",
+            "start": "2027-01-08T11:00:00"
+          },
+          {
+            "allow_shift_minutes": 0,
+            "end": "2027-01-07T18:00:00",
+            "session_id": "session:Z",
+            "start": "2027-01-07T16:30:00"
+          }
+        ],
+        "team_ref": "team:variation_feedback",
+        "timezone": "Europe/Tirane",
+        "venue_ref": "venue:challenge"
+      }
+    },
+    {
+      "event_id": "verify",
+      "inventory": {
+        "currency": "EUR",
+        "fields": [
+          {
+            "available_utc": [
+              [
+                1799308800,
+                1799348400
+              ],
+              [
+                1799395200,
+                1799434800
+              ],
+              [
+                1799481600,
+                1799521200
+              ]
+            ],
+            "field_id": "field:J",
+            "full_size": true,
+            "occupied_utc": [
+              [
+                1799402400,
+                1799404200
+              ]
+            ],
+            "price_minor": 2174,
+            "surface": "natural_grass"
+          },
+          {
+            "available_utc": [
+              [
+                1799308800,
+                1799348400
+              ],
+              [
+                1799395200,
+                1799434800
+              ],
+              [
+                1799481600,
+                1799521200
+              ]
+            ],
+            "field_id": "field:K",
+            "full_size": true,
+            "occupied_utc": [],
+            "price_minor": 38,
+            "surface": "artificial"
+          }
+        ],
+        "revision": 4,
+        "venue_ref": "venue:challenge"
+      },
+      "request": {
+        "budget_minor": 99999,
+        "currency": "EUR",
+        "operation": "VERIFY_EXISTING",
+        "owner_approval_ref": "consent:controlled:booking",
+        "request_id": "request:variation_feedback",
+        "revision": 2,
+        "sessions": [
+          {
+            "allow_shift_minutes": 0,
+            "end": "2027-01-09T12:30:00",
+            "session_id": "session:X",
+            "start": "2027-01-09T11:00:00"
+          },
+          {
+            "allow_shift_minutes": 30,
+            "end": "2027-01-08T12:30:00",
+            "session_id": "session:Y",
+            "start": "2027-01-08T11:00:00"
+          },
+          {
+            "allow_shift_minutes": 0,
+            "end": "2027-01-07T18:00:00",
+            "session_id": "session:Z",
+            "start": "2027-01-07T16:30:00"
+          }
+        ],
+        "team_ref": "team:variation_feedback",
+        "timezone": "Europe/Tirane",
+        "venue_ref": "venue:challenge"
+      }
+    }
+  ],
+  "policy": {
+    "accept_football": true,
+    "book_approvals": [
+      {
+        "approval_ref": "consent:controlled:booking",
+        "offer_request_sha256": "fc3cda56216e4942c461afefe586f47d14b99a7b45206def0e3f219f406d90ce",
+        "request_sha256": "6ebc339c29e5def682888a9da4d950a722c71d85fc0cbfd9848778972b9577ec"
+      }
+    ],
+    "local_root": "VenueRoot",
+    "max_source_age": 300,
+    "peer_root": "ActivePlanetRoot",
+    "publish_enabled": true,
+    "recipients": [
+      "ActivePlanetRoot"
+    ],
+    "release_enabled": true,
+    "shift_approvals": [
+      {
+        "approval_ref": "consent:jan8-only",
+        "previous_request_sha256": "fda157c6036c85d9342c2bcba1eb4039016fa8e04d59496c3453e756f82a209a",
+        "request_sha256": "fc3cda56216e4942c461afefe586f47d14b99a7b45206def0e3f219f406d90ce"
+      }
+    ],
+    "status": "ACTIVE",
+    "ttl_seconds": 300
+  },
+  "role": "publisher",
+  "version": "g54.peer_input.v01"
+}

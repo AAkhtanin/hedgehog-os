@@ -1,0 +1,103 @@
+"""Passive selected-code observation for exact reviewed reference code, not attestation."""
+import dataclasses, hashlib, json, sys, time
+from collections.abc import Mapping
+from pathlib import Path
+
+def install(fd,role,document,module,send):
+    from hedgehog import work_execution_host_v01 as h, action_commit_packet_v02 as a
+    from hedgehog.kernel import work_composition_v01 as w, effect_firewall_v01 as f, abi_v01 as abi, root_decision_v01 as roots
+    from hedgehog.external_drs import gate5_native_v01 as n, gate5_contracts_v01 as c, gate5_exchange_v01 as e
+    from candidate_domain import effect as target_effect
+    def plain(value):
+        if isinstance(value,abi.KernelArtifactV01):return abi.kernel_artifact_to_plain_dict_v01(value)
+        if dataclasses.is_dataclass(value):return {x.name:plain(getattr(value,x.name)) for x in dataclasses.fields(value)}
+        if isinstance(value,Mapping):return {str(k):plain(v) for k,v in value.items()}
+        if isinstance(value,(list,tuple)):return [plain(v) for v in value]
+        if value is None or type(value) in (str,int,bool,float):return value
+        raise TypeError('observer_projection:'+type(value).__name__)
+    current={'event':None,'index':-1};counter=[0]
+    def state():
+        path=Path('/out/publisher/state/registry.json')
+        if not path.exists():return dict(records=[],idempotency={})
+        if path.is_symlink() or path.stat().st_size>1048576:raise ValueError('registry_read_bound')
+        return json.loads(path.read_text())
+    def emit(kind,phase,**values):
+        counter[0]+=1
+        send(fd,dict(kind=kind,phase=phase,role=role,event_id=current['event'],sequence=counter[0],utc=time.time(),**values))
+    functions={(module.publisher_event if role=='publisher' else module.requester_event):'EVENT',module.validate_event:'INTAKE',h.execute_admitted_pure_work_v01:'PURE',
+        w.work_program_result_to_artifact_v01:'ARTIFACT',n.root_review:'ROOT',roots.decide_root_v01:'NATIVE_ROOT',
+        c.check_bundle:'BUNDLE_CHECK',e.PipeChannel.receive:'WIRE_RECEIVE',
+        c.crypto.trusted_root_key_set_to_plain_dict_v01:'PUBLIC_KEYS',h.dispatch_current_action_v01:'DISPATCH',
+        f.execute_bound_effect_v01:'EFFECT',target_effect.execute_booking:'CALLBACK',
+        h.RootWorkExecutionHostV01._record_started:'EXECUTOR',h.RootWorkExecutionHostV01._refresh_sources:'REFRESH',
+        a.inspect_action_packet_present_eligibility_v01:'ELIGIBILITY',e.state_write:'STATE_WRITE',n.save:'SAVE'}
+    codes={fn.__code__:name for fn,name in functions.items()}
+    def host_projection(host,packet):
+        entry=next(x for x in host.registry.action_packet_lifecycle_entries if x.root_bound_genesis.packet_identity.packet_id==packet)
+        return dict(revision=host.revision,root_bound=plain(entry.root_bound_genesis),events=plain(host.events))
+    def start(code,offset):
+        try:
+            name=codes[code];frame=sys._getframe(1)
+            assert frame.f_code is code
+            loc=frame.f_locals
+            if name=='EVENT':
+                current['index']+=1;index=current['index']
+                assert loc['event']==document['events'][index] and loc['p']['local_root']==document['policy']['local_root']
+                current['event']=document['events'][index]['event_id']
+                emit(name,'START',parent_input_event_sha256=c.sha(document['events'][index]),registry=state() if role=='publisher' else None)
+            elif name=='ROOT':emit(name,'START',arguments={k:plain(loc[k]) for k in ('root','transaction','candidate','subject','checks','claim_value','now','window')})
+            elif name=='NATIVE_ROOT':emit(name,'START',kernel=plain(loc['kernel']),inputs=plain(loc['decision_input']))
+            elif name=='BUNDLE_CHECK':emit(name,'START',material={k:plain(loc[k]) for k in ('bundle','pointer_envelope','request','status','policy','now','history','conflicts')})
+            elif name=='DISPATCH':emit(name,'START',arguments={k:plain(loc[k]) for k in ('packet_id','task_id','expected_revision','evaluation_time','evaluation_time_source','evaluation_context_id')},host=host_projection(loc['host'],loc['packet_id']),registry=state())
+            elif name=='EFFECT':emit(name,'START',invocation=plain(loc['invocation']),request=plain(loc['request']),decision=plain(loc['decision']),current_tick=loc['current_tick'],admission_id=loc['admitted_capability'].admission_id,definition=plain(loc['admitted_capability'].definition))
+            elif name in ('CALLBACK','EXECUTOR'):emit(name,'START',invocation=plain(loc['invocation']),registry=state())
+            elif name=='STATE_WRITE' and str(loc['path'])=='/out/publisher/state/registry.json':emit(name,'START',path=str(loc['path']),registry=state(),proposed=plain(loc['value']))
+        except Exception as exc:emit('OBSERVER_ERROR','START',code=code.co_name,error=type(exc).__name__+':'+str(exc))
+    def returned(code,offset,value):
+        try:
+            name=codes[code];frame=sys._getframe(1)
+            assert frame.f_code is code
+            loc=frame.f_locals
+            if name=='PURE':emit(name,'RETURN',native_evidence=dict(admission=plain(loc['snapshot']),invocation=plain(value[0]),result=plain(value[1])))
+            elif name=='ARTIFACT':emit(name,'RETURN',artifact=plain(value),results=plain(loc['results']))
+            elif name=='ROOT':emit(name,'RETURN',record=n.root_plain(value))
+            elif name=='NATIVE_ROOT':emit(name,'RETURN',record=dict(kernel=plain(loc['kernel']),inputs=plain(loc['decision_input']),result=plain(value)))
+            elif name=='BUNDLE_CHECK':emit(name,'RETURN',checked=plain(value))
+            elif name=='WIRE_RECEIVE' and value is not None:emit(name,'RETURN',lane='bootstrap' if Path(loc['self'].folder).name=='bootstrap' else 'channel',received_sha256=c.sha(value))
+            elif name=='PUBLIC_KEYS':emit(name,'RETURN',public=plain(value))
+            elif name=='INTAKE':emit(name,'RETURN',request_sha256=c.sha(value))
+            elif name=='EVENT':
+                emit(name,'RETURN',report=plain(value))
+                emit(name,'END',registry=state() if role=='publisher' else None)
+            elif name=='DISPATCH':
+                host=loc['host'];attempt=host.registry.action_packet_fulfillment_attempt_contexts[-1]
+                emit(name,'RETURN',host=host_projection(host,loc['packet_id']),attempt=plain(attempt),registry=state())
+            elif name=='EFFECT':emit(name,'RETURN',receipt=plain(value),registry=state())
+            elif name=='CALLBACK':emit(name,'RETURN',output=plain(value),registry=state())
+            elif name=='REFRESH':emit(name,'RETURN',revision=loc['self'].revision,evaluation_time=loc['evaluation_time'],evaluation_time_source=loc['evaluation_time_source'],evaluation_context_id=loc['evaluation_context_id'])
+            elif name=='ELIGIBILITY':emit(name,'RETURN',inspection=plain(value))
+            elif name=='STATE_WRITE' and str(loc['path'])=='/out/publisher/state/registry.json':emit(name,'RETURN',registry=state())
+            elif name=='SAVE':pass
+        except Exception as exc:emit('OBSERVER_ERROR','RETURN',code=code.co_name,error=type(exc).__name__+':'+str(exc))
+    def unwind(code,offset,exc):
+        if code not in codes:return
+        name=codes[code]
+        if name in ('DISPATCH','EFFECT','CALLBACK','EXECUTOR','ROOT','NATIVE_ROOT','BUNDLE_CHECK'):
+            emit(name,'UNWIND',exception=type(exc).__name__,reason=str(exc),registry=state() if role=='publisher' else None)
+    tool=4;sys.monitoring.use_tool_id(tool,'g54d_passive_observer')
+    for event,fn in ((sys.monitoring.events.PY_START,start),(sys.monitoring.events.PY_RETURN,returned),(sys.monitoring.events.PY_UNWIND,unwind)):
+        sys.monitoring.register_callback(tool,event,fn)
+    for code in codes:sys.monitoring.set_local_events(tool,code,sys.monitoring.events.PY_START|sys.monitoring.events.PY_RETURN)
+    # CPython makes PY_UNWIND non-local; only the selected code objects emit data.
+    sys.monitoring.set_events(tool,sys.monitoring.events.PY_UNWIND)
+    def stop():
+        sys.monitoring.set_events(tool,0)
+        for code in codes:sys.monitoring.set_local_events(tool,code,0)
+        sys.monitoring.free_tool_id(tool)
+        origins={}
+        for name,mod in list(sys.modules.items()):
+            path=getattr(mod,'__file__',None)
+            if path and str(path).startswith(('/candidate/','/approved/source/')) and Path(path).is_file():
+                origins[name]=dict(path=path,sha256=hashlib.sha256(Path(path).read_bytes()).hexdigest())
+        emit('IMPORT_ORIGINS','FINAL',origins=origins,registry=state() if role=='publisher' else None)
+    return stop

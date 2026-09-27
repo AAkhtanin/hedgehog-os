@@ -1,0 +1,695 @@
+{
+  "profile": "G6A4R_REVIEW_PROPOSAL_V01",
+  "review": "REVIEW_PENDING",
+  "rows": [
+    {
+      "profile": "DIRECT",
+      "status": "FRESH_PASS",
+      "review": "REVIEW_PENDING",
+      "receipt": "fresh/DIRECT/receipts.json",
+      "receipt_pin": {
+        "bytes": 183582,
+        "sha256": "5969d9d10e534d084c500ed26b8cc59b703748515ae67e4784c494b4ad6bb07c",
+        "mode": 420
+      },
+      "source_closure_sha256": "73f5fe75dee04bb54c629c148bc48b98516765776649b100d108884e5cf7115b",
+      "result_seconds": 13.14343810081482,
+      "unchanged_direct_inventory": true,
+      "native_mock_effects": "See primary G35 branch facts and selected-code observations; DIRECT test-local counts/assertions remain in exact source and phases. No universal zero-effect claim."
+    },
+    {
+      "profile": "G35",
+      "status": "FRESH_PASS",
+      "review": "REVIEW_PENDING",
+      "receipt": "fresh/G35/receipts.json",
+      "receipt_pin": {
+        "bytes": 147334,
+        "sha256": "827b1f626ffc7b74eeb7b463d8eab6a020eb1f2cc69a751b8b6fc7e782d160e7",
+        "mode": 420
+      },
+      "source_closure_sha256": "73f5fe75dee04bb54c629c148bc48b98516765776649b100d108884e5cf7115b",
+      "result_seconds": 124.28478384017944,
+      "unchanged_direct_inventory": false,
+      "native_mock_effects": "See primary G35 branch facts and selected-code observations; DIRECT test-local counts/assertions remain in exact source and phases. No universal zero-effect claim."
+    },
+    {
+      "profile": "LIVING_G36",
+      "status": "RETAINED_REVALIDATED_COMPATIBILITY_PROPOSED",
+      "review": "REVIEW_PENDING",
+      "original": {
+        "receipt": "historical/campaign_receipts.json#LIVING_G36",
+        "raw_container_pin": {
+          "bytes": 6836258,
+          "sha256": "6e9052408a86e6652dcee9567cc99d6e242191bae1f03527a1017e7052cd5446",
+          "mode": 420
+        },
+        "record_canonical_sha256": "b3217bd9da9f09315f63506f1b6121c94def76d83b157e40ef8dede0d51d0a20",
+        "source_closure_sha256": "859c863fa40000dfcd6759685f3b0083f0e040b777df19e5393154fc9ac0f288",
+        "classification": "FRESH_NATIVE",
+        "seconds": 2226.325478076935,
+        "original_status": "PASS",
+        "original_source": {
+          "bytes": 264699,
+          "path": "demo/run_living_gauntlet_v01.py",
+          "sha256": "688951260b3986c82ad0d16417a474dcb61f412e9412806f863ec75c7994bb45"
+        },
+        "input_closure_canonical_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+        "output_files_canonical_sha256": "dd5253afe5bb553eefe234581342e8e248d5b2265b33c7022b3a8fa86a32ac0b"
+      },
+      "new_checks": [
+        {
+          "path": "retained/LIVING_G36/result.json",
+          "bytes": 28303,
+          "sha256": "bb74fe0547a21a8cb97b053182086b474efab9824362bd835edcb827a5beda5b",
+          "mode": 420
+        }
+      ],
+      "commands": {
+        "008_retained_LIVING_G36": {
+          "rc": 0,
+          "timeout": false,
+          "elapsed_seconds": 10.837006540969014,
+          "ended": "2026-09-27T07:34:15.299655+00:00",
+          "reaped": true,
+          "stdout": {
+            "bytes": 80,
+            "sha256": "a737b9b326b4b4ae2d34d2b54b2a75eda956c8b8933f61938d32160177e7fba5",
+            "mode": 420
+          },
+          "stderr": {
+            "bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "mode": 420
+          }
+        }
+      },
+      "witnesses": [
+        "demo/run_living_gauntlet_v01.py::validate_living_g36_v01",
+        "demo/run_living_gauntlet_v01.py::collect_living_g36_v01",
+        "hedgehog/gate3_mechanism_v01.py::collect_mechanism_v01",
+        "hedgehog/gate3_mechanism_v01.py::consume_mechanism_v01"
+      ],
+      "impact": "The original independent owner collects legacy E5/D5 and collect_mechanism_v01 -> supplier.collect_episode_v01, not the five-domain G35 pack. Supplied validation checks the original legacy report, registration_root and supplied G36 proof. consume_mechanism_v01 rebuilds Supplier relations, not Testflix collect_source. Import of an adapter dispatch table does not execute that producer. Every unchanged source-closure entry and actual loaded project dependency has the same bytes.",
+      "dependency_scope": "810 predecessor closure entries compared exactly; only the projection adapter differs. New test has no producer role. Actual import pins/input ledgers and raw observations are kept per command.",
+      "limitation": "A finite review proposal, not a substitute for unchanged exact-closure readiness or fresh native execution. Observers cover named code objects/current process/thread only; children are separately evidenced, not inferred zero."
+    },
+    {
+      "profile": "CONFORMANCE_G36",
+      "status": "RETAINED_REVALIDATED_COMPATIBILITY_PROPOSED",
+      "review": "REVIEW_PENDING",
+      "original": {
+        "receipt": "historical/campaign_receipts.json#CONFORMANCE_G36",
+        "raw_container_pin": {
+          "bytes": 6836258,
+          "sha256": "6e9052408a86e6652dcee9567cc99d6e242191bae1f03527a1017e7052cd5446",
+          "mode": 420
+        },
+        "record_canonical_sha256": "587138f84b9e723dfd3f08e264b05c5766adb164af8c3b0916b76d4401ee84bc",
+        "source_closure_sha256": "859c863fa40000dfcd6759685f3b0083f0e040b777df19e5393154fc9ac0f288",
+        "classification": "FRESH_NATIVE_INDEPENDENT",
+        "seconds": 2198.549877882004,
+        "original_status": "PASS",
+        "original_source": {
+          "bytes": 136730,
+          "path": "demo/run_kernel_conformance_v01.py",
+          "sha256": "77db1f8417ba1b746425e9854662476861418a35e52be511ec8627c30726eeaa"
+        },
+        "input_closure_canonical_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+        "output_files_canonical_sha256": "a915a510d854d30305292d31cc0b5ac12cb5c980db572dba5988e1680dfc6413"
+      },
+      "new_checks": [
+        {
+          "path": "retained/CONFORMANCE_G36/result.json",
+          "bytes": 24777,
+          "sha256": "e441b7fd8315a8982052728dc4b797c268619166604e89991789a6b3508c17b8",
+          "mode": 420
+        }
+      ],
+      "commands": {
+        "009_retained_CONFORMANCE_G36": {
+          "rc": 0,
+          "timeout": false,
+          "elapsed_seconds": 5.85094799939543,
+          "ended": "2026-09-27T07:34:21.151669+00:00",
+          "reaped": true,
+          "stdout": {
+            "bytes": 86,
+            "sha256": "52cb5e0739cd0da4ed62f3fe2545651d33d8821bf4a52ab0836132555728655c",
+            "mode": 420
+          },
+          "stderr": {
+            "bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "mode": 420
+          }
+        }
+      },
+      "witnesses": [
+        "demo/run_kernel_conformance_v01.py::validate_kernel_conformance_g36_v01",
+        "demo/run_kernel_conformance_v01.py::collect_kernel_conformance_g36_v01",
+        "hedgehog/gate4_reference_release_v01.py::decode_conformance_v01"
+      ],
+      "impact": "The independent original Conformance owner and its E5/D5/G36 counts remain distinct from Living. A new in-memory dictionary decodes only legacy with the unchanged strict decoder; the raw original JSON is untouched. Supplied kernel report and Supplier mechanism consumers have no absent-input collection fallback. No new Testflix G35 producer is used.",
+      "dependency_scope": "810 predecessor closure entries compared exactly; only the projection adapter differs. New test has no producer role. Actual import pins/input ledgers and raw observations are kept per command.",
+      "limitation": "A finite review proposal, not a substitute for unchanged exact-closure readiness or fresh native execution. Observers cover named code objects/current process/thread only; children are separately evidenced, not inferred zero."
+    },
+    {
+      "profile": "G4",
+      "status": "RETAINED_REVALIDATED_COMPATIBILITY_PROPOSED",
+      "review": "REVIEW_PENDING",
+      "original": {
+        "receipt": "historical/campaign_receipts.json#G4",
+        "raw_container_pin": {
+          "bytes": 6836258,
+          "sha256": "6e9052408a86e6652dcee9567cc99d6e242191bae1f03527a1017e7052cd5446",
+          "mode": 420
+        },
+        "record_canonical_sha256": "0d7b42e63f89c8fd06c598bdb9d639640d5f8f460acaa411173df4c81777ff1e",
+        "source_closure_sha256": "859c863fa40000dfcd6759685f3b0083f0e040b777df19e5393154fc9ac0f288",
+        "classification": "FRESH_G4_WITH_TWO_PURE_TEST_PIN_CONSUMERS",
+        "seconds": 39.18926930427551,
+        "original_status": "PASS",
+        "original_source": {
+          "bytes": 10116,
+          "path": "hedgehog/gate4_reference_release_v01.py",
+          "sha256": "2cef08b3496187f1984e0c69609d3d0afa33ba2ac426ec558c6c12a259ed9da0"
+        },
+        "input_closure_canonical_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+        "output_files_canonical_sha256": "540cb7354eda8ce381c6aa498859d4223f278ebaed34e95b674ad62a6a468fe9"
+      },
+      "new_checks": [
+        {
+          "path": "retained/G4_original/result.json",
+          "bytes": 1621471,
+          "sha256": "31045d950ee599391945716b7c927637b1661966c597cc1e038937fe3df8c6f6",
+          "mode": 420
+        },
+        {
+          "path": "retained/G4_successor/result.json",
+          "bytes": 1573460,
+          "sha256": "3fbfdc81aed3bf3a86b6cb4a22fc4cc0e89d58361b7912f6edb0c8a9be03bacf",
+          "mode": 420
+        }
+      ],
+      "commands": {
+        "012_retained_G4_original": {
+          "rc": 0,
+          "timeout": false,
+          "elapsed_seconds": 4.830526166595519,
+          "ended": "2026-09-27T07:34:28.174581+00:00",
+          "reaped": true,
+          "stdout": {
+            "bytes": 99,
+            "sha256": "e3437431fbb03e0dc6691a603c19c959797c97c4f25276cea00d12239ee612c7",
+            "mode": 420
+          },
+          "stderr": {
+            "bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "mode": 420
+          }
+        },
+        "013_retained_G4_successor": {
+          "rc": 0,
+          "timeout": false,
+          "elapsed_seconds": 3.7174253752455115,
+          "ended": "2026-09-27T07:34:31.893225+00:00",
+          "reaped": true,
+          "stdout": {
+            "bytes": 101,
+            "sha256": "1021477eafce1b74263a4e95614d56ed8926d7c75049edee51fbc98f79f1417f",
+            "mode": 420
+          },
+          "stderr": {
+            "bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "mode": 420
+          }
+        }
+      },
+      "witnesses": [
+        "hedgehog/gate4_reference_evidence_v01.py::verify_package_v01",
+        "hedgehog/gate4_reference_evidence_v01.py::validate_saved_story_v01"
+      ],
+      "impact": "The full portable package pins 123 original checker sources, including the old adapter. Full verification ran in the separate original exact-source process; successor validation only recomputed saved-story causal, budget, Root-record and history relations over identical original story bytes and equalled original_verification.result. No successor full check against old checker pins is claimed. The saved relation algorithm and all dependencies except the unexecuted changed projection are byte-identical.",
+      "dependency_scope": "810 predecessor closure entries compared exactly; only the projection adapter differs. New test has no producer role. Actual import pins/input ledgers and raw observations are kept per command.",
+      "limitation": "A finite review proposal, not a substitute for unchanged exact-closure readiness or fresh native execution. Observers cover named code objects/current process/thread only; children are separately evidenced, not inferred zero."
+    },
+    {
+      "profile": "G51",
+      "status": "RETAINED_REVALIDATED_COMPATIBILITY_PROPOSED",
+      "review": "REVIEW_PENDING",
+      "original": {
+        "receipt": "historical/campaign_receipts.json#G51",
+        "raw_container_pin": {
+          "bytes": 6836258,
+          "sha256": "6e9052408a86e6652dcee9567cc99d6e242191bae1f03527a1017e7052cd5446",
+          "mode": 420
+        },
+        "record_canonical_sha256": "70d9c45386cd100ab4dba5eea835620556dc99ca82e1ede726015a3ba975094f",
+        "source_closure_sha256": "859c863fa40000dfcd6759685f3b0083f0e040b777df19e5393154fc9ac0f288",
+        "classification": "FRESH_EXCHANGE",
+        "seconds": 2.040548086166382,
+        "original_status": "PASS",
+        "original_source": {
+          "bytes": 5578,
+          "path": "demo/run_gate5_calibration_v01.py",
+          "sha256": "391d9fce88aa663811d6a7b12df6c05a76b82eed154c136909472b7263270d1d"
+        },
+        "input_closure_canonical_sha256": "de0b87dd7b3603b1375c486ee6af5bd521b1213cc0bcb82f50bc56b1d693979e",
+        "output_files_canonical_sha256": "21ddee67461107b6b1e848ddf210e9f688fc0040c4d70a9dc6444eb625e227c5"
+      },
+      "new_checks": [
+        {
+          "path": "retained/G51/result.json",
+          "bytes": 45734,
+          "sha256": "f45e9fbdecae5b9f6e3402bd5b492197387cf5c00603786dc9c6ee81d3e1bcf4",
+          "mode": 420
+        }
+      ],
+      "commands": {
+        "010_retained_G51": {
+          "rc": 0,
+          "timeout": false,
+          "elapsed_seconds": 0.9320422085002065,
+          "ended": "2026-09-27T07:34:22.084881+00:00",
+          "reaped": true,
+          "stdout": {
+            "bytes": 76,
+            "sha256": "10fe1fc2d65d9c93436f0c6138aaa4114ea2f23f0d1f35d77db8477d9a6618e3",
+            "mode": 420
+          },
+          "stderr": {
+            "bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "mode": 420
+          }
+        }
+      },
+      "witnesses": [
+        "hedgehog/external_drs/gate5_supplied_v01.py::verify_capture"
+      ],
+      "impact": "The existing saved exchange verifier checks source pins, schema/signatures, independent peers, bounded native receipts and recorded ownership/consumption. It does not generate exchange, open a current Root or call the Testflix G35 producer. Its source closure dependencies and fixtures are unchanged; the new result equals the original supplied result.",
+      "dependency_scope": "810 predecessor closure entries compared exactly; only the projection adapter differs. New test has no producer role. Actual import pins/input ledgers and raw observations are kept per command.",
+      "limitation": "A finite review proposal, not a substitute for unchanged exact-closure readiness or fresh native execution. Observers cover named code objects/current process/thread only; children are separately evidenced, not inferred zero."
+    },
+    {
+      "profile": "G52",
+      "status": "RETAINED_REVALIDATED_COMPATIBILITY_PROPOSED",
+      "review": "REVIEW_PENDING",
+      "original": {
+        "receipt": "historical/campaign_receipts.json#G52",
+        "raw_container_pin": {
+          "bytes": 6836258,
+          "sha256": "6e9052408a86e6652dcee9567cc99d6e242191bae1f03527a1017e7052cd5446",
+          "mode": 420
+        },
+        "record_canonical_sha256": "6ee6d4b10b80433d1d284395228b128b76a1d788f765b7f66a1a79a272798c3b",
+        "source_closure_sha256": "859c863fa40000dfcd6759685f3b0083f0e040b777df19e5393154fc9ac0f288",
+        "classification": "FRESH_RESTART",
+        "seconds": 3.9608118534088135,
+        "original_status": "PASS",
+        "original_source": {
+          "bytes": 8407,
+          "path": "demo/run_gate5_lifecycle_v01.py",
+          "sha256": "85d98abc1fa4b64a9d836c501f7bf00af9378e21df5505f12af146ddc9ae4b8c"
+        },
+        "input_closure_canonical_sha256": "b6368fe551735f74df0a4327b22b4e786049fc7426ddab73af3e68859bcd2439",
+        "output_files_canonical_sha256": "5a812b3ac4c4dbf76b6713da7b5f549e412bd4cd25de2dd1b03ee9474a150db2"
+      },
+      "new_checks": [
+        {
+          "path": "retained/G52/result.json",
+          "bytes": 79184,
+          "sha256": "5d3edf2c7d26b0ad9987e1224777eb821c284c9fd242ec5125d27b3d83ae0ad3",
+          "mode": 420
+        }
+      ],
+      "commands": {
+        "011_retained_G52": {
+          "rc": 0,
+          "timeout": false,
+          "elapsed_seconds": 1.2568416250869632,
+          "ended": "2026-09-27T07:34:23.342950+00:00",
+          "reaped": true,
+          "stdout": {
+            "bytes": 75,
+            "sha256": "6c3962f53920bff321303cd430da5f8f436e54c5f673145795c9321f86e04303",
+            "mode": 420
+          },
+          "stderr": {
+            "bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "mode": 420
+          }
+        }
+      },
+      "witnesses": [
+        "hedgehog/external_drs/gate5_lifecycle_supplied_v01.py::verify"
+      ],
+      "impact": "The unchanged saved lifecycle verifier validates restart/history/source-currentness at the recorded events from exact input pins. No restart/native peer or new exchange was created. The producer projection is absent from the executed pure path; new result equals original supplied result.",
+      "dependency_scope": "810 predecessor closure entries compared exactly; only the projection adapter differs. New test has no producer role. Actual import pins/input ledgers and raw observations are kept per command.",
+      "limitation": "A finite review proposal, not a substitute for unchanged exact-closure readiness or fresh native execution. Observers cover named code objects/current process/thread only; children are separately evidenced, not inferred zero."
+    },
+    {
+      "profile": "FOOTBALL",
+      "status": "RETAINED_REVALIDATED_COMPATIBILITY_PROPOSED",
+      "review": "REVIEW_PENDING",
+      "original": {
+        "receipt": "historical/campaign_receipts.json#FOOTBALL",
+        "raw_container_pin": {
+          "bytes": 6836258,
+          "sha256": "6e9052408a86e6652dcee9567cc99d6e242191bae1f03527a1017e7052cd5446",
+          "mode": 420
+        },
+        "record_canonical_sha256": "90b06bd27fc305a680af73bc4224e9be006eb51181b5e0fd66400f3317b69dd9",
+        "source_closure_sha256": "859c863fa40000dfcd6759685f3b0083f0e040b777df19e5393154fc9ac0f288",
+        "classification": "ACCEPTED_PROGRAM_REEXECUTION",
+        "seconds": 92.31682991981506,
+        "original_status": "PASS",
+        "original_source": {
+          "bytes": 20399,
+          "path": "tools/run_gate6_football_reference_v01.py",
+          "sha256": "7886cc9e9378766cf0741e13ff4f736b701c8ab60d808696722c5398cbe535af"
+        },
+        "input_closure_canonical_sha256": "f4737e99955fced0bf73ea5f8eed5143c838e036d1e4e5b06b9ee2e282d58d4f",
+        "output_files_canonical_sha256": "c011352919d4fce540dd91386f5fd94cecf14e24f977b28df182812eb5f80c8e"
+      },
+      "new_checks": [
+        {
+          "path": "reconciliation/FOOTBALL.json",
+          "bytes": 27694,
+          "sha256": "290a123fef4e520ee2eb232cbcb3186f44adc5d756c9ff20a0c1e4ca41a5b313",
+          "mode": 420
+        }
+      ],
+      "commands": {
+        "016_retained_FOOTBALL": {
+          "rc": 1,
+          "timeout": false,
+          "elapsed_seconds": 39.53828529175371,
+          "ended": "2026-09-27T07:36:50.479255+00:00",
+          "reaped": true,
+          "stdout": {
+            "bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "mode": 420
+          },
+          "stderr": {
+            "bytes": 491,
+            "sha256": "7d73bebbc2810e8835dbc139b8e2c81aaa2a3ce897bb157a010732c5f0d5c3fa",
+            "mode": 420
+          }
+        },
+        "020_data_reconciliation": {
+          "rc": 0,
+          "timeout": false,
+          "elapsed_seconds": 1.5236689997836947,
+          "ended": "2026-09-27T07:45:33.293178+00:00",
+          "reaped": true,
+          "stdout": {
+            "bytes": 114,
+            "sha256": "f61ebe46c9e5388d7beab15d7bad9b94222ac26a9d1263c84d765a66242977df",
+            "mode": 420
+          },
+          "stderr": {
+            "bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "mode": 420
+          }
+        }
+      },
+      "witnesses": [
+        "tools/run_gate6_football_reference_v01.py::supplied",
+        "tools/run_gate6_football_reference_v01.py::check_prepared"
+      ],
+      "impact": "All 16 exact original cases received two calls to the unchanged per-case supplied checker; all 32 matched the original results with active sentinel and zero root/dispatch/work/effect calls. review_finds deliberately adds its frozen AUTHOR_VISIBLE/source; this caused only the external wrapper final import-root assertion after completed consumers. A separate import-only probe proves every such dependency is byte-identical to successor; candidate/worker/oracle pins and complete evidence hashes remain exact. The bridge checks candidate is not imported. No new candidate or container executed; 56 semantic events/seven mock effects are historical, not new effects.",
+      "dependency_scope": "810 predecessor closure entries compared exactly; only the projection adapter differs. New test has no producer role. Actual import pins/input ledgers and raw observations are kept per command.",
+      "limitation": "A finite review proposal, not a substitute for unchanged exact-closure readiness or fresh native execution. Observers cover named code objects/current process/thread only; children are separately evidenced, not inferred zero."
+    },
+    {
+      "profile": "G44_RECORDED",
+      "status": "RETAINED_REVALIDATED_COMPATIBILITY_PROPOSED",
+      "review": "REVIEW_PENDING",
+      "original": {
+        "receipt": "historical/campaign_receipts.json#G44_RECORDED",
+        "raw_container_pin": {
+          "bytes": 6836258,
+          "sha256": "6e9052408a86e6652dcee9567cc99d6e242191bae1f03527a1017e7052cd5446",
+          "mode": 420
+        },
+        "record_canonical_sha256": "2ecea744605250a16848781683ee72efbee4bfd0aa276b0cb9e3c6db96c18a1b",
+        "source_closure_sha256": "859c863fa40000dfcd6759685f3b0083f0e040b777df19e5393154fc9ac0f288",
+        "classification": "HISTORICAL_PURE_NOT_FRESH_G4",
+        "seconds": 19.83903694152832,
+        "original_status": "PASS",
+        "original_source": {
+          "bytes": 10116,
+          "path": "hedgehog/gate4_reference_release_v01.py",
+          "sha256": "2cef08b3496187f1984e0c69609d3d0afa33ba2ac426ec558c6c12a259ed9da0"
+        },
+        "input_closure_canonical_sha256": "8841468c6daeed91e73d50c8f992edf218335b3172b19c58de305b3843d5046c",
+        "output_files_canonical_sha256": "92f22126cfb3352a5ebc97967e479fe4bf7931a4070609f556b1cd4f29621e16"
+      },
+      "new_checks": [
+        {
+          "path": "retained/G44_original/result.json",
+          "bytes": 1772635,
+          "sha256": "01311c206b2351ce530d118978c9c01f16b00085f1d35cc0eff43647c895ae22",
+          "mode": 420
+        },
+        {
+          "path": "retained/G44_successor/result.json",
+          "bytes": 1689829,
+          "sha256": "ca78ec7769622310b477becf1a91e634c5867d02e7d0594086b910c2a1bc1714",
+          "mode": 420
+        }
+      ],
+      "commands": {
+        "014_retained_G44_original": {
+          "rc": 0,
+          "timeout": false,
+          "elapsed_seconds": 19.756831833161414,
+          "ended": "2026-09-27T07:34:51.651630+00:00",
+          "reaped": true,
+          "stdout": {
+            "bytes": 99,
+            "sha256": "aeba735d55f34aaf372492eedca2b84b73b5418dcf6a33fa089f417f1484bfee",
+            "mode": 420
+          },
+          "stderr": {
+            "bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "mode": 420
+          }
+        },
+        "015_retained_G44_successor": {
+          "rc": 0,
+          "timeout": false,
+          "elapsed_seconds": 18.853611500002444,
+          "ended": "2026-09-27T07:35:10.508470+00:00",
+          "reaped": true,
+          "stdout": {
+            "bytes": 102,
+            "sha256": "5efc233b5e9a691615c712390c3ab62c145e1f26ac9410dd0c60cd3af2dca973",
+            "mode": 420
+          },
+          "stderr": {
+            "bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "mode": 420
+          }
+        }
+      },
+      "witnesses": [
+        "hedgehog/gate4_reference_release_v01.py::validate_release_v01",
+        "hedgehog/gate4_reference_release_v01.py::validate_registration_v01",
+        "hedgehog/gate4_reference_release_v01.py::validate_parents_v01"
+      ],
+      "impact": "The full release checker remains original-source-only because its portable package pins the old adapter. Separate successor calls validated registration, unchanged-source parents with the original external manifest pin, and saved-story relations. Parent unchanged-source set excludes the repaired adapter. New story/parent/registration results equal originals; full successor verification against old package pins is not asserted.",
+      "dependency_scope": "810 predecessor closure entries compared exactly; only the projection adapter differs. New test has no producer role. Actual import pins/input ledgers and raw observations are kept per command.",
+      "limitation": "A finite review proposal, not a substitute for unchanged exact-closure readiness or fresh native execution. Observers cover named code objects/current process/thread only; children are separately evidenced, not inferred zero."
+    },
+    {
+      "profile": "G5_RECORDED",
+      "status": "RETAINED_REVALIDATED_COMPATIBILITY_PROPOSED",
+      "review": "REVIEW_PENDING",
+      "original": {
+        "receipt": "historical/campaign_receipts.json#G5_RECORDED",
+        "raw_container_pin": {
+          "bytes": 6836258,
+          "sha256": "6e9052408a86e6652dcee9567cc99d6e242191bae1f03527a1017e7052cd5446",
+          "mode": 420
+        },
+        "record_canonical_sha256": "a0fe43d0dcff73f5c9b9f3d697c2760e6bc4000fe2f0d293e8f14fa14c9be884",
+        "source_closure_sha256": "859c863fa40000dfcd6759685f3b0083f0e040b777df19e5393154fc9ac0f288",
+        "classification": "HISTORICAL_PURE_NOT_FRESH_NATIVE",
+        "seconds": 5.3077051639556885,
+        "original_status": "PASS",
+        "original_source": {
+          "bytes": 9287,
+          "path": "demo/verify_gate5_reference_v01.py",
+          "sha256": "2852dda26988804f665181374ae9d2a44d96d395808f038707db4f02b7b63c22"
+        },
+        "input_closure_canonical_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+        "output_files_canonical_sha256": "8c448cfcf286be46689e915bd614f711651a233d3a845da08da535b7dd03c7c2"
+      },
+      "new_checks": [
+        {
+          "path": "reconciliation/G5_RECORDED.json",
+          "bytes": 3569,
+          "sha256": "8b922c18f0a9fbd66e5b61b6a1751eec6bc13f569346295108215b62d83eb82e",
+          "mode": 420
+        }
+      ],
+      "commands": {
+        "017_retained_G5_RECORDED": {
+          "rc": 1,
+          "timeout": false,
+          "elapsed_seconds": 1.002761334180832,
+          "ended": "2026-09-27T07:41:02.800460+00:00",
+          "reaped": true,
+          "stdout": {
+            "bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "mode": 420
+          },
+          "stderr": {
+            "bytes": 823,
+            "sha256": "35bf2bdd49c5e101d4d9bf1d18abe52d5dcf177254d4c5afc9b0a5ac7ac50be7",
+            "mode": 420
+          }
+        },
+        "019_retained_G5_original": {
+          "rc": 1,
+          "timeout": false,
+          "elapsed_seconds": 6.4152979999780655,
+          "ended": "2026-09-27T07:42:15.225752+00:00",
+          "reaped": true,
+          "stdout": {
+            "bytes": 163,
+            "sha256": "0803cb4118ecf3bc4dd98aa07a8807791aa83c94ab3a1e423934b6af66da60e1",
+            "mode": 420
+          },
+          "stderr": {
+            "bytes": 1075,
+            "sha256": "114d19b88da7769ab3c9769482f1e6e76d4d8311ff3ca5b6d7486af8e31b92b8",
+            "mode": 420
+          }
+        },
+        "020_data_reconciliation": {
+          "rc": 0,
+          "timeout": false,
+          "elapsed_seconds": 1.5236689997836947,
+          "ended": "2026-09-27T07:45:33.293178+00:00",
+          "reaped": true,
+          "stdout": {
+            "bytes": 114,
+            "sha256": "f61ebe46c9e5388d7beab15d7bad9b94222ac26a9d1263c84d765a66242977df",
+            "mode": 420
+          },
+          "stderr": {
+            "bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "mode": 420
+          }
+        }
+      },
+      "witnesses": [
+        "demo/verify_gate5_reference_v01.py::main",
+        "demo/verify_gate5_reference_v01.py::materialize",
+        "demo/verify_gate5_reference_v01.py::author_reconstruction"
+      ],
+      "impact": "The successor full verifier honestly refuses proof_input_freeze on the modified adapter (command 017). It is not bypassed. The unchanged full verifier in original context completed both historical pure children and produced the exact accepted canonical_result (command 019); its wrapper then failed on a deliberately omitted archive locator. Data-only reconciliation used the original recovery ledger and accepted-base blob, without rerunning the verifier. Source bindings, material blobs, candidate/worker/oracle and historical pure children are unchanged. The adapter is read by the input freeze, not executed as a G35 producer. This is proposed historical compatibility, not current full source-binding PASS.",
+      "dependency_scope": "810 predecessor closure entries compared exactly; only the projection adapter differs. New test has no producer role. Actual import pins/input ledgers and raw observations are kept per command.",
+      "limitation": "A finite review proposal, not a substitute for unchanged exact-closure readiness or fresh native execution. Observers cover named code objects/current process/thread only; children are separately evidenced, not inferred zero."
+    },
+    {
+      "profile": "MODEL",
+      "status": "RETAINED_REVALIDATED_COMPATIBILITY_PROPOSED",
+      "review": "REVIEW_PENDING",
+      "original": {
+        "receipt": "historical/campaign_receipts.json#MODEL",
+        "raw_container_pin": {
+          "bytes": 6836258,
+          "sha256": "6e9052408a86e6652dcee9567cc99d6e242191bae1f03527a1017e7052cd5446",
+          "mode": 420
+        },
+        "record_canonical_sha256": "a782e8216a3e351ec170c7bb4ba7a8fb7a9e08b349b1ffb2e3df1feba2471ff3",
+        "source_closure_sha256": "859c863fa40000dfcd6759685f3b0083f0e040b777df19e5393154fc9ac0f288",
+        "classification": "LIVE_CONTRAST_COMPLETE",
+        "seconds": 127.40975999832153,
+        "original_status": "PASS",
+        "original_source": {
+          "bytes": 21836,
+          "path": "tools/run_gate6_model_contrast_v01.py",
+          "sha256": "0989ec6e6bebf142dd1bb93092faf3558a76d559cf54205993b7e24d9d7357a0"
+        },
+        "input_closure_canonical_sha256": "0a38a404c9d7875c520db297c6aa79dfd270b92859f16709f93a2236fa889f9b",
+        "output_files_canonical_sha256": "180c85d6bbb481ba67fd9771b49a3735afb9bf96cf8ff69f7406e9b0a681d8d5"
+      },
+      "new_checks": [
+        {
+          "path": "retained/MODEL/result.json",
+          "bytes": 35763,
+          "sha256": "6331edbb62e305bfdd39378f982cbcaa73804bf677c95863fd8ad56feeed9ea7",
+          "mode": 420
+        },
+        {
+          "path": "reconciliation/MODEL.json",
+          "bytes": 1027,
+          "sha256": "4c077d5a7b627e17601e3c292da5e7b58df656320940d86c388ff95ce3723020",
+          "mode": 420
+        }
+      ],
+      "commands": {
+        "018_retained_MODEL": {
+          "rc": 0,
+          "timeout": false,
+          "elapsed_seconds": 1.2610814170911908,
+          "ended": "2026-09-27T07:41:04.062851+00:00",
+          "reaped": true,
+          "stdout": {
+            "bytes": 101,
+            "sha256": "1d84ad73a5d6a6dec357a5ce6ae37b2c349bb42d1c64374e20ad932d50a38989",
+            "mode": 420
+          },
+          "stderr": {
+            "bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "mode": 420
+          }
+        },
+        "020_data_reconciliation": {
+          "rc": 0,
+          "timeout": false,
+          "elapsed_seconds": 1.5236689997836947,
+          "ended": "2026-09-27T07:45:33.293178+00:00",
+          "reaped": true,
+          "stdout": {
+            "bytes": 114,
+            "sha256": "f61ebe46c9e5388d7beab15d7bad9b94222ac26a9d1263c84d765a66242977df",
+            "mode": 420
+          },
+          "stderr": {
+            "bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "mode": 420
+          }
+        }
+      },
+      "witnesses": [
+        "tools/run_gate6_model_contrast_v01.py::pure_replay"
+      ],
+      "impact": "The saved LIVE and CONTROLLED sealed chains replayed through unchanged pure_replay over their original manifests. There was no budget open, handler/native/control rerun, authorization renewal, countTokens or generation. The original handler consumes four semantic roles through evidence/kernel adapter paths, not G35 outcome_feedback_adapter.collect_source. Historical 4+4 transport, source/projection/response bindings, usage, downstream quote inputs and final result were data-checked separately. The terms-analyst free-text cd79 error remains disclosed; structured data and final ab31/1080p/600 remain correct.",
+      "dependency_scope": "810 predecessor closure entries compared exactly; only the projection adapter differs. New test has no producer role. Actual import pins/input ledgers and raw observations are kept per command.",
+      "limitation": "A finite review proposal, not a substitute for unchanged exact-closure readiness or fresh native execution. Observers cover named code objects/current process/thread only; children are separately evidenced, not inferred zero."
+    }
+  ],
+  "fresh_profiles": 2,
+  "retained_profiles": 9,
+  "source_admission": "UNADMITTED",
+  "historical_G6A4": "INCOMPLETE",
+  "gate6a_technical_ready": false,
+  "gate6_closed": false
+}

@@ -1,0 +1,1 @@
+{"events":[{"event_id":"exact","status":"REFUSED"},{"event_id":"shift","status":"REFUSED"}],"executed_provider_calls":0,"role":"publisher","wire":{"received":4,"received_bytes":7362,"sent":4,"sent_bytes":5010}}

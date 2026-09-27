@@ -1,0 +1,78 @@
+{
+  "backend": "LOCAL_START_RETURN_FILTERED_GLOBAL_UNWIND",
+  "children": "UNOBSERVED_NOT_ZERO",
+  "counts": {
+    "descent": 1,
+    "sentinel": 1
+  },
+  "direct_owners": {
+    "descent": 1,
+    "sentinel": 1
+  },
+  "entered": 1790507297.8155699,
+  "events": [
+    {
+      "event": "call",
+      "label": "sentinel",
+      "nested": false,
+      "parents": [],
+      "time": 5839676.994979041
+    },
+    {
+      "event": "return",
+      "label": "sentinel",
+      "time": 5839676.994979833
+    },
+    {
+      "event": "call",
+      "label": "descent",
+      "nested": false,
+      "parents": [],
+      "time": 5839676.994981833
+    },
+    {
+      "event": "return",
+      "label": "descent",
+      "time": 5839677.019153375
+    }
+  ],
+  "exited": 1790507297.840097,
+  "identities": {
+    "access": {
+      "bytes": 157202,
+      "file": "/private/tmp/RADIOLARIA_G6A5R1.53l3ouws/clone/hedgehog/drs_memory_resolution_v01.py",
+      "line": 2564,
+      "sha256": "698a34262d4442dba1474a1a137ca19057c27d2d20595a9f82e848c3816579d8",
+      "symbol": "_b3_pointer_access_allowed"
+    },
+    "descent": {
+      "bytes": 157202,
+      "file": "/private/tmp/RADIOLARIA_G6A5R1.53l3ouws/clone/hedgehog/drs_memory_resolution_v01.py",
+      "line": 2958,
+      "sha256": "698a34262d4442dba1474a1a137ca19057c27d2d20595a9f82e848c3816579d8",
+      "symbol": "execute_local_memory_descent_v01"
+    },
+    "effect": {
+      "bytes": 128809,
+      "file": "/private/tmp/RADIOLARIA_G6A5R1.53l3ouws/clone/hedgehog/kernel/effect_firewall_v01.py",
+      "line": 812,
+      "sha256": "46a453e0ef98565f0de59ab062b307eff6549a716973268a034592a5f98463bd",
+      "symbol": "execute_mock_effect_v01"
+    },
+    "read": {
+      "bytes": 3888,
+      "file": "/private/tmp/RADIOLARIA_G6A5R1.53l3ouws/clone/hedgehog/drs.py",
+      "line": 99,
+      "sha256": "7e78be61a24f285608841cbd8d07047967fb0abf7708173eadeff5f5578553f4",
+      "symbol": "LocalDRS.read_record"
+    }
+  },
+  "nested": {},
+  "phase": "summary",
+  "pid": 83159,
+  "rationale": "Same-family nested wrappers are one owner; D5 inside E5 is visible nested work, not another direct D5.",
+  "restored": true,
+  "scope": "CURRENT_PROCESS_CURRENT_THREAD_ONLY",
+  "sentinel_live": true,
+  "thread": 8409947520
+}

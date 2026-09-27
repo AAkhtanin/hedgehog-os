@@ -1,0 +1,51 @@
+"""Finite event boundary predicates for reviewed projections, not a candidate API.
+
+The source-reviewed observer adapter supplies original input facts, actual stages
+and independently read state. Candidate-declared reason strings are not triggers.
+"""
+from examiner import need,sha
+from hedgehog.external_drs.gate5_lifecycle_supplied_v01 import root_record
+
+PUBLIC_REFUSALS=frozenset(('REFUSED','NEEDS_CONFIRMATION','CURRENT_STATUS_UNKNOWN','CLARIFY'))
+
+def refusal_causes(facts):
+    causes=[]
+    if facts['operation']=='CLARIFY' or facts['required_input_missing']:causes.append('CLARIFY_REQUIRED')
+    for key in ('book_consent','release_allowed','recipient_allowed','request_binding','owner_binding','known_capability','source_code_unchanged'):
+        if facts[key] is False:causes.append(key.upper())
+    if facts['source_state'] in ('REVOKED','SUPERSEDED'):causes.append('NONACTIVE_SOURCE')
+    if facts['source_state']=='UNKNOWN':causes.append('CURRENT_STATUS_UNKNOWN')
+    if facts['source_end'] is not None and facts['use_time']>=facts['source_end']:causes.append('EXPIRED_SOURCE')
+    if facts['status_end'] is not None and facts['use_time']>=facts['status_end']:causes.append('STALE_STATUS')
+    if facts['selected_revision'] is not None and facts['selected_revision']!=facts['current_revision']:causes.append('STALE_SCHEDULE')
+    if facts['occupancy_conflict']:causes.append('CURRENT_OCCUPANCY_CONFLICT')
+    if facts['same_key_payload_changed']:causes.append('CHANGED_PAYLOAD')
+    if facts['operation']=='VERIFY_EXISTING' and not facts['matching_history']:causes.append('MISSING_OR_INCONSISTENT_HISTORY')
+    if facts['malformed_producer']:causes.append('MISSING_OR_INVALID_PRODUCER')
+    return causes
+
+def check_refusal(facts, observed, report, actual_root):
+    """Origin of facts is mandatory reviewer input, not report-owned booleans."""
+    need(facts['origin']=='FROZEN_PARENT_INPUT_AND_INDEPENDENT_NATIVE_READBACK','refusal_fact_origin')
+    causes=refusal_causes(facts);need(bool(causes),'no_independent_refusal_cause')
+    need(report['status'] in PUBLIC_REFUSALS and not report['slots'] and report['receipt_ref'] is None,'refusal_not_success')
+    claim=root_record(actual_root,facts['local_root'],None,accepted=False)
+    need(claim['request']==facts['request'],'refusal_original_request_claim')
+    need(observed['root_record']==actual_root,'actual_refusal_root')
+    need(observed['executor_starts']==0 and observed['mutations']==0 and observed['before']==observed['after'],'pre_effect_refusal_delta')
+    need(0<=observed['host_attempts']<=1 and 0<=observed['firewall_entries']<=observed['host_attempts'],'refusal_stage_order')
+    need(report['counts']['dispatch']==observed['host_attempts'] and report['counts']['mutations']==0,'actual_refusal_attempt_count')
+    if 'RELEASE_ALLOWED' in causes:need(observed['released_bodies']==0 and observed['consumer_works']==0,'denied_release_no_body_or_use')
+    if facts['operation']=='VERIFY_EXISTING':
+        need(report['status']=='CURRENT_STATUS_UNKNOWN' and observed['consumer_works']==0 and observed['source_works']==0 and observed['host_attempts']==0,'missing_history_no_retry')
+    return dict(classification='CHECKED_REFUSAL',causes=causes)
+
+def check_uncertain(facts,observed,report):
+    need(facts['origin']=='FROZEN_PARENT_INPUT_AND_INDEPENDENT_NATIVE_READBACK','uncertain_fact_origin')
+    need(bool(observed['actual_exceptions']),'uncertain_exception_required')
+    need(report['status']=='CURRENT_STATUS_UNKNOWN' and observed['blind_retry'] is False,'uncertain_no_success_or_retry')
+    need(observed['host_attempts']<=1 and observed['executor_starts']<=1,'uncertain_extra_attempt')
+    need(observed['last_independent_readback']==observed['after'],'uncertain_readback')
+    if observed['executor_starts']==0:need(observed['before']==observed['after'],'effect_without_executor')
+    need(report['counts']['dispatch']==observed['host_attempts'] and report['counts']['mutations']==observed['mutations'],'uncertain_honest_counts')
+    return dict(classification='UNKNOWN_PRESERVED',state_changed=sha(observed['before'])!=sha(observed['after']))

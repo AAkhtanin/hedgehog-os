@@ -1,0 +1,1 @@
+{"status": "PASS_NARROW_G52_SUPPLIED", "seconds": 0.3658072501420975, "report": "/Users/admin/Projects/hedgehog-os-gate6-g6a4r-bsu1xe8j/retained/G5_original/native/g52_result.json", "report_writes": 1, "observed": {"root_decisions": 0, "native_work": 0, "work_advance": 0, "root_private_decision": 0, "host_dispatch": 0, "peer_send": 0, "peer_receive": 0}}

@@ -512,3 +512,43 @@ def test_g6b_exact_exception_requires_installed_tip_and_full_binding_v01():
         value[key] = changed
         assert not REVIEW._g6b_exact_publication_v01(value, bridge)
     assert not REVIEW._g6b_exact_publication_v01(manifest, dict(bridge, verified_maintenance_tip=None))
+
+
+def test_entry_payload_is_exact_not_general_v02():
+    for payload in (None, [], _g6b_test_payload(), _g6b_test_payload() * 5):
+        with pytest.raises(REVIEW.Refusal, match="ENTRY_EXACT_PUBLICATION_PAYLOAD"):
+            REVIEW._entry_payload_v02(payload)
+
+
+def test_entry_exception_requires_same_installed_tip_and_complete_payload_v02():
+    import copy
+    tip = dict(commit="a" * 40, tree="b" * 40)
+    bridge = dict(schema=REVIEW.ENTRY_BRIDGE_VERSION, verified_maintenance_tip=tip,
+                  new_policy_id="c" * 64, manifest_sha256="d" * 64,
+                  publication_ledger=[{"exact": "payload already checked at bridge boundary"}])
+    manifest = dict(kind="DOCUMENTATION", base=tip,
+                    previous=dict(tip, policy_id=bridge["new_policy_id"], manifest_sha256=bridge["manifest_sha256"]),
+                    governed_namespaces=[REVIEW.ENTRY_NAMESPACE], ledger=bridge["publication_ledger"],
+                    commit_message=REVIEW.ENTRY_PUBLICATION_MESSAGE)
+    assert REVIEW._entry_exact_publication_v02(manifest, bridge)
+    assert not REVIEW._entry_exact_publication_v02(manifest, None)
+    for key, bad in (("kind", "ENGINEERING"), ("base", REVIEW.ENTRY_BASE),
+                     ("previous", {}), ("governed_namespaces", [REVIEW.G6B_NAMESPACE]),
+                     ("ledger", []), ("commit_message", "Another publication")):
+        value = copy.deepcopy(manifest)
+        value[key] = bad
+        assert not REVIEW._entry_exact_publication_v02(value, bridge)
+    assert not REVIEW._entry_exact_publication_v02(manifest, dict(bridge, verified_maintenance_tip=None))
+    assert not REVIEW._entry_exact_publication_v02(manifest, dict(bridge, schema=REVIEW.G6B_BRIDGE_VERSION))
+    assert not REVIEW._g6b_exact_publication_v01(manifest, bridge)
+
+
+def test_entry_wrong_historical_basis_refuses_before_git_v02(tmp_path):
+    bridge = dict.fromkeys(("schema", "repository", "base", "predecessor_context_utf8",
+        "predecessor_manifest_utf8", "prior_installation_utf8", "old_enforcement", "new_enforcement",
+        "old_policy_id", "new_policy_id", "manifest_sha256", "ledger", "old_registries",
+        "new_registries", "commit_message", "publication_ledger"))
+    bridge.update(schema=REVIEW.ENTRY_BRIDGE_VERSION, repository=REVIEW.REPOSITORY,
+                  base=REVIEW.G6B_BASE, old_policy_id=REVIEW.ENTRY_OLD_POLICY)
+    with pytest.raises(REVIEW.Refusal, match="ENTRY_FIXED_BASIS"):
+        REVIEW._entry_maintenance_v02(tmp_path, {}, {}, bridge)

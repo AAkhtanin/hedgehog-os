@@ -226,3 +226,36 @@ current inventory/index/branch/origin and historical G44 rules remain in force.
 This section describes proposed code, not installation in owner. Owner M/P,
 ordinary commit/push, visibility, release uploads, website/DNS and archival
 publication remain separately authorized operations.
+
+## GitHub Human Entry V02: Exact Maintenance Proposal
+
+UNADMITTED: independent exact-byte review and separate owner authorization are
+required. This proposal does not install itself. The finite
+`reviewed_github_entry_maintenance_v02` bridge succeeds only published P
+`800f38c3407b3f4ec93dc943c977ffeecb614881`, tree
+`d665994930e50c7f10d5f928d57ceb7aac758203`. The finalized P context, P manifest
+and previous G6B bridge are exact raw inputs. Two fixed immutable Git edges
+verify the prior maintenance and publication; there is no recursive service.
+
+The new M changes only the policy helper, this contract and the focused policy
+tests. Its external bridge binds the complete old/new four-file enforcement
+maps, the three maintenance pre/postimages, unchanged registries and the exact
+ten-path documentation ledger. The public guard and actual release binder are
+unchanged. All bytes, including new constants, participate in the policy ID.
+
+Only DOCUMENTATION immediately on the actual new M may replace this README
+with the frozen V02 bytes and add nine inert files under
+`docs/showcase/github_entry_v01`. The exact payload hash, namespace, commit
+message, README pair, M manifest and actual M tip are mandatory. Prior capsules
+and the eight released assets remain unchanged. The old G6B exception keeps its
+original meaning; ordinary documentation still permits only one navigation
+line, and engineering still cannot rewrite README. Current branch, origin,
+index, modes, full inventory, unchanged neighbors and context checks remain.
+
+The documentation manifest is bound after the real owner M exists, independently
+checked before apply, and never borrows a disposable commit. PREPARED_COMMITTED
+recovery finalizes the existing exact child without a second commit. Atomic
+context replacement retains the previous raw record. The external operator and
+its pins require the same exact review; rehearsal is DISPOSABLE_TEST_ONLY.
+No owner write, commit, push, release modification or Gate closure is authorized
+by preparing or testing this proposal.

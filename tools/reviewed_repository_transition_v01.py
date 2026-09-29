@@ -436,6 +436,7 @@ def _kind_rules(root: Path, manifest: dict, ledger: dict, base: dict, installati
                                 lines[:i] + lines[i + 1:]) == old:
                             removed = True
                     _require(removed or _g6b_exact_publication_v01(
+                        manifest, installation) or _entry_exact_publication_v02(
                         manifest, installation), "DOCUMENTATION_NAVIGATION_EXACT_INSERTION")
                 else:
                     _require(row["action"] == "A" and any(name.startswith(item + "/") for item in capsules),
@@ -638,6 +639,125 @@ def _g6b_maintenance_v01(root: Path, context: dict, manifest: dict, bridge: dict
     return dict(bridge, verified_maintenance_tip=tip)
 
 
+ENTRY_BRIDGE_VERSION = "reviewed_github_entry_maintenance_v02"
+ENTRY_BASE = {"commit": "800f38c3407b3f4ec93dc943c977ffeecb614881",
+              "tree": "d665994930e50c7f10d5f928d57ceb7aac758203"}
+ENTRY_PRIOR_TIP = {"commit": "2201c5a970c6a118c312ba213e113dcbcd4b2ccd",
+                   "tree": "aa2c301bcab1c516c3d6d19816fa66ae9483409e"}
+ENTRY_OLD_POLICY = "b38e134ffa26fff644be5a9dfde6cca4b657b0502167f7ade579ca6b13215bfd"
+ENTRY_PREDECESSOR_CONTEXT = "b2b21f948bd71f7eeb0d8dc4fb349ed8bddd81f031a31b06b6b353b66862f86b"
+ENTRY_PREDECESSOR_MANIFEST = "b5638d2180ba8482874b925de8503f74f84fa2944f435aa5bdc5744f514130c1"
+ENTRY_PRIOR_BRIDGE = "6b7bb0850100d1d427b7906e8a4ed0e9b7d074a5ecd63aa7a9c52d4df2f0b8a6"
+ENTRY_NAMESPACE = "docs/showcase/github_entry_v01"
+ENTRY_PAYLOAD_SHA256 = "edcb90ccf3f7f1f1979fcaec79e1b5de23df0e70f55d4c4f92ba80fa58162202"
+ENTRY_PUBLICATION_MESSAGE = "Publish reviewed GitHub human entry V02"
+
+
+def _entry_payload_v02(payload: object) -> None:
+    # This exact inert proposal is not a general full-README permission.
+    _require(type(payload) is list and len(payload) == 10
+             and _digest(_canonical(payload)) == ENTRY_PAYLOAD_SHA256,
+             "ENTRY_EXACT_PUBLICATION_PAYLOAD")
+
+
+def _entry_exact_publication_v02(manifest: dict, installation: dict | None) -> bool:
+    if installation is None or installation.get("schema") != ENTRY_BRIDGE_VERSION:
+        return False
+    tip = installation.get("verified_maintenance_tip")
+    return (tip is not None and manifest["kind"] == "DOCUMENTATION"
+            and manifest["base"] == tip
+            and manifest["previous"] == dict(tip, policy_id=installation["new_policy_id"],
+                manifest_sha256=installation["manifest_sha256"])
+            and manifest["governed_namespaces"] == [ENTRY_NAMESPACE]
+            and manifest["commit_message"] == ENTRY_PUBLICATION_MESSAGE
+            and manifest["ledger"] == installation["publication_ledger"])
+
+
+def _entry_maintenance_v02(root: Path, context: dict, manifest: dict, bridge: dict) -> dict:
+    _keys(bridge, {
+        "schema", "repository", "base", "predecessor_context_utf8", "predecessor_manifest_utf8",
+        "prior_installation_utf8", "old_enforcement", "new_enforcement", "old_policy_id",
+        "new_policy_id", "manifest_sha256", "ledger", "old_registries", "new_registries",
+        "commit_message", "publication_ledger",
+    }, "ENTRY_BRIDGE_SHAPE")
+    _require(bridge["schema"] == ENTRY_BRIDGE_VERSION and bridge["repository"] == REPOSITORY
+             and bridge["base"] == ENTRY_BASE and bridge["old_policy_id"] == ENTRY_OLD_POLICY,
+             "ENTRY_FIXED_BASIS")
+    inputs = {}
+    for key, pin in (("predecessor_context_utf8", ENTRY_PREDECESSOR_CONTEXT),
+                     ("predecessor_manifest_utf8", ENTRY_PREDECESSOR_MANIFEST),
+                     ("prior_installation_utf8", ENTRY_PRIOR_BRIDGE)):
+        _require(type(bridge[key]) is str and _digest(bridge[key].encode()) == pin,
+                 "ENTRY_HISTORY_PIN:" + key)
+        inputs[key] = strict_json(bridge[key].encode())
+    previous, prior, installed = (inputs[key] for key in (
+        "predecessor_context_utf8", "predecessor_manifest_utf8", "prior_installation_utf8"))
+    _require(previous["schema"] == INSTALL_VERSION and previous["state"] == "FINALIZED"
+             and previous["finalized"] == ENTRY_BASE and previous["policy_id"] == ENTRY_OLD_POLICY
+             and previous["installation"]["tip"] == ENTRY_PRIOR_TIP
+             and previous["installation"]["sha256"] == ENTRY_PRIOR_BRIDGE,
+             "ENTRY_FINALIZED_PREDECESSOR")
+    for key in ("schema", "repository", "policy_id", "kind", "accepted_basis", "base", "previous"):
+        _require(previous[key] == prior[key], "ENTRY_PRIOR_CONTEXT:" + key)
+    _require(prior["base"] == ENTRY_PRIOR_TIP and installed["schema"] == G6B_BRIDGE_VERSION
+             and installed["base"] == G6B_BASE, "ENTRY_PRIOR_INSTALLATION")
+    # Two fixed historical Git edges only; no recursive policy evaluation.
+    old_tip = _g6b_frozen_transition_v01(root, ENTRY_PRIOR_TIP, installed["base"],
+                                       installed["ledger"], installed["commit_message"])
+    base = _g6b_frozen_transition_v01(root, ENTRY_BASE, prior["base"], prior["ledger"],
+                                    prior["commit_message"])
+    _require(installed["new_enforcement"] == {name: old_tip[name] for name in POLICY_PATHS}
+             == {name: base[name] for name in POLICY_PATHS}, "ENTRY_PRIOR_ENFORCEMENT")
+    for key in ("old_enforcement", "new_enforcement"):
+        _require(type(bridge[key]) is dict and set(bridge[key]) == set(POLICY_PATHS),
+                 "ENTRY_ENFORCEMENT_CLOSURE")
+        for row in bridge[key].values():
+            _identity_shape(row)
+    _require(bridge["old_enforcement"] == {name: base[name] for name in POLICY_PATHS}
+             and bridge["new_enforcement"] == {name: _current_file(root, name)[0] for name in POLICY_PATHS},
+             "ENTRY_RAW_ENFORCEMENT")
+    for key in ("old", "new"):
+        _require(_digest(_canonical(bridge[key + "_enforcement"])) == bridge[key + "_policy_id"],
+                 "ENTRY_POLICY_MAP_ID")
+    _require(bridge["new_policy_id"] == context["policy_id"], "ENTRY_NEW_POLICY_ID")
+    for name in set(POLICY_PATHS) - G6B_MAINTENANCE_PATHS:
+        _require(bridge["new_enforcement"][name] == base[name], "ENTRY_INTEGRATION_UNCHANGED")
+    registries = {name: base[name] for name in REGISTRY_PATHS}
+    _require(bridge["old_registries"] == bridge["new_registries"] == registries
+             == {name: _current_file(root, name)[0] for name in REGISTRY_PATHS},
+             "ENTRY_REGISTRIES_UNCHANGED")
+    payload = bridge["ledger"]
+    _require(type(payload) is list and len(payload) == 3, "ENTRY_MAINTENANCE_COUNT")
+    names = set()
+    for row in payload:
+        _keys(row, {"path", "action", "pre", "post"}, "ENTRY_MAINTENANCE_ROW")
+        name = row["path"]
+        _require(name in G6B_MAINTENANCE_PATHS and name not in names and row["action"] == "M"
+                 and row["pre"] == base[name] and row["post"] != row["pre"], "ENTRY_MAINTENANCE_PREIMAGE")
+        _identity_shape(row["post"])
+        _require(row["post"] == _current_file(root, name)[0], "ENTRY_MAINTENANCE_POSTIMAGE")
+        names.add(name)
+    _entry_payload_v02(bridge["publication_ledger"])
+    publication = {row["path"]: row for row in bridge["publication_ledger"]}
+    _require(publication["README.md"]["pre"] == base["README.md"]
+             and not any(name.startswith(ENTRY_NAMESPACE + "/") for name in base), "ENTRY_PUBLICATION_PREIMAGE")
+    binding = context["installation"]
+    if manifest["kind"] == INSTALL_KIND:
+        _require(manifest["base"] == ENTRY_BASE and manifest["ledger"] == payload
+                 and not manifest["governed_namespaces"] and manifest["commit_message"] == bridge["commit_message"]
+                 and context["manifest"]["sha256"] == bridge["manifest_sha256"], "ENTRY_EXACT_M_PROPOSAL")
+        _require(manifest["previous"] == dict(ENTRY_BASE, policy_id=ENTRY_OLD_POLICY,
+                 manifest_sha256=ENTRY_PREDECESSOR_MANIFEST), "ENTRY_PREVIOUS_BINDING")
+        _require(binding["tip"] is None or binding["tip"] == context["finalized"], "ENTRY_M_TIP_BINDING")
+        tip = None
+    else:
+        tip = binding["tip"]
+        _g6b_frozen_transition_v01(root, tip, ENTRY_BASE, payload, bridge["commit_message"])
+        _require(tip["commit"] in git(root, "rev-list", manifest["base"]["commit"]).decode().splitlines(),
+                 "ENTRY_INSTALLED_BASE_ANCESTRY")
+    return dict(bridge, verified_maintenance_tip=tip)
+
+
 def validate_policy_installation_v01(root: Path, context: dict, manifest: dict, ledger: dict) -> dict:
     """Inactive until explicitly dispatched by the closed installation schema.
 
@@ -650,6 +770,8 @@ def validate_policy_installation_v01(root: Path, context: dict, manifest: dict, 
     raw = _read_regular(Path(binding["path"]), "INSTALLATION_BRIDGE_FILE")
     _require(_digest(raw) == binding["sha256"], "INSTALLATION_BRIDGE_PIN")
     parsed = strict_json(raw)
+    if type(parsed) is dict and parsed.get("schema") == ENTRY_BRIDGE_VERSION:
+        return _entry_maintenance_v02(root, context, manifest, parsed)
     if type(parsed) is dict and parsed.get("schema") == G6B_BRIDGE_VERSION:
         return _g6b_maintenance_v01(root, context, manifest, parsed)
     bridge = _keys(parsed, {

@@ -1,18 +1,34 @@
 # Radiolaria OS
 
+<p align="center">
+  <img src="docs/showcase/github_entry_v01/assets/hero.png" alt="Computing, assembled around intent. Models, programs and services organised around useful work." width="780">
+</p>
+
 **Computing, assembled around intent.**
 
-Radiolaria OS is an application execution kernel for composing models, programs,
-services and devices around a practical intention. It makes the work, the data
-actually consumed, and each local owner's decision inspectable. A model can propose
-what to do; it does not acquire the authority to do it.
+Radiolaria OS is an execution kernel that brings models, programs, services and devices together around a practical task. It connects the work performed, the information used and the decisions of the owners involved.
 
-| Start here | What you will find |
-| --- | --- |
-| [Understand](docs/showcase/radiolaria_os_v01/WHITEPAPER.md) | The purpose, mechanism and bounded case studies |
-| [Verify](#verify) | A free source inspection, evidence classes and the accepted technical basis |
-| [Build](#build) | Current contracts, typed Work and the neutral Authoring Kit |
-| [Read with an LLM](#read-with-an-llm) | An explanatory reader and a separate complete source export |
+**New here? Open the presentation first. No installation is needed to read the materials.**
+
+<p align="center">
+  <a href="https://github.com/AAkhtanin/hedgehog-os/releases/download/radiolaria-os-reference-g6b6f-v01/RADIOLARIA_PRESENTATION.pdf"><img src="docs/showcase/github_entry_v01/assets/presentation.png" alt="Open the presentation: Start here · 25 slides · PDF" width="380"></a>
+  <a href="https://github.com/AAkhtanin/hedgehog-os/releases/download/radiolaria-os-reference-g6b6f-v01/RADIOLARIA_WHITEPAPER.pdf"><img src="docs/showcase/github_entry_v01/assets/whitepaper.png" alt="Read the whitepaper: Architecture, mathematics and evidence" width="380"></a>
+</p>
+
+<p align="center">
+  <a href="https://github.com/AAkhtanin/hedgehog-os/releases/download/radiolaria-os-reference-g6b6f-v01/RADIOLARIA_ATLAS.pdf"><img src="docs/showcase/github_entry_v01/assets/atlas.png" alt="Geometry Atlas: One system · Seven connected views" width="380"></a>
+  <a href="#read-with-an-llm"><img src="docs/showcase/github_entry_v01/assets/llm.png" alt="Read with your LLM: One XML to start · Full source available" width="380"></a>
+</p>
+
+<p align="center">
+  <a href="#verify"><img src="docs/showcase/github_entry_v01/assets/verify.png" alt="Verify / Full source: Inspect evidence or explore the code" width="380"></a>
+</p>
+
+[Presentation PDF](https://github.com/AAkhtanin/hedgehog-os/releases/download/radiolaria-os-reference-g6b6f-v01/RADIOLARIA_PRESENTATION.pdf) · [Whitepaper](https://github.com/AAkhtanin/hedgehog-os/releases/download/radiolaria-os-reference-g6b6f-v01/RADIOLARIA_WHITEPAPER.pdf) · [Atlas](https://github.com/AAkhtanin/hedgehog-os/releases/download/radiolaria-os-reference-g6b6f-v01/RADIOLARIA_ATLAS.pdf) · [LLM reading](#read-with-an-llm) · [Verify](#verify)
+
+**Published reference release:** [radiolaria-os-reference-g6b6f-v01](https://github.com/AAkhtanin/hedgehog-os/releases/tag/radiolaria-os-reference-g6b6f-v01). Code, documentation and recorded evidence are available now. Website and DOI deposit are separate follow-up work.
+
+The detailed architecture, verification instructions, integration entry and scope follow below.
 
 ![Conceptual map: intent enters bounded parent Work; child Work returns a typed result for local Root review. Time, memory, source and source admission qualify use but do not grant permission.](docs/showcase/radiolaria_os_v01/atlas/OVERVIEW.svg)
 
@@ -24,12 +40,12 @@ relations](docs/showcase/radiolaria_os_v01/atlas/OVERVIEW.md).
 
 ## Understand
 
-- **Main presentation:** [25-slide PDF](docs/showcase/radiolaria_os_v01/presentation/main_export.pdf)
-  and [editable PPTX](docs/showcase/radiolaria_os_v01/presentation/main.pptx).
-- **Whitepaper:** [58-page PDF](docs/showcase/radiolaria_os_v01/whitepaper.pdf),
-  [HTML](docs/showcase/radiolaria_os_v01/WHITEPAPER.html) and
+- **Main presentation:** [25-slide PDF](https://github.com/AAkhtanin/hedgehog-os/releases/download/radiolaria-os-reference-g6b6f-v01/RADIOLARIA_PRESENTATION.pdf)
+  and [editable PPTX](https://github.com/AAkhtanin/hedgehog-os/releases/download/radiolaria-os-reference-g6b6f-v01/RADIOLARIA_PRESENTATION.pptx).
+- **Whitepaper:** [58-page PDF](https://github.com/AAkhtanin/hedgehog-os/releases/download/radiolaria-os-reference-g6b6f-v01/RADIOLARIA_WHITEPAPER.pdf),
+  [HTML source for local viewing](docs/showcase/radiolaria_os_v01/WHITEPAPER.html) and
   [Markdown](docs/showcase/radiolaria_os_v01/WHITEPAPER.md).
-- **Geometry Atlas:** [8-page PDF](docs/showcase/radiolaria_os_v01/atlas/atlas.pdf)
+- **Geometry Atlas:** [8-page PDF](https://github.com/AAkhtanin/hedgehog-os/releases/download/radiolaria-os-reference-g6b6f-v01/RADIOLARIA_ATLAS.pdf)
   and [overview](docs/showcase/radiolaria_os_v01/atlas/OVERVIEW.md).
 - **Technical chapters:** [intent](docs/showcase/radiolaria_os_v01/chapters/01_intent.md),
   [geometry](docs/showcase/radiolaria_os_v01/chapters/02_geometry.md),
@@ -51,23 +67,35 @@ model answer, a native Work return, an effect receipt and a replay are different
 
 ## Downloads
 
-These are real **offline candidate assets**, not announced hosted releases. The
-[asset guide](docs/showcase/radiolaria_os_v01/release/DOWNLOADS.md) gives the layout
-of the delivered bundle; its detached asset record binds exact bytes. No DOI or
-future release URL has been invented.
+The [published reference release](https://github.com/AAkhtanin/hedgehog-os/releases/tag/radiolaria-os-reference-g6b6f-v01) provides these eight files.
+Each link below downloads the named file directly; sizes are exact published bytes.
 
-| Asset | Purpose and scope |
-| --- | --- |
-| [READ_RADIOLARIA.xml](docs/showcase/radiolaria_os_v01/reader/READ_RADIOLARIA.xml) | Accepted 62-block explanatory reading route; not the whole repository |
-| [RADIOLARIA_FULL_SOURCE.xml](docs/showcase/radiolaria_os_v01/release/DOWNLOADS.md#full-source-xml) | Lossless declared public text of A and the proposed publication delta; exact binaries remain neighboring files |
-| [RADIOLARIA_REVIEW_BUNDLE.zip](docs/showcase/radiolaria_os_v01/release/DOWNLOADS.md#accepted-review-bundle) | Unchanged 341-member historical B5 input, with recorded reader scope |
-| [RADIOLARIA_FULL_SOURCE_BUNDLE.zip](docs/showcase/radiolaria_os_v01/release/DOWNLOADS.md#complete-source-bundle) | One offline download: implementation, contracts, tests, evidence, publication formats, full XML and inventories |
+| File | Bytes | Purpose and scope |
+| --- | ---: | --- |
+| [RADIOLARIA_PRESENTATION.pdf](https://github.com/AAkhtanin/hedgehog-os/releases/download/radiolaria-os-reference-g6b6f-v01/RADIOLARIA_PRESENTATION.pdf) | 616,975 | 25-slide presentation; start here |
+| [RADIOLARIA_PRESENTATION.pptx](https://github.com/AAkhtanin/hedgehog-os/releases/download/radiolaria-os-reference-g6b6f-v01/RADIOLARIA_PRESENTATION.pptx) | 1,728,230 | Editable presentation, same accepted 25 slides |
+| [RADIOLARIA_WHITEPAPER.pdf](https://github.com/AAkhtanin/hedgehog-os/releases/download/radiolaria-os-reference-g6b6f-v01/RADIOLARIA_WHITEPAPER.pdf) | 302,367 | 58-page whitepaper: architecture, mathematics and evidence |
+| [RADIOLARIA_ATLAS.pdf](https://github.com/AAkhtanin/hedgehog-os/releases/download/radiolaria-os-reference-g6b6f-v01/RADIOLARIA_ATLAS.pdf) | 36,663 | 8-page Geometry Atlas: overview and seven connected views |
+| [READ_RADIOLARIA.xml](https://github.com/AAkhtanin/hedgehog-os/releases/download/radiolaria-os-reference-g6b6f-v01/READ_RADIOLARIA.xml) | 1,488,319 | Current 62-block explanatory reading route; not the whole repository |
+| [RADIOLARIA_FULL_SOURCE_BUNDLE.zip](https://github.com/AAkhtanin/hedgehog-os/releases/download/radiolaria-os-reference-g6b6f-v01/RADIOLARIA_FULL_SOURCE_BUNDLE.zip) | 339,347,838 | Full declared source/evidence snapshot and offline dependencies; tool-enabled reading |
+| [RADIOLARIA_FULL_SOURCE.xml](https://github.com/AAkhtanin/hedgehog-os/releases/download/radiolaria-os-reference-g6b6f-v01/RADIOLARIA_FULL_SOURCE.xml) | 807,537,837 | Lossless declared source text; indexed reading, with exact binary neighbours in the full ZIP |
+| [RADIOLARIA_REVIEW_BUNDLE.zip](https://github.com/AAkhtanin/hedgehog-os/releases/download/radiolaria-os-reference-g6b6f-v01/RADIOLARIA_REVIEW_BUNDLE.zip) | 12,895,598 | Unchanged historical B5 input; not the current default Reader package |
 
+The source exports preserve the declared publication snapshot at
+[`800f38c3407b3f4ec93dc943c977ffeecb614881`](https://github.com/AAkhtanin/hedgehog-os/commit/800f38c3407b3f4ec93dc943c977ffeecb614881).
+They are not automatically regenerated by later README or navigation changes.
 The full-source bundle omits four individually inventoried loose font binaries,
-not source text. Its source snapshot includes historical public evidence but not
-the Git database or every past revision. It is a new source-audit route, **not** an
-input that passed the earlier B5 reader trial. Rights-pending illustrations remain
-labelled private-review assets; preparation is not permission to redistribute them.
+not source text. It includes historical public evidence but not the Git database
+or every past revision. It is a source-audit route, **not** a new input passed
+through the earlier B5 reader trial. See the preserved
+[bundle-layout guide](docs/showcase/radiolaria_os_v01/release/DOWNLOADS.md) for
+its offline structure and [accepted rights](docs/showcase/radiolaria_os_v01/RIGHTS.md)
+for the declared use of the published materials.
+
+Documents in the tagged release retain their original editorial version.
+Historical `NOT_RUN`, `PENDING` and preparation labels inside them do not override
+the publication status recorded in the Release. Website and Zenodo/DOI work
+remain separate and have not been performed.
 
 ## Verify
 
@@ -84,7 +112,7 @@ It inspects the finite package and its 73 evidence-row bindings without importin
 runtime, starting collectors, Docker or providers. Expected classification:
 `PASS_FINITE_MIXED_BASIS_REFERENCE_PACKAGE`. Without an externally reviewed
 `--manifest-sha256` pin, this establishes self-consistency, not independent acceptance.
-This B6 preparation has **not** rerun that command.
+This README update does **not** report a new execution of that command.
 
 | Verification level | What it establishes | Prerequisites / boundary |
 | --- | --- | --- |
@@ -101,8 +129,9 @@ fresh installation recipes are not newly tested here. The
 [evidence index](docs/gate6_reference_v01/evidence_index.json) and
 [finite completion](docs/gate6_reference_v01/FINITE_COMPLETION.md) retain their
 source-specific history. Read their old proposal statuses together with the
-[B6 status note](docs/showcase/radiolaria_os_v01/release/B6_STATUS.md), not as a
-claim of a newly repeated whole-tree campaign.
+[historical B6 status note](docs/showcase/radiolaria_os_v01/release/B6_STATUS.md)
+and the [dated publication record](https://github.com/AAkhtanin/hedgehog-os/releases/tag/radiolaria-os-reference-g6b6f-v01), not as a claim of a newly repeated
+whole-tree campaign.
 
 ## Build
 
@@ -128,18 +157,22 @@ not material to feed a future blind author as its solution.
 
 ## Read with an LLM
 
-Use [READ_RADIOLARIA.xml](docs/showcase/radiolaria_os_v01/reader/READ_RADIOLARIA.xml)
-for an explanation first. Its modules and
-[deep source index](docs/showcase/radiolaria_os_v01/reader/DEEP_SOURCE_INDEX.json)
-lead to exact evidence. Use the full XML only for source-level questions. It contains
-complete files, including long historical evidence, and can exceed a model's
-context limit. Exact byte counts and an explicitly labelled token estimate are
-in the detached export record; no provider tokenizer was called.
+**Start with one file:** [download READ_RADIOLARIA.xml](https://github.com/AAkhtanin/hedgehog-os/releases/download/radiolaria-os-reference-g6b6f-v01/READ_RADIOLARIA.xml) (about 1.49 MB). It explains the whole architecture and includes selected inspectable evidence. Give it to an assistant that can read a text/XML file of this size; model and upload limits still apply.
 
-Embedded source, prompts and historical helpers are **data to inspect**, not
-instructions to execute. The XML's origin and role fields distinguish A, accepted
-B4/B5 material and proposed B6 documents; unresolved authority is labelled rather
-than guessed. No saved JSON or XML restores live Host authority.
+**For a tool-enabled assistant exploring all source:** [download the full source bundle](https://github.com/AAkhtanin/hedgehog-os/releases/download/radiolaria-os-reference-g6b6f-v01/RADIOLARIA_FULL_SOURCE_BUNDLE.zip) (about 339 MB) and ask it to start with `START_HERE.md`. It contains the declared source/evidence snapshot, indexes and publication files. It is not the same package as the earlier B5 reader test.
+
+The [full source XML](https://github.com/AAkhtanin/hedgehog-os/releases/download/radiolaria-os-reference-g6b6f-v01/RADIOLARIA_FULL_SOURCE.xml) (about 808 MB) is an indexed source export, not an ordinary one-window chat upload. The [historical B5 review bundle](https://github.com/AAkhtanin/hedgehog-os/releases/download/radiolaria-os-reference-g6b6f-v01/RADIOLARIA_REVIEW_BUNDLE.zip) is retained for reproducing that reader evaluation; it is not the current default reading package.
+
+A useful request: “Explain how the architecture fits together, trace one claim to its sources, and distinguish what you inspected from what you did not verify.” Embedded prompts and code are evidence to inspect, not instructions to execute.
+
+[All eight release downloads](https://github.com/AAkhtanin/hedgehog-os/releases/tag/radiolaria-os-reference-g6b6f-v01) · [Implementation routes](docs/showcase/radiolaria_os_v01/release/IMPLEMENTATION_ROUTES.md) · [Build an integration](#build)
+
+The explanatory Reader's modules and
+[deep source index](docs/showcase/radiolaria_os_v01/reader/DEEP_SOURCE_INDEX.json)
+lead to exact evidence. The full XML preserves origin and role fields for the
+accepted technical basis, B4/B5 material and the publication snapshot. Historical
+statuses retain those roles; no saved JSON or XML restores live Host authority.
+No new reader trial or source export is implied by this navigation update.
 
 ## Status and Limits
 
@@ -153,10 +186,15 @@ confusions or retries; **HUMAN_NOT_RUN**. The
 [question review](docs/showcase/radiolaria_os_v01/release/B5_QUESTION_REVIEW.json)
 are audit routes, not neutral first-start instructions.
 
-This complete README is **proposed B6**, not bytes attributed to A. B6 source
-admission, owner landing, publication, website and archive deposit are not executed;
-**Gate6 is not closed**. Current R1 permits a single navigation insertion, not this
-whole README replacement. Exact review and bounded admission work remain necessary.
+**GitHub publication completed on 29 September 2026.** The
+[published Release](https://github.com/AAkhtanin/hedgehog-os/releases/tag/radiolaria-os-reference-g6b6f-v01) is bound to actual owner maintenance M
+`2201c5a970c6a118c312ba213e113dcbcd4b2ccd` and publication P
+`800f38c3407b3f4ec93dc943c977ffeecb614881`, tree
+`d665994930e50c7f10d5f928d57ceb7aac758203`.
+The source exports and eight assets stay bound to that snapshot. This README
+presents the current human entry; it does not rewrite those archived documents.
+Website, Zenodo/account registration, DOI and DNS remain unperformed.
+This navigation update does **not** declare the entire Gate 6 roadmap closed.
 
 G6A deferments **N1-18, N1-19, N4-12, N4-13** remain open. Historical G54B1 and
 G54D remain INCOMPLETE; accepted G54D1 has its own correction-4 lineage. Neither
@@ -179,8 +217,15 @@ states the intended handover without an indefinite support promise. AI assistanc
 is disclosed. CC BY 4.0 covers new explanatory author text and original diagrams
 only; code, verbatim excerpts, historical evidence and third-party material retain
 their own terms. See [rights](docs/showcase/radiolaria_os_v01/RIGHTS.md) and
-[citation](docs/showcase/radiolaria_os_v01/CITATION.cff). This preparation is not
-a published deposit, signature or assigned DOI.
+[citation](docs/showcase/radiolaria_os_v01/CITATION.cff). The GitHub release is
+published; no archival deposit, signature or assigned DOI is claimed.
+
+The exact image identities covered by the owner's public-use decision retain
+their provenance in [RIGHTS.md](docs/showcase/radiolaria_os_v01/RIGHTS.md).
+The new navigation images are editorial derivatives for this project entry;
+no blanket third-party rights warranty or CC BY grant is inferred for them.
+The Visual Seal and its NONCANONICAL_PREVIEW remain prototypes, not
+cryptographic seals, demonstrated reverse decoders or permission.
 
 ## Engineering History
 
@@ -195,4 +240,5 @@ a published deposit, signature or assigned DOI.
   bundle at `history/A/README.md`. The commit-pinned link is provenance, not a
   fresh network availability check.
 
-[Offline and planned direct Release downloads](docs/showcase/radiolaria_os_v01/release/DOWNLOADS.md). Planned uploads are PENDING; no anonymous availability is claimed.
+[Published Release and all eight downloads](https://github.com/AAkhtanin/hedgehog-os/releases/tag/radiolaria-os-reference-g6b6f-v01).
+The [preserved offline guide](docs/showcase/radiolaria_os_v01/release/DOWNLOADS.md) describes the tagged bundle layout.

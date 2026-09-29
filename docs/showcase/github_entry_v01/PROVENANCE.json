@@ -1,0 +1,83 @@
+{
+  "status": "PREPARED_FOR_SEPARATE_R1_ADMISSION",
+  "source_art": {
+    "public_path": "docs/showcase/radiolaria_os_v01/assets/radiolaria_reference_cover.png",
+    "technical_or_publication_commit": "800f38c3407b3f4ec93dc943c977ffeecb614881",
+    "bytes": 1499173,
+    "sha256": "a8570e18d4c79834fb188e8d24cf0612380a5430bf370676bf69421ffb1c49f6",
+    "source_delivery": "exact file extracted from previously delivered Nimbus B4 archive; agrees with current published assets/provenance.json",
+    "treatment": "unmodified source retained elsewhere; new hero and social image are distinct editorial derivatives using crop/scale/composition, not a re-issue of the original bytes",
+    "rights": "Use only within current owner-requested project presentation; no new blanket licensing claim for source art"
+  },
+  "new_files": [
+    {
+      "path": "assets/atlas.png",
+      "bytes": 11850,
+      "sha256": "195972ce4e4584f0a5e86ba4514754223d74090ef247d7c12503765fbbdec9fa",
+      "width": 760,
+      "height": 192
+    },
+    {
+      "path": "assets/hero.png",
+      "bytes": 238493,
+      "sha256": "7f6cb989eed9509b1e312b835209db2e7497ab636a396e9c2e4717791fbf18d4",
+      "width": 1560,
+      "height": 410
+    },
+    {
+      "path": "assets/llm.png",
+      "bytes": 11852,
+      "sha256": "88a77cbe1ee2d6aa9bcfb518f559d499f583f4759dceb04507bbc0b3a3510f5a",
+      "width": 760,
+      "height": 192
+    },
+    {
+      "path": "assets/presentation.png",
+      "bytes": 9789,
+      "sha256": "dbaa28760e3552a4129b527f19ed866bd1573038910cd1e160f6fd9ced275fc8",
+      "width": 760,
+      "height": 192
+    },
+    {
+      "path": "assets/social-preview.png",
+      "bytes": 342547,
+      "sha256": "8d5778da635710da64a277232fcc1f27c339edf060f9c50f33459562e4fb94d2",
+      "width": 1280,
+      "height": 640
+    },
+    {
+      "path": "assets/verify.png",
+      "bytes": 10333,
+      "sha256": "2003b42f3705aeb5487ecfaeeb27d76999029968a7a242a1eb64cd0469d9cc97",
+      "width": 760,
+      "height": 192
+    },
+    {
+      "path": "assets/whitepaper.png",
+      "bytes": 9917,
+      "sha256": "351b1edeb4ba03a1af0f22865aa81c735eaed59a5964f8c6f89fdebfd7605620",
+      "width": 760,
+      "height": 192
+    }
+  ],
+  "fonts": "Installed DejaVu Sans rasterised into PNG. No font binaries included. No new dependency required in Work.",
+  "current_readme_blob": "10b4764499a2582338149f6f9a1f20495c89635f",
+  "generation": "Pillow layout over existing artwork; no new scientific illustration or model-generated proof image",
+  "limitations": [
+    "This capsule does not change the Release, its eight assets, source exports, runtime, or prior publications.",
+    "The banner and navigation PNGs are editorial UI images, not execution diagrams or proof.",
+    "Social preview requires a separate GitHub setting; committing the PNG does not set it.",
+    "Historical preparation labels in this capsule do not establish a later deployment result."
+  ],
+  "role": "INERT_EDITORIAL_NAVIGATION_ASSETS",
+  "source_package": {
+    "name": "RADIOLARIA_GITHUB_HUMAN_ENTRY_V02_FOR_WORK_20260929.zip",
+    "bytes": 1117223,
+    "sha256": "dc6496376ade8d6437744985971ec8b636066e1649ccb5adb466ce8dd2124f01"
+  },
+  "release_snapshot": {
+    "commit": "800f38c3407b3f4ec93dc943c977ffeecb614881",
+    "tree": "d665994930e50c7f10d5f928d57ceb7aac758203",
+    "tag": "radiolaria-os-reference-g6b6f-v01"
+  }
+}

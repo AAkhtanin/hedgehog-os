@@ -435,7 +435,8 @@ def _kind_rules(root: Path, manifest: dict, ledger: dict, base: dict, installati
                         if match and match.group(1).rsplit("/", 1)[0] in capsules and "".join(
                                 lines[:i] + lines[i + 1:]) == old:
                             removed = True
-                    _require(removed, "DOCUMENTATION_NAVIGATION_EXACT_INSERTION")
+                    _require(removed or _g6b_exact_publication_v01(
+                        manifest, installation), "DOCUMENTATION_NAVIGATION_EXACT_INSERTION")
                 else:
                     _require(row["action"] == "A" and any(name.startswith(item + "/") for item in capsules),
                              "DOCUMENTATION_SCOPE:" + name)
@@ -451,6 +452,21 @@ def _kind_rules(root: Path, manifest: dict, ledger: dict, base: dict, installati
 INSTALL_VERSION = "reviewed_repository_policy_installation_v01"
 INSTALL_KIND = "POLICY_INSTALLATION"
 REGISTRY_PATHS = tuple(name for name in PROTECTED_PINS if name.startswith("release/"))
+G6B_BRIDGE_VERSION = "reviewed_g6b_final_bytes_maintenance_v01"
+G6B_BASE = {"commit": "2e965ecb18e545e428380eb8e9aa5a7037a388be",
+            "tree": "59a43cc0da470886804aab6c9af87fe17dfbd685"}
+G6B_OLD_POLICY = "d788fa45194be3dbcf23bb83634f901f8f1c20bcdf24334782fc916074b9bb2a"
+G6B_PREDECESSOR_CONTEXT = "90724321f0b03386073d1aa583906b8ee2a9afaa78adfa23178f6262cd7e974d"
+G6B_PREDECESSOR_MANIFEST = "b170760f040b4c801c50625435bbeb0ed9bc5d4ac60f9ef646bf9c9eb7122c27"
+G6B_PRIOR_BRIDGE = "92952b8a2386ac445560a41c998eccd991bbcfe2440c227fd1a1128f6bcf2dea"
+G6B_PRIOR_TIP = {"commit": "5b259441994ba41ed3467e8ffcb9ae6ee8d371f0",
+                 "tree": "921f07b8ac54e117e2b70e29d3da41ea373bcc62"}
+G6B_NAMESPACE = "docs/showcase/radiolaria_os_v01"
+G6B_MAINTENANCE_PATHS = frozenset({
+    "tools/reviewed_repository_transition_v01.py",
+    "docs/repository_transition_admission_v01.md",
+    "tests/test_reviewed_repository_transition_v01.py",
+})
 INSTALLATION_PATHS = frozenset({
     'demo/run_gate4_reference_v01.py', 'demo/run_living_gauntlet_v01.py', 'demo/run_kernel_conformance_v01.py',
     'hedgehog/domains/airline/gate4_reference_adapter_v01.py', 'hedgehog/domains/airline/gate4_reference_history_v01.py',
@@ -482,6 +498,146 @@ def _installation_context_shape(context: dict) -> None:
         _base_shape(binding["tip"])
 
 
+def _g6b_payload_shape_v01(payload: object) -> dict:
+    """Closed publication payload, not a general README replacement option."""
+    _require(type(payload) is list and len(payload) > 1, "G6B_PUBLICATION_PAYLOAD")
+    rows, folded = {}, set()
+    for row in payload:
+        _keys(row, {"path", "action", "pre", "post"}, "G6B_PUBLICATION_ROW")
+        name = row["path"]
+        _require(_relative(name) and name not in rows and name.casefold() not in folded,
+                 "G6B_PUBLICATION_PATH")
+        _identity_shape(row["post"])
+        _require(row["post"]["mode"] == "100644", "G6B_PUBLICATION_MODE")
+        if name == "README.md":
+            _identity_shape(row["pre"])
+            _require(row["action"] == "M" and row["pre"] != row["post"], "G6B_README_ROW")
+        else:
+            _require(name.startswith(G6B_NAMESPACE + "/") and row["action"] == "A"
+                     and row["pre"] is None, "G6B_PUBLICATION_NAMESPACE")
+        rows[name] = row
+        folded.add(name.casefold())
+    _require("README.md" in rows and G6B_NAMESPACE + "/README.md" in rows,
+             "G6B_PUBLICATION_ENTRIES")
+    return rows
+
+
+def _g6b_exact_publication_v01(manifest: dict, installation: dict | None) -> bool:
+    if installation is None or installation.get("schema") != G6B_BRIDGE_VERSION:
+        return False
+    tip = installation.get("verified_maintenance_tip")
+    return (tip is not None and manifest["kind"] == "DOCUMENTATION"
+            and manifest["base"] == tip
+            and manifest["previous"] == dict(tip, policy_id=installation["new_policy_id"],
+                manifest_sha256=installation["manifest_sha256"])
+            and manifest["governed_namespaces"] == [G6B_NAMESPACE]
+            and manifest["ledger"] == installation["publication_ledger"])
+
+
+def _g6b_frozen_transition_v01(root: Path, tip: dict, base: dict, payload: list,
+                              message: str) -> dict:
+    """Verify one named historical edge from immutable objects, never recursive."""
+    _base_shape(tip)
+    _base_shape(base)
+    _require(git(root, "rev-parse", base["commit"] + "^{tree}").decode().strip() == base["tree"],
+             "G6B_HISTORY_BASE_TREE")
+    _require(git(root, "show", "-s", "--format=%P%n%T%n%B", tip["commit"]).decode().strip().splitlines()
+             == [base["commit"], tip["tree"], message], "G6B_HISTORY_PARENT_TREE_MESSAGE")
+    expected = _object_identities(tree_objects(root, base["commit"]))
+    names = set()
+    for row in payload:
+        _keys(row, {"path", "action", "pre", "post"}, "G6B_HISTORY_ROW")
+        name = row["path"]
+        _require(_relative(name) and name not in names and row["pre"] == expected.get(name)
+                 and row["action"] == ("M" if name in expected else "A"), "G6B_HISTORY_PREIMAGE")
+        _identity_shape(row["post"])
+        expected[name] = row["post"]
+        names.add(name)
+    _require(expected == _object_identities(tree_objects(root, tip["commit"])),
+             "G6B_HISTORY_EXACT_TREE")
+    return expected
+
+
+def _g6b_maintenance_v01(root: Path, context: dict, manifest: dict, bridge: dict) -> dict:
+    _keys(bridge, {
+        "schema", "repository", "base", "predecessor_context_utf8", "predecessor_manifest_utf8",
+        "prior_installation_utf8", "old_enforcement", "new_enforcement", "old_policy_id",
+        "new_policy_id", "manifest_sha256", "ledger", "old_registries", "new_registries",
+        "commit_message", "publication_ledger",
+    }, "G6B_BRIDGE_SHAPE")
+    _require(bridge["repository"] == REPOSITORY and bridge["base"] == G6B_BASE
+             and bridge["old_policy_id"] == G6B_OLD_POLICY, "G6B_FIXED_BASIS")
+    inputs = {}
+    for key, pin in (("predecessor_context_utf8", G6B_PREDECESSOR_CONTEXT),
+                     ("predecessor_manifest_utf8", G6B_PREDECESSOR_MANIFEST),
+                     ("prior_installation_utf8", G6B_PRIOR_BRIDGE)):
+        _require(type(bridge[key]) is str and _digest(bridge[key].encode()) == pin,
+                 "G6B_HISTORY_PIN:" + key)
+        inputs[key] = strict_json(bridge[key].encode())
+    previous, prior, g44 = (inputs[key] for key in (
+        "predecessor_context_utf8", "predecessor_manifest_utf8", "prior_installation_utf8"))
+    _require(previous["schema"] == INSTALL_VERSION and previous["state"] == "FINALIZED"
+             and previous["finalized"] == G6B_BASE and previous["policy_id"] == G6B_OLD_POLICY
+             and previous["installation"]["tip"] == G6B_PRIOR_TIP
+             and previous["installation"]["sha256"] == G6B_PRIOR_BRIDGE,
+             "G6B_FINALIZED_PREDECESSOR")
+    for key in ("schema", "repository", "policy_id", "kind", "accepted_basis", "base", "previous"):
+        _require(previous[key] == prior[key], "G6B_PRIOR_CONTEXT:" + key)
+    a = _g6b_frozen_transition_v01(root, G6B_BASE, prior["base"], prior["ledger"], prior["commit_message"])
+    g44_tree = _g6b_frozen_transition_v01(root, G6B_PRIOR_TIP, g44["base"], g44["ledger"], g44["commit_message"])
+    _require(G6B_PRIOR_TIP["commit"] in git(root, "rev-list", G6B_BASE["commit"]).decode().splitlines(),
+             "G6B_PRIOR_INSTALLATION_ANCESTRY")
+    _require({name: g44_tree[name] for name in POLICY_PATHS} == g44["new_enforcement"]
+             and g44["new_enforcement"] == {name: a[name] for name in POLICY_PATHS},
+             "G6B_PRIOR_ENFORCEMENT")
+    for key in ("old_enforcement", "new_enforcement"):
+        _require(type(bridge[key]) is dict and set(bridge[key]) == set(POLICY_PATHS), "G6B_ENFORCEMENT_CLOSURE")
+        for row in bridge[key].values():
+            _identity_shape(row)
+    _require(bridge["old_enforcement"] == {name: a[name] for name in POLICY_PATHS}
+             and bridge["new_enforcement"] == {name: _current_file(root, name)[0] for name in POLICY_PATHS},
+             "G6B_RAW_ENFORCEMENT")
+    for key in ("old", "new"):
+        _require(_digest(_canonical(bridge[key + "_enforcement"])) == bridge[key + "_policy_id"],
+                 "G6B_POLICY_MAP_ID")
+    _require(bridge["new_policy_id"] == context["policy_id"], "G6B_NEW_POLICY_ID")
+    for name in set(POLICY_PATHS) - G6B_MAINTENANCE_PATHS:
+        _require(bridge["new_enforcement"][name] == a[name], "G6B_INTEGRATION_UNCHANGED")
+    registries = {name: a[name] for name in REGISTRY_PATHS}
+    _require(bridge["old_registries"] == bridge["new_registries"] == registries
+             == {name: _current_file(root, name)[0] for name in REGISTRY_PATHS}, "G6B_REGISTRIES_UNCHANGED")
+    payload = bridge["ledger"]
+    _require(type(payload) is list and len(payload) == 3, "G6B_MAINTENANCE_COUNT")
+    names = set()
+    for row in payload:
+        _keys(row, {"path", "action", "pre", "post"}, "G6B_MAINTENANCE_ROW")
+        name = row["path"]
+        _require(name in G6B_MAINTENANCE_PATHS and name not in names and row["action"] == "M"
+                 and row["pre"] == a[name] and row["post"] != row["pre"], "G6B_MAINTENANCE_PREIMAGE")
+        _identity_shape(row["post"])
+        _require(row["post"] == _current_file(root, name)[0], "G6B_MAINTENANCE_POSTIMAGE")
+        names.add(name)
+    publication = _g6b_payload_shape_v01(bridge["publication_ledger"])
+    _require(publication["README.md"]["pre"] == a["README.md"]
+             and not any(name.startswith(G6B_NAMESPACE + "/") for name in a), "G6B_PUBLICATION_PREIMAGE")
+    binding = context["installation"]
+    if manifest["kind"] == INSTALL_KIND:
+        _require(manifest["base"] == G6B_BASE and manifest["ledger"] == payload
+                 and not manifest["governed_namespaces"] and manifest["commit_message"] == bridge["commit_message"]
+                 and context["manifest"]["sha256"] == bridge["manifest_sha256"], "G6B_EXACT_M_PROPOSAL")
+        _require(manifest["previous"] == dict(G6B_BASE, policy_id=G6B_OLD_POLICY,
+                 manifest_sha256=G6B_PREDECESSOR_MANIFEST), "G6B_PREVIOUS_BINDING")
+        _require(binding["tip"] is None or binding["tip"] == context["finalized"], "G6B_M_TIP_BINDING")
+        tip = None
+    else:
+        tip = binding["tip"]
+        _g6b_frozen_transition_v01(root, tip, G6B_BASE, payload, bridge["commit_message"])
+        _require(tip["commit"] in git(root, "rev-list", manifest["base"]["commit"]).decode().splitlines(),
+                 "G6B_INSTALLED_BASE_ANCESTRY")
+    # Derived only after the actual Git installation proof. It is not caller input.
+    return dict(bridge, verified_maintenance_tip=tip)
+
+
 def validate_policy_installation_v01(root: Path, context: dict, manifest: dict, ledger: dict) -> dict:
     """Inactive until explicitly dispatched by the closed installation schema.
 
@@ -493,7 +649,10 @@ def validate_policy_installation_v01(root: Path, context: dict, manifest: dict, 
     binding = context["installation"]
     raw = _read_regular(Path(binding["path"]), "INSTALLATION_BRIDGE_FILE")
     _require(_digest(raw) == binding["sha256"], "INSTALLATION_BRIDGE_PIN")
-    bridge = _keys(strict_json(raw), {
+    parsed = strict_json(raw)
+    if type(parsed) is dict and parsed.get("schema") == G6B_BRIDGE_VERSION:
+        return _g6b_maintenance_v01(root, context, manifest, parsed)
+    bridge = _keys(parsed, {
         "schema", "repository", "base", "predecessor_context", "predecessor_manifest_utf8",
         "old_enforcement", "new_enforcement", "old_policy_id", "new_policy_id",
         "manifest_sha256", "ledger", "old_registries", "new_registries", "commit_message",

@@ -185,3 +185,44 @@ uses the same approved identities and actual commit, never reset/amend/force or
 a regenerated approval. All G44 examples/rehearsals are DISPOSABLE_TEST_ONLY.
 Only later exact-byte independent review and a separate owner instruction can
 authorize production installation. Source admission is not Gate4 closure.
+# G6B Final-Bytes Maintenance Proposal
+
+The separately reviewed `reviewed_g6b_final_bytes_maintenance_v01` bridge is
+limited to accepted A `2e965ecb18e545e428380eb8e9aa5a7037a388be`, tree
+`59a43cc0da470886804aab6c9af87fe17dfbd685`. It uses the existing
+POLICY_INSTALLATION and DOCUMENTATION dispatch and phase vocabulary. The public
+guard and actual import-time release binder are unchanged. Source admission
+does not grant Root permission, certify runtime behavior, publish anything or
+close Gate 6.
+
+M changes exactly this contract, the policy helper and its focused tests. Its
+external expected bridge pin covers the full old/new four-file enforcement maps,
+all three M pre/postimages, unchanged registry identities, the exact finalized A
+context/manifest, and the previous G44 installation and actual tip. Immutable Git
+objects prove the two finite historical edges and G44 ancestry; no recursive
+policy-installation service is introduced. All new raw code, including constants,
+participates in the externally reviewed policy identity. The bridge is external
+to avoid a self-approval hash cycle. The old verifier must first validate A;
+selection of a new verifier requires independent review and separate owner
+authorization, not old-policy approval of its own replacement.
+
+The same bridge freezes the complete final publication ledger and exactly one
+namespace, `docs/showcase/radiolaria_os_v01`. P is DOCUMENTATION on the real,
+verified, sole-parent M commit/tree. Only that exact base, previous M manifest,
+full payload and README pre/post pair permit the full README replacement.
+Another replacement, namespace, omitted/extra path or later reuse fails. Ordinary
+one-link DOCUMENTATION remains unchanged outside this exception; ENGINEERING
+still refuses README. No ignored files, partial staging, changed neighbors,
+symlinks, unsafe modes or operation/context conflicts become admissible.
+
+The future owner's M commit cannot be predicted by a rehearsal. P's payload is
+frozen now; its manifest and context are deterministically bound to the actual
+owner M after that commit, then independently checked before P applies. A
+disposable M identity is never an owner identity. PREPARED_COMMITTED recovery
+checks the existing sole-parent commit, then finalizes the same context without
+a second commit, reset, amend or regenerated review authorization. Existing
+current inventory/index/branch/origin and historical G44 rules remain in force.
+
+This section describes proposed code, not installation in owner. Owner M/P,
+ordinary commit/push, visibility, release uploads, website/DNS and archival
+publication remain separately authorized operations.

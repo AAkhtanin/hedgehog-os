@@ -469,3 +469,46 @@ def test_review_sequential_publications_and_engineering_v01(reviewed_git_fixture
         assert {name: (root / name).read_bytes() for name in REVIEW.POLICY_PATHS} == unchanged_policy
         _record("FINALIZED_FIXTURE", label=label, tip=tip, unchanged_enforcement=True,
                 remote_publication="NOT_CHECKED", context=str(context))
+def _g6b_test_payload():
+    row = REVIEW.identity(b"Final documentation\n", "100644")
+    return [dict(path="README.md", action="M", pre=REVIEW.identity(b"Old\n", "100644"), post=row),
+            dict(path=REVIEW.G6B_NAMESPACE + "/README.md", action="A", pre=None, post=row)]
+
+
+def test_g6b_payload_closed_shape_v01():
+    rows = _g6b_test_payload()
+    assert set(REVIEW._g6b_payload_shape_v01(rows)) == {r["path"] for r in rows}
+
+
+@pytest.mark.parametrize("mutation", ["namespace", "duplicate", "casefold", "mode", "preimage", "missing", "unknown"])
+def test_g6b_payload_refuses_v01(mutation):
+    rows = _g6b_test_payload()
+    if mutation == "namespace": rows[1]["path"] = "docs/showcase/other_v01/README.md"
+    elif mutation == "duplicate": rows.append(dict(rows[1]))
+    elif mutation == "casefold": rows.append(dict(rows[1], path=rows[1]["path"].upper()))
+    elif mutation == "mode": rows[1]["post"] = dict(rows[1]["post"], mode="100755")
+    elif mutation == "preimage": rows[1]["pre"] = rows[0]["pre"]
+    elif mutation == "missing": rows.pop(0)
+    elif mutation == "unknown": rows[0]["trusted"] = True
+    with pytest.raises(REVIEW.Refusal):
+        REVIEW._g6b_payload_shape_v01(rows)
+
+
+def test_g6b_exact_exception_requires_installed_tip_and_full_binding_v01():
+    import copy
+    tip = {"commit": "1" * 40, "tree": "2" * 40}
+    bridge = dict(schema=REVIEW.G6B_BRIDGE_VERSION, verified_maintenance_tip=tip,
+                  new_policy_id="3" * 64, manifest_sha256="4" * 64,
+                  publication_ledger=_g6b_test_payload())
+    manifest = dict(kind="DOCUMENTATION", base=tip,
+                    previous=dict(tip, policy_id="3" * 64, manifest_sha256="4" * 64),
+                    governed_namespaces=[REVIEW.G6B_NAMESPACE], ledger=bridge["publication_ledger"])
+    assert REVIEW._g6b_exact_publication_v01(manifest, bridge)
+    assert not REVIEW._g6b_exact_publication_v01(manifest, None)
+    for key, changed in (("kind", "ENGINEERING"), ("base", dict(tip, commit="5" * 40)),
+                         ("previous", dict(manifest["previous"], manifest_sha256="6" * 64)),
+                         ("governed_namespaces", ["docs/showcase/other_v01"]), ("ledger", [])):
+        value = copy.deepcopy(manifest)
+        value[key] = changed
+        assert not REVIEW._g6b_exact_publication_v01(value, bridge)
+    assert not REVIEW._g6b_exact_publication_v01(manifest, dict(bridge, verified_maintenance_tip=None))

@@ -1,0 +1,39 @@
+def refuse_inactive_status(r,policy,material,folder):
+    """Record a local current-use refusal, never renew the observed source/status."""
+    c.require(material is not None,'status_refusal_observation_missing')
+    observed_at=material['observed_at']
+    pointer=c.check_pointer(material['descriptor'],policy,material['pointer_checked_at'],profile=profile())
+    fetch=material['fetch_request']; status=material['status']
+    key,entry=c.authenticate_status(status,pointer,fetch,policy,observed_at,material['highwater'])
+    c.require(entry['state'] in ('REVOKED','SUPERSEDED'),'status_refusal_not_terminal')
+    c.require(material['highwater'].get(key)==entry,'status_refusal_terminal_not_saved')
+    # Observation time is retained. This new review records refusal at its own UTC;
+    # its default review window does not extend any source or STATUS lifetime.
+    checks=dict(source_active=entry['state']=='ACTIVE',
+        original_request=fetch['task_ref']==task_ref(r) and fetch['object_id']==object_ref(r)
+            and fetch['request_revision']==r['revision'],
+        local_requester=fetch['requester']==policy['local_root'],
+        local_policy=fetch['trust_profile_hash']==c.sha(policy),
+        source_owner=entry['publisher_root_id']==policy['peer_root'],
+        terminal_saved=material['highwater'][key]==entry)
+    evidence=dict(material,request=r,policy=policy)
+    save(folder/'status_refusal_evidence.json',evidence)
+    received_body=read(folder/'offer_body.json')
+    booking=None if received_body is None else received_body['booking']
+    # CONFIRM may already have reached the source effect boundary before DESCRIBE
+    # returned. A requester-local refusal cannot certify that source outcome.
+    outcome='CURRENT_STATUS_UNKNOWN' if r['operation']=='CONFIRM_MOCK_BOOKING' or effect_started(folder) or booking is not None else 'REFUSED'
+    claim=dict(request=r,request_sha256=c.sha(r),reason='status_not_active',status=outcome,
+        source_record_ref=pointer['source_record_ref'],source_revision=pointer['source_revision'],
+        source_review_ref=pointer['source_review_ref'],pointer_ref=pointer['pointer_id'],
+        fetch_request_ref=fetch['request_id'],status_sha256=c.sha(status),
+        status_entry=entry,observed_at=observed_at,evidence_sha256=c.sha(evidence))
+    identity=c.sha(claim)
+    live=review(policy['local_root'],'transaction:football:status_refusal:'+identity,
+        'candidate:football:status_refusal:'+identity,r['request_id'],checks,claim,x.clock(),
+        folder,'refusal_review',predicate='football_current_source_status_v01')
+    c.require(live[2].decision=='BLOCKED_FAIL_CLOSED','status_refusal_root_outcome')
+    save(folder/'refusal.json',dict(reason=claim['reason'],status=outcome,
+        review_ref=live[2].decision_id,evidence_ref='status_refusal_evidence.json',
+        evidence_sha256=c.sha(evidence)))
+    return report(r,outcome,receipt=None if booking is None else booking['receipt_ref'])

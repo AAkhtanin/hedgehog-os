@@ -1,0 +1,244 @@
+{
+  "G6B": "NOT_STARTED",
+  "Gate5": "CLOSED",
+  "Gate6": "NOT_CLOSED",
+  "base": "b6d11f5fcb619a10e877bbaaf6770881be315f16",
+  "executed_source_closures": [
+    "r/original_source_closure.json",
+    "r/source_closure.json"
+  ],
+  "final_package_review": "PENDING",
+  "finite_successor": {
+    "admission": "UNADMITTED",
+    "consumer": "RETAINED_OBLIGATIONS",
+    "historical_G6A5": "INCOMPLETE",
+    "historical_G6A5R": "INCOMPLETE",
+    "impact": "source_impact.json",
+    "rows": [
+      "N1-05",
+      "N4-04",
+      "N4-05",
+      "N4-07"
+    ],
+    "source": "current_source_closure.json"
+  },
+  "frozen_postimages": {
+    "demo/run_gate6_reference_v01.py": {
+      "bytes": 47929,
+      "mode": 420,
+      "sha256": "e05f5a6540cb06327e2cb65c407ca5ffba4f75b047419ce2d515d96157ac37f0"
+    },
+    "docs/gate6_reference_execution_v01.md": {
+      "bytes": 15439,
+      "mode": 420,
+      "sha256": "d7587d029800bfee53385cfe46e3783f3c6850e658aaaae75d9f114ebf56301d"
+    },
+    "hedgehog/domains/testflix/outcome_feedback_adapter_v01.py": {
+      "bytes": 10595,
+      "mode": 420,
+      "sha256": "c979f15b8dc093a9924060efc5db05917ccf20c86d55b1a50b738ac4fa25bde6"
+    },
+    "tests/test_gate6_g35_request_projection_v01.py": {
+      "bytes": 3638,
+      "mode": 420,
+      "sha256": "33c6c9eaff076267a300551d14fbda14016ccbc98629fa5e984e5985e3270101"
+    },
+    "tests/test_gate6_model_budget_v01.py": {
+      "bytes": 9972,
+      "mode": 420,
+      "sha256": "571b2f14e46052fa4f1885a75908cee359df1ed6a0abadf488c95735ed251392"
+    },
+    "tests/test_gate6_reference_adversarial_v01.py": {
+      "bytes": 14259,
+      "mode": 420,
+      "sha256": "80fa9441238b112a14da0b489f6c9c6fa499cfae693f59467a11b073d0e298cb"
+    },
+    "tests/test_gate6_reference_conformance_v01.py": {
+      "bytes": 8127,
+      "mode": 420,
+      "sha256": "693b7018ef8670e9423453b3dbeb0652b63d358b25087d67112dce7661fd3efc"
+    },
+    "tests/test_gate6_reference_inventory_v01.py": {
+      "bytes": 14383,
+      "mode": 420,
+      "sha256": "9053345dde8ce5ae987d0aedcf4d5e219c07ceb70c68116a4c1dc7af439a8103"
+    },
+    "tools/run_gate6_football_reference_v01.py": {
+      "bytes": 20399,
+      "mode": 420,
+      "sha256": "7886cc9e9378766cf0741e13ff4f736b701c8ab60d808696722c5398cbe535af"
+    },
+    "tools/run_gate6_model_contrast_v01.py": {
+      "bytes": 21836,
+      "mode": 420,
+      "sha256": "0989ec6e6bebf142dd1bb93092faf3558a76d559cf54205993b7e24d9d7357a0"
+    }
+  },
+  "historical_G54D": "INCOMPLETE",
+  "historical_G6A4": "INCOMPLETE",
+  "owner_source_admission": "PENDING",
+  "packaging_inventory": "MANIFEST.json (external covering inventory, no embedded digest)",
+  "profiles": [
+    {
+      "checks": [
+        "r/fresh/DIRECT/DIRECT/direct_phases.json"
+      ],
+      "class": "FRESH_G6A4R",
+      "cost": 13.14343810081482,
+      "execution_basis": "73f5fe75dee04bb54c629c148bc48b98516765776649b100d108884e5cf7115b",
+      "primary": [
+        "r/fresh/DIRECT/receipts.json"
+      ],
+      "profile": "DIRECT",
+      "qualifications": "See BOUNDARY_AND_FINDINGS and exact source-impact rows",
+      "review": "Work external G6A5 section 1 accepts bounded compatibility, not final package"
+    },
+    {
+      "checks": [
+        "r/fresh/G35/G35/supplied_replay.json"
+      ],
+      "class": "FRESH_G6A4R",
+      "cost": 124.28478384017944,
+      "execution_basis": "73f5fe75dee04bb54c629c148bc48b98516765776649b100d108884e5cf7115b",
+      "primary": [
+        "r/fresh/G35/receipts.json"
+      ],
+      "profile": "G35",
+      "qualifications": "See BOUNDARY_AND_FINDINGS and exact source-impact rows",
+      "review": "Work external G6A5 section 1 accepts bounded compatibility, not final package"
+    },
+    {
+      "checks": [
+        "r/retained/LIVING_G36/result.json"
+      ],
+      "class": "RETAINED_G6A4_REVALIDATED",
+      "cost": 2226.325478076935,
+      "execution_basis": "859c863fa40000dfcd6759685f3b0083f0e040b777df19e5393154fc9ac0f288",
+      "primary": [
+        "a/campaign_receipts.json"
+      ],
+      "profile": "LIVING_G36",
+      "qualifications": "A finite review proposal, not a substitute for unchanged exact-closure readiness or fresh native execution. Observers cover named code objects/current process/thread only; children are separately evidenced, not inferred zero.",
+      "review": "Work external G6A5 section 1 accepts bounded compatibility, not final package"
+    },
+    {
+      "checks": [
+        "r/retained/CONFORMANCE_G36/result.json"
+      ],
+      "class": "RETAINED_G6A4_REVALIDATED",
+      "cost": 2198.549877882004,
+      "execution_basis": "859c863fa40000dfcd6759685f3b0083f0e040b777df19e5393154fc9ac0f288",
+      "primary": [
+        "a/campaign_receipts.json"
+      ],
+      "profile": "CONFORMANCE_G36",
+      "qualifications": "A finite review proposal, not a substitute for unchanged exact-closure readiness or fresh native execution. Observers cover named code objects/current process/thread only; children are separately evidenced, not inferred zero.",
+      "review": "Work external G6A5 section 1 accepts bounded compatibility, not final package"
+    },
+    {
+      "checks": [
+        "r/retained/G4_original/result.json",
+        "r/retained/G4_successor/result.json"
+      ],
+      "class": "RETAINED_G6A4_REVALIDATED",
+      "cost": 39.18926930427551,
+      "execution_basis": "859c863fa40000dfcd6759685f3b0083f0e040b777df19e5393154fc9ac0f288",
+      "primary": [
+        "a/campaign_receipts.json"
+      ],
+      "profile": "G4",
+      "qualifications": "A finite review proposal, not a substitute for unchanged exact-closure readiness or fresh native execution. Observers cover named code objects/current process/thread only; children are separately evidenced, not inferred zero.",
+      "review": "Work external G6A5 section 1 accepts bounded compatibility, not final package"
+    },
+    {
+      "checks": [
+        "r/retained/G51/result.json"
+      ],
+      "class": "RETAINED_G6A4_REVALIDATED",
+      "cost": 2.040548086166382,
+      "execution_basis": "859c863fa40000dfcd6759685f3b0083f0e040b777df19e5393154fc9ac0f288",
+      "primary": [
+        "a/campaign_receipts.json"
+      ],
+      "profile": "G51",
+      "qualifications": "A finite review proposal, not a substitute for unchanged exact-closure readiness or fresh native execution. Observers cover named code objects/current process/thread only; children are separately evidenced, not inferred zero.",
+      "review": "Work external G6A5 section 1 accepts bounded compatibility, not final package"
+    },
+    {
+      "checks": [
+        "r/retained/G52/result.json"
+      ],
+      "class": "RETAINED_G6A4_REVALIDATED",
+      "cost": 3.9608118534088135,
+      "execution_basis": "859c863fa40000dfcd6759685f3b0083f0e040b777df19e5393154fc9ac0f288",
+      "primary": [
+        "a/campaign_receipts.json"
+      ],
+      "profile": "G52",
+      "qualifications": "A finite review proposal, not a substitute for unchanged exact-closure readiness or fresh native execution. Observers cover named code objects/current process/thread only; children are separately evidenced, not inferred zero.",
+      "review": "Work external G6A5 section 1 accepts bounded compatibility, not final package"
+    },
+    {
+      "checks": [
+        "r/SUCCESSOR_EVIDENCE_INDEX.json"
+      ],
+      "class": "RETAINED_G6A4_REVALIDATED",
+      "cost": 92.31682991981506,
+      "execution_basis": "859c863fa40000dfcd6759685f3b0083f0e040b777df19e5393154fc9ac0f288",
+      "primary": [
+        "a/campaign_receipts.json"
+      ],
+      "profile": "FOOTBALL",
+      "qualifications": "A finite review proposal, not a substitute for unchanged exact-closure readiness or fresh native execution. Observers cover named code objects/current process/thread only; children are separately evidenced, not inferred zero.",
+      "review": "Work external G6A5 section 1 accepts bounded compatibility, not final package"
+    },
+    {
+      "checks": [
+        "r/retained/G44_original/result.json",
+        "r/retained/G44_successor/result.json"
+      ],
+      "class": "RETAINED_G6A4_REVALIDATED",
+      "cost": 19.83903694152832,
+      "execution_basis": "859c863fa40000dfcd6759685f3b0083f0e040b777df19e5393154fc9ac0f288",
+      "primary": [
+        "a/campaign_receipts.json"
+      ],
+      "profile": "G44_RECORDED",
+      "qualifications": "A finite review proposal, not a substitute for unchanged exact-closure readiness or fresh native execution. Observers cover named code objects/current process/thread only; children are separately evidenced, not inferred zero.",
+      "review": "Work external G6A5 section 1 accepts bounded compatibility, not final package"
+    },
+    {
+      "checks": [
+        "r/retained/G5_original/native/canonical_result.json",
+        "r/retained/G5_original/native/d1_result.json",
+        "r/retained/G5_original/native/g52_result.json"
+      ],
+      "class": "RETAINED_G6A4_REVALIDATED",
+      "cost": 5.3077051639556885,
+      "execution_basis": "859c863fa40000dfcd6759685f3b0083f0e040b777df19e5393154fc9ac0f288",
+      "primary": [
+        "a/campaign_receipts.json"
+      ],
+      "profile": "G5_RECORDED",
+      "qualifications": "A finite review proposal, not a substitute for unchanged exact-closure readiness or fresh native execution. Observers cover named code objects/current process/thread only; children are separately evidenced, not inferred zero.",
+      "review": "Work external G6A5 section 1 accepts bounded compatibility, not final package"
+    },
+    {
+      "checks": [
+        "r/retained/MODEL/result.json"
+      ],
+      "class": "RETAINED_G6A4_REVALIDATED",
+      "cost": 127.40975999832153,
+      "execution_basis": "859c863fa40000dfcd6759685f3b0083f0e040b777df19e5393154fc9ac0f288",
+      "primary": [
+        "a/campaign_receipts.json"
+      ],
+      "profile": "MODEL",
+      "qualifications": "A finite review proposal, not a substitute for unchanged exact-closure readiness or fresh native execution. Observers cover named code objects/current process/thread only; children are separately evidenced, not inferred zero.",
+      "review": "Work external G6A5 section 1 accepts bounded compatibility, not final package"
+    }
+  ],
+  "protocol": "TWO_FRESH_NINE_RETAINED",
+  "runtime_change": "Exact reviewed Testflix projection plus compatibility-local generated wrapper classification. All ten G6A4R postimages unchanged.",
+  "schema": "gate6_machine_reference_v01"
+}

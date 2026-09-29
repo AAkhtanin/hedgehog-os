@@ -1,0 +1,7 @@
+# Public Review Bundle
+
+RADIOLARIA_REVIEW_BUNDLE.zip is delivered beside the publication in the operator return's public_bundle directory. START_HERE.md is its first entry. Its positive allowlist and internal manifest describe the exact payload. Finalization requires the real editable presentation/main.pptx, its searchable presentation/main_export.pdf, actual native inspection and all-slide visual comparison. EXPORT_NATIVE_REPORT.json and EXPORT_VISUAL_REPORT.json in the ZIP identify those actual final bytes. The old PRE_EXPORT_REVIEW_BUNDLE remains an unchanged historical handoff.
+
+The primary public deck PDF is presentation/main_export.pdf, converted from the actual PPTX after export. presentation/main.pdf remains the separately generated source comparison PDF. The whitepaper and eight-view Atlas are the other main PDFs. Historical five-slide pilots retain their original role.
+
+The bundle carries the same XML, paper, source comparison deck, Atlas, source data and local routes. It excludes operator logs, private inputs, QA rasters, old TARs, dependencies, font binaries and this task's instruction archives. Proposed public eligibility is not owner release or asset-rights clearance. Selected source maps distinguish exact sources, projections and unavailable historical raw. Public and operator inventories are separate to avoid digest cycles. B5 remains NOT_RUN, B6 remains NOT_STARTED and Gate6 remains NOT_CLOSED.

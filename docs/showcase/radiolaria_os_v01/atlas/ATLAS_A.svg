@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" role="img">
+<title>ATLAS_A</title>
+<desc>Editable labelled diagram. Full text alternative in atlas/README.md.</desc>
+<metadata>{&quot;id&quot;: &quot;ATLAS_A&quot;, &quot;class&quot;: &quot;CONCEPTUAL&quot;, &quot;claims&quot;: [&quot;CL01&quot;], &quot;sources&quot;: [&quot;specs/current_architecture_lock_v01.md&quot;], &quot;assertion&quot;: &quot;Independent local owners accept their own work and actions.&quot;, &quot;nodes&quot;: [&quot;INTENT&quot;, &quot;MODEL&quot;, &quot;VENUE&quot;, &quot;REQUESTER&quot;, &quot;WORK&quot;, &quot;ROOT&quot;, &quot;MEMORY&quot;, &quot;FIREWALL&quot;], &quot;relations&quot;: [[&quot;VENUE&quot;, &quot;REQUESTER&quot;, &quot;DATA&quot;], [&quot;MODEL&quot;, &quot;WORK&quot;, &quot;PROPOSAL&quot;], [&quot;WORK&quot;, &quot;ROOT&quot;, &quot;DATA&quot;], [&quot;MEMORY&quot;, &quot;ROOT&quot;, &quot;DATA&quot;], [&quot;ROOT&quot;, &quot;FIREWALL&quot;, &quot;PERMISSION&quot;], [&quot;FIREWALL&quot;, &quot;WORK&quot;, &quot;EXECUTION&quot;]], &quot;meaning&quot;: &quot;The first Work returns evidence. The effect lane denotes separately authorized bounded work after a current Root packet, not permission for the first proposal. Repeat this local pattern for independent owners; no edge grants authority from one Root to another.&quot;, &quot;omitted_scope&quot;: &quot;Topology and time predicates, packet internals, Root descent and provider callbacks are not fully drawn.&quot;, &quot;rendering&quot;: {&quot;layout&quot;: &quot;Two local-owner columns, VenueRoot left and ActivePlanetRoot right. Shared intention/proposal line above; time/memory and child Work context below.&quot;, &quot;graphical_arrows&quot;: [[&quot;VENUE&quot;, &quot;REQUESTER&quot;, &quot;DATA&quot;]], &quot;text_flows&quot;: [&quot;Each column: local Work result to its own Root review.&quot;, &quot;Left column: Permission/current packet to Firewall; then separate authorized execution.&quot;, &quot;Right column: foreign approval creates no registry write permission.&quot;], &quot;entity_instances&quot;: {&quot;WORK&quot;: [&quot;VenueRoot availability Work&quot;, &quot;ActivePlanetRoot checked consumer Work&quot;, &quot;Separate authorized effect Work&quot;], &quot;ROOT&quot;: [&quot;VenueRoot local result review&quot;, &quot;ActivePlanetRoot own local decision&quot;]}, &quot;legend&quot;: &quot;Only the cross-owner DATA relation is a graphical arrow; local proposal, permission and execution relations are labelled in text. No SuperRoot.&quot;}}</metadata>
+<rect width="1280" height="720" fill="white"/>
+<text x="56" y="47" font-family="Arial, sans-serif" font-size="14" fill="#6E6E73" font-weight="400">RADIOLARIA OS  /  EDITORIAL PILOT</text>
+<text x="56" y="99" font-family="Arial, sans-serif" font-size="40" fill="#1D1D1F" font-weight="700">Independent owners, useful work</text>
+<line x1="56" y1="650" x2="1224" y2="650" stroke="#D2D2D7" stroke-width="2"/>
+<text x="56" y="681" font-family="Arial, sans-serif" font-size="13" fill="#6E6E73" font-weight="400">ATLAS_A / CONCEPTUAL / CL01 / No SuperRoot</text>
+<text x="1130" y="681" font-family="Arial, sans-serif" font-size="14" fill="#6E6E73" font-weight="400">02 / 05</text>
+<text x="56" y="164" font-family="Arial, sans-serif" font-size="23" fill="#1D1D1F" font-weight="400">A user or event supplies an intention; semantic proposals are not permission.</text>
+<text x="64" y="226" font-family="Arial, sans-serif" font-size="29" fill="#1D1D1F" font-weight="700">VenueRoot</text>
+<text x="724" y="226" font-family="Arial, sans-serif" font-size="29" fill="#1D1D1F" font-weight="700">ActivePlanetRoot</text>
+<line x1="64" y1="246" x2="550" y2="246" stroke="#D2D2D7" stroke-width="2"/>
+<line x1="724" y1="246" x2="1210" y2="246" stroke="#D2D2D7" stroke-width="2"/>
+<text x="64" y="293" font-family="Arial, sans-serif" font-size="22" fill="#1D1D1F" font-weight="400">Bounded code computes availability</text>
+<text x="724" y="293" font-family="Arial, sans-serif" font-size="22" fill="#1D1D1F" font-weight="400">Local Work consumes checked evidence</text>
+<text x="64" y="357" font-family="Arial, sans-serif" font-size="23" fill="#0071E3" font-weight="400">Local Root reviews the result</text>
+<text x="724" y="357" font-family="Arial, sans-serif" font-size="23" fill="#0071E3" font-weight="400">Its own Root decides locally</text>
+<line x1="547" y1="329" x2="711" y2="329" stroke="#0071E3" stroke-width="2"/>
+<line x1="702" y1="324" x2="711" y2="329" stroke="#0071E3" stroke-width="2"/>
+<line x1="702" y1="334" x2="711" y2="329" stroke="#0071E3" stroke-width="2"/>
+<text x="611.6645" y="301" font-family="Arial, sans-serif" font-size="13" fill="#6E6E73" font-weight="400">DATA</text>
+<text x="64" y="423" font-family="Arial, sans-serif" font-size="20" fill="#1D1D1F" font-weight="400">PERMISSION: current packet -&gt; Firewall</text>
+<text x="724" y="423" font-family="Arial, sans-serif" font-size="22" fill="#1D1D1F" font-weight="400">Foreign approval is not permission</text>
+<text x="64" y="466" font-family="Arial, sans-serif" font-size="20" fill="#6E6E73" font-weight="400">EXECUTION: separately authorized effect</text>
+<text x="724" y="466" font-family="Arial, sans-serif" font-size="20" fill="#6E6E73" font-weight="400">No write access to venue registry</text>
+<text x="64" y="552" font-family="Arial, sans-serif" font-size="23" fill="#1D1D1F" font-weight="400">Time and local memory inform each decision; neither retains action authority.</text>
+<text x="64" y="594" font-family="Arial, sans-serif" font-size="19" fill="#6E6E73" font-weight="400">Typed Work can compose child Work. Runtime owns topology, not final authority.</text>
+</svg>

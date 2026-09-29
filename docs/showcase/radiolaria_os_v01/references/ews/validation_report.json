@@ -1,0 +1,130 @@
+{
+  "artifact_kind": "EDITORIAL_HANDOFF_VALIDATION_RECORD",
+  "language": "en",
+  "status": "DELEGATED_DELIVERY_COMPLETE_NOT_PUBLICATION_ACCEPTANCE",
+  "scope": "Finalized after owner reported chapter and fields reviewed. No new source breadth added.",
+  "output_root": "external-recorded-location:g6b3_ews_worker",
+  "owner_unchanged": true,
+  "preservation_classification": "READ_ONLY_OWNER_SOURCE; no owner postimages, index/config/context replacements, commit or push",
+  "entry_checkpoint_limit": "Control-file hashes were recorded after initial pwd/HEAD/status reading and before output creation. The first Git reads omitted --no-optional-locks; later owner Git inspection used --no-optional-locks. No explicit Git write command was issued. Equality is asserted against the recorded checkpoint, not an unavailable earlier index snapshot.",
+  "source_classifications": {
+    "owner_source": "Hash-bound accepted technical source at 2e965ecb18e545e428380eb8e9aa5a7037a388be; never edited.",
+    "historical_source": "Original EWS archive/member identities retained; hash-matched members read in memory, not executed or redistributed wholesale.",
+    "public_safe_package": "EWS4R evidence-only derivatives, not raw execution.",
+    "presentation_evidence": "Later derivatives; explicitly outside the old EWS4R seal/anchor.",
+    "worker_projections": "New EVIDENCE_ONLY exact selected JSON values; formatting is new; no raw private record, live Host, permission, authenticated signer or new acceptance.",
+    "editorial_notes": "Historical GEO_NOTE and PLAN25 originals read completely; English dispositions retain meaning without promoting old plans/costs to current facts.",
+    "immutability": "Source bytes and recorded identities preserved. No chmod or filesystem immutability mechanism applied; output identities below describe this handoff."
+  },
+  "checks": {
+    "inspection": "PASS",
+    "source_identities_checked": 49,
+    "exact_selected_fields_checked": 148,
+    "graph_nodes": 27,
+    "typed_edges": 32,
+    "chapter_whitespace_words": 1483,
+    "project_runtime_or_tests_executed": false,
+    "archives_extracted_or_executed": false,
+    "scope": "Data identity and selected-value inspection, not runtime acceptance or full archive-manifest verification"
+  },
+  "commands": [
+    {
+      "command": "python3 -B /private/tmp/g6b3_ews_worker/inspect_sources.py",
+      "exit": 0,
+      "result": "PASS: 49 source identities, 148 selected values, 27 nodes, 32 typed edges, 1483 chapter words"
+    },
+    {
+      "command": "git --no-optional-locks diff --check",
+      "cwd": "external-recorded-location:hedgehog-os",
+      "exit": 0,
+      "result": "No findings"
+    },
+    {
+      "command": "git --no-optional-locks diff --name-status HEAD",
+      "cwd": "external-recorded-location:hedgehog-os",
+      "exit": 0,
+      "result": "No changed owner paths"
+    },
+    {
+      "command": "git --no-optional-locks status --porcelain=v1 --untracked-files=all",
+      "cwd": "external-recorded-location:hedgehog-os",
+      "exit": 0,
+      "result": "Clean"
+    },
+    {
+      "command": "git --no-optional-locks diff --no-index --check /dev/null <each delivered file>",
+      "cwd": "external-recorded-location:g6b3_ews_worker",
+      "exit": 1,
+      "result": "No whitespace diagnostics; exit 1 denotes added-file differences"
+    }
+  ],
+  "retrieval_notes": [
+    "An initial optional .codex path search returned missing-directory exit 2; no required source depended on it.",
+    "An initial archive suffix lookup stopped on two FINAL_REPORT.md matches. Corrected to exact root member; predecessor_failure/FINAL_REPORT.md was not substituted."
+  ],
+  "not_executed": [
+    "Project imports, runtime and tests",
+    "Archive code or sibling programs",
+    "Providers, network, installations",
+    "Owner mutation, commit, push, cleanup or context replacement",
+    "Deck rendering, shared corpus integration, B4/B5/B6"
+  ],
+  "remaining_for_integrator": [
+    "Integrate reviewed text and graph into the single shared publication index and real deck/chapter destinations.",
+    "Keep independent historical/principal origins, currentness and immutable evidence identities.",
+    "Retain separate owner meaning/visual review and publication authority."
+  ],
+  "output_identity_scope": "The seven content/inspection files below are pinned. This report is excluded from its own hash inventory.",
+  "output_files": [
+    {
+      "path": "README.md",
+      "bytes": 5952,
+      "sha256": "4fdb0f7e7d6fb36ff0ecadba3acd18afeef1914c8b5dacd5d1c33384c27b7139",
+      "mode": "0644",
+      "whitespace_exit": 1
+    },
+    {
+      "path": "editorial_disposition.md",
+      "bytes": 12207,
+      "sha256": "4ffe7f8e7bc46fef8c5b0248a900887d3a5190bae96d79b4747d7e5a79c4e821",
+      "mode": "0644",
+      "whitespace_exit": 1
+    },
+    {
+      "path": "ews_environment_lifecycle.md",
+      "bytes": 11200,
+      "sha256": "f0d69f5d4c23f44abd5772c781ed471e8c4755f588589758c24389236693aad6",
+      "mode": "0644",
+      "whitespace_exit": 1
+    },
+    {
+      "path": "inspect_sources.py",
+      "bytes": 5752,
+      "sha256": "01de1a75151bc07d31caf152b458a395247b6dbbbc8b55626c76bbdc3069b4f4",
+      "mode": "0644",
+      "whitespace_exit": 1
+    },
+    {
+      "path": "lifecycle_graph.json",
+      "bytes": 25475,
+      "sha256": "f21743f3d1f546b45ff193b3189cb6df40e89f989ed3e58c012e132bbfd3b7b5",
+      "mode": "0644",
+      "whitespace_exit": 1
+    },
+    {
+      "path": "selected_field_projections.json",
+      "bytes": 49085,
+      "sha256": "948588cbc135252d7c7d7c5fa44b57bfb2b382279c44244fdd51d4e4be05dab9",
+      "mode": "0644",
+      "whitespace_exit": 1
+    },
+    {
+      "path": "source_ledger.json",
+      "bytes": 22131,
+      "sha256": "96e29623bcd31d741854dbbdb9b87e5f96572aee64dec2038e6370194019fe34",
+      "mode": "0644",
+      "whitespace_exit": 1
+    }
+  ],
+  "task_owned_processes": "All task-owned command processes returned. No server or runtime session was started."
+}

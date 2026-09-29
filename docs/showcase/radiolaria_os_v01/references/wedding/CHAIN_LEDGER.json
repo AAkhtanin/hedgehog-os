@@ -1,0 +1,616 @@
+{
+  "schema": "G6B3WeddingEditorialChainObservationsV02",
+  "basis": "Stored exact selected projections and original-source hashes; not new execution evidence",
+  "relations": [
+    {
+      "name": "A role 0 capture identity",
+      "source_projection_ids": [
+        "A-capture0:/0/capture_ref",
+        "attempt-004:/capture_ref"
+      ],
+      "relationship": true,
+      "editorial_observation": "Exact equality of recorded identity; not provider attestation."
+    },
+    {
+      "name": "A stored role return",
+      "source_projection_ids": [
+        "A-capture0:/0/raw_response",
+        "attempt-004:/raw_response"
+      ],
+      "relationship": true,
+      "editorial_observation": "Exact response string correspondence."
+    },
+    {
+      "name": "A response to provider body",
+      "source_projection_ids": [
+        "attempt-004:/raw_response",
+        "attempt-004-provider:/candidates/0/content/parts/0/text"
+      ],
+      "relationship": true,
+      "editorial_observation": "Exact selected provider text correspondence; no HTTP headers or credentials projected."
+    },
+    {
+      "name": "A role 1 capture identity",
+      "source_projection_ids": [
+        "A-capture1:/1/capture_ref",
+        "attempt-005:/capture_ref"
+      ],
+      "relationship": true,
+      "editorial_observation": "Exact equality of recorded identity; not provider attestation."
+    },
+    {
+      "name": "A stored role return",
+      "source_projection_ids": [
+        "A-capture1:/1/raw_response",
+        "attempt-005:/raw_response"
+      ],
+      "relationship": true,
+      "editorial_observation": "Exact response string correspondence."
+    },
+    {
+      "name": "A response to provider body",
+      "source_projection_ids": [
+        "attempt-005:/raw_response",
+        "attempt-005-provider:/candidates/0/content/parts/0/text"
+      ],
+      "relationship": true,
+      "editorial_observation": "Exact selected provider text correspondence; no HTTP headers or credentials projected."
+    },
+    {
+      "name": "A actual consumed output",
+      "source_projection_ids": [
+        "A-consumed-output:/safe_output",
+        "A-run:/output"
+      ],
+      "relationship": true,
+      "editorial_observation": "Value equality between decoded final capability output and displayed output, not equality of enclosing artifact identities."
+    },
+    {
+      "name": "A objective returned and used",
+      "source_projection_ids": [
+        "A-returned1",
+        "A-material:/material/profile"
+      ],
+      "returned_objective": "KEEP_FAMILIAR_V01",
+      "used_profile": "KEEP_FAMILIAR_V01",
+      "interpretation": "Returned profile is the profile consumed by native Work.",
+      "recorded_origin": "CAPTURED_PROVIDER_RESPONSE_REEXECUTION",
+      "capture_refs": [
+        "capture:93fcd108eae64f61f3d4661f9065422fc92c9227c278b59a32e063ba23a4e242",
+        "capture:e93632ee1ce198bf17b357dc4d1cc191bfca5fe9290ac52fe91d6598322ef9b7"
+      ]
+    },
+    {
+      "name": "B role 0 capture identity",
+      "source_projection_ids": [
+        "B-capture0:/0/capture_ref",
+        "attempt-006:/capture_ref"
+      ],
+      "relationship": true,
+      "editorial_observation": "Exact equality of recorded identity; not provider attestation."
+    },
+    {
+      "name": "B stored role return",
+      "source_projection_ids": [
+        "B-capture0:/0/raw_response",
+        "attempt-006:/raw_response"
+      ],
+      "relationship": true,
+      "editorial_observation": "Exact response string correspondence."
+    },
+    {
+      "name": "B response to provider body",
+      "source_projection_ids": [
+        "attempt-006:/raw_response",
+        "attempt-006-provider:/candidates/0/content/parts/0/text"
+      ],
+      "relationship": true,
+      "editorial_observation": "Exact selected provider text correspondence; no HTTP headers or credentials projected."
+    },
+    {
+      "name": "B role 1 capture identity",
+      "source_projection_ids": [
+        "B-capture1:/1/capture_ref",
+        "attempt-007:/capture_ref"
+      ],
+      "relationship": true,
+      "editorial_observation": "Exact equality of recorded identity; not provider attestation."
+    },
+    {
+      "name": "B stored role return",
+      "source_projection_ids": [
+        "B-capture1:/1/raw_response",
+        "attempt-007:/raw_response"
+      ],
+      "relationship": true,
+      "editorial_observation": "Exact response string correspondence."
+    },
+    {
+      "name": "B response to provider body",
+      "source_projection_ids": [
+        "attempt-007:/raw_response",
+        "attempt-007-provider:/candidates/0/content/parts/0/text"
+      ],
+      "relationship": true,
+      "editorial_observation": "Exact selected provider text correspondence; no HTTP headers or credentials projected."
+    },
+    {
+      "name": "B actual consumed output",
+      "source_projection_ids": [
+        "B-consumed-output:/safe_output",
+        "B-run:/output"
+      ],
+      "relationship": true,
+      "editorial_observation": "Value equality between decoded final capability output and displayed output, not equality of enclosing artifact identities."
+    },
+    {
+      "name": "B objective returned and used",
+      "source_projection_ids": [
+        "B-returned1",
+        "B-material:/material/profile"
+      ],
+      "returned_objective": "MIX_CIRCLES_V01",
+      "used_profile": "MIX_CIRCLES_V01",
+      "interpretation": "Returned profile is the profile consumed by native Work.",
+      "recorded_origin": "LIVE_ROLE_ORIGIN",
+      "capture_refs": [
+        "capture:b47a28601d704cd5a496a9c97ddfc59d003f60e5cff594d2c6ad4ec4f40985dd",
+        "capture:5156642a2d63dd654be8b5d6b97fda5f4a6c525e9929970b903eafe6be692b6a"
+      ]
+    },
+    {
+      "name": "VERIFY role 0 capture identity",
+      "source_projection_ids": [
+        "VERIFY-capture0:/0/capture_ref",
+        "attempt-010:/capture_ref"
+      ],
+      "relationship": true,
+      "editorial_observation": "Exact equality of recorded identity; not provider attestation."
+    },
+    {
+      "name": "VERIFY stored role return",
+      "source_projection_ids": [
+        "VERIFY-capture0:/0/raw_response",
+        "attempt-010:/raw_response"
+      ],
+      "relationship": true,
+      "editorial_observation": "Exact response string correspondence."
+    },
+    {
+      "name": "VERIFY response to provider body",
+      "source_projection_ids": [
+        "attempt-010:/raw_response",
+        "attempt-010-provider:/candidates/0/content/parts/0/text"
+      ],
+      "relationship": true,
+      "editorial_observation": "Exact selected provider text correspondence; no HTTP headers or credentials projected."
+    },
+    {
+      "name": "VERIFY role 1 capture identity",
+      "source_projection_ids": [
+        "VERIFY-capture1:/1/capture_ref",
+        "attempt-011:/capture_ref"
+      ],
+      "relationship": true,
+      "editorial_observation": "Exact equality of recorded identity; not provider attestation."
+    },
+    {
+      "name": "VERIFY stored role return",
+      "source_projection_ids": [
+        "VERIFY-capture1:/1/raw_response",
+        "attempt-011:/raw_response"
+      ],
+      "relationship": true,
+      "editorial_observation": "Exact response string correspondence."
+    },
+    {
+      "name": "VERIFY response to provider body",
+      "source_projection_ids": [
+        "attempt-011:/raw_response",
+        "attempt-011-provider:/candidates/0/content/parts/0/text"
+      ],
+      "relationship": true,
+      "editorial_observation": "Exact selected provider text correspondence; no HTTP headers or credentials projected."
+    },
+    {
+      "name": "VERIFY actual consumed output",
+      "source_projection_ids": [
+        "VERIFY-consumed-output:/safe_output",
+        "VERIFY-run:/output"
+      ],
+      "relationship": true,
+      "editorial_observation": "Value equality between decoded final capability output and displayed output, not equality of enclosing artifact identities."
+    },
+    {
+      "name": "VERIFY objective returned and used",
+      "source_projection_ids": [
+        "VERIFY-returned1",
+        "VERIFY-material:/material/profile"
+      ],
+      "returned_objective": null,
+      "used_profile": "KEEP_FAMILIAR_V01",
+      "interpretation": "VALIDATE_EXISTING inherits actual prior result profile, not a new model choice.",
+      "recorded_origin": "LIVE_ROLE_ORIGIN",
+      "capture_refs": [
+        "capture:9daeb9d79189182c048ffc3d3d6da16b036518c03c1e2541c577b6b2ef809a34",
+        "capture:5916e4b5c00873b8d10724f99790afdbc6e50225f5a6c171fdf9033812abd7a2"
+      ]
+    },
+    {
+      "name": "AMBIGUOUS role 0 capture identity",
+      "source_projection_ids": [
+        "AMBIGUOUS-capture0:/0/capture_ref",
+        "attempt-012:/capture_ref"
+      ],
+      "relationship": true,
+      "editorial_observation": "Exact equality of recorded identity; not provider attestation."
+    },
+    {
+      "name": "AMBIGUOUS stored role return",
+      "source_projection_ids": [
+        "AMBIGUOUS-capture0:/0/raw_response",
+        "attempt-012:/raw_response"
+      ],
+      "relationship": true,
+      "editorial_observation": "Exact response string correspondence."
+    },
+    {
+      "name": "AMBIGUOUS response to provider body",
+      "source_projection_ids": [
+        "attempt-012:/raw_response",
+        "attempt-012-provider:/candidates/0/content/parts/0/text"
+      ],
+      "relationship": true,
+      "editorial_observation": "Exact selected provider text correspondence; no HTTP headers or credentials projected."
+    },
+    {
+      "name": "AMBIGUOUS role 1 capture identity",
+      "source_projection_ids": [
+        "AMBIGUOUS-capture1:/1/capture_ref",
+        "attempt-013:/capture_ref"
+      ],
+      "relationship": true,
+      "editorial_observation": "Exact equality of recorded identity; not provider attestation."
+    },
+    {
+      "name": "AMBIGUOUS stored role return",
+      "source_projection_ids": [
+        "AMBIGUOUS-capture1:/1/raw_response",
+        "attempt-013:/raw_response"
+      ],
+      "relationship": true,
+      "editorial_observation": "Exact response string correspondence."
+    },
+    {
+      "name": "AMBIGUOUS response to provider body",
+      "source_projection_ids": [
+        "attempt-013:/raw_response",
+        "attempt-013-provider:/candidates/0/content/parts/0/text"
+      ],
+      "relationship": true,
+      "editorial_observation": "Exact selected provider text correspondence; no HTTP headers or credentials projected."
+    },
+    {
+      "name": "SR1 role 0 capture identity",
+      "source_projection_ids": [
+        "SR1-capture0:/0/capture_ref",
+        "attempt-014:/capture_ref"
+      ],
+      "relationship": true,
+      "editorial_observation": "Exact equality of recorded identity; not provider attestation."
+    },
+    {
+      "name": "SR1 stored role return",
+      "source_projection_ids": [
+        "SR1-capture0:/0/raw_response",
+        "attempt-014:/raw_response"
+      ],
+      "relationship": true,
+      "editorial_observation": "Exact response string correspondence."
+    },
+    {
+      "name": "SR1 response to provider body",
+      "source_projection_ids": [
+        "attempt-014:/raw_response",
+        "attempt-014-provider:/candidates/0/content/parts/0/text"
+      ],
+      "relationship": true,
+      "editorial_observation": "Exact selected provider text correspondence; no HTTP headers or credentials projected."
+    },
+    {
+      "name": "SR1 role 1 capture identity",
+      "source_projection_ids": [
+        "SR1-capture1:/1/capture_ref",
+        "attempt-015:/capture_ref"
+      ],
+      "relationship": true,
+      "editorial_observation": "Exact equality of recorded identity; not provider attestation."
+    },
+    {
+      "name": "SR1 stored role return",
+      "source_projection_ids": [
+        "SR1-capture1:/1/raw_response",
+        "attempt-015:/raw_response"
+      ],
+      "relationship": true,
+      "editorial_observation": "Exact response string correspondence."
+    },
+    {
+      "name": "SR1 response to provider body",
+      "source_projection_ids": [
+        "attempt-015:/raw_response",
+        "attempt-015-provider:/candidates/0/content/parts/0/text"
+      ],
+      "relationship": true,
+      "editorial_observation": "Exact selected provider text correspondence; no HTTP headers or credentials projected."
+    },
+    {
+      "name": "SR1 actual consumed output",
+      "source_projection_ids": [
+        "SR1-consumed-output:/safe_output",
+        "SR1-run:/output"
+      ],
+      "relationship": true,
+      "editorial_observation": "Value equality between decoded final capability output and displayed output, not equality of enclosing artifact identities."
+    },
+    {
+      "name": "SR1 objective returned and used",
+      "source_projection_ids": [
+        "SR1-returned1",
+        "SR1-material:/material/profile"
+      ],
+      "returned_objective": "MIX_CIRCLES_V01",
+      "used_profile": "MIX_CIRCLES_V01",
+      "interpretation": "Returned profile is the profile consumed by native Work.",
+      "recorded_origin": "CAPTURED_PROVIDER_RESPONSE_REEXECUTION",
+      "capture_refs": [
+        "capture:43a9f124efa2ce62641bf711f9fe9f59ffec7b5064482dc1caf99ac1ebf96ca9",
+        "capture:c1bcdc143fe11294b9c2884de77f4632354cd5123c46d41e1cd4c22551bb2d04"
+      ]
+    },
+    {
+      "name": "SR2 role 0 capture identity",
+      "source_projection_ids": [
+        "SR2-capture0:/0/capture_ref",
+        "attempt-016:/capture_ref"
+      ],
+      "relationship": true,
+      "editorial_observation": "Exact equality of recorded identity; not provider attestation."
+    },
+    {
+      "name": "SR2 stored role return",
+      "source_projection_ids": [
+        "SR2-capture0:/0/raw_response",
+        "attempt-016:/raw_response"
+      ],
+      "relationship": true,
+      "editorial_observation": "Exact response string correspondence."
+    },
+    {
+      "name": "SR2 response to provider body",
+      "source_projection_ids": [
+        "attempt-016:/raw_response",
+        "attempt-016-provider:/candidates/0/content/parts/0/text"
+      ],
+      "relationship": true,
+      "editorial_observation": "Exact selected provider text correspondence; no HTTP headers or credentials projected."
+    },
+    {
+      "name": "SR2 role 1 capture identity",
+      "source_projection_ids": [
+        "SR2-capture1:/1/capture_ref",
+        "attempt-017:/capture_ref"
+      ],
+      "relationship": true,
+      "editorial_observation": "Exact equality of recorded identity; not provider attestation."
+    },
+    {
+      "name": "SR2 stored role return",
+      "source_projection_ids": [
+        "SR2-capture1:/1/raw_response",
+        "attempt-017:/raw_response"
+      ],
+      "relationship": true,
+      "editorial_observation": "Exact response string correspondence."
+    },
+    {
+      "name": "SR2 response to provider body",
+      "source_projection_ids": [
+        "attempt-017:/raw_response",
+        "attempt-017-provider:/candidates/0/content/parts/0/text"
+      ],
+      "relationship": true,
+      "editorial_observation": "Exact selected provider text correspondence; no HTTP headers or credentials projected."
+    },
+    {
+      "name": "SR2 actual consumed output",
+      "source_projection_ids": [
+        "SR2-consumed-output:/safe_output",
+        "SR2-run:/output"
+      ],
+      "relationship": true,
+      "editorial_observation": "Value equality between decoded final capability output and displayed output, not equality of enclosing artifact identities."
+    },
+    {
+      "name": "SR2 objective returned and used",
+      "source_projection_ids": [
+        "SR2-returned1",
+        "SR2-material:/material/profile"
+      ],
+      "returned_objective": "MIX_CIRCLES_V01",
+      "used_profile": "MIX_CIRCLES_V01",
+      "interpretation": "Returned profile is the profile consumed by native Work.",
+      "recorded_origin": "LIVE_ROLE_ORIGIN",
+      "capture_refs": [
+        "capture:f926e675311b9d23428c20937ed67061a20deb0dfc2d73df99393b08948f766e",
+        "capture:c189488fe1f096e06418329f0efc2ea0e7eec7652dfb3c2521c2f62e58dd64ad"
+      ]
+    },
+    {
+      "name": "SR3 role 0 capture identity",
+      "source_projection_ids": [
+        "SR3-capture0:/0/capture_ref",
+        "attempt-018:/capture_ref"
+      ],
+      "relationship": true,
+      "editorial_observation": "Exact equality of recorded identity; not provider attestation."
+    },
+    {
+      "name": "SR3 stored role return",
+      "source_projection_ids": [
+        "SR3-capture0:/0/raw_response",
+        "attempt-018:/raw_response"
+      ],
+      "relationship": true,
+      "editorial_observation": "Exact response string correspondence."
+    },
+    {
+      "name": "SR3 response to provider body",
+      "source_projection_ids": [
+        "attempt-018:/raw_response",
+        "attempt-018-provider:/candidates/0/content/parts/0/text"
+      ],
+      "relationship": true,
+      "editorial_observation": "Exact selected provider text correspondence; no HTTP headers or credentials projected."
+    },
+    {
+      "name": "SR3 role 1 capture identity",
+      "source_projection_ids": [
+        "SR3-capture1:/1/capture_ref",
+        "attempt-019:/capture_ref"
+      ],
+      "relationship": true,
+      "editorial_observation": "Exact equality of recorded identity; not provider attestation."
+    },
+    {
+      "name": "SR3 stored role return",
+      "source_projection_ids": [
+        "SR3-capture1:/1/raw_response",
+        "attempt-019:/raw_response"
+      ],
+      "relationship": true,
+      "editorial_observation": "Exact response string correspondence."
+    },
+    {
+      "name": "SR3 response to provider body",
+      "source_projection_ids": [
+        "attempt-019:/raw_response",
+        "attempt-019-provider:/candidates/0/content/parts/0/text"
+      ],
+      "relationship": true,
+      "editorial_observation": "Exact selected provider text correspondence; no HTTP headers or credentials projected."
+    },
+    {
+      "name": "SR3 actual consumed output",
+      "source_projection_ids": [
+        "SR3-consumed-output:/safe_output",
+        "SR3-run:/output"
+      ],
+      "relationship": true,
+      "editorial_observation": "Value equality between decoded final capability output and displayed output, not equality of enclosing artifact identities."
+    },
+    {
+      "name": "SR3 objective returned and used",
+      "source_projection_ids": [
+        "SR3-returned1",
+        "SR3-material:/material/profile"
+      ],
+      "returned_objective": null,
+      "used_profile": "MIX_CIRCLES_V01",
+      "interpretation": "VALIDATE_EXISTING inherits actual prior result profile, not a new model choice.",
+      "recorded_origin": "LIVE_ROLE_ORIGIN",
+      "capture_refs": [
+        "capture:f28959ceaa1275d665a5a5cd5b66e035c188b331fe45b2c03cb2b9b78b2dc138",
+        "capture:c1db652c496058abbf256a5c54c697be0a15a7e528609847bef8377b608a8701"
+      ]
+    },
+    {
+      "name": "SR2 returned amendment accepted as scoped acknowledgement",
+      "source_projection_ids": [
+        "SR2-returned1",
+        "SR2-material:/material/revision_acknowledgement"
+      ],
+      "relationship": true,
+      "equality_semantics": "JSON object key order ignored; arrays ordered; scalar values unchanged",
+      "editorial_observation": "Exact amendment value equality, separately scoped scripted owner acknowledgement and revision Root review."
+    },
+    {
+      "name": "A explicit later request parent",
+      "source_projection_ids": [
+        "A-run:/artifact/artifact_id",
+        "VERIFY-intake:/prior_result_ref"
+      ],
+      "relationship": true,
+      "editorial_observation": "Recorded linkage, not same-task identity."
+    },
+    {
+      "name": "SR1 explicit later request parent",
+      "source_projection_ids": [
+        "SR1-run:/artifact/artifact_id",
+        "SR2-intake:/prior_result_ref"
+      ],
+      "relationship": true,
+      "editorial_observation": "Recorded linkage, not same-task identity."
+    },
+    {
+      "name": "SR2 explicit later request parent",
+      "source_projection_ids": [
+        "SR2-run:/artifact/artifact_id",
+        "SR3-intake:/prior_result_ref"
+      ],
+      "relationship": true,
+      "editorial_observation": "Recorded linkage, not same-task identity."
+    },
+    {
+      "name": "KEEP_FAMILIAR_V01 raw-to-used-to-saved",
+      "source_projection_ids": [
+        "KEEP_FAMILIAR_V01-raw:/taskMetadata",
+        "KEEP_FAMILIAR_V01-samples:/raw_sha256",
+        "KEEP_FAMILIAR_V01-samples:/selected",
+        "KEEP_FAMILIAR_V01-native:/output",
+        "KEEP_FAMILIAR_V01-saved-output",
+        "KEEP_FAMILIAR_V01-save0:/0/claim"
+      ],
+      "observations": {
+        "raw_file_hash_equals_sample_binding": true,
+        "provider_task_equals_native_task": true,
+        "selected_assignment_equals_native": true,
+        "selected_shot_equals_native": true,
+        "selected_basis_equals_native": true,
+        "native_value_equals_saved_json": true,
+        "save_receipt_sha_equals_saved_raw_file": true,
+        "save_receipt_length_equals_saved_raw_file": true
+      },
+      "scope": "Read-only equality of archived fields and byte hashes; no project validator, runtime, Root, provider, QPU or save invoked."
+    },
+    {
+      "name": "MIX_CIRCLES_V01 raw-to-used-to-saved",
+      "source_projection_ids": [
+        "MIX_CIRCLES_V01-raw:/taskMetadata",
+        "MIX_CIRCLES_V01-samples:/raw_sha256",
+        "MIX_CIRCLES_V01-samples:/selected",
+        "MIX_CIRCLES_V01-native:/output",
+        "MIX_CIRCLES_V01-saved-output",
+        "MIX_CIRCLES_V01-save0:/0/claim"
+      ],
+      "observations": {
+        "raw_file_hash_equals_sample_binding": true,
+        "provider_task_equals_native_task": true,
+        "selected_assignment_equals_native": true,
+        "selected_shot_equals_native": true,
+        "selected_basis_equals_native": true,
+        "native_value_equals_saved_json": true,
+        "save_receipt_sha_equals_saved_raw_file": true,
+        "save_receipt_length_equals_saved_raw_file": true
+      },
+      "scope": "Read-only equality of archived fields and byte hashes; no project validator, runtime, Root, provider, QPU or save invoked."
+    }
+  ],
+  "boundaries": [
+    "Seven W3 episodes, six distinct selected native tasks; AMBIGUOUS has no native program in its record.",
+    "A/SR1 consume live-origin captures by reexecution; B/VERIFY/AMBIGUOUS/SR2/SR3 preserve LIVE_ROLE_ORIGIN.",
+    "old_under_new.current_root_refusal=current_owner_context names a domain precondition failure, not a new Root decision.",
+    "W4 is the original revision-1 numerical stage; array equality with SR2 does not establish identity.",
+    "Historical validation/reference reports are read, not rerun. Provider byte provenance is not physical-world or cryptographic provider attestation."
+  ]
+}

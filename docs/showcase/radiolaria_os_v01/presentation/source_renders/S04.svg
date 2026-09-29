@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 1280 720" role="img" aria-labelledby="title desc">
+<title id="title">The requester consumes the offered value</title>
+<desc id="desc">RECORDED FOOTBALL  /  Value inclusion binds the actual Work input</desc>
+<defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L9,3 z" fill="#176B68"/></marker></defs>
+<rect width="1280" height="720" fill="white"/>
+<text id="S04_title" font-family="Nimbus Sans" font-size="42" font-weight="bold" fill="#16282B">
+<tspan x="54" y="78.0">The requester consumes the offered value</tspan>
+</text>
+<text id="S04_scope" font-family="Nimbus Sans" font-size="23" font-weight="normal" fill="#43595D">
+<tspan x="56" y="136.0">RECORDED FOOTBALL / Value inclusion binds the actual Work input</tspan>
+</text>
+<rect x="56.0" y="235" width="300" height="110" id="S04_values_0" fill="#EFF5F3" stroke="#176B68" stroke-width="2"/>
+<text id="S04_values_0_label" font-family="Nimbus Sans" font-size="24" font-weight="normal" fill="#16282B">
+<tspan x="69.0" y="271.0">E</tspan>
+<tspan x="69.0" y="298.6">offer_json</tspan>
+</text>
+<rect x="490.0" y="235" width="300" height="110" id="S04_values_1" fill="#EFF5F3" stroke="#176B68" stroke-width="2"/>
+<text id="S04_values_1_label" font-family="Nimbus Sans" font-size="24" font-weight="normal" fill="#16282B">
+<tspan x="503.0" y="271.0">B</tspan>
+<tspan x="503.0" y="298.6">B.offer = E</tspan>
+</text>
+<rect x="924.0" y="235" width="300" height="110" id="S04_values_2" fill="#EFF5F3" stroke="#176B68" stroke-width="2"/>
+<text id="S04_values_2_label" font-family="Nimbus Sans" font-size="24" font-weight="normal" fill="#16282B">
+<tspan x="937.0" y="271.0">C</tspan>
+<tspan x="937.0" y="298.6">C.body = B</tspan>
+</text>
+<line id="S04_values_edge_0" x1="356.0" y1="290.0" x2="490.0" y2="290.0" stroke="#176B68" stroke-width="2" marker-end="url(#arrow)"/>
+<text id="S04_values_edge_0_label" font-family="Nimbus Sans" font-size="17" font-weight="normal" fill="#43595D">
+<tspan x="360.0" y="225.0">included value</tspan>
+</text>
+<line id="S04_values_edge_1" x1="790.0" y1="290.0" x2="924.0" y2="290.0" stroke="#176B68" stroke-width="2" marker-end="url(#arrow)"/>
+<text id="S04_values_edge_1_label" font-family="Nimbus Sans" font-size="17" font-weight="normal" fill="#43595D">
+<tspan x="794.0" y="225.0">included body</tspan>
+</text>
+<rect x="390" y="440" width="505" height="110" id="S04_consume" fill="#EFF5F3" stroke="#176B68" stroke-width="2"/>
+<text id="S04_consume_label" font-family="Nimbus Sans" font-size="24" font-weight="normal" fill="#16282B">
+<tspan x="403" y="476.0">Requester Work input</tspan>
+<tspan x="403" y="503.6">uses the bound offer field</tspan>
+</text>
+<text id="S04_checked" font-family="Nimbus Sans" font-size="28" font-weight="normal" fill="#16282B">
+<tspan x="58" y="393.0">Independent source and STATUS reconstruction qualify C</tspan>
+<tspan x="58" y="425.2">before consumption.</tspan>
+</text>
+<text id="S04_qualification" font-family="Nimbus Sans" font-size="23" font-weight="normal" fill="#43595D">
+<tspan x="56" y="619.0">A source hash is one check, not its own oracle. Full source identities and selectors remain in the field ledger.</tspan>
+</text>
+<line id="S04_rule" x1="56" y1="671" x2="1218" y2="671" stroke="#B8C8C6" stroke-width="1"/>
+<a href="../../references/episode_sources.json">
+<text id="S04_source_link" font-family="Nimbus Sans" font-size="18" font-weight="normal" fill="#315E8B">
+<tspan x="56" y="703.0">S04 Source: football</tspan>
+</text>
+</a>
+<a href="../../atlas/README.html">
+<text id="S04_atlas_locator" font-family="Nimbus Sans" font-size="17" font-weight="normal" fill="#315E8B">
+<tspan x="660" y="702.0">Atlas: Overview / GEO 1 2 3 4 5 6 7</tspan>
+</text>
+</a>
+<line id="S04_actual_consumption" x1="1074.0" y1="345" x2="895.0" y2="495.0" stroke="#176B68" stroke-width="2" marker-end="url(#arrow)"/>
+</svg>

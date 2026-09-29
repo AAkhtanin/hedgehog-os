@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 1280 720" role="img" aria-labelledby="title desc">
+<title id="title">A refused neighbor makes the boundary visible</title>
+<desc id="desc">RECORDED INCIDENT ATLAS S1 / S4  /  Controlled Water Filter operations</desc>
+<defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L9,3 z" fill="#176B68"/></marker></defs>
+<rect width="1280" height="720" fill="white"/>
+<text id="S14_title" font-family="Nimbus Sans" font-size="42" font-weight="bold" fill="#16282B">
+<tspan x="54" y="78.0">A refused neighbor makes the boundary visible</tspan>
+</text>
+<text id="S14_scope" font-family="Nimbus Sans" font-size="23" font-weight="normal" fill="#43595D">
+<tspan x="56" y="136.0">RECORDED INCIDENT ATLAS S1 / S4 / Controlled Water Filter operations</tspan>
+</text>
+<rect x="56" y="226" width="514" height="124" id="S14_allow" fill="#EFF5F3" stroke="#176B68" stroke-width="2"/>
+<text id="S14_allow_label" font-family="Nimbus Sans" font-size="24" font-weight="normal" fill="#16282B">
+<tspan x="69" y="262.0">Supplier A</tspan>
+<tspan x="69" y="289.6">permitted bounded operation</tspan>
+</text>
+<rect x="710" y="226" width="514" height="124" id="S14_deny" fill="#FAEFED" stroke="#A13D32" stroke-width="2"/>
+<text id="S14_deny_label" font-family="Nimbus Sans" font-size="24" font-weight="normal" fill="#16282B">
+<tspan x="723" y="262.0">Local Root reviews</tspan>
+<tspan x="723" y="289.6">Supplier B&#x27;s unsafe</tspan>
+<tspan x="723" y="317.2">recipient proposal</tspan>
+</text>
+<text id="S14_allow_effect" font-family="Nimbus Sans" font-size="34" font-weight="normal" fill="#176B68">
+<tspan x="56" y="420.0">Current review permits</tspan>
+<tspan x="56" y="459.1">one controlled mock effect</tspan>
+</text>
+<text id="S14_deny_effect" font-family="Nimbus Sans" font-size="34" font-weight="normal" fill="#A13D32">
+<tspan x="710" y="420.0">Root refuses: no packet</tspan>
+<tspan x="710" y="459.1">zero effects from ADV-1</tspan>
+</text>
+<text id="S14_classes" font-family="Nimbus Sans" font-size="24" font-weight="normal" fill="#16282B">
+<tspan x="56" y="549.0">S1: DIRECT_CAUSAL S4: SHARED_DOMAIN_PROOF_POST_CONSUMER_CONTROL</tspan>
+</text>
+<text id="S14_qualification" font-family="Nimbus Sans" font-size="23" font-weight="normal" fill="#43595D">
+<tspan x="56" y="619.0">Shared domain proof is separate from direct causality; S4 controls follow the consumer. Supplier labels alone</tspan>
+<tspan x="56" y="645.45">establish no second Root.</tspan>
+</text>
+<line id="S14_rule" x1="56" y1="671" x2="1218" y2="671" stroke="#B8C8C6" stroke-width="1"/>
+<a href="https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/showcase/incident_to_proof_atlas_v01/evidence/atlas_package.json">
+<text id="S14_source_link" font-family="Nimbus Sans" font-size="18" font-weight="normal" fill="#315E8B">
+<tspan x="56" y="703.0">S14 Source: incident</tspan>
+</text>
+</a>
+<a href="../../atlas/README.html">
+<text id="S14_atlas_locator" font-family="Nimbus Sans" font-size="17" font-weight="normal" fill="#315E8B">
+<tspan x="660" y="702.0">Atlas: Overview / GEO 1 2 3 4 5 6 7</tspan>
+</text>
+</a>
+</svg>

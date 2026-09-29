@@ -1,0 +1,918 @@
+{
+  "artifact_kind": "EDITORIAL_LIFECYCLE_GRAPH_NOT_RUNTIME_TOPOLOGY",
+  "language": "en",
+  "figure_id": "CASE-EWS-LIFECYCLE",
+  "figure_class": "conceptual",
+  "status": "EDITORIAL_COMPLETE_PENDING_INTEGRATOR_AND_OWNER_REVIEW",
+  "source_ledger": "source_ledger.json",
+  "selected_fields": "selected_field_projections.json",
+  "question": "How can a temporary environment change, preserve useful work, save separately, and end while history remains inspectable?",
+  "audience": "Readers and integrators comparing Work, permission, resources, results and memory lifecycles",
+  "boundary": "Principal EWS3R2 local synthetic browser run plus an explicitly separate EWS3 historical memory lane; no new run",
+  "id_rule": "ews.* IDs are editorial entity IDs, not claimed native runtime IDs. Native selected identifiers remain in P_consumption. Reuse these same editorial identities across views.",
+  "lanes": {
+    "principal": "EWS3R2 browser_run_01; CONTROLLED_DETERMINISTIC semantics; SCRIPTED_BROWSER_TEST interactions",
+    "historical_memory": "EWS3 LIVE production and strict CAPTURED_REEXECUTION; contrast_memory_04; not the principal sidecar"
+  },
+  "relation_legend": {
+    "data": "Value is supplied or consumed",
+    "proposal": "Candidate for independent review",
+    "control": "Gates, changes, checks or ends state",
+    "ownership": "Local resource ownership, not shared business supremacy",
+    "permission": "Scoped required authorization; no implication of transferable permission",
+    "authorized_execution": "Current admitted operation through the existing authority path",
+    "provenance": "Binds historical result/evidence",
+    "documentary_reference": "Explanation/comparison only, never runtime dataflow or causal continuity"
+  },
+  "nodes": [
+    {
+      "id": "ews.intent",
+      "label": "Browse, rate, select, adjust previews; optional audio",
+      "type": "intent",
+      "lane": "principal",
+      "status": "recorded-historical",
+      "sources": [
+        {
+          "source_id": "semantic",
+          "selector": "/principal_controlled_role_records/0/bounded_input/request"
+        }
+      ]
+    },
+    {
+      "id": "ews.proposals",
+      "label": "Three controlled semantic contributions",
+      "type": "proposal",
+      "lane": "principal",
+      "status": "recorded-historical",
+      "sources": [
+        {
+          "source_id": "semantic",
+          "selector": "/principal_controlled_role_records"
+        }
+      ]
+    },
+    {
+      "id": "ews.bsep",
+      "label": "Native BSEP and bounded role projection are distinct",
+      "type": "semantic_boundary",
+      "lane": "principal",
+      "status": "recorded-historical",
+      "sources": [
+        {
+          "source_id": "appendix",
+          "selector": "Section 4"
+        }
+      ]
+    },
+    {
+      "id": "ews.root",
+      "label": "Local PersonalRoot; route and command decisions remain distinct",
+      "type": "owner",
+      "lane": "principal",
+      "status": "interpretation",
+      "sources": [
+        {
+          "source_id": "appendix",
+          "selector": "Section 5"
+        }
+      ],
+      "basis_class": "normative-for-profile"
+    },
+    {
+      "id": "ews.compile",
+      "label": "compile_contract Work",
+      "type": "work",
+      "lane": "principal",
+      "status": "recorded-historical",
+      "sources": [
+        {
+          "source_id": "topology",
+          "selector": "/payload/safe_document/summary/work_roles/0"
+        }
+      ]
+    },
+    {
+      "id": "ews.consume",
+      "label": "consume_contract Work uses actual material output",
+      "type": "work",
+      "lane": "principal",
+      "status": "recorded-historical",
+      "sources": [
+        {
+          "source_id": "appendix",
+          "selector": "Section 6"
+        }
+      ]
+    },
+    {
+      "id": "ews.environment",
+      "label": "Temporary local workspace: owned services and viewers",
+      "type": "environment",
+      "lane": "principal",
+      "status": "recorded-historical",
+      "sources": [
+        {
+          "source_id": "appendix",
+          "selector": "Section 6"
+        }
+      ]
+    },
+    {
+      "id": "ews.originals",
+      "label": "Original photo/media fixtures, not rewritten",
+      "type": "storage",
+      "lane": "principal",
+      "status": "recorded-historical",
+      "sources": [
+        {
+          "source_id": "complete",
+          "selector": "/source_preserved"
+        }
+      ]
+    },
+    {
+      "id": "ews.preview",
+      "label": "Derived RGB PNG; manual rating and preview parameters",
+      "type": "result",
+      "lane": "principal",
+      "status": "recorded-historical",
+      "sources": [
+        {
+          "source_id": "temporal",
+          "selector": "/loss_photo_work"
+        }
+      ]
+    },
+    {
+      "id": "ews.audio",
+      "label": "AudioSink: four frames, 16000 PCM samples before loss",
+      "type": "process",
+      "lane": "principal",
+      "status": "recorded-historical",
+      "sources": [
+        {
+          "source_id": "events",
+          "selector": "/payload/safe_document/summary"
+        }
+      ]
+    },
+    {
+      "id": "ews.loss",
+      "label": "Owned AudioSink exits; audio unavailable",
+      "type": "change",
+      "lane": "principal",
+      "status": "recorded-historical",
+      "sources": [
+        {
+          "source_id": "complete",
+          "selector": "/cleanup/processes/0"
+        }
+      ]
+    },
+    {
+      "id": "ews.expired",
+      "label": "Old action refused: host_current_action_not_executable",
+      "type": "refusal",
+      "lane": "principal",
+      "status": "recorded-historical",
+      "sources": [
+        {
+          "source_id": "temporal",
+          "selector": "/stale_packet_refusal"
+        }
+      ]
+    },
+    {
+      "id": "ews.delta",
+      "label": "E consumes changed source; one retained D recomputation",
+      "type": "work",
+      "lane": "principal",
+      "status": "recorded-historical",
+      "sources": [
+        {
+          "source_id": "consumption",
+          "selector": "/recomputed_result_ref"
+        }
+      ]
+    },
+    {
+      "id": "ews.retained",
+      "label": "Unaffected D sibling retained and consumed",
+      "type": "retained_result",
+      "lane": "principal",
+      "status": "recorded-historical",
+      "sources": [
+        {
+          "source_id": "consumption",
+          "selector": "/preserved_D_result_ref"
+        }
+      ]
+    },
+    {
+      "id": "ews.silent",
+      "label": "Silent continuation: 4 to 16 frames, PCM stays 16000",
+      "type": "result",
+      "lane": "principal",
+      "status": "recorded-historical",
+      "sources": [
+        {
+          "source_id": "events",
+          "selector": "/payload/safe_document/summary"
+        }
+      ]
+    },
+    {
+      "id": "ews.candidate",
+      "label": "REQUEST_SAVE exact candidate; no sidecar yet",
+      "type": "save_candidate",
+      "lane": "principal",
+      "status": "interpretation",
+      "sources": [
+        {
+          "source_id": "session_code",
+          "selector": "save_candidate"
+        }
+      ],
+      "basis_class": "normative-for-profile"
+    },
+    {
+      "id": "ews.approval",
+      "label": "Separate owner-origin exact approval; scripted browser action",
+      "type": "approval",
+      "lane": "principal",
+      "status": "recorded-historical",
+      "sources": [
+        {
+          "source_id": "save_packet",
+          "selector": "/payload/safe_document/summary"
+        }
+      ]
+    },
+    {
+      "id": "ews.packet",
+      "label": "Fresh Root-bound SAVE packet through Host/Firewall",
+      "type": "action_packet",
+      "lane": "principal",
+      "status": "recorded-historical",
+      "sources": [
+        {
+          "source_id": "save_packet",
+          "selector": "/payload/safe_document/summary/save_packet_sha256"
+        }
+      ]
+    },
+    {
+      "id": "ews.sidecar",
+      "label": "One 250-byte selection.json; rating 5, SQUARE, exposure 5",
+      "type": "saved_result",
+      "lane": "principal",
+      "status": "recorded-historical",
+      "sources": [
+        {
+          "source_id": "sidecar",
+          "selector": "/selection"
+        }
+      ]
+    },
+    {
+      "id": "ews.receipt",
+      "label": "Save receipt: evidence of one write, not future permission",
+      "type": "receipt",
+      "lane": "principal",
+      "status": "recorded-historical",
+      "sources": [
+        {
+          "source_id": "save_receipt",
+          "selector": "/payload/safe_document/summary"
+        }
+      ]
+    },
+    {
+      "id": "ews.closed",
+      "label": "CLOSED_SUCCESS; audio receipt null, other children graceful",
+      "type": "lifecycle_end",
+      "lane": "principal",
+      "status": "recorded-historical",
+      "sources": [
+        {
+          "source_id": "complete",
+          "selector": "/cleanup"
+        }
+      ]
+    },
+    {
+      "id": "ews.history",
+      "label": "Pinned principal evidence remains inspectable",
+      "type": "evidence",
+      "lane": "principal",
+      "status": "interpretation",
+      "sources": [
+        {
+          "source_id": "evidence",
+          "selector": "Evidence and Review Scope"
+        }
+      ]
+    },
+    {
+      "id": "ews.h_live",
+      "label": "Historical EWS3: six LIVE responses, nine attempts",
+      "type": "semantic_production",
+      "lane": "historical_memory",
+      "status": "recorded-historical",
+      "sources": [
+        {
+          "source_id": "semantic",
+          "selector": "/historical_attempt_counts"
+        }
+      ]
+    },
+    {
+      "id": "ews.h_capture",
+      "label": "Strict captured consumption; fresh Host/resources",
+      "type": "work",
+      "lane": "historical_memory",
+      "status": "recorded-historical",
+      "sources": [
+        {
+          "source_id": "memory",
+          "selector": "/records/0"
+        }
+      ]
+    },
+    {
+      "id": "ews.h_drs",
+      "label": "Durable LocalDRS recipe and saved-work summary",
+      "type": "memory",
+      "lane": "historical_memory",
+      "status": "recorded-historical",
+      "sources": [
+        {
+          "source_id": "memory",
+          "selector": "/records/3"
+        }
+      ]
+    },
+    {
+      "id": "ews.h_lookup",
+      "label": "Fresh SUMMARY_ONLY retrieval; no new workspace or effect",
+      "type": "informational_result",
+      "lane": "historical_memory",
+      "status": "recorded-historical",
+      "sources": [
+        {
+          "source_id": "saved_information",
+          "selector": ""
+        }
+      ]
+    },
+    {
+      "id": "ews.h_blocked",
+      "label": "Old recipe stored but BLOCKED_BY_SCOPE",
+      "type": "refusal",
+      "lane": "historical_memory",
+      "status": "recorded-historical",
+      "sources": [
+        {
+          "source_id": "memory",
+          "selector": "/records/5"
+        }
+      ]
+    }
+  ],
+  "typed_edges": [
+    {
+      "id": "e01",
+      "from": "ews.intent",
+      "to": "ews.proposals",
+      "type": "data",
+      "label": "bounded request and capability classes",
+      "status": "recorded-historical",
+      "sources": [
+        {
+          "source_id": "semantic",
+          "selector": "/principal_controlled_role_records/0/bounded_input"
+        }
+      ]
+    },
+    {
+      "id": "e02",
+      "from": "ews.proposals",
+      "to": "ews.root",
+      "type": "proposal",
+      "label": "needs go to independent route review",
+      "status": "recorded-historical",
+      "sources": [
+        {
+          "source_id": "appendix",
+          "selector": "Sections 3-5"
+        }
+      ]
+    },
+    {
+      "id": "e03",
+      "from": "ews.root",
+      "to": "ews.bsep",
+      "type": "control",
+      "label": "accepted route conditions; not universal future command permission",
+      "status": "recorded-historical",
+      "sources": [
+        {
+          "source_id": "appendix",
+          "selector": "Sections 4-5"
+        }
+      ]
+    },
+    {
+      "id": "e04",
+      "from": "ews.bsep",
+      "to": "ews.proposals",
+      "type": "data",
+      "label": "bounded architect input; compact role view is not full native DTO",
+      "status": "recorded-historical",
+      "sources": [
+        {
+          "source_id": "semantic",
+          "selector": "/principal_controlled_role_records/1/bounded_input"
+        }
+      ]
+    },
+    {
+      "id": "e05",
+      "from": "ews.proposals",
+      "to": "ews.compile",
+      "type": "proposal",
+      "label": "validated role values supplied to finite compiler",
+      "status": "recorded-historical",
+      "sources": [
+        {
+          "source_id": "appendix",
+          "selector": "Section 6"
+        }
+      ]
+    },
+    {
+      "id": "e06",
+      "from": "ews.compile",
+      "to": "ews.consume",
+      "type": "data",
+      "label": "actual material output consumed by next Work item",
+      "status": "recorded-historical",
+      "sources": [
+        {
+          "source_id": "appendix",
+          "selector": "Section 6"
+        }
+      ]
+    },
+    {
+      "id": "e07",
+      "from": "ews.consume",
+      "to": "ews.environment",
+      "type": "control",
+      "label": "consumed contract establishes supported operation gate",
+      "status": "recorded-historical",
+      "sources": [
+        {
+          "source_id": "appendix",
+          "selector": "Section 6"
+        }
+      ]
+    },
+    {
+      "id": "e08",
+      "from": "ews.root",
+      "to": "ews.environment",
+      "type": "authorized_execution",
+      "label": "OPEN separately current; Root/Host/Firewall path",
+      "status": "interpretation",
+      "sources": [
+        {
+          "source_id": "session_code",
+          "selector": "execute_effect"
+        }
+      ],
+      "basis_class": "normative-for-profile"
+    },
+    {
+      "id": "e09",
+      "from": "ews.environment",
+      "to": "ews.audio",
+      "type": "ownership",
+      "label": "owns audio child; not arbitrary external process",
+      "status": "recorded-historical",
+      "sources": [
+        {
+          "source_id": "appendix",
+          "selector": "Section 6"
+        }
+      ]
+    },
+    {
+      "id": "e10",
+      "from": "ews.originals",
+      "to": "ews.preview",
+      "type": "data",
+      "label": "scoped read -> derived preview, no source write",
+      "status": "interpretation",
+      "sources": [
+        {
+          "source_id": "render_code",
+          "selector": "render"
+        }
+      ],
+      "basis_class": "normative-for-profile"
+    },
+    {
+      "id": "e11",
+      "from": "ews.audio",
+      "to": "ews.loss",
+      "type": "control",
+      "label": "deliberate owned-process kill observed, return -9",
+      "status": "recorded-historical",
+      "sources": [
+        {
+          "source_id": "complete",
+          "selector": "/cleanup/processes/0"
+        }
+      ]
+    },
+    {
+      "id": "e12",
+      "from": "ews.loss",
+      "to": "ews.delta",
+      "type": "data",
+      "label": "fresh changed-source evidence; prior authority unchanged",
+      "status": "recorded-historical",
+      "sources": [
+        {
+          "source_id": "temporal",
+          "selector": "/new_observation_valid_at_acquisition"
+        }
+      ]
+    },
+    {
+      "id": "e13",
+      "from": "ews.loss",
+      "to": "ews.expired",
+      "type": "documentary_reference",
+      "label": "same principal temporal record also records old-packet refusal",
+      "status": "recorded-historical",
+      "sources": [
+        {
+          "source_id": "temporal",
+          "selector": "/stale_packet_refusal"
+        }
+      ]
+    },
+    {
+      "id": "e14",
+      "from": "ews.delta",
+      "to": "ews.retained",
+      "type": "data",
+      "label": "retained consumption of unaffected sibling",
+      "status": "recorded-historical",
+      "sources": [
+        {
+          "source_id": "consumption",
+          "selector": "/retained_consumption_ref"
+        }
+      ]
+    },
+    {
+      "id": "e15",
+      "from": "ews.preview",
+      "to": "ews.delta",
+      "type": "data",
+      "label": "photo snapshot checked equal across loss/E",
+      "status": "recorded-historical",
+      "sources": [
+        {
+          "source_id": "temporal",
+          "selector": "/current_photo_work"
+        }
+      ]
+    },
+    {
+      "id": "e16",
+      "from": "ews.delta",
+      "to": "ews.silent",
+      "type": "control",
+      "label": "consumed SILENT_CONTINUE plan; PLAY still needs fresh authority",
+      "status": "recorded-historical",
+      "sources": [
+        {
+          "source_id": "consumption",
+          "selector": "/audio_policy"
+        }
+      ]
+    },
+    {
+      "id": "e17",
+      "from": "ews.preview",
+      "to": "ews.candidate",
+      "type": "data",
+      "label": "selected assets, ratings, crop/exposure and source digests",
+      "status": "interpretation",
+      "sources": [
+        {
+          "source_id": "session_code",
+          "selector": "save_candidate"
+        }
+      ],
+      "basis_class": "normative-for-profile"
+    },
+    {
+      "id": "e18",
+      "from": "ews.candidate",
+      "to": "ews.approval",
+      "type": "proposal",
+      "label": "owner-origin review of exact candidate, no write yet",
+      "status": "recorded-historical",
+      "sources": [
+        {
+          "source_id": "appendix",
+          "selector": "Section 12"
+        }
+      ]
+    },
+    {
+      "id": "e19",
+      "from": "ews.approval",
+      "to": "ews.packet",
+      "type": "permission",
+      "label": "exact unused approval is required, but insufficient without current packet",
+      "status": "interpretation",
+      "sources": [
+        {
+          "source_id": "session_code",
+          "selector": "validate_effect; approve"
+        }
+      ],
+      "basis_class": "normative-for-profile"
+    },
+    {
+      "id": "e20",
+      "from": "ews.root",
+      "to": "ews.packet",
+      "type": "permission",
+      "label": "current scoped action decision; no permission from retained result",
+      "status": "recorded-historical",
+      "sources": [
+        {
+          "source_id": "appendix",
+          "selector": "Section 5"
+        }
+      ]
+    },
+    {
+      "id": "e21",
+      "from": "ews.packet",
+      "to": "ews.sidecar",
+      "type": "authorized_execution",
+      "label": "Host/Firewall dispatches exactly approved sidecar write",
+      "status": "recorded-historical",
+      "sources": [
+        {
+          "source_id": "save_packet",
+          "selector": "/payload/safe_document/summary"
+        }
+      ]
+    },
+    {
+      "id": "e22",
+      "from": "ews.sidecar",
+      "to": "ews.receipt",
+      "type": "provenance",
+      "label": "receipt and exact saved-byte binding",
+      "status": "recorded-historical",
+      "sources": [
+        {
+          "source_id": "save_receipt",
+          "selector": "/payload/safe_document/summary"
+        }
+      ]
+    },
+    {
+      "id": "e23",
+      "from": "ews.environment",
+      "to": "ews.closed",
+      "type": "control",
+      "label": "owner-end cleanup; finite owned resource boundary",
+      "status": "recorded-historical",
+      "sources": [
+        {
+          "source_id": "complete",
+          "selector": "/cleanup"
+        }
+      ]
+    },
+    {
+      "id": "e24",
+      "from": "ews.closed",
+      "to": "ews.sidecar",
+      "type": "documentary_reference",
+      "label": "saved output remains; this is not a second write",
+      "status": "recorded-historical",
+      "sources": [
+        {
+          "source_id": "appendix",
+          "selector": "Section 12"
+        }
+      ]
+    },
+    {
+      "id": "e25",
+      "from": "ews.closed",
+      "to": "ews.originals",
+      "type": "documentary_reference",
+      "label": "original photo and media fixtures remain",
+      "status": "recorded-historical",
+      "sources": [
+        {
+          "source_id": "complete",
+          "selector": "/media_sources_preserved"
+        }
+      ]
+    },
+    {
+      "id": "e26",
+      "from": "ews.closed",
+      "to": "ews.history",
+      "type": "provenance",
+      "label": "recorded teardown remains inspectable; cannot restore Host",
+      "status": "interpretation",
+      "sources": [
+        {
+          "source_id": "evidence",
+          "selector": "Evidence and Review Scope"
+        }
+      ]
+    },
+    {
+      "id": "e27",
+      "from": "ews.receipt",
+      "to": "ews.history",
+      "type": "provenance",
+      "label": "historical result evidence, never next-operation permission",
+      "status": "recorded-historical",
+      "sources": [
+        {
+          "source_id": "appendix",
+          "selector": "Sections 5 and 16"
+        }
+      ]
+    },
+    {
+      "id": "e28",
+      "from": "ews.h_live",
+      "to": "ews.h_capture",
+      "type": "data",
+      "label": "accepted captured values consumed later; not another live call",
+      "status": "recorded-historical",
+      "sources": [
+        {
+          "source_id": "semantic",
+          "selector": "/historical_consumption_crosschecks"
+        }
+      ]
+    },
+    {
+      "id": "e29",
+      "from": "ews.h_capture",
+      "to": "ews.h_drs",
+      "type": "data",
+      "label": "historical profile records recipe and saved-work information",
+      "status": "recorded-historical",
+      "sources": [
+        {
+          "source_id": "memory",
+          "selector": "/records/3"
+        }
+      ]
+    },
+    {
+      "id": "e30",
+      "from": "ews.h_drs",
+      "to": "ews.h_lookup",
+      "type": "data",
+      "label": "fresh Root-reviewed summary-only descent; rating 4/ORIGINAL/0",
+      "status": "recorded-historical",
+      "sources": [
+        {
+          "source_id": "memory",
+          "selector": "/records/9"
+        }
+      ]
+    },
+    {
+      "id": "e31",
+      "from": "ews.h_drs",
+      "to": "ews.h_blocked",
+      "type": "control",
+      "label": "changed-scope query blocks old recipe, does not erase it",
+      "status": "recorded-historical",
+      "sources": [
+        {
+          "source_id": "memory",
+          "selector": "/records/5"
+        }
+      ]
+    },
+    {
+      "id": "e32",
+      "from": "ews.history",
+      "to": "ews.h_lookup",
+      "type": "documentary_reference",
+      "label": "related lifecycle meaning only: DIFFERENT RUN AND SAVED SELECTION",
+      "status": "interpretation",
+      "sources": [
+        {
+          "source_id": "appendix",
+          "selector": "Section 13"
+        }
+      ]
+    }
+  ],
+  "views": [
+    {
+      "id": "GEO-1",
+      "meaning": "Intent becomes finite compiled and consumed Work",
+      "nodes": [
+        "ews.intent",
+        "ews.proposals",
+        "ews.bsep",
+        "ews.compile",
+        "ews.consume",
+        "ews.environment"
+      ]
+    },
+    {
+      "id": "GEO-2",
+      "meaning": "Semantic contribution, route review, owner approval and action authority are distinct",
+      "nodes": [
+        "ews.proposals",
+        "ews.root",
+        "ews.candidate",
+        "ews.approval",
+        "ews.packet",
+        "ews.receipt"
+      ]
+    },
+    {
+      "id": "GEO-3",
+      "meaning": "Environment birth/loss/continuation/end differs from result/history lifetime",
+      "nodes": [
+        "ews.environment",
+        "ews.loss",
+        "ews.delta",
+        "ews.retained",
+        "ews.silent",
+        "ews.closed",
+        "ews.sidecar",
+        "ews.history"
+      ]
+    },
+    {
+      "id": "GEO-4",
+      "meaning": "Retained results and historical memory require provenance and fresh applicability",
+      "nodes": [
+        "ews.retained",
+        "ews.history",
+        "ews.h_live",
+        "ews.h_capture",
+        "ews.h_drs",
+        "ews.h_lookup",
+        "ews.h_blocked"
+      ]
+    },
+    {
+      "id": "GEO-5",
+      "meaning": "Compute, display, storage and process boundaries are concrete local participants",
+      "nodes": [
+        "ews.environment",
+        "ews.originals",
+        "ews.preview",
+        "ews.audio",
+        "ews.loss",
+        "ews.closed"
+      ]
+    }
+  ],
+  "omissions": [
+    "GEO-6 numerical learning/ranking and GEO-7 extension-author acceptance are not proved by this lifecycle; integrator uses their own accepted sources.",
+    "General child-memory need is preserved in editorial_disposition.md, not invented as an EWS runtime event.",
+    "No credentials, session tokens, process nonces, private paths, full native graph or raw private captures are embedded.",
+    "No whole-system diagram or new schema is introduced; this is a disjoint contribution to the integrator's existing Atlas."
+  ],
+  "text_equivalent": "A bounded task supplies controlled semantic proposals. Reviewed values become compile_contract and consume_contract Work, then a temporary local workspace. Original fixtures supply derived previews. An owned audio process disappears; fresh changed-source evidence enters E and retained D recomputation, while the unaffected sibling and photo snapshot remain. Silent playback completes under its supported policy. A separate exact save candidate, owner-origin approval and fresh Root-bound packet precede one sidecar write and receipt. Owner-end cleanup releases owned services/previews and leaves original media, saved output and inspectable evidence. A separate historical EWS3 lane shows captured semantic consumption, durable LocalDRS, fresh summary-only retrieval and blocked changed-scope reuse; it is not a causal continuation of the principal run.",
+  "recorded_inset_class": "recorded-execution",
+  "cell_status_semantics": [
+    "observed-current",
+    "recorded-historical",
+    "independently-checked",
+    "interpretation",
+    "future",
+    "not-applicable",
+    "not-demonstrated"
+  ]
+}

@@ -1,0 +1,238 @@
+[
+  {
+    "id": "ATLAS_A",
+    "class": "CONCEPTUAL",
+    "claims": [
+      "CL01"
+    ],
+    "sources": [
+      "specs/current_architecture_lock_v01.md"
+    ],
+    "assertion": "Independent local owners accept their own work and actions.",
+    "nodes": [
+      "INTENT",
+      "MODEL",
+      "VENUE",
+      "REQUESTER",
+      "WORK",
+      "ROOT",
+      "MEMORY",
+      "FIREWALL"
+    ],
+    "relations": [
+      [
+        "VENUE",
+        "REQUESTER",
+        "DATA"
+      ],
+      [
+        "MODEL",
+        "WORK",
+        "PROPOSAL"
+      ],
+      [
+        "WORK",
+        "ROOT",
+        "DATA"
+      ],
+      [
+        "MEMORY",
+        "ROOT",
+        "DATA"
+      ],
+      [
+        "ROOT",
+        "FIREWALL",
+        "PERMISSION"
+      ],
+      [
+        "FIREWALL",
+        "WORK",
+        "EXECUTION"
+      ]
+    ],
+    "meaning": "The first Work returns evidence. The effect lane denotes separately authorized bounded work after a current Root packet, not permission for the first proposal. Repeat this local pattern for independent owners; no edge grants authority from one Root to another.",
+    "omitted_scope": "Topology and time predicates, packet internals, Root descent and provider callbacks are not fully drawn.",
+    "rendering": {
+      "layout": "Two local-owner columns, VenueRoot left and ActivePlanetRoot right. Shared intention/proposal line above; time/memory and child Work context below.",
+      "graphical_arrows": [
+        [
+          "VENUE",
+          "REQUESTER",
+          "DATA"
+        ]
+      ],
+      "text_flows": [
+        "Each column: local Work result to its own Root review.",
+        "Left column: Permission/current packet to Firewall; then separate authorized execution.",
+        "Right column: foreign approval creates no registry write permission."
+      ],
+      "entity_instances": {
+        "WORK": [
+          "VenueRoot availability Work",
+          "ActivePlanetRoot checked consumer Work",
+          "Separate authorized effect Work"
+        ],
+        "ROOT": [
+          "VenueRoot local result review",
+          "ActivePlanetRoot own local decision"
+        ]
+      },
+      "legend": "Only the cross-owner DATA relation is a graphical arrow; local proposal, permission and execution relations are labelled in text. No SuperRoot."
+    }
+  },
+  {
+    "id": "ATLAS_B",
+    "class": "RECORDED_EXECUTION",
+    "claims": [
+      "CL02",
+      "CL03"
+    ],
+    "sources": [
+      "main_pub_shift_venue_work",
+      "main_pub_shift_offer_body",
+      "main_req_shift_requester_work",
+      "negative_shift_status"
+    ],
+    "assertion": "The received body becomes local evidence, not transferred booking permission.",
+    "nodes": [
+      "VENUE",
+      "E",
+      "B",
+      "POINTER",
+      "STATUS",
+      "C",
+      "REQUESTER"
+    ],
+    "relations": [
+      [
+        "VENUE",
+        "E",
+        "EXECUTION"
+      ],
+      [
+        "E",
+        "B",
+        "DERIVATION"
+      ],
+      [
+        "POINTER",
+        "B",
+        "DOCUMENT_REFERENCE"
+      ],
+      [
+        "B",
+        "C",
+        "DATA"
+      ],
+      [
+        "STATUS",
+        "C",
+        "DATA"
+      ],
+      [
+        "C",
+        "REQUESTER",
+        "DATA"
+      ]
+    ],
+    "meaning": "Producer E precedes review and B. Received B and authenticated STATUS produce C. Requester Work consumes C before local result review. Separate BOOK is outside this exchange. Revoked STATUS stops the positive consumption lane.",
+    "omitted_scope": "Release/nonce/high-water checks are described in text; not all sixteen historical cases or full signature replay are depicted.",
+    "rendering": {
+      "layout": "E, B and C columns; negative status strip below; separate BOOK boundary at bottom.",
+      "graphical_arrows": [
+        [
+          "E",
+          "B",
+          "DERIVATION"
+        ],
+        [
+          "B",
+          "C",
+          "DATA"
+        ]
+      ],
+      "text_flows": [
+        "VenueRoot native Work produces E.",
+        "Address locates B; release binds delivery.",
+        "C belongs to ActivePlanetRoot Work and includes current STATUS; local result review follows.",
+        "REVOKED stops this positive consumption path. BOOK is a separate consent/action boundary."
+      ],
+      "legend": "DERIVATION builds a different object; DATA transfers material for checked consumption, not permission. Other checks are text, not unlabelled graph edges."
+    }
+  },
+  {
+    "id": "ATLAS_C",
+    "class": "CONCEPTUAL",
+    "claims": [
+      "CL04"
+    ],
+    "sources": [
+      "docs/gate5_authoring_kit_v01/START_HERE.md",
+      "docs/showcase/gate5_reference_v01/dossiers/A.md"
+    ],
+    "assertion": "Authoring and independent admission precede, rather than replace, runtime decisions.",
+    "nodes": [
+      "KIT",
+      "WHAT",
+      "CANDIDATE",
+      "EXAMINER",
+      "SOURCE_ADMISSION",
+      "READER"
+    ],
+    "relations": [
+      [
+        "KIT",
+        "CANDIDATE",
+        "DOCUMENT_REFERENCE"
+      ],
+      [
+        "WHAT",
+        "CANDIDATE",
+        "DOCUMENT_REFERENCE"
+      ],
+      [
+        "CANDIDATE",
+        "EXAMINER",
+        "DATA"
+      ],
+      [
+        "EXAMINER",
+        "SOURCE_ADMISSION",
+        "PROPOSAL"
+      ],
+      [
+        "EXAMINER",
+        "READER",
+        "DOCUMENT_REFERENCE"
+      ]
+    ],
+    "meaning": "SOURCE_ADMISSION is a separately authorized repository/source operation, deliberately distinct from runtime ROOT. The audit Reader explains evidence; it is not the HOW kit or the examiner oracle. G54D1 required an authorized fourth correction.",
+    "omitted_scope": "No future cold author is given old hidden examiner answers. Source admission never grants current action permission.",
+    "rendering": {
+      "layout": "HOW + WHAT, candidate, independent exam, source admission above a distinct runtime band.",
+      "graphical_arrows": [
+        [
+          "KIT+WHAT",
+          "CANDIDATE",
+          "DOCUMENT_REFERENCE"
+        ],
+        [
+          "CANDIDATE",
+          "EXAMINER",
+          "DATA"
+        ],
+        [
+          "EXAMINER",
+          "SOURCE_ADMISSION",
+          "PROPOSAL"
+        ]
+      ],
+      "text_flows": [
+        "The audit Reader is not the kit or hidden oracle.",
+        "The lower runtime band names request, current sources, Work, local Root and scoped effect; it does not share SOURCE_ADMISSION identity."
+      ],
+      "legend": "DOCUMENT_REFERENCE supplies authoring inputs, DATA submits a candidate, PROPOSAL supports separate source admission."
+    }
+  }
+]

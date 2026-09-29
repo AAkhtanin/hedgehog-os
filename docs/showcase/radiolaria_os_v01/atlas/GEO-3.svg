@@ -1,0 +1,81 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 1280 720" role="img" aria-labelledby="title desc">
+<title id="title">Useful work can outlive a changed resource</title>
+<desc id="desc">RECORDED EWS3R2 PRINCIPAL LANE  /  Separate clocks below, no receipt-controlled cleanup</desc>
+<defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L9,3 z" fill="#176B68"/></marker></defs>
+<rect width="1280" height="720" fill="white"/>
+<text id="GEO-3_title" font-family="Nimbus Sans" font-size="42" font-weight="bold" fill="#16282B">
+<tspan x="54" y="78.0">Useful work can outlive a changed resource</tspan>
+</text>
+<text id="GEO-3_scope" font-family="Nimbus Sans" font-size="23" font-weight="normal" fill="#43595D">
+<tspan x="56" y="136.0">RECORDED EWS3R2 PRINCIPAL LANE / Separate clocks below, no receipt-controlled cleanup</tspan>
+</text>
+<rect x="56.0" y="214" width="290" height="110" id="GEO-3_media_0" fill="#EFF5F3" stroke="#176B68" stroke-width="2"/>
+<text id="GEO-3_media_0_label" font-family="Nimbus Sans" font-size="24" font-weight="normal" fill="#16282B">
+<tspan x="69.0" y="250.0">Audio loss</tspan>
+<tspan x="69.0" y="277.6">return code -9</tspan>
+</text>
+<rect x="495.0" y="214" width="290" height="110" id="GEO-3_media_1" fill="#EFF5F3" stroke="#176B68" stroke-width="2"/>
+<text id="GEO-3_media_1_label" font-family="Nimbus Sans" font-size="24" font-weight="normal" fill="#16282B">
+<tspan x="508.0" y="250.0">Old packet refused</tspan>
+<tspan x="508.0" y="277.6">fresh observation</tspan>
+</text>
+<rect x="934.0" y="214" width="290" height="110" id="GEO-3_media_2" fill="#EFF5F3" stroke="#176B68" stroke-width="2"/>
+<text id="GEO-3_media_2_label" font-family="Nimbus Sans" font-size="24" font-weight="normal" fill="#16282B">
+<tspan x="947.0" y="250.0">Affected media</tspan>
+<tspan x="947.0" y="277.6">4 to 16 frames</tspan>
+</text>
+<line id="GEO-3_media_edge_0" x1="346.0" y1="269.0" x2="495.0" y2="269.0" stroke="#176B68" stroke-width="2" marker-end="url(#arrow)"/>
+<text id="GEO-3_media_edge_0_label" font-family="Nimbus Sans" font-size="17" font-weight="normal" fill="#43595D">
+<tspan x="350.0" y="204.0">changed-source</tspan>
+<tspan x="350.0" y="223.55">data</tspan>
+</text>
+<line id="GEO-3_media_edge_1" x1="785.0" y1="269.0" x2="934.0" y2="269.0" stroke="#176B68" stroke-width="2" marker-end="url(#arrow)"/>
+<text id="GEO-3_media_edge_1_label" font-family="Nimbus Sans" font-size="17" font-weight="normal" fill="#43595D">
+<tspan x="789.0" y="204.0">new current basis</tspan>
+</text>
+<text id="GEO-3_photo" font-family="Nimbus Sans" font-size="26" font-weight="normal" fill="#16282B">
+<tspan x="56" y="361.0">RETAINED PHOTO Same state and preview SHA. Producer count remains 3.</tspan>
+</text>
+<rect x="56.0" y="424" width="290" height="110" id="GEO-3_save_0" fill="#EFF5F3" stroke="#176B68" stroke-width="2"/>
+<text id="GEO-3_save_0_label" font-family="Nimbus Sans" font-size="24" font-weight="normal" fill="#16282B">
+<tspan x="69.0" y="460.0">Separate save</tspan>
+<tspan x="69.0" y="487.6">decision / packet</tspan>
+</text>
+<rect x="495.0" y="424" width="290" height="110" id="GEO-3_save_1" fill="#EFF5F3" stroke="#176B68" stroke-width="2"/>
+<text id="GEO-3_save_1_label" font-family="Nimbus Sans" font-size="24" font-weight="normal" fill="#16282B">
+<tspan x="508.0" y="460.0">Actual write</tspan>
+<tspan x="508.0" y="487.6">250-byte sidecar</tspan>
+</text>
+<rect x="934.0" y="424" width="290" height="110" id="GEO-3_save_2" fill="#EFF5F3" stroke="#176B68" stroke-width="2"/>
+<text id="GEO-3_save_2_label" font-family="Nimbus Sans" font-size="24" font-weight="normal" fill="#16282B">
+<tspan x="947.0" y="460.0">Write receipt</tspan>
+<tspan x="947.0" y="487.6">evidence</tspan>
+</text>
+<line id="GEO-3_save_edge_0" x1="346.0" y1="479.0" x2="495.0" y2="479.0" stroke="#A13D32" stroke-width="2" marker-end="url(#arrow)"/>
+<text id="GEO-3_save_edge_0_label" font-family="Nimbus Sans" font-size="17" font-weight="normal" fill="#43595D">
+<tspan x="350.0" y="414.0">bound bytes</tspan>
+</text>
+<line id="GEO-3_save_edge_1" x1="785.0" y1="479.0" x2="934.0" y2="479.0" stroke="#176B68" stroke-width="2" marker-end="url(#arrow)"/>
+<text id="GEO-3_save_edge_1_label" font-family="Nimbus Sans" font-size="17" font-weight="normal" fill="#43595D">
+<tspan x="789.0" y="414.0">completed result</tspan>
+</text>
+<text id="GEO-3_cleanup" font-family="Nimbus Sans" font-size="21" font-weight="normal" fill="#16282B">
+<tspan x="56" y="561.0">RESOURCE END: owner-lifecycle cleanup. Audio ALREADY_EXITED, no graceful receipt.</tspan>
+<tspan x="56" y="585.15">HISTORICAL EWS3: separate summary, later SUMMARY_ONLY descent and fresh Root review.</tspan>
+</text>
+<text id="GEO-3_qualification" font-family="Nimbus Sans" font-size="23" font-weight="normal" fill="#43595D">
+<tspan x="56" y="619.0">Save precedes recorded closure chronologically. The receipt does not command cleanup or authorize another</tspan>
+<tspan x="56" y="645.45">write.</tspan>
+</text>
+<line id="GEO-3_rule" x1="56" y1="671" x2="1218" y2="671" stroke="#B8C8C6" stroke-width="1"/>
+<a href="../references/ews/source_ledger.json">
+<text id="GEO-3_source_link" font-family="Nimbus Sans" font-size="18" font-weight="normal" fill="#315E8B">
+<tspan x="56" y="703.0">GEO-3 Source: ews</tspan>
+</text>
+</a>
+<a href="../atlas/README.html">
+<text id="GEO-3_atlas_locator" font-family="Nimbus Sans" font-size="17" font-weight="normal" fill="#315E8B">
+<tspan x="660" y="702.0">Atlas: Overview / GEO 1 2 3 4 5 6 7</tspan>
+</text>
+</a>
+</svg>

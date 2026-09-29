@@ -1,0 +1,93 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 1280 720" role="img" aria-labelledby="title desc">
+<title id="title">One activity; several independent concerns</title>
+<desc id="desc">CONCEPTUAL MAP / Relations are not a recorded composite execution or a global owner</desc>
+<defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L9,3 z" fill="#176B68"/></marker></defs>
+<rect width="1280" height="720" fill="white"/>
+<text id="OVERVIEW_title" font-family="Nimbus Sans" font-size="42" font-weight="bold" fill="#16282B">
+<tspan x="54" y="78.0">One activity; several independent concerns</tspan>
+</text>
+<text id="OVERVIEW_scope" font-family="Nimbus Sans" font-size="23" font-weight="normal" fill="#43595D">
+<tspan x="56" y="136.0">CONCEPTUAL MAP / Relations are not a recorded composite execution or a global owner</tspan>
+</text>
+<rect x="43" y="183" width="905" height="376" id="OVERVIEW_activity_region" fill="#FFFFFF" stroke="#A4B9BC" stroke-width="1"/>
+<text id="OVERVIEW_local" font-family="Nimbus Sans" font-size="18" font-weight="bold" fill="#16282B">
+<tspan x="61" y="206.0">LOCAL ACTIVITY</tspan>
+</text>
+<rect x="61" y="342" width="160" height="84" id="OVERVIEW_intent" fill="#EFF5F3" stroke="#176B68" stroke-width="2"/>
+<text id="OVERVIEW_intent_label" font-family="Nimbus Sans" font-size="24" font-weight="normal" fill="#16282B">
+<tspan x="74" y="378.0">Intent</tspan>
+</text>
+<rect x="357" y="342" width="225" height="84" id="OVERVIEW_work" fill="#EFF5F3" stroke="#176B68" stroke-width="2"/>
+<text id="OVERVIEW_work_label" font-family="Nimbus Sans" font-size="24" font-weight="normal" fill="#16282B">
+<tspan x="370" y="378.0">Parent Work</tspan>
+</text>
+<rect x="716" y="342" width="205" height="84" id="OVERVIEW_result" fill="#EFF5F3" stroke="#176B68" stroke-width="2"/>
+<text id="OVERVIEW_result_label" font-family="Nimbus Sans" font-size="24" font-weight="normal" fill="#16282B">
+<tspan x="729" y="378.0">Consumed</tspan>
+<tspan x="729" y="405.6">result</tspan>
+</text>
+<rect x="357" y="480" width="275" height="60" id="OVERVIEW_child" fill="#EFF5F3" stroke="#176B68" stroke-width="2"/>
+<text id="OVERVIEW_child_label" font-family="Nimbus Sans" font-size="22" font-weight="normal" fill="#16282B">
+<tspan x="370" y="514.0">Bounded child Work</tspan>
+</text>
+<line id="OVERVIEW_intake" x1="221" y1="384.0" x2="357" y2="384.0" stroke="#176B68" stroke-width="2" marker-end="url(#arrow)"/>
+<text id="OVERVIEW_intake_label" font-family="Nimbus Sans" font-size="19" font-weight="normal" fill="#43595D">
+<tspan x="231" y="371.0">typed input</tspan>
+</text>
+<line id="OVERVIEW_return" x1="582" y1="384.0" x2="716" y2="384.0" stroke="#176B68" stroke-width="2" marker-end="url(#arrow)"/>
+<text id="OVERVIEW_return_label" font-family="Nimbus Sans" font-size="19" font-weight="normal" fill="#43595D">
+<tspan x="592" y="368.0">actual fields</tspan>
+</text>
+<line id="OVERVIEW_child_invocation" x1="469.5" y1="426" x2="494.5" y2="480" stroke="#176B68" stroke-width="2" marker-end="url(#arrow)"/>
+<text id="OVERVIEW_child_invocation_label" font-family="Nimbus Sans" font-size="19" font-weight="normal" fill="#43595D">
+<tspan x="648" y="482.0">bounded invocation</tspan>
+</text>
+<rect x="1000" y="342" width="222" height="90" id="OVERVIEW_root" fill="#EFF5F3" stroke="#176B68" stroke-width="2"/>
+<text id="OVERVIEW_root_label" font-family="Nimbus Sans" font-size="24" font-weight="normal" fill="#16282B">
+<tspan x="1013" y="378.0">Local Root</tspan>
+<tspan x="1013" y="405.6">review</tspan>
+</text>
+<line id="OVERVIEW_review" x1="921" y1="384.0" x2="1000" y2="387.0" stroke="#176B68" stroke-width="2" marker-end="url(#arrow)"/>
+<text id="OVERVIEW_review_label" font-family="Nimbus Sans" font-size="19" font-weight="normal" fill="#43595D">
+<tspan x="931" y="327.0">evidence</tspan>
+</text>
+<text id="OVERVIEW_other_owner" font-family="Nimbus Sans" font-size="22" font-weight="normal" fill="#16282B">
+<tspan x="987" y="502.0">Other owners retain</tspan>
+<tspan x="987" y="527.3">independent decisions.</tspan>
+</text>
+<rect x="56" y="228" width="202" height="51" id="OVERVIEW_context0" fill="#EFF5F3" stroke="#176B68" stroke-width="2"/>
+<text id="OVERVIEW_context0_label" font-family="Nimbus Sans" font-size="19" font-weight="normal" fill="#16282B">
+<tspan x="69" y="257.0">Time</tspan>
+</text>
+<line id="OVERVIEW_context_edge0" x1="157" y1="279" x2="469.5" y2="342" stroke="#315E8B" stroke-width="1.3" marker-end="url(#arrow)"/>
+<rect x="284" y="228" width="202" height="51" id="OVERVIEW_context1" fill="#EFF5F3" stroke="#176B68" stroke-width="2"/>
+<text id="OVERVIEW_context1_label" font-family="Nimbus Sans" font-size="19" font-weight="normal" fill="#16282B">
+<tspan x="297" y="257.0">Memory</tspan>
+</text>
+<line id="OVERVIEW_context_edge1" x1="385" y1="279" x2="469.5" y2="342" stroke="#315E8B" stroke-width="1.3" marker-end="url(#arrow)"/>
+<rect x="512" y="228" width="202" height="51" id="OVERVIEW_context2" fill="#EFF5F3" stroke="#176B68" stroke-width="2"/>
+<text id="OVERVIEW_context2_label" font-family="Nimbus Sans" font-size="19" font-weight="normal" fill="#16282B">
+<tspan x="525" y="257.0">Source</tspan>
+</text>
+<line id="OVERVIEW_context_edge2" x1="613" y1="279" x2="469.5" y2="342" stroke="#315E8B" stroke-width="1.3" marker-end="url(#arrow)"/>
+<rect x="740" y="228" width="202" height="51" id="OVERVIEW_context3" fill="#EFF5F3" stroke="#176B68" stroke-width="2"/>
+<text id="OVERVIEW_context3_label" font-family="Nimbus Sans" font-size="19" font-weight="normal" fill="#16282B">
+<tspan x="753" y="257.0">Source admission</tspan>
+</text>
+<line id="OVERVIEW_context_edge3" x1="841" y1="279" x2="469.5" y2="342" stroke="#315E8B" stroke-width="1.3" marker-end="url(#arrow)"/>
+<text id="OVERVIEW_qualification" font-family="Nimbus Sans" font-size="23" font-weight="normal" fill="#43595D">
+<tspan x="56" y="619.0">Time, memory and source qualify use. Source admission binds implementation. Current effects need their own</tspan>
+<tspan x="56" y="645.45">packet.</tspan>
+</text>
+<line id="OVERVIEW_rule" x1="56" y1="671" x2="1218" y2="671" stroke="#B8C8C6" stroke-width="1"/>
+<a href="https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/specs/current_architecture_lock_v01.md">
+<text id="OVERVIEW_source_link" font-family="Nimbus Sans" font-size="18" font-weight="normal" fill="#315E8B">
+<tspan x="56" y="703.0">OVERVIEW Source: architecture</tspan>
+</text>
+</a>
+<a href="../atlas/README.html">
+<text id="OVERVIEW_atlas_locator" font-family="Nimbus Sans" font-size="17" font-weight="normal" fill="#315E8B">
+<tspan x="660" y="702.0">Atlas: Overview / GEO 1 2 3 4 5 6 7</tspan>
+</text>
+</a>
+</svg>

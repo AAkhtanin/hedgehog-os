@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 1280 720" role="img" aria-labelledby="title desc">
+<title id="title">Different cases expose different relations</title>
+<desc id="desc">SELECTED MATRIX CELLS  /  Ten cases, ten relations in the linked full matrix</desc>
+<defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L9,3 z" fill="#176B68"/></marker></defs>
+<rect width="1280" height="720" fill="white"/>
+<text id="S13_title" font-family="Nimbus Sans" font-size="42" font-weight="bold" fill="#16282B">
+<tspan x="54" y="78.0">Different cases expose different relations</tspan>
+</text>
+<text id="S13_scope" font-family="Nimbus Sans" font-size="23" font-weight="normal" fill="#43595D">
+<tspan x="56" y="136.0">SELECTED MATRIX CELLS / Ten cases, ten relations in the linked full matrix</tspan>
+</text>
+<text id="S13_case0" font-family="Nimbus Sans" font-size="27" font-weight="bold" fill="#16282B">
+<tspan x="56" y="231.0">Wedding</tspan>
+</text>
+<text id="S13_relation0" font-family="Nimbus Sans" font-size="25" font-weight="normal" fill="#176B68">
+<tspan x="285" y="229.0">Returned semantics</tspan>
+</text>
+<text id="S13_value0" font-family="Nimbus Sans" font-size="25" font-weight="normal" fill="#16282B">
+<tspan x="650" y="229.0">Typed amendment changes consumed Work</tspan>
+</text>
+<text id="S13_case1" font-family="Nimbus Sans" font-size="27" font-weight="bold" fill="#16282B">
+<tspan x="56" y="302.0">EWS</tspan>
+</text>
+<text id="S13_relation1" font-family="Nimbus Sans" font-size="25" font-weight="normal" fill="#176B68">
+<tspan x="285" y="300.0">Selective continuity</tspan>
+</text>
+<text id="S13_value1" font-family="Nimbus Sans" font-size="25" font-weight="normal" fill="#16282B">
+<tspan x="650" y="300.0">Media changes; photo bytes remain</tspan>
+</text>
+<text id="S13_case2" font-family="Nimbus Sans" font-size="27" font-weight="bold" fill="#16282B">
+<tspan x="56" y="373.0">Football</tspan>
+</text>
+<text id="S13_relation2" font-family="Nimbus Sans" font-size="25" font-weight="normal" fill="#176B68">
+<tspan x="285" y="371.0">Independent owners</tspan>
+</text>
+<text id="S13_value2" font-family="Nimbus Sans" font-size="25" font-weight="normal" fill="#16282B">
+<tspan x="650" y="371.0">Checked offer is input, not BOOK permission</tspan>
+</text>
+<text id="S13_case3" font-family="Nimbus Sans" font-size="27" font-weight="bold" fill="#16282B">
+<tspan x="56" y="444.0">G3 / G4</tspan>
+</text>
+<text id="S13_relation3" font-family="Nimbus Sans" font-size="25" font-weight="normal" fill="#176B68">
+<tspan x="285" y="442.0">Experience and expenditure</tspan>
+</text>
+<text id="S13_value3" font-family="Nimbus Sans" font-size="25" font-weight="normal" fill="#16282B">
+<tspan x="650" y="442.0">Current eligible history changes allocation</tspan>
+</text>
+<text id="S13_case4" font-family="Nimbus Sans" font-size="27" font-weight="bold" fill="#16282B">
+<tspan x="56" y="515.0">Authoring</tspan>
+</text>
+<text id="S13_relation4" font-family="Nimbus Sans" font-size="25" font-weight="normal" fill="#176B68">
+<tspan x="285" y="513.0">Creation and admission</tspan>
+</text>
+<text id="S13_value4" font-family="Nimbus Sans" font-size="25" font-weight="normal" fill="#16282B">
+<tspan x="650" y="513.0">Exam evidence precedes owner source operation</tspan>
+</text>
+<text id="S13_qualification" font-family="Nimbus Sans" font-size="23" font-weight="normal" fill="#43595D">
+<tspan x="56" y="619.0">Each cell carries its own source, selector, method and limit. Related examples did not execute as one composite</tspan>
+<tspan x="56" y="645.45">transaction.</tspan>
+</text>
+<line id="S13_rule" x1="56" y1="671" x2="1218" y2="671" stroke="#B8C8C6" stroke-width="1"/>
+<a href="../../corpus/case_property_matrix.json">
+<text id="S13_source_link" font-family="Nimbus Sans" font-size="18" font-weight="normal" fill="#315E8B">
+<tspan x="56" y="703.0">S13 Source: cases</tspan>
+</text>
+</a>
+<a href="../../atlas/README.html">
+<text id="S13_atlas_locator" font-family="Nimbus Sans" font-size="17" font-weight="normal" fill="#315E8B">
+<tspan x="660" y="702.0">Atlas: Overview / GEO 1 2 3 4 5 6 7</tspan>
+</text>
+</a>
+</svg>

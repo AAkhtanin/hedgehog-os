@@ -1,0 +1,54 @@
+[
+  {
+    "path": "specs/current_architecture_lock_v01.md",
+    "publication_path": "references/current/current_architecture_lock_v01.md",
+    "commit": "2e965ecb18e545e428380eb8e9aa5a7037a388be",
+    "bytes": 33255,
+    "sha256": "0e122424aa2cd7f6b3156596f7038d4b46a5d9fc9b4c0962b565730ea5164682",
+    "git_blob_oid": "18a6a843d1da41c4d3ca445adcf0b43a3bcc9526",
+    "role": "EXACT_ACCEPTED_SOURCE_NOT_FRESH_RUNTIME"
+  },
+  {
+    "path": "docs/showcase/incident_to_proof_atlas_v01/presentation/external_sources.json",
+    "publication_path": "references/current/external_sources.json",
+    "commit": "2e965ecb18e545e428380eb8e9aa5a7037a388be",
+    "bytes": 39481,
+    "sha256": "d3b8db30124ad2ae422488cbe95920c5063dc91654c3650af7d6d39bc6d9cbdc",
+    "git_blob_oid": "9fd6cd17af965dd00ae7af3fc0015ce8554c7f79",
+    "role": "EXACT_ACCEPTED_SOURCE_NOT_FRESH_RUNTIME"
+  },
+  {
+    "path": "docs/showcase/incident_to_proof_atlas_v01/reader/CASE_ROUTES.json",
+    "publication_path": "references/current/CASE_ROUTES.json",
+    "commit": "2e965ecb18e545e428380eb8e9aa5a7037a388be",
+    "bytes": 32144,
+    "sha256": "9ebab55c4c93fe7b710ee92f1df14c965c71a5036a37cb05b081bf103b0bd459",
+    "git_blob_oid": "441b18690d297df32813c28b6656267184fe2525",
+    "role": "EXACT_ACCEPTED_SOURCE_NOT_FRESH_RUNTIME"
+  },
+  {
+    "path": "docs/showcase/landslide_sentinel_v01/research_context_v01.json",
+    "publication_path": "references/current/research_context_v01.json",
+    "commit": "2e965ecb18e545e428380eb8e9aa5a7037a388be",
+    "bytes": 21225,
+    "sha256": "631be72663131d328290083128d9093ca70fab50d3ddd5ea46bc150f4e1ef8f9",
+    "git_blob_oid": "867972aad6a5398b6a77a30b6b6f75a4fd286e37",
+    "role": "EXACT_ACCEPTED_SOURCE_NOT_FRESH_RUNTIME"
+  },
+  {
+    "path": "schemas/temporal_query.schema.json",
+    "publication_path": "references/current/temporal_query.schema.json",
+    "commit": "2e965ecb18e545e428380eb8e9aa5a7037a388be",
+    "bytes": 830,
+    "sha256": "8803318aa5f01c0e5b95367a9b36ce60e07e9dde8e5245764ba74f2ba3ad73a2",
+    "role": "EXACT_ACCEPTED_SCHEMA_NOT_EXECUTION"
+  },
+  {
+    "path": "schemas/common.schema.json",
+    "publication_path": "references/current/common.schema.json",
+    "commit": "2e965ecb18e545e428380eb8e9aa5a7037a388be",
+    "bytes": 4583,
+    "sha256": "961e73333fe62a7d935c7951a1104f1eb02ed7a20cf36c5e7df6d74e6d4d7880",
+    "role": "EXACT_ACCEPTED_SCHEMA_NOT_EXECUTION"
+  }
+]

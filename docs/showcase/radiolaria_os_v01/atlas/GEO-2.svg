@@ -1,0 +1,87 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 1280 720" role="img" aria-labelledby="title desc">
+<title id="title">Independent owners retain their own decisions</title>
+<desc id="desc">CONCEPTUAL PATTERN + FOOTBALL INSET  /  VenueRoot and ActivePlanetRoot are separate instances</desc>
+<defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L9,3 z" fill="#176B68"/></marker></defs>
+<rect width="1280" height="720" fill="white"/>
+<text id="GEO-2_title" font-family="Nimbus Sans" font-size="42" font-weight="bold" fill="#16282B">
+<tspan x="54" y="78.0">Independent owners retain their own decisions</tspan>
+</text>
+<text id="GEO-2_scope" font-family="Nimbus Sans" font-size="23" font-weight="normal" fill="#43595D">
+<tspan x="56" y="136.0">CONCEPTUAL PATTERN + FOOTBALL INSET / VenueRoot and ActivePlanetRoot are separate instances</tspan>
+</text>
+<rect x="56.0" y="216" width="290" height="110" id="GEO-2_owners_0" fill="#EFF5F3" stroke="#176B68" stroke-width="2"/>
+<text id="GEO-2_owners_0_label" font-family="Nimbus Sans" font-size="24" font-weight="normal" fill="#16282B">
+<tspan x="69.0" y="252.0">VenueRoot</tspan>
+<tspan x="69.0" y="279.6">offer review</tspan>
+</text>
+<rect x="495.0" y="216" width="290" height="110" id="GEO-2_owners_1" fill="#EFF5F3" stroke="#176B68" stroke-width="2"/>
+<text id="GEO-2_owners_1_label" font-family="Nimbus Sans" font-size="24" font-weight="normal" fill="#16282B">
+<tspan x="508.0" y="252.0">Released offer</tspan>
+<tspan x="508.0" y="279.6">evidence</tspan>
+</text>
+<rect x="934.0" y="216" width="290" height="110" id="GEO-2_owners_2" fill="#EFF5F3" stroke="#176B68" stroke-width="2"/>
+<text id="GEO-2_owners_2_label" font-family="Nimbus Sans" font-size="24" font-weight="normal" fill="#16282B">
+<tspan x="947.0" y="252.0">ActivePlanetRoot</tspan>
+<tspan x="947.0" y="279.6">local review</tspan>
+</text>
+<line id="GEO-2_owners_edge_0" x1="346.0" y1="271.0" x2="495.0" y2="271.0" stroke="#176B68" stroke-width="2" marker-end="url(#arrow)"/>
+<text id="GEO-2_owners_edge_0_label" font-family="Nimbus Sans" font-size="17" font-weight="normal" fill="#43595D">
+<tspan x="350.0" y="206.0">published body</tspan>
+</text>
+<line id="GEO-2_owners_edge_1" x1="785.0" y1="271.0" x2="934.0" y2="271.0" stroke="#176B68" stroke-width="2" marker-end="url(#arrow)"/>
+<text id="GEO-2_owners_edge_1_label" font-family="Nimbus Sans" font-size="17" font-weight="normal" fill="#43595D">
+<tspan x="789.0" y="206.0">current checked</tspan>
+<tspan x="789.0" y="225.55">input</tspan>
+</text>
+<rect x="56.0" y="439" width="225" height="110" id="GEO-2_booking_0" fill="#EFF5F3" stroke="#176B68" stroke-width="2"/>
+<text id="GEO-2_booking_0_label" font-family="Nimbus Sans" font-size="24" font-weight="normal" fill="#16282B">
+<tspan x="69.0" y="475.0">VenueRoot</tspan>
+<tspan x="69.0" y="502.6">current</tspan>
+<tspan x="69.0" y="530.2">BOOK packet</tspan>
+</text>
+<rect x="370.3333333333333" y="439" width="225" height="110" id="GEO-2_booking_1" fill="#EFF5F3" stroke="#176B68" stroke-width="2"/>
+<text id="GEO-2_booking_1_label" font-family="Nimbus Sans" font-size="24" font-weight="normal" fill="#16282B">
+<tspan x="383.3333333333333" y="475.0">Host / Firewall</tspan>
+<tspan x="383.3333333333333" y="502.6">enforcement</tspan>
+</text>
+<rect x="684.6666666666666" y="439" width="225" height="110" id="GEO-2_booking_2" fill="#EFF5F3" stroke="#176B68" stroke-width="2"/>
+<text id="GEO-2_booking_2_label" font-family="Nimbus Sans" font-size="24" font-weight="normal" fill="#16282B">
+<tspan x="697.6666666666666" y="475.0">Bounded mock</tspan>
+<tspan x="697.6666666666666" y="502.6">booking executor</tspan>
+</text>
+<rect x="999.0" y="439" width="225" height="110" id="GEO-2_booking_3" fill="#EFF5F3" stroke="#176B68" stroke-width="2"/>
+<text id="GEO-2_booking_3_label" font-family="Nimbus Sans" font-size="24" font-weight="normal" fill="#16282B">
+<tspan x="1012.0" y="475.0">Booking result</tspan>
+<tspan x="1012.0" y="502.6">and receipt</tspan>
+</text>
+<line id="GEO-2_booking_edge_0" x1="281.0" y1="494.0" x2="370.3333333333333" y2="494.0" stroke="#A13D32" stroke-width="2" marker-end="url(#arrow)"/>
+<text id="GEO-2_booking_edge_0_label" font-family="Nimbus Sans" font-size="17" font-weight="normal" fill="#43595D">
+<tspan x="285.0" y="429.0">scoped</tspan>
+<tspan x="285.0" y="448.55">permission</tspan>
+</text>
+<line id="GEO-2_booking_edge_1" x1="595.3333333333333" y1="494.0" x2="684.6666666666666" y2="494.0" stroke="#176B68" stroke-width="2" marker-end="url(#arrow)"/>
+<text id="GEO-2_booking_edge_1_label" font-family="Nimbus Sans" font-size="17" font-weight="normal" fill="#43595D">
+<tspan x="599.3333333333333" y="429.0">checked</tspan>
+<tspan x="599.3333333333333" y="448.55">operation</tspan>
+</text>
+<line id="GEO-2_booking_edge_2" x1="909.6666666666666" y1="494.0" x2="999.0" y2="494.0" stroke="#176B68" stroke-width="2" marker-end="url(#arrow)"/>
+<text id="GEO-2_booking_edge_2_label" font-family="Nimbus Sans" font-size="17" font-weight="normal" fill="#43595D">
+<tspan x="913.6666666666666" y="429.0">effect</tspan>
+<tspan x="913.6666666666666" y="448.55">evidence</tspan>
+</text>
+<text id="GEO-2_qualification" font-family="Nimbus Sans" font-size="23" font-weight="normal" fill="#43595D">
+<tspan x="56" y="619.0">Airline is a separate case with ClientRoot, AirlineRoot and BankRoot. No common business SuperRoot or new</tspan>
+<tspan x="56" y="645.45">action service.</tspan>
+</text>
+<line id="GEO-2_rule" x1="56" y1="671" x2="1218" y2="671" stroke="#B8C8C6" stroke-width="1"/>
+<a href="../references/episode_sources.json">
+<text id="GEO-2_source_link" font-family="Nimbus Sans" font-size="18" font-weight="normal" fill="#315E8B">
+<tspan x="56" y="703.0">GEO-2 Source: football</tspan>
+</text>
+</a>
+<a href="../atlas/README.html">
+<text id="GEO-2_atlas_locator" font-family="Nimbus Sans" font-size="17" font-weight="normal" fill="#315E8B">
+<tspan x="660" y="702.0">Atlas: Overview / GEO 1 2 3 4 5 6 7</tspan>
+</text>
+</a>
+</svg>

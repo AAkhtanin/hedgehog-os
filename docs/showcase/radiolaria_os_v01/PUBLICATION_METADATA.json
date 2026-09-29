@@ -1,0 +1,28 @@
+{
+  "publication_version": "G6B6F_FINAL_BYTES_V01",
+  "technical_commit": "2e965ecb18e545e428380eb8e9aa5a7037a388be",
+  "publication_commit": null,
+  "publication_url": null,
+  "doi": null,
+  "status": "UNPUBLISHED_REVIEW_PROPOSAL",
+  "gate6": "NOT_CLOSED",
+  "namespace": "docs/showcase/radiolaria_os_v01/",
+  "language": "en",
+  "date": "2026-09-29",
+  "format_status": "FINALIZED_SUCCESSOR_NOT_RETROACTIVELY_B5_TESTED",
+  "export_assignee": "LOCAL_OPERATOR",
+  "author_spelling": "Akhtanin Andrii",
+  "predecessor_publication_version": "G6B_WORK_B4_REVIEW_V01",
+  "format_status_scope": "Current derived bytes have separate finalization QA; historical B4/B5 inputs remain unchanged",
+  "content_correction": "F01: G6A N4-04/E08 witness attribution, no runtime change",
+  "font_profile": "Nimbus Sans Regular/Bold, explicitly authorized for this Work B4 successor on 2026-09-28",
+  "creators": [
+    {
+      "family-names": "Akhtanin",
+      "given-names": "Andrii"
+    }
+  ],
+  "editorial_license": "CC-BY-4.0",
+  "license_scope": "New explanatory author text and original diagrams only; code, verbatim excerpts, historical sources/evidence and third-party media retain their terms",
+  "owner_decision_sha256": "9288a849f620d2068bb13c8cfe4760754d38ec011ccb96275424a9b83b13baa3"
+}

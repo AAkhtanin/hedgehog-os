@@ -1,0 +1,141 @@
+{
+  "schema": "radiolaria.g6b5.independent_acceptance.v01",
+  "date": "2026-09-28",
+  "status": "G6B5_INDEPENDENTLY_ACCEPTED",
+  "review_kind": "Independent Work review of saved bytes, observable events, source-bound transport and answers; not a new reader/model peer-review campaign",
+  "input_archive": {
+    "status": "PASS",
+    "archive": "RADIOLARIA_GATE6_G6B5_TWO_COLD_READERS_V02_RETURN_20260928T171443Z.tar.gz",
+    "bytes": 717896,
+    "sha256": "f1fec404eff68080fa53f06bc9576e8927360af1337f95a3a8b19f7fa5aa2d93",
+    "files": 249,
+    "manifest_rows": 248,
+    "safe_paths": true,
+    "coverage": true,
+    "modes_format": "integer POSIX",
+    "all_rows_verified": true
+  },
+  "B4_basis": {
+    "archive": "RADIOLARIA_GATE6_G6B_WORK_B4_NIMBUS_COMPLETION_V01_RETURN_20260928T120504Z.tar.gz",
+    "sha256": "460723bc079c747570cc5afcd085b49cdd78bae2e61c312f350ca5122a493559",
+    "bytes": 27752149,
+    "review_scope": "Exact B5 inputs and published proposal inventory only; no B4 rebuild or repeat format audit"
+  },
+  "protocol": {
+    "file": "g6b5_return/operator/B5_PREPARED_NOT_RUN.md",
+    "sha256": "edf9ad1fb14416731b3dea89f45a29c7f20546363039873ce968dd15d9cb212d",
+    "rubric_sha256": "d02282b1fee9333b28b612d51ab7610f151330a6447b46ca035fa9b2fa1d1e89",
+    "resume_instruction_sha256": "7adedbd7ac8e17a538ad2f6a8bb5771ad253efc69a0752cab1899bb11c43ee3c",
+    "rubric_withheld": true,
+    "thresholds_unchanged": true
+  },
+  "routes": {
+    "A": {
+      "thread": "01a0e8f0-52fb-7511-b79f-a5c42f25664c",
+      "turn": "01a0e8f0-532b-7fe1-836a-dfa4299a11ab",
+      "elapsed_seconds": 155.64307362493128,
+      "initial_turns": 1,
+      "tools": 0,
+      "input_sha256": "1e94a736be7d244c7bd4da4809ae96d7919ec7ef069e93d5dee7ad8aab4d2ef3",
+      "answer_sha256": "3a55d02131d272aee6a4559938d03f6763e933184c395d7e6041313c5e43ed5d",
+      "start": "2026-09-28T16:54:19.175149+00:00",
+      "completion": "2026-09-28T16:56:53.891733+00:00",
+      "score": 16,
+      "maximum": 16,
+      "minimum": 13,
+      "critical_confusions": 0,
+      "result": "PASS"
+    },
+    "B": {
+      "thread": "01a0e8f3-607b-7590-99bf-e7a8fa393ee4",
+      "turn": "01a0e8f3-60ab-7ff0-a0b1-3bcf830dea9e",
+      "elapsed_seconds": 304.8815650418401,
+      "initial_turns": 1,
+      "tools": 59,
+      "input_sha256": "820ac90840efde0f776e2d46cd9d2c722d962626102354dc3735d99626f08f4c",
+      "answer_sha256": "a75f9ef8b9edd91988e316130f110d3657ca6e92d732de6effe204f0ae9a283b",
+      "start": "2026-09-28T16:57:39.242249+00:00",
+      "completion": "2026-09-28T17:02:43.618508+00:00",
+      "score": 20,
+      "maximum": 20,
+      "minimum": 16,
+      "critical_confusions": 0,
+      "result": "PASS"
+    }
+  },
+  "model_profile": {
+    "model": "gpt-6-astra",
+    "effort": "ultra",
+    "provider": "openai",
+    "service_tier": "default; explicit null accepted only against matching unmodified catalog default",
+    "authentication": "ChatGPT subscription",
+    "same_model_two_fresh_contexts": true,
+    "paid_API_or_purchases_recorded": false,
+    "per_session_zero_dollar_invoice_proven": false
+  },
+  "delivery": {
+    "eleven_input_pins_match": true,
+    "A_full_XML": "222424 bytes; no tools",
+    "B_bundle": "341 exact files behind bounded read-only broker",
+    "B_tool_operations": {
+      "read_text": 42,
+      "list_files": 6,
+      "search_text": 11
+    },
+    "all_59_responses_reconstructed_from_pinned_files": true,
+    "no_hidden_rubric_in_delivery": true,
+    "fresh_distinct_threads": true,
+    "project_environment_memory_and_instruction_sources_absent": true,
+    "one_initial_assignment_each": true,
+    "steering_retries_or_answer_substitution": false,
+    "two_rerun_slots_used": 0
+  },
+  "transport_V02": {
+    "result": "ACCEPTED_WITH_RECORDED_TRUST_SCOPE",
+    "broker_unchanged": true,
+    "same_assignment_model_effort_and_effective_access_limits": true,
+    "catalog_changed_fields": [
+      "tool_mode",
+      "experimental_supported_tools",
+      "node_repl_disabled"
+    ],
+    "actual_exposed_tools_A": [],
+    "actual_exposed_tools_B": [
+      "list_files",
+      "read_text",
+      "search_text"
+    ],
+    "construction_basis": "Saved exact-version source, effective configuration, session flags, finite registration branches and observable events",
+    "limitation": "Full original/restricted private catalogs intentionally omitted; equality rests on preserved operator derivation/loading receipts and reviewed derivation code, not fresh private-catalog recomputation.",
+    "remote_platform_attestation_claimed": false,
+    "prior_model_knowledge_absence_claimed": false
+  },
+  "human_navigation": "HUMAN_NOT_RUN; optional under frozen protocol, not substituted by author or curator",
+  "discrepancies_requiring_action": [],
+  "owner_preservation": {
+    "basis": "Saved before/after receipts; no fresh owner or GitHub inspection in this review",
+    "commit": "2e965ecb18e545e428380eb8e9aa5a7037a388be",
+    "tree": "59a43cc0da470886804aab6c9af87fe17dfbd685",
+    "saved_owner_clean": true
+  },
+  "history": {
+    "G6B5_V01": "INCOMPLETE; zero reader turns; preserved",
+    "B4": "Immutable accepted input preserved",
+    "G6A": "Unchanged",
+    "G54D": "Historical INCOMPLETE preserved"
+  },
+  "review_actions": {
+    "reader_runs": 0,
+    "new_model_reviewers": 0,
+    "native_runtime_campaigns": 0,
+    "B4_rebuilds": 0,
+    "commit": 0,
+    "push": 0,
+    "site": 0,
+    "zenodo": 0,
+    "visibility_changes": 0
+  },
+  "next": "B6 bounded release preparation and owner decisions only; no publication authority conferred by this acceptance",
+  "G6B6": "NOT_EXECUTED",
+  "GATE6": "NOT_CLOSED"
+}

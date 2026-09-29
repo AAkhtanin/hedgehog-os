@@ -1,0 +1,547 @@
+[
+  {
+    "section": "01",
+    "title": "Methods and their limits",
+    "phases": [
+      "B0",
+      "B1",
+      "B6"
+    ],
+    "state": "RETAINED_NOT_COMPLETED_BY_HANDOFF",
+    "output": "corpus/method_map.json",
+    "pilot_status": "PREPARED_SCOPED",
+    "release_status": "NOT_COMPLETED",
+    "note": "B0-B2 output is not completion of all listed phases.",
+    "b3_scope": "SUBSTANTIVE_CONTENT_PREPARED; final release status unchanged",
+    "b3_outputs": [
+      "corpus/method_map.json"
+    ]
+  },
+  {
+    "section": "02",
+    "title": "G6A/G6B scope",
+    "phases": [
+      "B0",
+      "B6"
+    ],
+    "state": "RETAINED_NOT_COMPLETED_BY_HANDOFF",
+    "output": "LIMITS.md",
+    "pilot_status": "PREPARED_SCOPED",
+    "release_status": "NOT_COMPLETED",
+    "note": "B0-B2 output is not completion of all listed phases.",
+    "b3_scope": "SUBSTANTIVE_CONTENT_PREPARED; final release status unchanged",
+    "b3_outputs": [
+      "LIMITS.md"
+    ]
+  },
+  {
+    "section": "03",
+    "title": "One corpus",
+    "phases": [
+      "B1",
+      "B3",
+      "B4"
+    ],
+    "state": "RETAINED_NOT_COMPLETED_BY_HANDOFF",
+    "output": "corpus/editorial.json",
+    "pilot_status": "PREPARED_SCOPED",
+    "release_status": "NOT_COMPLETED",
+    "note": "B0-B2 output is not completion of all listed phases.",
+    "b3_scope": "SUBSTANTIVE_CONTENT_PREPARED; final release status unchanged",
+    "b3_outputs": [
+      "corpus/editorial.json"
+    ]
+  },
+  {
+    "section": "04",
+    "title": "Human tasks and machine entry",
+    "phases": [
+      "B1",
+      "B2",
+      "B4"
+    ],
+    "state": "RETAINED_NOT_COMPLETED_BY_HANDOFF",
+    "output": "README.md",
+    "pilot_status": "PREPARED_SCOPED",
+    "release_status": "NOT_COMPLETED",
+    "note": "B0-B2 output is not completion of all listed phases.",
+    "b3_scope": "SUBSTANTIVE_CONTENT_PREPARED; final release status unchanged",
+    "b3_outputs": [
+      "README.md"
+    ]
+  },
+  {
+    "section": "05",
+    "title": "Meaningful first screen",
+    "phases": [
+      "B1",
+      "B2"
+    ],
+    "state": "RETAINED_NOT_COMPLETED_BY_HANDOFF",
+    "output": "README.md",
+    "pilot_status": "PREPARED_SCOPED",
+    "release_status": "NOT_COMPLETED",
+    "note": "B0-B2 output is not completion of all listed phases.",
+    "b3_scope": "SUBSTANTIVE_CONTENT_PREPARED; final release status unchanged",
+    "b3_outputs": [
+      "README.md"
+    ]
+  },
+  {
+    "section": "06",
+    "title": "Geometry Atlas definition",
+    "phases": [
+      "B1",
+      "B2",
+      "B3"
+    ],
+    "state": "RETAINED_NOT_COMPLETED_BY_HANDOFF",
+    "output": "atlas/README.md",
+    "pilot_status": "PREPARED_SCOPED",
+    "release_status": "NOT_COMPLETED",
+    "note": "B0-B2 output is not completion of all listed phases.",
+    "b3_scope": "SUBSTANTIVE_CONTENT_PREPARED; final release status unchanged",
+    "b3_outputs": [
+      "atlas/README.md"
+    ]
+  },
+  {
+    "section": "07",
+    "title": "Seven views",
+    "phases": [
+      "B1",
+      "B2",
+      "B3"
+    ],
+    "state": "RETAINED_NOT_COMPLETED_BY_HANDOFF",
+    "output": "atlas/figures.json",
+    "pilot_status": "PREPARED_SCOPED",
+    "release_status": "NOT_COMPLETED",
+    "note": "B0-B2 output is not completion of all listed phases.",
+    "b3_scope": "SUBSTANTIVE_CONTENT_PREPARED; final release status unchanged",
+    "b3_outputs": [
+      "atlas/views.json",
+      "atlas/ENTITIES.md"
+    ]
+  },
+  {
+    "section": "08",
+    "title": "Entities and correspondences",
+    "phases": [
+      "B1",
+      "B2",
+      "B4"
+    ],
+    "state": "RETAINED_NOT_COMPLETED_BY_HANDOFF",
+    "output": "corpus/editorial.json",
+    "pilot_status": "PREPARED_SCOPED",
+    "release_status": "NOT_COMPLETED",
+    "note": "B0-B2 output is not completion of all listed phases.",
+    "b3_scope": "SUBSTANTIVE_CONTENT_PREPARED; final release status unchanged",
+    "b3_outputs": [
+      "corpus/editorial.json"
+    ]
+  },
+  {
+    "section": "09",
+    "title": "Claim/evidence registry",
+    "phases": [
+      "B1",
+      "B2",
+      "B3",
+      "B4"
+    ],
+    "state": "RETAINED_NOT_COMPLETED_BY_HANDOFF",
+    "output": "CONTRIBUTIONS.md",
+    "pilot_status": "PREPARED_SCOPED",
+    "release_status": "NOT_COMPLETED",
+    "note": "B0-B2 output is not completion of all listed phases.",
+    "b3_scope": "SUBSTANTIVE_CONTENT_PREPARED; final release status unchanged",
+    "b3_outputs": [
+      "CONTRIBUTIONS.md"
+    ],
+  "r1_outputs": [
+    "corpus/editorial.json",
+    "CONTRIBUTIONS_GLOBAL.md",
+    "corpus/case_property_matrix.json",
+    "CASE_MATRIX.md"
+  ]
+  },
+  {
+    "section": "10",
+    "title": "Whitepaper",
+    "phases": [
+      "B2",
+      "B3"
+    ],
+    "state": "RETAINED_NOT_COMPLETED_BY_HANDOFF",
+    "output": "OUTLINES.md",
+    "pilot_status": "PREPARED_SCOPED",
+    "release_status": "NOT_COMPLETED",
+    "note": "B0-B2 output is not completion of all listed phases.",
+    "b3_scope": "SUBSTANTIVE_CONTENT_PREPARED; final release status unchanged",
+    "b3_outputs": [
+      "WHITEPAPER.md"
+    ]
+  },
+  {
+    "section": "11",
+    "title": "Presentation",
+    "phases": [
+      "B2",
+      "B3",
+      "B4"
+    ],
+    "state": "RETAINED_NOT_COMPLETED_BY_HANDOFF",
+    "output": "presentation/pilots.pdf",
+    "pilot_status": "PREPARED_SCOPED",
+    "release_status": "NOT_COMPLETED",
+    "note": "B0-B2 output is not completion of all listed phases.",
+    "b3_scope": "SUBSTANTIVE_CONTENT_PREPARED; final release status unchanged",
+    "b3_outputs": [
+      "presentation/MAIN_DECK.md",
+      "presentation/main.pdf"
+    ]
+  },
+  {
+    "section": "12",
+    "title": "Math/semantic contribution/numerical results",
+    "phases": [
+      "B2",
+      "B3",
+      "B4"
+    ],
+    "state": "RETAINED_NOT_COMPLETED_BY_HANDOFF",
+    "output": "CONTRIBUTIONS.md",
+    "pilot_status": "PREPARED_SCOPED",
+    "release_status": "NOT_COMPLETED",
+    "note": "B0-B2 output is not completion of all listed phases.",
+    "b3_scope": "SUBSTANTIVE_CONTENT_PREPARED; final release status unchanged",
+    "b3_outputs": [
+      "chapters/05_experience.md",
+      "chapters/08_wedding.md"
+    ]
+  },
+  {
+    "section": "13",
+    "title": "Related work and extrapolation",
+    "phases": [
+      "B1",
+      "B3"
+    ],
+    "state": "RETAINED_NOT_COMPLETED_BY_HANDOFF",
+    "output": "BACKGROUND_MAP.md",
+    "pilot_status": "PREPARED_SCOPED",
+    "release_status": "NOT_COMPLETED",
+    "note": "B0-B2 output is not completion of all listed phases.",
+    "b3_scope": "SUBSTANTIVE_CONTENT_PREPARED; final release status unchanged",
+    "b3_outputs": [
+      "chapters/12_context.md"
+    ]
+  },
+  {
+    "section": "14",
+    "title": "Before you audit",
+    "phases": [
+      "B1",
+      "B2",
+      "B3",
+      "B5"
+    ],
+    "state": "RETAINED_NOT_COMPLETED_BY_HANDOFF",
+    "output": "LIMITS.md",
+    "pilot_status": "PREPARED_SCOPED",
+    "release_status": "NOT_COMPLETED",
+    "note": "B0-B2 output is not completion of all listed phases.",
+    "b3_scope": "SUBSTANTIVE_CONTENT_PREPARED; final release status unchanged",
+    "b3_outputs": [
+      "LIMITS.md"
+    ]
+  },
+  {
+    "section": "15",
+    "title": "Machine sizes",
+    "phases": [
+      "B2",
+      "B3",
+      "B5"
+    ],
+    "state": "RETAINED_NOT_COMPLETED_BY_HANDOFF",
+    "output": "reader/token_inventory.json",
+    "pilot_status": "PREPARED_SCOPED",
+    "release_status": "NOT_COMPLETED",
+    "note": "B0-B2 output is not completion of all listed phases.",
+    "b3_scope": "SUBSTANTIVE_CONTENT_PREPARED; final release status unchanged",
+    "b3_outputs": [
+      "reader/current_inventory.json"
+    ]
+  },
+  {
+    "section": "16",
+    "title": "Context budget",
+    "phases": [
+      "B2",
+      "B4",
+      "B5"
+    ],
+    "state": "RETAINED_NOT_COMPLETED_BY_HANDOFF",
+    "output": "reader/token_inventory.json",
+    "pilot_status": "PREPARED_SCOPED",
+    "release_status": "NOT_COMPLETED",
+    "note": "B0-B2 output is not completion of all listed phases.",
+    "b3_scope": "SUBSTANTIVE_CONTENT_PREPARED; final release status unchanged",
+    "b3_outputs": [
+      "reader/current_inventory.json"
+    ]
+  },
+  {
+    "section": "17",
+    "title": "XML/Markdown/llms.txt/Repomix",
+    "phases": [
+      "B2",
+      "B3",
+      "B4"
+    ],
+    "state": "RETAINED_NOT_COMPLETED_BY_HANDOFF",
+    "output": "reader/M2_FOCUS.xml",
+    "pilot_status": "PREPARED_SCOPED",
+    "release_status": "NOT_COMPLETED",
+    "note": "B0-B2 output is not completion of all listed phases.",
+    "b3_scope": "SUBSTANTIVE_CONTENT_PREPARED; final release status unchanged",
+    "b3_outputs": [
+      "reader/CORE.xml"
+    ]
+  },
+  {
+    "section": "18",
+    "title": "Machine module contract",
+    "phases": [
+      "B2",
+      "B3",
+      "B4"
+    ],
+    "state": "RETAINED_NOT_COMPLETED_BY_HANDOFF",
+    "output": "reader/module.json",
+    "pilot_status": "PREPARED_SCOPED",
+    "release_status": "NOT_COMPLETED",
+    "note": "B0-B2 output is not completion of all listed phases.",
+    "b3_scope": "SUBSTANTIVE_CONTENT_PREPARED; final release status unchanged",
+    "b3_outputs": [
+      "reader/CORE.module.json"
+    ]
+  },
+  {
+    "section": "19",
+    "title": "History",
+    "phases": [
+      "B1",
+      "B3",
+      "B4"
+    ],
+    "state": "RETAINED_NOT_COMPLETED_BY_HANDOFF",
+    "output": "episode/FOOTBALL.md",
+    "pilot_status": "PREPARED_SCOPED",
+    "release_status": "NOT_COMPLETED",
+    "note": "B0-B2 output is not completion of all listed phases.",
+    "b3_scope": "SUBSTANTIVE_CONTENT_PREPARED; final release status unchanged",
+    "b3_outputs": [
+      "episode/FOOTBALL.md"
+    ]
+  },
+  {
+    "section": "20",
+    "title": "Audit vs authoring kit",
+    "phases": [
+      "B1",
+      "B3",
+      "B4"
+    ],
+    "state": "RETAINED_NOT_COMPLETED_BY_HANDOFF",
+    "output": "NARRATIVE.md",
+    "pilot_status": "PREPARED_SCOPED",
+    "release_status": "NOT_COMPLETED",
+    "note": "B0-B2 output is not completion of all listed phases.",
+    "b3_scope": "SUBSTANTIVE_CONTENT_PREPARED; final release status unchanged",
+    "b3_outputs": [
+      "NARRATIVE.md"
+    ]
+  },
+  {
+    "section": "21",
+    "title": "Verification modes",
+    "phases": [
+      "B1",
+      "B2",
+      "B3",
+      "B4"
+    ],
+    "state": "RETAINED_NOT_COMPLETED_BY_HANDOFF",
+    "output": "VERIFY.md",
+    "pilot_status": "PREPARED_SCOPED",
+    "release_status": "NOT_COMPLETED",
+    "note": "B0-B2 output is not completion of all listed phases.",
+    "b3_scope": "SUBSTANTIVE_CONTENT_PREPARED; final release status unchanged",
+    "b3_outputs": [
+      "VERIFY.md"
+    ]
+  },
+  {
+    "section": "22",
+    "title": "Visual/accessibility",
+    "phases": [
+      "B2",
+      "B4"
+    ],
+    "state": "RETAINED_NOT_COMPLETED_BY_HANDOFF",
+    "output": "presentation/README.md",
+    "pilot_status": "PREPARED_SCOPED",
+    "release_status": "NOT_COMPLETED",
+    "note": "B0-B2 output is not completion of all listed phases.",
+    "b3_scope": "SUBSTANTIVE_CONTENT_PREPARED; final release status unchanged",
+    "b3_outputs": [
+      "presentation/README.md"
+    ]
+  },
+  {
+    "section": "23",
+    "title": "Products without redundant passports",
+    "phases": [
+      "B1",
+      "B3",
+      "B4"
+    ],
+    "state": "RETAINED_NOT_COMPLETED_BY_HANDOFF",
+    "output": "README.md",
+    "pilot_status": "PREPARED_SCOPED",
+    "release_status": "NOT_COMPLETED",
+    "note": "B0-B2 output is not completion of all listed phases.",
+    "b3_scope": "SUBSTANTIVE_CONTENT_PREPARED; final release status unchanged",
+    "b3_outputs": [
+      "README.md"
+    ]
+  },
+  {
+    "section": "24",
+    "title": "Reader understanding",
+    "phases": [
+      "B5"
+    ],
+    "state": "RETAINED_NOT_COMPLETED_BY_HANDOFF",
+    "output": "REMAINING.md",
+    "pilot_status": "FUTURE_NOT_RUN",
+    "release_status": "NOT_COMPLETED",
+    "note": "B0-B2 output is not completion of all listed phases.",
+    "b3_scope": "SUBSTANTIVE_CONTENT_PREPARED; final release status unchanged",
+    "b3_outputs": [
+      "REMAINING.md"
+    ]
+  },
+  {
+    "section": "25",
+    "title": "Static QA",
+    "phases": [
+      "B2",
+      "B4",
+      "B6"
+    ],
+    "state": "RETAINED_NOT_COMPLETED_BY_HANDOFF",
+    "output": "RETURN_ONLY:qa/editorial_checks.json",
+    "pilot_status": "PREPARED_SCOPED",
+    "release_status": "NOT_COMPLETED",
+    "note": "B0-B2 output is not completion of all listed phases.",
+    "b3_scope": "SUBSTANTIVE_CONTENT_PREPARED; final release status unchanged",
+    "b3_outputs": [
+      "SEMANTIC_TRANSFER.md"
+    ]
+  },
+  {
+    "section": "26",
+    "title": "Archive/release identities",
+    "phases": [
+      "B1",
+      "B6"
+    ],
+    "state": "RETAINED_NOT_COMPLETED_BY_HANDOFF",
+    "output": "PUBLICATION_BOUNDARY.md",
+    "pilot_status": "PREPARED_SCOPED",
+    "release_status": "NOT_COMPLETED",
+    "note": "B0-B2 output is not completion of all listed phases.",
+    "b3_scope": "SUBSTANTIVE_CONTENT_PREPARED; final release status unchanged",
+    "b3_outputs": [
+      "PUBLICATION_METADATA.json"
+    ]
+  },
+  {
+    "section": "27",
+    "title": "Sequence",
+    "phases": [
+      "B0",
+      "B1",
+      "B2",
+      "B3",
+      "B4",
+      "B5",
+      "B6"
+    ],
+    "state": "RETAINED_NOT_COMPLETED_BY_HANDOFF",
+    "output": "REMAINING.md",
+    "pilot_status": "PREPARED_SCOPED",
+    "release_status": "NOT_COMPLETED",
+    "note": "B0-B2 output is not completion of all listed phases.",
+    "b3_scope": "SUBSTANTIVE_CONTENT_PREPARED; final release status unchanged",
+    "b3_outputs": [
+      "REMAINING.md"
+    ]
+  },
+  {
+    "section": "28",
+    "title": "Owner engagement/stops",
+    "phases": [
+      "B0",
+      "B2",
+      "B3",
+      "B6"
+    ],
+    "state": "RETAINED_NOT_COMPLETED_BY_HANDOFF",
+    "output": "REMAINING.md",
+    "pilot_status": "PREPARED_SCOPED",
+    "release_status": "NOT_COMPLETED",
+    "note": "B0-B2 output is not completion of all listed phases.",
+    "b3_scope": "SUBSTANTIVE_CONTENT_PREPARED; final release status unchanged",
+    "b3_outputs": [
+      "REMAINING.md"
+    ]
+  },
+  {
+    "section": "29",
+    "title": "Work instruction",
+    "phases": [
+      "B0"
+    ],
+    "state": "RETAINED_NOT_COMPLETED_BY_HANDOFF",
+    "output": "corpus/section_map.json",
+    "pilot_status": "PREPARED_SCOPED",
+    "release_status": "NOT_COMPLETED",
+    "note": "B0-B2 output is not completion of all listed phases.",
+    "b3_scope": "SUBSTANTIVE_CONTENT_PREPARED; final release status unchanged",
+    "b3_outputs": [
+      "corpus/section_map.json"
+    ]
+  },
+  {
+    "section": "30",
+    "title": "Overall outcome",
+    "phases": [
+      "B6"
+    ],
+    "state": "RETAINED_NOT_COMPLETED_BY_HANDOFF",
+    "output": "REMAINING.md",
+    "pilot_status": "FUTURE_NOT_RUN",
+    "release_status": "NOT_COMPLETED",
+    "note": "B0-B2 output is not completion of all listed phases.",
+    "b3_scope": "SUBSTANTIVE_CONTENT_PREPARED; final release status unchanged",
+    "b3_outputs": [
+      "REMAINING.md"
+    ]
+  }
+]

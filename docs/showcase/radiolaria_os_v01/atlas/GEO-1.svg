@@ -1,0 +1,97 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 1280 720" role="img" aria-labelledby="title desc">
+<title id="title">Intent becomes bounded, consuming Work</title>
+<desc id="desc">CONCEPTUAL  /  Local intake and route acceptance precede semantic composition</desc>
+<defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L9,3 z" fill="#176B68"/></marker></defs>
+<rect width="1280" height="720" fill="white"/>
+<text id="GEO-1_title" font-family="Nimbus Sans" font-size="42" font-weight="bold" fill="#16282B">
+<tspan x="54" y="78.0">Intent becomes bounded, consuming Work</tspan>
+</text>
+<text id="GEO-1_scope" font-family="Nimbus Sans" font-size="23" font-weight="normal" fill="#43595D">
+<tspan x="56" y="136.0">CONCEPTUAL / Local intake and route acceptance precede semantic composition</tspan>
+</text>
+<rect x="56.0" y="212" width="225" height="110" id="GEO-1_proposal_0" fill="#EFF5F3" stroke="#176B68" stroke-width="2"/>
+<text id="GEO-1_proposal_0_label" font-family="Nimbus Sans" font-size="24" font-weight="normal" fill="#16282B">
+<tspan x="69.0" y="248.0">BSEP side</tspan>
+<tspan x="69.0" y="275.6">projection</tspan>
+</text>
+<rect x="370.3333333333333" y="212" width="225" height="110" id="GEO-1_proposal_1" fill="#EFF5F3" stroke="#176B68" stroke-width="2"/>
+<text id="GEO-1_proposal_1_label" font-family="Nimbus Sans" font-size="24" font-weight="normal" fill="#16282B">
+<tspan x="383.3333333333333" y="248.0">Semantic model</tspan>
+<tspan x="383.3333333333333" y="275.6">participant</tspan>
+</text>
+<rect x="684.6666666666666" y="212" width="225" height="110" id="GEO-1_proposal_2" fill="#EFF5F3" stroke="#176B68" stroke-width="2"/>
+<text id="GEO-1_proposal_2_label" font-family="Nimbus Sans" font-size="24" font-weight="normal" fill="#16282B">
+<tspan x="697.6666666666666" y="248.0">Returned</tspan>
+<tspan x="697.6666666666666" y="275.6">semantic</tspan>
+<tspan x="697.6666666666666" y="303.2">proposal</tspan>
+</text>
+<rect x="999.0" y="212" width="225" height="110" id="GEO-1_proposal_3" fill="#EFF5F3" stroke="#176B68" stroke-width="2"/>
+<text id="GEO-1_proposal_3_label" font-family="Nimbus Sans" font-size="24" font-weight="normal" fill="#16282B">
+<tspan x="1012.0" y="248.0">Locally validated</tspan>
+<tspan x="1012.0" y="275.6">runtime topology</tspan>
+</text>
+<line id="GEO-1_proposal_edge_0" x1="281.0" y1="267.0" x2="370.3333333333333" y2="267.0" stroke="#176B68" stroke-width="2" marker-end="url(#arrow)"/>
+<text id="GEO-1_proposal_edge_0_label" font-family="Nimbus Sans" font-size="17" font-weight="normal" fill="#43595D">
+<tspan x="285.0" y="202.0">disclosed</tspan>
+<tspan x="285.0" y="221.55">input</tspan>
+</text>
+<line id="GEO-1_proposal_edge_1" x1="595.3333333333333" y1="267.0" x2="684.6666666666666" y2="267.0" stroke="#176B68" stroke-width="2" marker-end="url(#arrow)"/>
+<text id="GEO-1_proposal_edge_1_label" font-family="Nimbus Sans" font-size="17" font-weight="normal" fill="#43595D">
+<tspan x="599.3333333333333" y="202.0">returned</tspan>
+<tspan x="599.3333333333333" y="221.55">fields</tspan>
+</text>
+<line id="GEO-1_proposal_edge_2" x1="909.6666666666666" y1="267.0" x2="999.0" y2="267.0" stroke="#176B68" stroke-width="2" marker-end="url(#arrow)"/>
+<text id="GEO-1_proposal_edge_2_label" font-family="Nimbus Sans" font-size="17" font-weight="normal" fill="#43595D">
+<tspan x="913.6666666666666" y="202.0">checked</tspan>
+<tspan x="913.6666666666666" y="221.55">structure</tspan>
+</text>
+<rect x="56.0" y="440" width="225" height="110" id="GEO-1_work_0" fill="#EFF5F3" stroke="#176B68" stroke-width="2"/>
+<text id="GEO-1_work_0_label" font-family="Nimbus Sans" font-size="24" font-weight="normal" fill="#16282B">
+<tspan x="69.0" y="476.0">Parent Work</tspan>
+<tspan x="69.0" y="503.6">actual input</tspan>
+</text>
+<rect x="370.3333333333333" y="440" width="225" height="110" id="GEO-1_work_1" fill="#EFF5F3" stroke="#176B68" stroke-width="2"/>
+<text id="GEO-1_work_1_label" font-family="Nimbus Sans" font-size="24" font-weight="normal" fill="#16282B">
+<tspan x="383.3333333333333" y="476.0">Bounded child</tspan>
+<tspan x="383.3333333333333" y="503.6">Work</tspan>
+</text>
+<rect x="684.6666666666666" y="440" width="225" height="110" id="GEO-1_work_2" fill="#EFF5F3" stroke="#176B68" stroke-width="2"/>
+<text id="GEO-1_work_2_label" font-family="Nimbus Sans" font-size="24" font-weight="normal" fill="#16282B">
+<tspan x="697.6666666666666" y="476.0">Typed child</tspan>
+<tspan x="697.6666666666666" y="503.6">result</tspan>
+</text>
+<rect x="999.0" y="440" width="225" height="110" id="GEO-1_work_3" fill="#EFF5F3" stroke="#176B68" stroke-width="2"/>
+<text id="GEO-1_work_3_label" font-family="Nimbus Sans" font-size="24" font-weight="normal" fill="#16282B">
+<tspan x="1012.0" y="476.0">Parent slot</tspan>
+<tspan x="1012.0" y="503.6">consumes result</tspan>
+</text>
+<line id="GEO-1_work_edge_0" x1="281.0" y1="495.0" x2="370.3333333333333" y2="495.0" stroke="#176B68" stroke-width="2" marker-end="url(#arrow)"/>
+<text id="GEO-1_work_edge_0_label" font-family="Nimbus Sans" font-size="17" font-weight="normal" fill="#43595D">
+<tspan x="285.0" y="430.0">bounded</tspan>
+<tspan x="285.0" y="449.55">invocation</tspan>
+</text>
+<line id="GEO-1_work_edge_1" x1="595.3333333333333" y1="495.0" x2="684.6666666666666" y2="495.0" stroke="#176B68" stroke-width="2" marker-end="url(#arrow)"/>
+<text id="GEO-1_work_edge_1_label" font-family="Nimbus Sans" font-size="17" font-weight="normal" fill="#43595D">
+<tspan x="599.3333333333333" y="430.0">returned</tspan>
+<tspan x="599.3333333333333" y="449.55">material</tspan>
+</text>
+<line id="GEO-1_work_edge_2" x1="909.6666666666666" y1="495.0" x2="999.0" y2="495.0" stroke="#176B68" stroke-width="2" marker-end="url(#arrow)"/>
+<text id="GEO-1_work_edge_2_label" font-family="Nimbus Sans" font-size="17" font-weight="normal" fill="#43595D">
+<tspan x="913.6666666666666" y="430.0">exact field</tspan>
+<tspan x="913.6666666666666" y="449.55">binding</tspan>
+</text>
+<text id="GEO-1_qualification" font-family="Nimbus Sans" font-size="23" font-weight="normal" fill="#43595D">
+<tspan x="56" y="619.0">Root route/result reviews remain distinct. No arbitrary planner or universal child-memory search is demonstrated.</tspan>
+</text>
+<line id="GEO-1_rule" x1="56" y1="671" x2="1218" y2="671" stroke="#B8C8C6" stroke-width="1"/>
+<a href="https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/specs/current_architecture_lock_v01.md">
+<text id="GEO-1_source_link" font-family="Nimbus Sans" font-size="18" font-weight="normal" fill="#315E8B">
+<tspan x="56" y="703.0">GEO-1 Source: architecture</tspan>
+</text>
+</a>
+<a href="../atlas/README.html">
+<text id="GEO-1_atlas_locator" font-family="Nimbus Sans" font-size="17" font-weight="normal" fill="#315E8B">
+<tspan x="660" y="702.0">Atlas: Overview / GEO 1 2 3 4 5 6 7</tspan>
+</text>
+</a>
+</svg>

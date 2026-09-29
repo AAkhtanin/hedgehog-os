@@ -1,0 +1,4 @@
+def approve_booking(r,body,p):
+    need(r['owner_approval_ref'] is not None,'booking_owner_consent_missing')
+    need(any(a['approval_ref']==r['owner_approval_ref'] and a['request_sha256']==c.sha(r) and
+             a['offer_request_sha256']==c.sha(body['offer']['request']) for a in p['book_approvals']),'booking_owner_consent_missing')

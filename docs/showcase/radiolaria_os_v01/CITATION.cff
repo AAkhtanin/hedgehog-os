@@ -1,0 +1,11 @@
+cff-version: 1.2.0
+message: "Cite the explanatory work separately from its mixed source bundle."
+type: dataset
+title: "Radiolaria OS: Computing, Assembled Around Intent"
+authors:
+  - family-names: Akhtanin
+    given-names: Andrii
+version: "G6B6F_FINAL_BYTES_V01"
+license: CC-BY-4.0
+abstract: "Explanatory author text and original diagrams only. Code, verbatim code excerpts, historical evidence and third-party material are excluded from this CC BY scope and retain their own terms. This is an unpublished review candidate, not a deposit or assigned DOI."
+repository-code: "https://github.com/AAkhtanin/hedgehog-os"

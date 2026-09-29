@@ -1,0 +1,1784 @@
+[
+  {
+    "id": "BASE01",
+    "original_gate": "RELEASE",
+    "requirement": "Exact accepted A basis",
+    "source_requirement_sha256": "2a5aaa57a9064c20083b871d1621d20b7173e3f23b86a705c0c72612e2ae14ca",
+    "original_result": "NOT_EVALUATED",
+    "full_release_result": "NOT_RUN",
+    "pilot_result": "PASS_SCOPED_AUTHOR_QA_ONLY",
+    "outputs": [
+      "LIMITS.md",
+      "PUBLICATION_BOUNDARY.md"
+    ],
+    "phases": [
+      "B0",
+      "B1",
+      "B2",
+      "B3",
+      "B4"
+    ],
+    "note": "Pilot evidence only; full-publication original requirement is retained, not all-PASS.",
+    "b3_outputs": [
+      "PUBLICATION_BOUNDARY.md",
+      "chapters/13_verification.md"
+    ],
+    "b3_result": "CONTENT_PREPARED_AND_SCOPED_EDITORIAL_REVIEW; not full-release acceptance",
+    "b3_evidence": "Return qa/data_audit_final.json plus independent editorial and visual review; original gate/result fields preserved.",
+    "r1_findings": [],
+    "r1_result": "SCOPED_EDITORIAL_CHECK_ONLY_NOT_FULL_RELEASE",
+    "r1_evidence": "Return EDITORIAL_DISPOSITION.json, qa/ and source-bound commands/; not independent B5."
+  },
+  {
+    "id": "BASE02",
+    "original_gate": "RELEASE",
+    "requirement": "B scope preserves A deferments",
+    "source_requirement_sha256": "ea8886b7907e56c727c4358ae08094dba80c93fbc4fa4cfb30c0c10e18f1795c",
+    "original_result": "NOT_EVALUATED",
+    "full_release_result": "NOT_RUN",
+    "pilot_result": "PASS_SCOPED_AUTHOR_QA_ONLY",
+    "outputs": [
+      "LIMITS.md",
+      "PUBLICATION_BOUNDARY.md"
+    ],
+    "phases": [
+      "B0",
+      "B1",
+      "B2",
+      "B3",
+      "B4"
+    ],
+    "note": "Pilot evidence only; full-publication original requirement is retained, not all-PASS.",
+    "b3_outputs": [
+      "PUBLICATION_BOUNDARY.md",
+      "chapters/13_verification.md"
+    ],
+    "b3_result": "CONTENT_PREPARED_AND_SCOPED_EDITORIAL_REVIEW; not full-release acceptance",
+    "b3_evidence": "Return qa/data_audit_final.json plus independent editorial and visual review; original gate/result fields preserved.",
+    "r1_findings": [],
+    "r1_result": "SCOPED_EDITORIAL_CHECK_ONLY_NOT_FULL_RELEASE",
+    "r1_evidence": "Return EDITORIAL_DISPOSITION.json, qa/ and source-bound commands/; not independent B5."
+  },
+  {
+    "id": "BASE03",
+    "original_gate": "RELEASE",
+    "requirement": "R1 publication boundary",
+    "source_requirement_sha256": "a07a9f6ad72fedbd664333d70c2b5ce7df7a9d3f68daf54447e5a9396089861b",
+    "original_result": "NOT_EVALUATED",
+    "full_release_result": "NOT_RUN",
+    "pilot_result": "PASS_SCOPED_AUTHOR_QA_ONLY",
+    "outputs": [
+      "LIMITS.md",
+      "PUBLICATION_BOUNDARY.md"
+    ],
+    "phases": [
+      "B0",
+      "B1",
+      "B2",
+      "B3",
+      "B4"
+    ],
+    "note": "Pilot evidence only; full-publication original requirement is retained, not all-PASS.",
+    "b3_outputs": [
+      "PUBLICATION_BOUNDARY.md",
+      "chapters/13_verification.md"
+    ],
+    "b3_result": "CONTENT_PREPARED_AND_SCOPED_EDITORIAL_REVIEW; not full-release acceptance",
+    "b3_evidence": "Return qa/data_audit_final.json plus independent editorial and visual review; original gate/result fields preserved.",
+    "r1_findings": [],
+    "r1_result": "SCOPED_EDITORIAL_CHECK_ONLY_NOT_FULL_RELEASE",
+    "r1_evidence": "Return EDITORIAL_DISPOSITION.json, qa/ and source-bound commands/; not independent B5."
+  },
+  {
+    "id": "CLAIM01",
+    "original_gate": "RELEASE",
+    "requirement": "Source-bound central claims",
+    "source_requirement_sha256": "1b3556115c98945df8f69beaa6273b9e4de79494bf298dc941dbfba13211c1db",
+    "original_result": "NOT_EVALUATED",
+    "full_release_result": "NOT_RUN",
+    "pilot_result": "PASS_SCOPED_AUTHOR_QA_ONLY",
+    "outputs": [
+      "CONTRIBUTIONS.md",
+      "BACKGROUND_MAP.md"
+    ],
+    "phases": [
+      "B0",
+      "B1",
+      "B2",
+      "B3",
+      "B4"
+    ],
+    "note": "Pilot evidence only; full-publication original requirement is retained, not all-PASS.",
+    "b3_outputs": [
+      "CONTRIBUTIONS_GLOBAL.md",
+      "BACKGROUND_MAP.md",
+      "chapters/12_context.md"
+    ],
+    "b3_result": "CONTENT_PREPARED_AND_SCOPED_EDITORIAL_REVIEW; not full-release acceptance",
+    "b3_evidence": "Return qa/data_audit_final.json plus independent editorial and visual review; original gate/result fields preserved.",
+    "r1_findings": [
+      "ED08",
+      "ED09"
+    ],
+    "r1_result": "SCOPED_EDITORIAL_CHECK_ONLY_NOT_FULL_RELEASE",
+    "r1_evidence": "Return EDITORIAL_DISPOSITION.json, qa/ and source-bound commands/; not independent B5."
+  },
+  {
+    "id": "CLAIM02",
+    "original_gate": "RELEASE",
+    "requirement": "Claim types distinguished",
+    "source_requirement_sha256": "2f547e1694def23a185587d3470dde44c9cd3ed7f0750462a48d1728c1ab38ec",
+    "original_result": "NOT_EVALUATED",
+    "full_release_result": "NOT_RUN",
+    "pilot_result": "PASS_SCOPED_AUTHOR_QA_ONLY",
+    "outputs": [
+      "CONTRIBUTIONS.md",
+      "BACKGROUND_MAP.md"
+    ],
+    "phases": [
+      "B0",
+      "B1",
+      "B2",
+      "B3",
+      "B4"
+    ],
+    "note": "Pilot evidence only; full-publication original requirement is retained, not all-PASS.",
+    "b3_outputs": [
+      "CONTRIBUTIONS_GLOBAL.md",
+      "BACKGROUND_MAP.md",
+      "chapters/12_context.md"
+    ],
+    "b3_result": "CONTENT_PREPARED_AND_SCOPED_EDITORIAL_REVIEW; not full-release acceptance",
+    "b3_evidence": "Return qa/data_audit_final.json plus independent editorial and visual review; original gate/result fields preserved.",
+    "r1_findings": [
+      "ED09",
+      "ED10"
+    ],
+    "r1_result": "SCOPED_EDITORIAL_CHECK_ONLY_NOT_FULL_RELEASE",
+    "r1_evidence": "Return EDITORIAL_DISPOSITION.json, qa/ and source-bound commands/; not independent B5."
+  },
+  {
+    "id": "CLAIM03",
+    "original_gate": "RELEASE",
+    "requirement": "No invented formal proof",
+    "source_requirement_sha256": "88f0618c95b374f5c65d41e9fb26741047f2ba70cb00dc507329c88a69daf7a3",
+    "original_result": "NOT_EVALUATED",
+    "full_release_result": "NOT_RUN",
+    "pilot_result": "PASS_SCOPED_AUTHOR_QA_ONLY",
+    "outputs": [
+      "CONTRIBUTIONS.md",
+      "BACKGROUND_MAP.md"
+    ],
+    "phases": [
+      "B0",
+      "B1",
+      "B2",
+      "B3",
+      "B4"
+    ],
+    "note": "Pilot evidence only; full-publication original requirement is retained, not all-PASS.",
+    "b3_outputs": [
+      "CONTRIBUTIONS_GLOBAL.md",
+      "BACKGROUND_MAP.md",
+      "chapters/12_context.md"
+    ],
+    "b3_result": "CONTENT_PREPARED_AND_SCOPED_EDITORIAL_REVIEW; not full-release acceptance",
+    "b3_evidence": "Return qa/data_audit_final.json plus independent editorial and visual review; original gate/result fields preserved.",
+    "r1_findings": [],
+    "r1_result": "SCOPED_EDITORIAL_CHECK_ONLY_NOT_FULL_RELEASE",
+    "r1_evidence": "Return EDITORIAL_DISPOSITION.json, qa/ and source-bound commands/; not independent B5."
+  },
+  {
+    "id": "CLAIM04",
+    "original_gate": "RELEASE",
+    "requirement": "Hashes not authority",
+    "source_requirement_sha256": "0bb3e5daaed90083304c376ecdde25c41697799846721e79b427baae52cc99b4",
+    "original_result": "NOT_EVALUATED",
+    "full_release_result": "NOT_RUN",
+    "pilot_result": "PASS_SCOPED_AUTHOR_QA_ONLY",
+    "outputs": [
+      "CONTRIBUTIONS.md",
+      "BACKGROUND_MAP.md"
+    ],
+    "phases": [
+      "B0",
+      "B1",
+      "B2",
+      "B3",
+      "B4"
+    ],
+    "note": "Pilot evidence only; full-publication original requirement is retained, not all-PASS.",
+    "b3_outputs": [
+      "CONTRIBUTIONS_GLOBAL.md",
+      "BACKGROUND_MAP.md",
+      "chapters/12_context.md"
+    ],
+    "b3_result": "CONTENT_PREPARED_AND_SCOPED_EDITORIAL_REVIEW; not full-release acceptance",
+    "b3_evidence": "Return qa/data_audit_final.json plus independent editorial and visual review; original gate/result fields preserved.",
+    "r1_findings": [
+      "ED09"
+    ],
+    "r1_result": "SCOPED_EDITORIAL_CHECK_ONLY_NOT_FULL_RELEASE",
+    "r1_evidence": "Return EDITORIAL_DISPOSITION.json, qa/ and source-bound commands/; not independent B5."
+  },
+  {
+    "id": "CLAIM05",
+    "original_gate": "RELEASE",
+    "requirement": "Alternatives and evidence gaps",
+    "source_requirement_sha256": "bba696e8b60121017abe2bf5ca79fd7dd193bf144092e023f78fbddcfa2c6313",
+    "original_result": "NOT_EVALUATED",
+    "full_release_result": "NOT_RUN",
+    "pilot_result": "PASS_SCOPED_AUTHOR_QA_ONLY",
+    "outputs": [
+      "CONTRIBUTIONS.md",
+      "BACKGROUND_MAP.md"
+    ],
+    "phases": [
+      "B0",
+      "B1",
+      "B2",
+      "B3",
+      "B4"
+    ],
+    "note": "Pilot evidence only; full-publication original requirement is retained, not all-PASS.",
+    "b3_outputs": [
+      "CONTRIBUTIONS_GLOBAL.md",
+      "BACKGROUND_MAP.md",
+      "chapters/12_context.md"
+    ],
+    "b3_result": "CONTENT_PREPARED_AND_SCOPED_EDITORIAL_REVIEW; not full-release acceptance",
+    "b3_evidence": "Return qa/data_audit_final.json plus independent editorial and visual review; original gate/result fields preserved.",
+    "r1_findings": [
+      "ED08"
+    ],
+    "r1_result": "SCOPED_EDITORIAL_CHECK_ONLY_NOT_FULL_RELEASE",
+    "r1_evidence": "Return EDITORIAL_DISPOSITION.json, qa/ and source-bound commands/; not independent B5."
+  },
+  {
+    "id": "CLAIM06",
+    "original_gate": "RELEASE",
+    "requirement": "Extrapolation not measured scale",
+    "source_requirement_sha256": "39b3203f2680358a1564d6cc0612c1c64bacf51367a492f790330aad1e21da4d",
+    "original_result": "NOT_EVALUATED",
+    "full_release_result": "NOT_RUN",
+    "pilot_result": "PASS_SCOPED_AUTHOR_QA_ONLY",
+    "outputs": [
+      "CONTRIBUTIONS.md",
+      "BACKGROUND_MAP.md"
+    ],
+    "phases": [
+      "B0",
+      "B1",
+      "B2",
+      "B3",
+      "B4"
+    ],
+    "note": "Pilot evidence only; full-publication original requirement is retained, not all-PASS.",
+    "b3_outputs": [
+      "CONTRIBUTIONS_GLOBAL.md",
+      "BACKGROUND_MAP.md",
+      "chapters/12_context.md"
+    ],
+    "b3_result": "CONTENT_PREPARED_AND_SCOPED_EDITORIAL_REVIEW; not full-release acceptance",
+    "b3_evidence": "Return qa/data_audit_final.json plus independent editorial and visual review; original gate/result fields preserved.",
+    "r1_findings": [],
+    "r1_result": "SCOPED_EDITORIAL_CHECK_ONLY_NOT_FULL_RELEASE",
+    "r1_evidence": "Return EDITORIAL_DISPOSITION.json, qa/ and source-bound commands/; not independent B5."
+  },
+  {
+    "id": "CLAIM07",
+    "original_gate": "RELEASE",
+    "requirement": "Primary related work",
+    "source_requirement_sha256": "37efd56680e0b533b0640cc95946a57382f9f8fac8ed81a18f5db8332b6ef764",
+    "original_result": "NOT_EVALUATED",
+    "full_release_result": "NOT_RUN",
+    "pilot_result": "NOT_RUN_FUTURE_SCOPE",
+    "outputs": [
+      "CONTRIBUTIONS.md",
+      "BACKGROUND_MAP.md"
+    ],
+    "phases": [
+      "B0",
+      "B1",
+      "B2",
+      "B3",
+      "B4"
+    ],
+    "note": "Explicitly outside B0-B2; not waived for full release.",
+    "b3_outputs": [
+      "CONTRIBUTIONS_GLOBAL.md",
+      "BACKGROUND_MAP.md",
+      "chapters/12_context.md"
+    ],
+    "b3_result": "CONTENT_PREPARED_AND_SCOPED_EDITORIAL_REVIEW; not full-release acceptance",
+    "b3_evidence": "Return qa/data_audit_final.json plus independent editorial and visual review; original gate/result fields preserved.",
+    "r1_findings": [
+      "ED17"
+    ],
+    "r1_result": "SCOPED_EDITORIAL_CHECK_ONLY_NOT_FULL_RELEASE",
+    "r1_evidence": "Return EDITORIAL_DISPOSITION.json, qa/ and source-bound commands/; not independent B5."
+  },
+  {
+    "id": "GEO01",
+    "original_gate": "RELEASE",
+    "requirement": "Whole-system Atlas",
+    "source_requirement_sha256": "992f98dcfb40d64b2bf55b165f9b070d9694a5aab74b52d1ec65b0b9c3bc62b4",
+    "original_result": "NOT_EVALUATED",
+    "full_release_result": "NOT_RUN",
+    "pilot_result": "PASS_SCOPED_AUTHOR_QA_ONLY",
+    "outputs": [
+      "atlas/README.md",
+      "atlas/figures.json"
+    ],
+    "phases": [
+      "B0",
+      "B1",
+      "B2",
+      "B3",
+      "B4"
+    ],
+    "note": "Pilot evidence only; full-publication original requirement is retained, not all-PASS.",
+    "b3_outputs": [
+      "atlas/views.json",
+      "atlas/ENTITIES.md",
+      "CASE_MATRIX.md"
+    ],
+    "b3_result": "CONTENT_PREPARED_AND_SCOPED_EDITORIAL_REVIEW; not full-release acceptance",
+    "b3_evidence": "Return qa/data_audit_final.json plus independent editorial and visual review; original gate/result fields preserved.",
+    "r1_findings": [
+      "ED01"
+    ],
+    "r1_result": "SCOPED_EDITORIAL_CHECK_ONLY_NOT_FULL_RELEASE",
+    "r1_evidence": "Return EDITORIAL_DISPOSITION.json, qa/ and source-bound commands/; not independent B5."
+  },
+  {
+    "id": "GEO02",
+    "original_gate": "RELEASE",
+    "requirement": "Consistent entity IDs",
+    "source_requirement_sha256": "8bb4a1e1dae39dbc74efad3a8591d2a5577b4ace5aeba4eb815f1e59a021bc2d",
+    "original_result": "NOT_EVALUATED",
+    "full_release_result": "NOT_RUN",
+    "pilot_result": "PASS_SCOPED_AUTHOR_QA_ONLY",
+    "outputs": [
+      "atlas/README.md",
+      "atlas/figures.json"
+    ],
+    "phases": [
+      "B0",
+      "B1",
+      "B2",
+      "B3",
+      "B4"
+    ],
+    "note": "Pilot evidence only; full-publication original requirement is retained, not all-PASS.",
+    "b3_outputs": [
+      "atlas/views.json",
+      "atlas/ENTITIES.md",
+      "CASE_MATRIX.md"
+    ],
+    "b3_result": "CONTENT_PREPARED_AND_SCOPED_EDITORIAL_REVIEW; not full-release acceptance",
+    "b3_evidence": "Return qa/data_audit_final.json plus independent editorial and visual review; original gate/result fields preserved.",
+    "r1_findings": [
+      "ED01",
+      "ED02",
+      "ED05"
+    ],
+    "r1_result": "SCOPED_EDITORIAL_CHECK_ONLY_NOT_FULL_RELEASE",
+    "r1_evidence": "Return EDITORIAL_DISPOSITION.json, qa/ and source-bound commands/; not independent B5."
+  },
+  {
+    "id": "GEO03",
+    "original_gate": "RELEASE",
+    "requirement": "Arrow and diagram classes",
+    "source_requirement_sha256": "08c2148b4efacdaa186c04b49510d74bcc45f8d05edb300df4daa545da1c1ab8",
+    "original_result": "NOT_EVALUATED",
+    "full_release_result": "NOT_RUN",
+    "pilot_result": "PASS_SCOPED_AUTHOR_QA_ONLY",
+    "outputs": [
+      "atlas/README.md",
+      "atlas/figures.json"
+    ],
+    "phases": [
+      "B0",
+      "B1",
+      "B2",
+      "B3",
+      "B4"
+    ],
+    "note": "Pilot evidence only; full-publication original requirement is retained, not all-PASS.",
+    "b3_outputs": [
+      "atlas/views.json",
+      "atlas/ENTITIES.md",
+      "CASE_MATRIX.md"
+    ],
+    "b3_result": "CONTENT_PREPARED_AND_SCOPED_EDITORIAL_REVIEW; not full-release acceptance",
+    "b3_evidence": "Return qa/data_audit_final.json plus independent editorial and visual review; original gate/result fields preserved.",
+    "r1_findings": [
+      "ED03",
+      "ED04"
+    ],
+    "r1_result": "SCOPED_EDITORIAL_CHECK_ONLY_NOT_FULL_RELEASE",
+    "r1_evidence": "Return EDITORIAL_DISPOSITION.json, qa/ and source-bound commands/; not independent B5."
+  },
+  {
+    "id": "GEO04",
+    "original_gate": "RELEASE",
+    "requirement": "Actual causal order",
+    "source_requirement_sha256": "a3670351c433e3b592bb095d0012e4509a1045c0c31b59233b1d28bd46b14e69",
+    "original_result": "NOT_EVALUATED",
+    "full_release_result": "NOT_RUN",
+    "pilot_result": "PASS_SCOPED_AUTHOR_QA_ONLY",
+    "outputs": [
+      "atlas/README.md",
+      "atlas/figures.json"
+    ],
+    "phases": [
+      "B0",
+      "B1",
+      "B2",
+      "B3",
+      "B4"
+    ],
+    "note": "Pilot evidence only; full-publication original requirement is retained, not all-PASS.",
+    "b3_outputs": [
+      "atlas/views.json",
+      "atlas/ENTITIES.md",
+      "CASE_MATRIX.md"
+    ],
+    "b3_result": "CONTENT_PREPARED_AND_SCOPED_EDITORIAL_REVIEW; not full-release acceptance",
+    "b3_evidence": "Return qa/data_audit_final.json plus independent editorial and visual review; original gate/result fields preserved.",
+    "r1_findings": [
+      "ED03",
+      "ED05",
+      "ED06"
+    ],
+    "r1_result": "SCOPED_EDITORIAL_CHECK_ONLY_NOT_FULL_RELEASE",
+    "r1_evidence": "Return EDITORIAL_DISPOSITION.json, qa/ and source-bound commands/; not independent B5."
+  },
+  {
+    "id": "GEO05",
+    "original_gate": "RELEASE",
+    "requirement": "Independent business Roots",
+    "source_requirement_sha256": "c6ed97006a66c25a9d49ad893731a537eb35245ef3eee322ba9e5e4f8d905949",
+    "original_result": "NOT_EVALUATED",
+    "full_release_result": "NOT_RUN",
+    "pilot_result": "PASS_SCOPED_AUTHOR_QA_ONLY",
+    "outputs": [
+      "atlas/README.md",
+      "atlas/figures.json"
+    ],
+    "phases": [
+      "B0",
+      "B1",
+      "B2",
+      "B3",
+      "B4"
+    ],
+    "note": "Pilot evidence only; full-publication original requirement is retained, not all-PASS.",
+    "b3_outputs": [
+      "atlas/views.json",
+      "atlas/ENTITIES.md",
+      "CASE_MATRIX.md"
+    ],
+    "b3_result": "CONTENT_PREPARED_AND_SCOPED_EDITORIAL_REVIEW; not full-release acceptance",
+    "b3_evidence": "Return qa/data_audit_final.json plus independent editorial and visual review; original gate/result fields preserved.",
+    "r1_findings": [
+      "ED04"
+    ],
+    "r1_result": "SCOPED_EDITORIAL_CHECK_ONLY_NOT_FULL_RELEASE",
+    "r1_evidence": "Return EDITORIAL_DISPOSITION.json, qa/ and source-bound commands/; not independent B5."
+  },
+  {
+    "id": "GEO06",
+    "original_gate": "RELEASE",
+    "requirement": "Authoring versus runtime",
+    "source_requirement_sha256": "488eb6fc10edbf351d8f1f84213e02fe261008ca210505d10880701b472ecf2d",
+    "original_result": "NOT_EVALUATED",
+    "full_release_result": "NOT_RUN",
+    "pilot_result": "PASS_SCOPED_AUTHOR_QA_ONLY",
+    "outputs": [
+      "atlas/README.md",
+      "atlas/figures.json"
+    ],
+    "phases": [
+      "B0",
+      "B1",
+      "B2",
+      "B3",
+      "B4"
+    ],
+    "note": "Pilot evidence only; full-publication original requirement is retained, not all-PASS.",
+    "b3_outputs": [
+      "atlas/views.json",
+      "atlas/ENTITIES.md",
+      "CASE_MATRIX.md"
+    ],
+    "b3_result": "CONTENT_PREPARED_AND_SCOPED_EDITORIAL_REVIEW; not full-release acceptance",
+    "b3_evidence": "Return qa/data_audit_final.json plus independent editorial and visual review; original gate/result fields preserved.",
+    "r1_findings": [
+      "ED07"
+    ],
+    "r1_result": "SCOPED_EDITORIAL_CHECK_ONLY_NOT_FULL_RELEASE",
+    "r1_evidence": "Return EDITORIAL_DISPOSITION.json, qa/ and source-bound commands/; not independent B5."
+  },
+  {
+    "id": "GEO07",
+    "original_gate": "RELEASE",
+    "requirement": "Atlas not a certificate",
+    "source_requirement_sha256": "ce590cc7525e0be74b8e58f62615d06afaac7906bd25f97246cf7a784c449c18",
+    "original_result": "NOT_EVALUATED",
+    "full_release_result": "NOT_RUN",
+    "pilot_result": "PASS_SCOPED_AUTHOR_QA_ONLY",
+    "outputs": [
+      "atlas/README.md",
+      "atlas/figures.json"
+    ],
+    "phases": [
+      "B0",
+      "B1",
+      "B2",
+      "B3",
+      "B4"
+    ],
+    "note": "Pilot evidence only; full-publication original requirement is retained, not all-PASS.",
+    "b3_outputs": [
+      "atlas/views.json",
+      "atlas/ENTITIES.md",
+      "CASE_MATRIX.md"
+    ],
+    "b3_result": "CONTENT_PREPARED_AND_SCOPED_EDITORIAL_REVIEW; not full-release acceptance",
+    "b3_evidence": "Return qa/data_audit_final.json plus independent editorial and visual review; original gate/result fields preserved.",
+    "r1_findings": [],
+    "r1_result": "SCOPED_EDITORIAL_CHECK_ONLY_NOT_FULL_RELEASE",
+    "r1_evidence": "Return EDITORIAL_DISPOSITION.json, qa/ and source-bound commands/; not independent B5."
+  },
+  {
+    "id": "EVID01",
+    "original_gate": "RELEASE",
+    "requirement": "Exact excerpts and source ranges",
+    "source_requirement_sha256": "f77108f1d98fd662969ede97ef9b5d6810d9942af228071aa5c52bbcf0b23379",
+    "original_result": "NOT_EVALUATED",
+    "full_release_result": "NOT_RUN",
+    "pilot_result": "PASS_SCOPED_AUTHOR_QA_ONLY",
+    "outputs": [
+      "episode/FOOTBALL.md",
+      "references/episode_sources.json"
+    ],
+    "phases": [
+      "B0",
+      "B1",
+      "B2",
+      "B3",
+      "B4"
+    ],
+    "note": "Pilot evidence only; full-publication original requirement is retained, not all-PASS.",
+    "b3_outputs": [
+      "chapters/08_wedding.md",
+      "chapters/09_workspace.md",
+      "references/README.md"
+    ],
+    "b3_result": "CONTENT_PREPARED_AND_SCOPED_EDITORIAL_REVIEW; not full-release acceptance",
+    "b3_evidence": "Return qa/data_audit_final.json plus independent editorial and visual review; original gate/result fields preserved.",
+    "r1_findings": [
+      "ED08",
+      "ED11"
+    ],
+    "r1_result": "SCOPED_EDITORIAL_CHECK_ONLY_NOT_FULL_RELEASE",
+    "r1_evidence": "Return EDITORIAL_DISPOSITION.json, qa/ and source-bound commands/; not independent B5."
+  },
+  {
+    "id": "EVID02",
+    "original_gate": "RELEASE",
+    "requirement": "Counters retain their units",
+    "source_requirement_sha256": "c3b91212a8e8611817c7d71c379c4eb0d07fdff379b3c6653f71daf8047d8c22",
+    "original_result": "NOT_EVALUATED",
+    "full_release_result": "NOT_RUN",
+    "pilot_result": "PASS_SCOPED_AUTHOR_QA_ONLY",
+    "outputs": [
+      "episode/FOOTBALL.md",
+      "references/episode_sources.json"
+    ],
+    "phases": [
+      "B0",
+      "B1",
+      "B2",
+      "B3",
+      "B4"
+    ],
+    "note": "Pilot evidence only; full-publication original requirement is retained, not all-PASS.",
+    "b3_outputs": [
+      "chapters/08_wedding.md",
+      "chapters/09_workspace.md",
+      "references/README.md"
+    ],
+    "b3_result": "CONTENT_PREPARED_AND_SCOPED_EDITORIAL_REVIEW; not full-release acceptance",
+    "b3_evidence": "Return qa/data_audit_final.json plus independent editorial and visual review; original gate/result fields preserved.",
+    "r1_findings": [
+      "ED06"
+    ],
+    "r1_result": "SCOPED_EDITORIAL_CHECK_ONLY_NOT_FULL_RELEASE",
+    "r1_evidence": "Return EDITORIAL_DISPOSITION.json, qa/ and source-bound commands/; not independent B5."
+  },
+  {
+    "id": "EVID03",
+    "original_gate": "RELEASE",
+    "requirement": "Positive refusal continuation",
+    "source_requirement_sha256": "d2baa1200e948945f3d632a536ba2fd92bfe39a1780d5adb325c80debe5eb68d",
+    "original_result": "NOT_EVALUATED",
+    "full_release_result": "NOT_RUN",
+    "pilot_result": "PASS_SCOPED_AUTHOR_QA_ONLY",
+    "outputs": [
+      "episode/FOOTBALL.md",
+      "references/episode_sources.json"
+    ],
+    "phases": [
+      "B0",
+      "B1",
+      "B2",
+      "B3",
+      "B4"
+    ],
+    "note": "Pilot evidence only; full-publication original requirement is retained, not all-PASS.",
+    "b3_outputs": [
+      "chapters/08_wedding.md",
+      "chapters/09_workspace.md",
+      "references/README.md"
+    ],
+    "b3_result": "CONTENT_PREPARED_AND_SCOPED_EDITORIAL_REVIEW; not full-release acceptance",
+    "b3_evidence": "Return qa/data_audit_final.json plus independent editorial and visual review; original gate/result fields preserved.",
+    "r1_findings": [],
+    "r1_result": "SCOPED_EDITORIAL_CHECK_ONLY_NOT_FULL_RELEASE",
+    "r1_evidence": "Return EDITORIAL_DISPOSITION.json, qa/ and source-bound commands/; not independent B5."
+  },
+  {
+    "id": "EVID04",
+    "original_gate": "RELEASE",
+    "requirement": "Model output consumption evidence",
+    "source_requirement_sha256": "0f27d6c3a943045b89206d588f209ca5bf4d936c4925986a675d68a254741650",
+    "original_result": "NOT_EVALUATED",
+    "full_release_result": "NOT_RUN",
+    "pilot_result": "NOT_APPLICABLE_THIS_EPISODE",
+    "outputs": [
+      "episode/FOOTBALL.md",
+      "references/episode_sources.json"
+    ],
+    "phases": [
+      "B0",
+      "B1",
+      "B2",
+      "B3",
+      "B4"
+    ],
+    "note": "This episode is native deterministic code, no model responses used; later claims require their own consumption evidence.",
+    "b3_outputs": [
+      "chapters/08_wedding.md",
+      "chapters/09_workspace.md",
+      "references/README.md"
+    ],
+    "b3_result": "CONTENT_PREPARED_AND_SCOPED_EDITORIAL_REVIEW; not full-release acceptance",
+    "b3_evidence": "Return qa/data_audit_final.json plus independent editorial and visual review; original gate/result fields preserved.",
+    "r1_findings": [
+      "ED13"
+    ],
+    "r1_result": "SCOPED_EDITORIAL_CHECK_ONLY_NOT_FULL_RELEASE",
+    "r1_evidence": "Return EDITORIAL_DISPOSITION.json, qa/ and source-bound commands/; not independent B5."
+  },
+  {
+    "id": "EVID05",
+    "original_gate": "RELEASE",
+    "requirement": "Coherent historical sources",
+    "source_requirement_sha256": "daf2a33648dc87e645f37caa0a41e137826d4e1263d2f8e030c17911efecb261",
+    "original_result": "NOT_EVALUATED",
+    "full_release_result": "NOT_RUN",
+    "pilot_result": "PASS_SCOPED_AUTHOR_QA_ONLY",
+    "outputs": [
+      "episode/FOOTBALL.md",
+      "references/episode_sources.json"
+    ],
+    "phases": [
+      "B0",
+      "B1",
+      "B2",
+      "B3",
+      "B4"
+    ],
+    "note": "Pilot evidence only; full-publication original requirement is retained, not all-PASS.",
+    "b3_outputs": [
+      "chapters/08_wedding.md",
+      "chapters/09_workspace.md",
+      "references/README.md"
+    ],
+    "b3_result": "CONTENT_PREPARED_AND_SCOPED_EDITORIAL_REVIEW; not full-release acceptance",
+    "b3_evidence": "Return qa/data_audit_final.json plus independent editorial and visual review; original gate/result fields preserved.",
+    "r1_findings": [
+      "ED03"
+    ],
+    "r1_result": "SCOPED_EDITORIAL_CHECK_ONLY_NOT_FULL_RELEASE",
+    "r1_evidence": "Return EDITORIAL_DISPOSITION.json, qa/ and source-bound commands/; not independent B5."
+  },
+  {
+    "id": "EVID06",
+    "original_gate": "RELEASE",
+    "requirement": "Raw versus processed",
+    "source_requirement_sha256": "6e891c8d21f8e822c3ddb67d4a5f8512233c21378e99ca7c862bd7cd69fc0147",
+    "original_result": "NOT_EVALUATED",
+    "full_release_result": "NOT_RUN",
+    "pilot_result": "PASS_SCOPED_AUTHOR_QA_ONLY",
+    "outputs": [
+      "episode/FOOTBALL.md",
+      "references/episode_sources.json"
+    ],
+    "phases": [
+      "B0",
+      "B1",
+      "B2",
+      "B3",
+      "B4"
+    ],
+    "note": "Pilot evidence only; full-publication original requirement is retained, not all-PASS.",
+    "b3_outputs": [
+      "chapters/08_wedding.md",
+      "chapters/09_workspace.md",
+      "references/README.md"
+    ],
+    "b3_result": "CONTENT_PREPARED_AND_SCOPED_EDITORIAL_REVIEW; not full-release acceptance",
+    "b3_evidence": "Return qa/data_audit_final.json plus independent editorial and visual review; original gate/result fields preserved.",
+    "r1_findings": [
+      "ED05",
+      "ED13"
+    ],
+    "r1_result": "SCOPED_EDITORIAL_CHECK_ONLY_NOT_FULL_RELEASE",
+    "r1_evidence": "Return EDITORIAL_DISPOSITION.json, qa/ and source-bound commands/; not independent B5."
+  },
+  {
+    "id": "EVID07",
+    "original_gate": "RELEASE",
+    "requirement": "Incomplete histories preserved",
+    "source_requirement_sha256": "3b2fbafa38f0e60304a0650b05876f6ead3f48ce67b8c31dfb64eeec0d3d81bf",
+    "original_result": "NOT_EVALUATED",
+    "full_release_result": "NOT_RUN",
+    "pilot_result": "PASS_SCOPED_AUTHOR_QA_ONLY",
+    "outputs": [
+      "episode/FOOTBALL.md",
+      "references/episode_sources.json"
+    ],
+    "phases": [
+      "B0",
+      "B1",
+      "B2",
+      "B3",
+      "B4"
+    ],
+    "note": "Pilot evidence only; full-publication original requirement is retained, not all-PASS.",
+    "b3_outputs": [
+      "chapters/08_wedding.md",
+      "chapters/09_workspace.md",
+      "references/README.md"
+    ],
+    "b3_result": "CONTENT_PREPARED_AND_SCOPED_EDITORIAL_REVIEW; not full-release acceptance",
+    "b3_evidence": "Return qa/data_audit_final.json plus independent editorial and visual review; original gate/result fields preserved.",
+    "r1_findings": [
+      "ED07"
+    ],
+    "r1_result": "SCOPED_EDITORIAL_CHECK_ONLY_NOT_FULL_RELEASE",
+    "r1_evidence": "Return EDITORIAL_DISPOSITION.json, qa/ and source-bound commands/; not independent B5."
+  },
+  {
+    "id": "EVID08",
+    "original_gate": "RELEASE",
+    "requirement": "Observer not autonomous runtime",
+    "source_requirement_sha256": "3b477cfb17e3754950b17f60e25dcbf7102ed4a778ca434f5d3e7525585f6faf",
+    "original_result": "NOT_EVALUATED",
+    "full_release_result": "NOT_RUN",
+    "pilot_result": "PASS_SCOPED_AUTHOR_QA_ONLY",
+    "outputs": [
+      "episode/FOOTBALL.md",
+      "references/episode_sources.json"
+    ],
+    "phases": [
+      "B0",
+      "B1",
+      "B2",
+      "B3",
+      "B4"
+    ],
+    "note": "Pilot evidence only; full-publication original requirement is retained, not all-PASS.",
+    "b3_outputs": [
+      "chapters/08_wedding.md",
+      "chapters/09_workspace.md",
+      "references/README.md"
+    ],
+    "b3_result": "CONTENT_PREPARED_AND_SCOPED_EDITORIAL_REVIEW; not full-release acceptance",
+    "b3_evidence": "Return qa/data_audit_final.json plus independent editorial and visual review; original gate/result fields preserved.",
+    "r1_findings": [],
+    "r1_result": "SCOPED_EDITORIAL_CHECK_ONLY_NOT_FULL_RELEASE",
+    "r1_evidence": "Return EDITORIAL_DISPOSITION.json, qa/ and source-bound commands/; not independent B5."
+  },
+  {
+    "id": "AUD01",
+    "original_gate": "RELEASE",
+    "requirement": "Fixed audit starting boundary",
+    "source_requirement_sha256": "762e26ca957013cac76ce258069d1e304bcb0d7cea00e484283f0b09d28dfb3e",
+    "original_result": "NOT_EVALUATED",
+    "full_release_result": "NOT_RUN",
+    "pilot_result": "PASS_SCOPED_AUTHOR_QA_ONLY",
+    "outputs": [
+      "LIMITS.md",
+      "reader/M2_FOCUS.md"
+    ],
+    "phases": [
+      "B0",
+      "B1",
+      "B2",
+      "B3",
+      "B4"
+    ],
+    "note": "Pilot evidence only; full-publication original requirement is retained, not all-PASS.",
+    "b3_outputs": [
+      "chapters/06_method.md"
+    ],
+    "b3_result": "CONTENT_PREPARED_AND_SCOPED_EDITORIAL_REVIEW; not full-release acceptance",
+    "b3_evidence": "Return qa/data_audit_final.json plus independent editorial and visual review; original gate/result fields preserved.",
+    "r1_findings": [],
+    "r1_result": "SCOPED_EDITORIAL_CHECK_ONLY_NOT_FULL_RELEASE",
+    "r1_evidence": "Return EDITORIAL_DISPOSITION.json, qa/ and source-bound commands/; not independent B5."
+  },
+  {
+    "id": "AUD02",
+    "original_gate": "RELEASE",
+    "requirement": "Reachable compromise stays in scope",
+    "source_requirement_sha256": "ea3e99ef896764c3202a2f309ba34a8c9d69b6b152a28c819a8859c87436d7cb",
+    "original_result": "NOT_EVALUATED",
+    "full_release_result": "NOT_RUN",
+    "pilot_result": "PASS_SCOPED_AUTHOR_QA_ONLY",
+    "outputs": [
+      "LIMITS.md",
+      "reader/M2_FOCUS.md"
+    ],
+    "phases": [
+      "B0",
+      "B1",
+      "B2",
+      "B3",
+      "B4"
+    ],
+    "note": "Pilot evidence only; full-publication original requirement is retained, not all-PASS.",
+    "b3_outputs": [
+      "chapters/06_method.md"
+    ],
+    "b3_result": "CONTENT_PREPARED_AND_SCOPED_EDITORIAL_REVIEW; not full-release acceptance",
+    "b3_evidence": "Return qa/data_audit_final.json plus independent editorial and visual review; original gate/result fields preserved.",
+    "r1_findings": [],
+    "r1_result": "SCOPED_EDITORIAL_CHECK_ONLY_NOT_FULL_RELEASE",
+    "r1_evidence": "Return EDITORIAL_DISPOSITION.json, qa/ and source-bound commands/; not independent B5."
+  },
+  {
+    "id": "AUD03",
+    "original_gate": "RELEASE",
+    "requirement": "Critical reader instructions",
+    "source_requirement_sha256": "022dfa91b1db5cc3262aa9014c2fa6c7dd59880197588f770911a4853a244e1d",
+    "original_result": "NOT_EVALUATED",
+    "full_release_result": "NOT_RUN",
+    "pilot_result": "PASS_SCOPED_AUTHOR_QA_ONLY",
+    "outputs": [
+      "LIMITS.md",
+      "reader/M2_FOCUS.md"
+    ],
+    "phases": [
+      "B0",
+      "B1",
+      "B2",
+      "B3",
+      "B4"
+    ],
+    "note": "Pilot evidence only; full-publication original requirement is retained, not all-PASS.",
+    "b3_outputs": [
+      "chapters/06_method.md"
+    ],
+    "b3_result": "CONTENT_PREPARED_AND_SCOPED_EDITORIAL_REVIEW; not full-release acceptance",
+    "b3_evidence": "Return qa/data_audit_final.json plus independent editorial and visual review; original gate/result fields preserved.",
+    "r1_findings": [],
+    "r1_result": "SCOPED_EDITORIAL_CHECK_ONLY_NOT_FULL_RELEASE",
+    "r1_evidence": "Return EDITORIAL_DISPOSITION.json, qa/ and source-bound commands/; not independent B5."
+  },
+  {
+    "id": "READ01",
+    "original_gate": "RELEASE",
+    "requirement": "Honest START_HERE",
+    "source_requirement_sha256": "ae4dcec4d0cc795065561a48e51dcadbb59eca2e56fe64172ef7843c5ef20880",
+    "original_result": "NOT_EVALUATED",
+    "full_release_result": "NOT_RUN",
+    "pilot_result": "PASS_SCOPED_AUTHOR_QA_ONLY",
+    "outputs": [
+      "reader/module.json",
+      "reader/token_inventory.json"
+    ],
+    "phases": [
+      "B0",
+      "B1",
+      "B2",
+      "B3",
+      "B4"
+    ],
+    "note": "Pilot evidence only; full-publication original requirement is retained, not all-PASS.",
+    "b3_outputs": [
+      "reader/START_HERE.md",
+      "reader/current_inventory.json"
+    ],
+    "b3_result": "CONTENT_PREPARED_AND_SCOPED_EDITORIAL_REVIEW; not full-release acceptance",
+    "b3_evidence": "Return qa/data_audit_final.json plus independent editorial and visual review; original gate/result fields preserved.",
+    "r1_findings": [
+      "ED10",
+      "ED18"
+    ],
+    "r1_result": "SCOPED_EDITORIAL_CHECK_ONLY_NOT_FULL_RELEASE",
+    "r1_evidence": "Return EDITORIAL_DISPOSITION.json, qa/ and source-bound commands/; not independent B5."
+  },
+  {
+    "id": "READ02",
+    "original_gate": "RELEASE",
+    "requirement": "Narrow FOCUS self-containment",
+    "source_requirement_sha256": "db51dca25477c698846f267a984ca0013377f8e0c2fe3cf54d7255be10b19c73",
+    "original_result": "NOT_EVALUATED",
+    "full_release_result": "NOT_RUN",
+    "pilot_result": "PASS_SCOPED_AUTHOR_QA_ONLY",
+    "outputs": [
+      "reader/module.json",
+      "reader/token_inventory.json"
+    ],
+    "phases": [
+      "B0",
+      "B1",
+      "B2",
+      "B3",
+      "B4"
+    ],
+    "note": "Pilot evidence only; full-publication original requirement is retained, not all-PASS.",
+    "b3_outputs": [
+      "reader/START_HERE.md",
+      "reader/current_inventory.json"
+    ],
+    "b3_result": "CONTENT_PREPARED_AND_SCOPED_EDITORIAL_REVIEW; not full-release acceptance",
+    "b3_evidence": "Return qa/data_audit_final.json plus independent editorial and visual review; original gate/result fields preserved.",
+    "r1_findings": [
+      "ED18"
+    ],
+    "r1_result": "SCOPED_EDITORIAL_CHECK_ONLY_NOT_FULL_RELEASE",
+    "r1_evidence": "Return EDITORIAL_DISPOSITION.json, qa/ and source-bound commands/; not independent B5."
+  },
+  {
+    "id": "READ03",
+    "original_gate": "RELEASE",
+    "requirement": "Deep-route dependencies",
+    "source_requirement_sha256": "51504262c076944da9dc275ce02cd8a105ab736304652ae27947faffc9eddfcc",
+    "original_result": "NOT_EVALUATED",
+    "full_release_result": "NOT_RUN",
+    "pilot_result": "NOT_RUN_FUTURE_SCOPE",
+    "outputs": [
+      "reader/module.json",
+      "reader/token_inventory.json"
+    ],
+    "phases": [
+      "B0",
+      "B1",
+      "B2",
+      "B3",
+      "B4"
+    ],
+    "note": "Explicitly outside B0-B2; not waived for full release.",
+    "b3_outputs": [
+      "reader/START_HERE.md",
+      "reader/current_inventory.json"
+    ],
+    "b3_result": "CONTENT_PREPARED_AND_SCOPED_EDITORIAL_REVIEW; not full-release acceptance",
+    "b3_evidence": "Return qa/data_audit_final.json plus independent editorial and visual review; original gate/result fields preserved.",
+    "r1_findings": [
+      "ED11",
+      "ED18"
+    ],
+    "r1_result": "SCOPED_EDITORIAL_CHECK_ONLY_NOT_FULL_RELEASE",
+    "r1_evidence": "Return EDITORIAL_DISPOSITION.json, qa/ and source-bound commands/; not independent B5."
+  },
+  {
+    "id": "READ04",
+    "original_gate": "RELEASE",
+    "requirement": "Token method and budget",
+    "source_requirement_sha256": "572ce72ec73b5dcf23f4bc7e289ae29e23912ee05a31cc8c5ef9c24cd0c5cafa",
+    "original_result": "NOT_EVALUATED",
+    "full_release_result": "NOT_RUN",
+    "pilot_result": "PASS_SCOPED_AUTHOR_QA_ONLY",
+    "outputs": [
+      "reader/module.json",
+      "reader/token_inventory.json"
+    ],
+    "phases": [
+      "B0",
+      "B1",
+      "B2",
+      "B3",
+      "B4"
+    ],
+    "note": "Pilot evidence only; full-publication original requirement is retained, not all-PASS.",
+    "b3_outputs": [
+      "reader/START_HERE.md",
+      "reader/current_inventory.json"
+    ],
+    "b3_result": "CONTENT_PREPARED_AND_SCOPED_EDITORIAL_REVIEW; not full-release acceptance",
+    "b3_evidence": "Return qa/data_audit_final.json plus independent editorial and visual review; original gate/result fields preserved.",
+    "r1_findings": [
+      "ED18"
+    ],
+    "r1_result": "SCOPED_EDITORIAL_CHECK_ONLY_NOT_FULL_RELEASE",
+    "r1_evidence": "Return EDITORIAL_DISPOSITION.json, qa/ and source-bound commands/; not independent B5."
+  },
+  {
+    "id": "READ05",
+    "original_gate": "RELEASE",
+    "requirement": "Representation counts",
+    "source_requirement_sha256": "05b069c39c86ca09034a703d2655883ef510c9cf2d0048c9c64f14eb67b0e13e",
+    "original_result": "NOT_EVALUATED",
+    "full_release_result": "NOT_RUN",
+    "pilot_result": "PASS_SCOPED_AUTHOR_QA_ONLY",
+    "outputs": [
+      "reader/module.json",
+      "reader/token_inventory.json"
+    ],
+    "phases": [
+      "B0",
+      "B1",
+      "B2",
+      "B3",
+      "B4"
+    ],
+    "note": "Pilot evidence only; full-publication original requirement is retained, not all-PASS.",
+    "b3_outputs": [
+      "reader/START_HERE.md",
+      "reader/current_inventory.json"
+    ],
+    "b3_result": "CONTENT_PREPARED_AND_SCOPED_EDITORIAL_REVIEW; not full-release acceptance",
+    "b3_evidence": "Return qa/data_audit_final.json plus independent editorial and visual review; original gate/result fields preserved.",
+    "r1_findings": [
+      "ED18"
+    ],
+    "r1_result": "SCOPED_EDITORIAL_CHECK_ONLY_NOT_FULL_RELEASE",
+    "r1_evidence": "Return EDITORIAL_DISPOSITION.json, qa/ and source-bound commands/; not independent B5."
+  },
+  {
+    "id": "READ06",
+    "original_gate": "RELEASE",
+    "requirement": "Compressed versus derived bytes",
+    "source_requirement_sha256": "6957c06fde4f2a102ff927d16b68a63628cd60ec7959abbf7c567a859cdcfc4a",
+    "original_result": "NOT_EVALUATED",
+    "full_release_result": "NOT_RUN",
+    "pilot_result": "PASS_SCOPED_AUTHOR_QA_ONLY",
+    "outputs": [
+      "reader/module.json",
+      "reader/token_inventory.json"
+    ],
+    "phases": [
+      "B0",
+      "B1",
+      "B2",
+      "B3",
+      "B4"
+    ],
+    "note": "Pilot evidence only; full-publication original requirement is retained, not all-PASS.",
+    "b3_outputs": [
+      "reader/START_HERE.md",
+      "reader/current_inventory.json"
+    ],
+    "b3_result": "CONTENT_PREPARED_AND_SCOPED_EDITORIAL_REVIEW; not full-release acceptance",
+    "b3_evidence": "Return qa/data_audit_final.json plus independent editorial and visual review; original gate/result fields preserved.",
+    "r1_findings": [
+      "ED18"
+    ],
+    "r1_result": "SCOPED_EDITORIAL_CHECK_ONLY_NOT_FULL_RELEASE",
+    "r1_evidence": "Return EDITORIAL_DISPOSITION.json, qa/ and source-bound commands/; not independent B5."
+  },
+  {
+    "id": "READ07",
+    "original_gate": "RELEASE",
+    "requirement": "Safe inert XML",
+    "source_requirement_sha256": "2026c1882eb9a949b5f18c6fa140f863d284f669f74e3fa179883228884e5c0e",
+    "original_result": "NOT_EVALUATED",
+    "full_release_result": "NOT_RUN",
+    "pilot_result": "PASS_SCOPED_AUTHOR_QA_ONLY",
+    "outputs": [
+      "reader/module.json",
+      "reader/token_inventory.json"
+    ],
+    "phases": [
+      "B0",
+      "B1",
+      "B2",
+      "B3",
+      "B4"
+    ],
+    "note": "Pilot evidence only; full-publication original requirement is retained, not all-PASS.",
+    "b3_outputs": [
+      "reader/START_HERE.md",
+      "reader/current_inventory.json"
+    ],
+    "b3_result": "CONTENT_PREPARED_AND_SCOPED_EDITORIAL_REVIEW; not full-release acceptance",
+    "b3_evidence": "Return qa/data_audit_final.json plus independent editorial and visual review; original gate/result fields preserved.",
+    "r1_findings": [
+      "ED18"
+    ],
+    "r1_result": "SCOPED_EDITORIAL_CHECK_ONLY_NOT_FULL_RELEASE",
+    "r1_evidence": "Return EDITORIAL_DISPOSITION.json, qa/ and source-bound commands/; not independent B5."
+  },
+  {
+    "id": "READ08",
+    "original_gate": "RELEASE",
+    "requirement": "Kit versus examiner",
+    "source_requirement_sha256": "2fb81de8ef4c62e4a7d6276e0ab2cae68ad94320a6fe0b953c3bd70f609199ae",
+    "original_result": "NOT_EVALUATED",
+    "full_release_result": "NOT_RUN",
+    "pilot_result": "PASS_SCOPED_AUTHOR_QA_ONLY",
+    "outputs": [
+      "reader/module.json",
+      "reader/token_inventory.json"
+    ],
+    "phases": [
+      "B0",
+      "B1",
+      "B2",
+      "B3",
+      "B4"
+    ],
+    "note": "Pilot evidence only; full-publication original requirement is retained, not all-PASS.",
+    "b3_outputs": [
+      "reader/START_HERE.md",
+      "reader/current_inventory.json"
+    ],
+    "b3_result": "CONTENT_PREPARED_AND_SCOPED_EDITORIAL_REVIEW; not full-release acceptance",
+    "b3_evidence": "Return qa/data_audit_final.json plus independent editorial and visual review; original gate/result fields preserved.",
+    "r1_findings": [
+      "ED07",
+      "ED18"
+    ],
+    "r1_result": "SCOPED_EDITORIAL_CHECK_ONLY_NOT_FULL_RELEASE",
+    "r1_evidence": "Return EDITORIAL_DISPOSITION.json, qa/ and source-bound commands/; not independent B5."
+  },
+  {
+    "id": "READ09",
+    "original_gate": "RELEASE",
+    "requirement": "Historical versus current authority",
+    "source_requirement_sha256": "16e75a1a85e6e84bda78e15c9c3d4f3a76b562ade5b6fd4bf95407a762d783c6",
+    "original_result": "NOT_EVALUATED",
+    "full_release_result": "NOT_RUN",
+    "pilot_result": "PASS_SCOPED_AUTHOR_QA_ONLY",
+    "outputs": [
+      "reader/module.json",
+      "reader/token_inventory.json"
+    ],
+    "phases": [
+      "B0",
+      "B1",
+      "B2",
+      "B3",
+      "B4"
+    ],
+    "note": "Pilot evidence only; full-publication original requirement is retained, not all-PASS.",
+    "b3_outputs": [
+      "reader/START_HERE.md",
+      "reader/current_inventory.json"
+    ],
+    "b3_result": "CONTENT_PREPARED_AND_SCOPED_EDITORIAL_REVIEW; not full-release acceptance",
+    "b3_evidence": "Return qa/data_audit_final.json plus independent editorial and visual review; original gate/result fields preserved.",
+    "r1_findings": [
+      "ED18"
+    ],
+    "r1_result": "SCOPED_EDITORIAL_CHECK_ONLY_NOT_FULL_RELEASE",
+    "r1_evidence": "Return EDITORIAL_DISPOSITION.json, qa/ and source-bound commands/; not independent B5."
+  },
+  {
+    "id": "READ10",
+    "original_gate": "RELEASE",
+    "requirement": "Diagram text alternatives",
+    "source_requirement_sha256": "72167edc3bf6e21fdcd3e01e26005ca7e35373233428364ab0669e4991a8ae18",
+    "original_result": "NOT_EVALUATED",
+    "full_release_result": "NOT_RUN",
+    "pilot_result": "PASS_SCOPED_AUTHOR_QA_ONLY",
+    "outputs": [
+      "reader/module.json",
+      "reader/token_inventory.json"
+    ],
+    "phases": [
+      "B0",
+      "B1",
+      "B2",
+      "B3",
+      "B4"
+    ],
+    "note": "Pilot evidence only; full-publication original requirement is retained, not all-PASS.",
+    "b3_outputs": [
+      "reader/START_HERE.md",
+      "reader/current_inventory.json"
+    ],
+    "b3_result": "CONTENT_PREPARED_AND_SCOPED_EDITORIAL_REVIEW; not full-release acceptance",
+    "b3_evidence": "Return qa/data_audit_final.json plus independent editorial and visual review; original gate/result fields preserved.",
+    "r1_findings": [
+      "ED02",
+      "ED18"
+    ],
+    "r1_result": "SCOPED_EDITORIAL_CHECK_ONLY_NOT_FULL_RELEASE",
+    "r1_evidence": "Return EDITORIAL_DISPOSITION.json, qa/ and source-bound commands/; not independent B5."
+  },
+  {
+    "id": "RUN01",
+    "original_gate": "RELEASE",
+    "requirement": "Saved native live distinction",
+    "source_requirement_sha256": "77c0c443298801b9eea3e832c31e668e6f6d763dcd1eb85c54f2d06cba390ea7",
+    "original_result": "NOT_EVALUATED",
+    "full_release_result": "NOT_RUN",
+    "pilot_result": "PASS_SCOPED_AUTHOR_QA_ONLY",
+    "outputs": [
+      "VERIFY.md"
+    ],
+    "phases": [
+      "B0",
+      "B1",
+      "B2",
+      "B3",
+      "B4"
+    ],
+    "note": "Pilot evidence only; full-publication original requirement is retained, not all-PASS.",
+    "b3_outputs": [
+      "VERIFY.md"
+    ],
+    "b3_result": "CONTENT_PREPARED_AND_SCOPED_EDITORIAL_REVIEW; not full-release acceptance",
+    "b3_evidence": "Return qa/data_audit_final.json plus independent editorial and visual review; original gate/result fields preserved.",
+    "r1_findings": [],
+    "r1_result": "SCOPED_EDITORIAL_CHECK_ONLY_NOT_FULL_RELEASE",
+    "r1_evidence": "Return EDITORIAL_DISPOSITION.json, qa/ and source-bound commands/; not independent B5."
+  },
+  {
+    "id": "RUN02",
+    "original_gate": "RELEASE",
+    "requirement": "Credential-free first encounter",
+    "source_requirement_sha256": "32fd8dbffc9821fe3adf7357befcfa4e0ec1f86ba94397963cd8fc004ad1dc3b",
+    "original_result": "NOT_EVALUATED",
+    "full_release_result": "NOT_RUN",
+    "pilot_result": "PASS_SCOPED_AUTHOR_QA_ONLY",
+    "outputs": [
+      "VERIFY.md"
+    ],
+    "phases": [
+      "B0",
+      "B1",
+      "B2",
+      "B3",
+      "B4"
+    ],
+    "note": "Pilot evidence only; full-publication original requirement is retained, not all-PASS.",
+    "b3_outputs": [
+      "VERIFY.md"
+    ],
+    "b3_result": "CONTENT_PREPARED_AND_SCOPED_EDITORIAL_REVIEW; not full-release acceptance",
+    "b3_evidence": "Return qa/data_audit_final.json plus independent editorial and visual review; original gate/result fields preserved.",
+    "r1_findings": [],
+    "r1_result": "SCOPED_EDITORIAL_CHECK_ONLY_NOT_FULL_RELEASE",
+    "r1_evidence": "Return EDITORIAL_DISPOSITION.json, qa/ and source-bound commands/; not independent B5."
+  },
+  {
+    "id": "RUN03",
+    "original_gate": "RELEASE",
+    "requirement": "Editorial QA not runtime",
+    "source_requirement_sha256": "669518ae5ddb7657fc4059e88cf6f5afc1ad700edd95eb51d4d8ca8eacfa17ad",
+    "original_result": "NOT_EVALUATED",
+    "full_release_result": "NOT_RUN",
+    "pilot_result": "PASS_SCOPED_AUTHOR_QA_ONLY",
+    "outputs": [
+      "VERIFY.md"
+    ],
+    "phases": [
+      "B0",
+      "B1",
+      "B2",
+      "B3",
+      "B4"
+    ],
+    "note": "Pilot evidence only; full-publication original requirement is retained, not all-PASS.",
+    "b3_outputs": [
+      "VERIFY.md"
+    ],
+    "b3_result": "CONTENT_PREPARED_AND_SCOPED_EDITORIAL_REVIEW; not full-release acceptance",
+    "b3_evidence": "Return qa/data_audit_final.json plus independent editorial and visual review; original gate/result fields preserved.",
+    "r1_findings": [],
+    "r1_result": "SCOPED_EDITORIAL_CHECK_ONLY_NOT_FULL_RELEASE",
+    "r1_evidence": "Return EDITORIAL_DISPOSITION.json, qa/ and source-bound commands/; not independent B5."
+  },
+  {
+    "id": "VIS01",
+    "original_gate": "RELEASE",
+    "requirement": "Editable PPTX and searchable PDF",
+    "source_requirement_sha256": "5115b334020729be46dc68392944d0f98b46e00bbca47c5cd8d6963eb8281cb4",
+    "original_result": "NOT_EVALUATED",
+    "full_release_result": "NOT_RUN",
+    "pilot_result": "PASS_SCOPED_WORK_COMPLETION",
+    "outputs": [
+      "presentation/pilots.pptx",
+      "presentation/pilots.pdf",
+      "presentation/README.md"
+    ],
+    "phases": [
+      "B0",
+      "B1",
+      "B2",
+      "B3",
+      "B4"
+    ],
+    "note": "Five-slide native-object PPTX completed in Work; exact text/link targets and all rendered pages checked. Private successor qa/pptx_completion holds checks. No desktop-PowerPoint or whole-release certification; full-release result remains NOT_RUN.",
+    "b3_outputs": [
+      "presentation/README.md",
+      "BUILD.md"
+    ],
+    "b3_result": "PARTIAL: searchable embedded-font PDFs built; full native PPTX blocked by missing permitted exporter",
+    "b3_evidence": "Return qa/data_audit_final.json plus independent editorial and visual review; original gate/result fields preserved.",
+    "r1_findings": [
+      "ED12",
+      "ED14"
+    ],
+    "r1_result": "CURRENT_STATIC_OUTPUTS_CHECKED_NATIVE_PPTX_AND_PARITY_PENDING_WORK",
+    "r1_evidence": "Return EDITORIAL_DISPOSITION.json, qa/ and source-bound commands/; not independent B5."
+  },
+  {
+    "id": "VIS02",
+    "original_gate": "RELEASE",
+    "requirement": "Visual layout",
+    "source_requirement_sha256": "92051d729c1494bf8f0223c6b96781c2b7638ad659fea033790736d372b70f0d",
+    "original_result": "NOT_EVALUATED",
+    "full_release_result": "NOT_RUN",
+    "pilot_result": "PASS_SCOPED_AUTHOR_QA_ONLY",
+    "outputs": [
+      "presentation/README.md",
+      "presentation/pilots.pdf"
+    ],
+    "phases": [
+      "B0",
+      "B1",
+      "B2",
+      "B3",
+      "B4"
+    ],
+    "note": "Pilot evidence only; full-publication original requirement is retained, not all-PASS.",
+    "b3_outputs": [
+      "presentation/README.md",
+      "BUILD.md"
+    ],
+    "b3_result": "INITIAL_PAGE_REVIEW_ONLY; exact findings/corrections in return QA; B4 NOT_RUN",
+    "b3_evidence": "Return qa/data_audit_final.json plus independent editorial and visual review; original gate/result fields preserved.",
+    "r1_findings": [
+      "ED12",
+      "ED13"
+    ],
+    "r1_result": "SCOPED_EDITORIAL_CHECK_ONLY_NOT_FULL_RELEASE",
+    "r1_evidence": "Return EDITORIAL_DISPOSITION.json, qa/ and source-bound commands/; not independent B5."
+  },
+  {
+    "id": "VIS03",
+    "original_gate": "RELEASE",
+    "requirement": "Declared accessibility only",
+    "source_requirement_sha256": "691ba9584c8bd38698863b8931ee6238b4ad6c7f157f154f93ee1c7d256c90b2",
+    "original_result": "NOT_EVALUATED",
+    "full_release_result": "NOT_RUN",
+    "pilot_result": "PASS_SCOPED_AUTHOR_QA_ONLY",
+    "outputs": [
+      "presentation/README.md",
+      "presentation/pilots.pdf"
+    ],
+    "phases": [
+      "B0",
+      "B1",
+      "B2",
+      "B3",
+      "B4"
+    ],
+    "note": "Pilot evidence only; full-publication original requirement is retained, not all-PASS.",
+    "b3_outputs": [
+      "presentation/README.md",
+      "BUILD.md"
+    ],
+    "b3_result": "Text alternatives and high-contrast review only; no PDF/UA or client-universal claim",
+    "b3_evidence": "Return qa/data_audit_final.json plus independent editorial and visual review; original gate/result fields preserved.",
+    "r1_findings": [],
+    "r1_result": "SCOPED_EDITORIAL_CHECK_ONLY_NOT_FULL_RELEASE",
+    "r1_evidence": "Return EDITORIAL_DISPOSITION.json, qa/ and source-bound commands/; not independent B5."
+  },
+  {
+    "id": "VIS04",
+    "original_gate": "RELEASE",
+    "requirement": "Working local links",
+    "source_requirement_sha256": "99a1dc6faebc7f79bc036b607bd0716d6687db38bf2ad068622204a7fa56d0fa",
+    "original_result": "NOT_EVALUATED",
+    "full_release_result": "NOT_RUN",
+    "pilot_result": "PASS_SCOPED_WORK_COMPLETION",
+    "outputs": [
+      "presentation/pilots.pptx",
+      "presentation/pilots.pdf",
+      "presentation/README.md"
+    ],
+    "phases": [
+      "B0",
+      "B1",
+      "B2",
+      "B3",
+      "B4"
+    ],
+    "note": "Five-slide native-object PPTX completed in Work; exact text/link targets and all rendered pages checked. Private successor qa/pptx_completion holds checks. No desktop-PowerPoint or whole-release certification; full-release result remains NOT_RUN.",
+    "b3_outputs": [
+      "presentation/README.md",
+      "BUILD.md"
+    ],
+    "b3_result": "CONTENT_PREPARED_AND_SCOPED_EDITORIAL_REVIEW; not full-release acceptance",
+    "b3_evidence": "Return qa/data_audit_final.json plus independent editorial and visual review; original gate/result fields preserved.",
+    "r1_findings": [
+      "ED11",
+      "ED14"
+    ],
+    "r1_result": "CURRENT_STATIC_OUTPUTS_CHECKED_NATIVE_PPTX_AND_PARITY_PENDING_WORK",
+    "r1_evidence": "Return EDITORIAL_DISPOSITION.json, qa/ and source-bound commands/; not independent B5."
+  },
+  {
+    "id": "VIS05",
+    "original_gate": "RELEASE",
+    "requirement": "Single fact source",
+    "source_requirement_sha256": "852a6636f981c1d34eb6a0bac7d319bb5628a9c1bf111f0990af2a62a259b718",
+    "original_result": "NOT_EVALUATED",
+    "full_release_result": "NOT_RUN",
+    "pilot_result": "PASS_SCOPED_FACT_AGREEMENT",
+    "outputs": [
+      "corpus/episode_facts.json",
+      "corpus/editorial.json",
+      "presentation/slides.json",
+      "presentation/pilots.pdf"
+    ],
+    "operator_review_evidence": {
+      "return_relative_path": "qa/crossformat_fact_agreement.json",
+      "checker_return_relative_path": "build_sources/check_pilot_fact_agreement_v01.py",
+      "role": "RETURN_REVIEW_EVIDENCE_NOT_EMBEDDED_PUBLIC_SOURCE"
+    },
+    "phases": [
+      "B0",
+      "B1",
+      "B2",
+      "B3",
+      "B4"
+    ],
+    "note": "110 finite comparisons passed for selected shared facts in JSON, five Markdown views, slide JSON and PDF text: prices/currency, slots, owners, effect counts, refusal reasons and correction history. This establishes checked fact agreement, not complete automatic regeneration from one source. PPTX parity and reader understanding are not covered here. The original full-release requirement remains NOT_RUN.",
+    "b3_outputs": [
+      "presentation/README.md",
+      "BUILD.md"
+    ],
+    "b3_result": "Partial shared-data generation and exact duplicate checks; no all-sentences-generated claim",
+    "b3_evidence": "Return qa/data_audit_final.json plus independent editorial and visual review; original gate/result fields preserved.",
+    "r1_findings": [
+      "ED14"
+    ],
+    "r1_result": "CURRENT_STATIC_OUTPUTS_CHECKED_NATIVE_PPTX_AND_PARITY_PENDING_WORK",
+    "r1_evidence": "Return EDITORIAL_DISPOSITION.json, qa/ and source-bound commands/; not independent B5."
+  },
+  {
+    "id": "PROBE01",
+    "original_gate": "RELEASE_OR_EXPLICIT_SCOPE_DECISION",
+    "requirement": "No-tools reader probe",
+    "source_requirement_sha256": "3a12d3a24007b094bf6a5f36578c780d423a93a0e9f0d95a78bfb7eface0688e",
+    "original_result": "NOT_EVALUATED",
+    "full_release_result": "NOT_RUN",
+    "pilot_result": "NOT_RUN_FUTURE_SCOPE",
+    "outputs": [
+      "REMAINING.md"
+    ],
+    "phases": [
+      "B5"
+    ],
+    "note": "Explicitly outside B0-B2; not waived for full release.",
+    "b3_outputs": [
+      "reader/START_HERE.md",
+      "REMAINING.md"
+    ],
+    "b3_result": "NOT_RUN_IN_B3; inherited pilot history remains unchanged",
+    "b3_evidence": "Return qa/data_audit_final.json plus independent editorial and visual review; original gate/result fields preserved.",
+    "r1_findings": [],
+    "r1_result": "B5_NOT_RUN_NOT_AUTHORIZED",
+    "r1_evidence": "Return EDITORIAL_DISPOSITION.json, qa/ and source-bound commands/; not independent B5."
+  },
+  {
+    "id": "PROBE02",
+    "original_gate": "RELEASE_OR_EXPLICIT_SCOPE_DECISION",
+    "requirement": "Tool reader probe",
+    "source_requirement_sha256": "beaa1731226a2b291a8e5886a0fbd665c6555149fa94dc9b451fba04d7a84eb9",
+    "original_result": "NOT_EVALUATED",
+    "full_release_result": "NOT_RUN",
+    "pilot_result": "NOT_RUN_FUTURE_SCOPE",
+    "outputs": [
+      "REMAINING.md"
+    ],
+    "phases": [
+      "B5"
+    ],
+    "note": "Explicitly outside B0-B2; not waived for full release.",
+    "b3_outputs": [
+      "reader/START_HERE.md",
+      "REMAINING.md"
+    ],
+    "b3_result": "NOT_RUN_IN_B3; inherited pilot history remains unchanged",
+    "b3_evidence": "Return qa/data_audit_final.json plus independent editorial and visual review; original gate/result fields preserved.",
+    "r1_findings": [],
+    "r1_result": "B5_NOT_RUN_NOT_AUTHORIZED",
+    "r1_evidence": "Return EDITORIAL_DISPOSITION.json, qa/ and source-bound commands/; not independent B5."
+  },
+  {
+    "id": "PROBE03",
+    "original_gate": "RELEASE",
+    "requirement": "Visible corrections",
+    "source_requirement_sha256": "8d846ba34ca0198b69ff74f968f5f90beb0c9e5ded49bfd243ad42f081e1747d",
+    "original_result": "NOT_EVALUATED",
+    "full_release_result": "NOT_RUN",
+    "pilot_result": "NOT_RUN_FUTURE_SCOPE",
+    "outputs": [
+      "REMAINING.md"
+    ],
+    "phases": [
+      "B5"
+    ],
+    "note": "B5 reader trials and their correction/repeat ledger have not run. Ordinary editorial revisions are retained separately in review/ but do not establish this future reader-probe result. The original full-release obligation is not waived.",
+    "b3_outputs": [
+      "reader/START_HERE.md",
+      "REMAINING.md"
+    ],
+    "b3_result": "NOT_RUN_IN_B3; inherited pilot history remains unchanged",
+    "b3_evidence": "Return qa/data_audit_final.json plus independent editorial and visual review; original gate/result fields preserved.",
+    "r1_findings": [],
+    "r1_result": "B5_NOT_RUN_NOT_AUTHORIZED",
+    "r1_evidence": "Return EDITORIAL_DISPOSITION.json, qa/ and source-bound commands/; not independent B5."
+  },
+  {
+    "id": "PROBE04",
+    "original_gate": "RECOMMENDED",
+    "requirement": "Independent human review",
+    "source_requirement_sha256": "6e5ff165d7fd1ee1ca494aec2eb2b234c7cf50691a0dcfd276e1408b62fb8c3c",
+    "original_result": "NOT_EVALUATED",
+    "full_release_result": "NOT_RUN",
+    "pilot_result": "NOT_RUN_FUTURE_SCOPE",
+    "outputs": [
+      "REMAINING.md"
+    ],
+    "phases": [
+      "B5"
+    ],
+    "note": "Explicitly outside B0-B2; not waived for full release.",
+    "b3_outputs": [
+      "reader/START_HERE.md",
+      "REMAINING.md"
+    ],
+    "b3_result": "NOT_RUN_IN_B3; inherited pilot history remains unchanged",
+    "b3_evidence": "Return qa/data_audit_final.json plus independent editorial and visual review; original gate/result fields preserved.",
+    "r1_findings": [],
+    "r1_result": "B5_NOT_RUN_NOT_AUTHORIZED",
+    "r1_evidence": "Return EDITORIAL_DISPOSITION.json, qa/ and source-bound commands/; not independent B5."
+  },
+  {
+    "id": "SEC01",
+    "original_gate": "RELEASE",
+    "requirement": "Private material and rights",
+    "source_requirement_sha256": "d17e05e38d350cc436d3df76bc760e843e50de73220803701149eb1923dd6bc8",
+    "original_result": "NOT_EVALUATED",
+    "full_release_result": "NOT_RUN",
+    "pilot_result": "PASS_SCOPED_AUTHOR_QA_ONLY",
+    "outputs": [
+      "RIGHTS.md"
+    ],
+    "phases": [
+      "B0",
+      "B1",
+      "B2",
+      "B3",
+      "B4"
+    ],
+    "note": "Pilot evidence only; full-publication original requirement is retained, not all-PASS.",
+    "b3_outputs": [
+      "assets/provenance.json",
+      "RIGHTS.md"
+    ],
+    "b3_result": "Private originals excluded from public postimages; Visual Seal rights/binding remain open",
+    "b3_evidence": "Return qa/data_audit_final.json plus independent editorial and visual review; original gate/result fields preserved.",
+    "r1_findings": [
+      "ED16",
+      "ED17"
+    ],
+    "r1_result": "NO_SECRETS_OR_FONT_FILES_BUNDLED_PUBLIC_RIGHTS_PENDING",
+    "r1_evidence": "Return EDITORIAL_DISPOSITION.json, qa/ and source-bound commands/; not independent B5."
+  },
+  {
+    "id": "SEC02",
+    "original_gate": "RELEASE",
+    "requirement": "Safe manifest/archive",
+    "source_requirement_sha256": "a363c2abf1e2a4e5a06288504de3231a2cece8a0c99b921045e1757f2fe2ec04",
+    "original_result": "NOT_EVALUATED",
+    "full_release_result": "NOT_RUN",
+    "pilot_result": "PASS_SCOPED_AUTHOR_QA_ONLY",
+    "outputs": [
+      "RIGHTS.md"
+    ],
+    "phases": [
+      "B0",
+      "B1",
+      "B2",
+      "B3",
+      "B4"
+    ],
+    "note": "Pilot evidence only; full-publication original requirement is retained, not all-PASS.",
+    "b3_outputs": [
+      "assets/provenance.json",
+      "RIGHTS.md"
+    ],
+    "b3_result": "CONTENT_PREPARED_AND_SCOPED_EDITORIAL_REVIEW; not full-release acceptance",
+    "b3_evidence": "Return qa/data_audit_final.json plus independent editorial and visual review; original gate/result fields preserved.",
+    "r1_findings": [],
+    "r1_result": "SCOPED_EDITORIAL_CHECK_ONLY_NOT_FULL_RELEASE",
+    "r1_evidence": "Return EDITORIAL_DISPOSITION.json, qa/ and source-bound commands/; not independent B5."
+  },
+  {
+    "id": "REL01",
+    "original_gate": "RELEASE",
+    "requirement": "Three identities",
+    "source_requirement_sha256": "8d71586ac9f2edc5b3ce02b7892406e9d433c0fdcd60ecb54ef2b3a5ca6fb8b6",
+    "original_result": "NOT_EVALUATED",
+    "full_release_result": "NOT_RUN",
+    "pilot_result": "PASS_SCOPED_AUTHOR_QA_ONLY",
+    "outputs": [
+      "PUBLICATION_BOUNDARY.md",
+      "REMAINING.md"
+    ],
+    "phases": [
+      "B6"
+    ],
+    "note": "Pilot evidence only; full-publication original requirement is retained, not all-PASS.",
+    "b3_outputs": [
+      "PUBLICATION_METADATA.json",
+      "CITATION_DRAFT.md",
+      "REMAINING.md"
+    ],
+    "b3_result": "CONTENT_PREPARED_AND_SCOPED_EDITORIAL_REVIEW; not full-release acceptance",
+    "b3_evidence": "Return qa/data_audit_final.json plus independent editorial and visual review; original gate/result fields preserved.",
+    "r1_findings": [
+      "ED16"
+    ],
+    "r1_result": "SCOPED_EDITORIAL_CHECK_ONLY_NOT_FULL_RELEASE",
+    "r1_evidence": "Return EDITORIAL_DISPOSITION.json, qa/ and source-bound commands/; not independent B5."
+  },
+  {
+    "id": "REL02",
+    "original_gate": "RELEASE",
+    "requirement": "Real licensing and DOI",
+    "source_requirement_sha256": "442259692caba43b98addd2a9e0646b46e9c2ba66d557bd220f1eb72c48b59fe",
+    "original_result": "NOT_EVALUATED",
+    "full_release_result": "NOT_RUN",
+    "pilot_result": "PASS_SCOPED_AUTHOR_QA_ONLY",
+    "outputs": [
+      "PUBLICATION_BOUNDARY.md",
+      "REMAINING.md"
+    ],
+    "phases": [
+      "B6"
+    ],
+    "note": "Pilot evidence only; full-publication original requirement is retained, not all-PASS.",
+    "b3_outputs": [
+      "PUBLICATION_METADATA.json",
+      "CITATION_DRAFT.md",
+      "REMAINING.md"
+    ],
+    "b3_result": "PENDING_SEPARATE_PUBLICATION; no DOI/public visibility/remote readback claimed",
+    "b3_evidence": "Return qa/data_audit_final.json plus independent editorial and visual review; original gate/result fields preserved.",
+    "r1_findings": [
+      "ED16"
+    ],
+    "r1_result": "B6_NOT_RUN_NOT_AUTHORIZED",
+    "r1_evidence": "Return EDITORIAL_DISPOSITION.json, qa/ and source-bound commands/; not independent B5."
+  },
+  {
+    "id": "REL03",
+    "original_gate": "FINAL_AFTER_AUTHORIZED_PUBLICATION",
+    "requirement": "Public readback",
+    "source_requirement_sha256": "b059cb97a8b5a7f3f34a83ef573bef78fe4449d55564f6bd2a39ca1d48eb759e",
+    "original_result": "NOT_EVALUATED",
+    "full_release_result": "NOT_RUN",
+    "pilot_result": "NOT_RUN_FUTURE_SCOPE",
+    "outputs": [
+      "PUBLICATION_BOUNDARY.md",
+      "REMAINING.md"
+    ],
+    "phases": [
+      "B6"
+    ],
+    "note": "Explicitly outside B0-B2; not waived for full release.",
+    "b3_outputs": [
+      "PUBLICATION_METADATA.json",
+      "CITATION_DRAFT.md",
+      "REMAINING.md"
+    ],
+    "b3_result": "PENDING_SEPARATE_PUBLICATION; no DOI/public visibility/remote readback claimed",
+    "b3_evidence": "Return qa/data_audit_final.json plus independent editorial and visual review; original gate/result fields preserved.",
+    "r1_findings": [],
+    "r1_result": "B6_NOT_RUN_NOT_AUTHORIZED",
+    "r1_evidence": "Return EDITORIAL_DISPOSITION.json, qa/ and source-bound commands/; not independent B5."
+  },
+  {
+    "id": "REL04",
+    "original_gate": "FINAL_WITH_DECLARED_ARCHIVAL_SCOPE",
+    "requirement": "Permanent archive",
+    "source_requirement_sha256": "ad27e7eb402ca1ce6c42d0763c5a31d50360644c3c156a475f69fa754db845da",
+    "original_result": "NOT_EVALUATED",
+    "full_release_result": "NOT_RUN",
+    "pilot_result": "NOT_RUN_FUTURE_SCOPE",
+    "outputs": [
+      "PUBLICATION_BOUNDARY.md",
+      "REMAINING.md"
+    ],
+    "phases": [
+      "B6"
+    ],
+    "note": "Explicitly outside B0-B2; not waived for full release.",
+    "b3_outputs": [
+      "PUBLICATION_METADATA.json",
+      "CITATION_DRAFT.md",
+      "REMAINING.md"
+    ],
+    "b3_result": "PENDING_SEPARATE_PUBLICATION; no DOI/public visibility/remote readback claimed",
+    "b3_evidence": "Return qa/data_audit_final.json plus independent editorial and visual review; original gate/result fields preserved.",
+    "r1_findings": [],
+    "r1_result": "B6_NOT_RUN_NOT_AUTHORIZED",
+    "r1_evidence": "Return EDITORIAL_DISPOSITION.json, qa/ and source-bound commands/; not independent B5."
+  },
+  {
+    "id": "REL05",
+    "original_gate": "RELEASE",
+    "requirement": "Accurate completion statement",
+    "source_requirement_sha256": "b835db5c7d125cfd948dcdf3683e2cbd3438d3e5bda7dcb32eb140ffd3f27eb1",
+    "original_result": "NOT_EVALUATED",
+    "full_release_result": "NOT_RUN",
+    "pilot_result": "PASS_SCOPED_AUTHOR_QA_ONLY",
+    "outputs": [
+      "PUBLICATION_BOUNDARY.md",
+      "REMAINING.md"
+    ],
+    "phases": [
+      "B6"
+    ],
+    "note": "Pilot evidence only; full-publication original requirement is retained, not all-PASS.",
+    "b3_outputs": [
+      "PUBLICATION_METADATA.json",
+      "CITATION_DRAFT.md",
+      "REMAINING.md"
+    ],
+    "b3_result": "CONTENT_PREPARED_AND_SCOPED_EDITORIAL_REVIEW; not full-release acceptance",
+    "b3_evidence": "Return qa/data_audit_final.json plus independent editorial and visual review; original gate/result fields preserved.",
+    "r1_findings": [
+      "ED15"
+    ],
+    "r1_result": "SCOPED_EDITORIAL_CHECK_ONLY_NOT_FULL_RELEASE",
+    "r1_evidence": "Return EDITORIAL_DISPOSITION.json, qa/ and source-bound commands/; not independent B5."
+  }
+]

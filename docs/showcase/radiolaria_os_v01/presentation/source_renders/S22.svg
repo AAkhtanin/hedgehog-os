@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 1280 720" role="img" aria-labelledby="title desc">
+<title id="title">One file to inspect; one bundle to go deeper</title>
+<desc id="desc">REVIEW LINKS  /  Offline bundle routes are distinct from accepted-source HTTPS</desc>
+<defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L9,3 z" fill="#176B68"/></marker></defs>
+<rect width="1280" height="720" fill="white"/>
+<text id="S22_title" font-family="Nimbus Sans" font-size="42" font-weight="bold" fill="#16282B">
+<tspan x="54" y="78.0">One file to inspect; one bundle to go deeper</tspan>
+</text>
+<text id="S22_scope" font-family="Nimbus Sans" font-size="23" font-weight="normal" fill="#43595D">
+<tspan x="56" y="136.0">REVIEW LINKS / Offline bundle routes are distinct from accepted-source HTTPS</tspan>
+</text>
+<a href="../../WHITEPAPER.html">
+<text id="S22_link0" font-family="Nimbus Sans" font-size="33" font-weight="bold" fill="#315E8B">
+<tspan x="56" y="230.0">Understand</tspan>
+</text>
+</a>
+<text id="S22_desc0" font-family="Nimbus Sans" font-size="29" font-weight="normal" fill="#16282B">
+<tspan x="364" y="226.0">Whole argument and seven views</tspan>
+</text>
+<a href="../../VERIFY.html">
+<text id="S22_link1" font-family="Nimbus Sans" font-size="33" font-weight="bold" fill="#315E8B">
+<tspan x="56" y="312.0">Verify</tspan>
+</text>
+</a>
+<text id="S22_desc1" font-family="Nimbus Sans" font-size="29" font-weight="normal" fill="#16282B">
+<tspan x="364" y="308.0">Recorded claims, fields and limits</tspan>
+</text>
+<a href="https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/gate5_authoring_kit_v01/START_HERE.md">
+<text id="S22_link2" font-family="Nimbus Sans" font-size="33" font-weight="bold" fill="#315E8B">
+<tspan x="56" y="394.0">Build</tspan>
+</text>
+</a>
+<text id="S22_desc2" font-family="Nimbus Sans" font-size="29" font-weight="normal" fill="#16282B">
+<tspan x="364" y="390.0">Accepted HOW and interfaces</tspan>
+</text>
+<a href="../../reader/READ_RADIOLARIA.xml">
+<text id="S22_link3" font-family="Nimbus Sans" font-size="33" font-weight="bold" fill="#315E8B">
+<tspan x="56" y="476.0">LLM</tspan>
+</text>
+</a>
+<text id="S22_desc3" font-family="Nimbus Sans" font-size="29" font-weight="normal" fill="#16282B">
+<tspan x="364" y="472.0">READ_RADIOLARIA.xml / optional focused routes</tspan>
+</text>
+<text id="S22_chain" font-family="Nimbus Sans" font-size="24" font-weight="normal" fill="#16282B">
+<tspan x="56" y="550.0">One file to understand and inspect; one bundle for deeper tool-assisted review.</tspan>
+</text>
+<text id="S22_qualification" font-family="Nimbus Sans" font-size="23" font-weight="normal" fill="#43595D">
+<tspan x="56" y="619.0">Reading evidence does not execute the project or restore authority. B5 reader trials and publication remain unrun.</tspan>
+</text>
+<line id="S22_rule" x1="56" y1="671" x2="1218" y2="671" stroke="#B8C8C6" stroke-width="1"/>
+<a href="../../VERIFY.html">
+<text id="S22_source_link" font-family="Nimbus Sans" font-size="18" font-weight="normal" fill="#315E8B">
+<tspan x="56" y="703.0">S22 Source: verify</tspan>
+</text>
+</a>
+<a href="../../atlas/README.html">
+<text id="S22_atlas_locator" font-family="Nimbus Sans" font-size="17" font-weight="normal" fill="#315E8B">
+<tspan x="660" y="702.0">Atlas: Overview / GEO 1 2 3 4 5 6 7</tspan>
+</text>
+</a>
+</svg>

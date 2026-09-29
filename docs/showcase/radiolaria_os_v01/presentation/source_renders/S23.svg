@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 1280 720" role="img" aria-labelledby="title desc">
+<title id="title">Published problems become bounded questions</title>
+<desc id="desc">INCIDENT ATLAS ORIGINS / 15 risk families; 20 cards; five domains</desc>
+<defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L9,3 z" fill="#176B68"/></marker></defs>
+<rect width="1280" height="720" fill="white"/>
+<text id="S23_title" font-family="Nimbus Sans" font-size="42" font-weight="bold" fill="#16282B">
+<tspan x="54" y="78.0">Published problems become bounded questions</tspan>
+</text>
+<text id="S23_scope" font-family="Nimbus Sans" font-size="23" font-weight="normal" fill="#43595D">
+<tspan x="56" y="136.0">INCIDENT ATLAS ORIGINS / 15 risk families; 20 cards; five domains</tspan>
+</text>
+<text id="S23_label0" font-family="Nimbus Sans" font-size="26" font-weight="bold" fill="#16282B">
+<tspan x="56" y="219.0">Incidents / experiments</tspan>
+</text>
+<text id="S23_body0" font-family="Nimbus Sans" font-size="25" font-weight="normal" fill="#16282B">
+<tspan x="385" y="218.0">Scope leakage, carried instructions and disclosure become</tspan>
+<tspan x="385" y="246.75">source/account/operation checks, not claims of replaying external exploits.</tspan>
+</text>
+<text id="S23_label1" font-family="Nimbus Sans" font-size="26" font-weight="bold" fill="#16282B">
+<tspan x="56" y="341.0">Requirements / context</tspan>
+</text>
+<text id="S23_body1" font-family="Nimbus Sans" font-size="25" font-weight="normal" fill="#16282B">
+<tspan x="385" y="340.0">AP2 asks for exact authorization. AISI asks for observed outcomes. E15 is</tspan>
+<tspan x="385" y="368.75">project context, not another independent incident.</tspan>
+</text>
+<text id="S23_label2" font-family="Nimbus Sans" font-size="26" font-weight="bold" fill="#16282B">
+<tspan x="56" y="463.0">Lawful continuation</tspan>
+</text>
+<text id="S23_body2" font-family="Nimbus Sans" font-size="25" font-weight="normal" fill="#16282B">
+<tspan x="385" y="462.0">Preserve useful evidence; review current qualified input. The accepted</tspan>
+<tspan x="385" y="490.75">catalog keeps I / E / R / E-R / P-R distinct.</tspan>
+</text>
+<text id="S23_qualification" font-family="Nimbus Sans" font-size="23" font-weight="normal" fill="#43595D">
+<tspan x="56" y="619.0">15 E context records plus four M method records. Australia is later context, not the Atlas origin.</tspan>
+</text>
+<line id="S23_rule" x1="56" y1="671" x2="1218" y2="671" stroke="#B8C8C6" stroke-width="1"/>
+<a href="https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/showcase/incident_to_proof_atlas_v01/evidence/atlas_package.json">
+<text id="S23_source_link" font-family="Nimbus Sans" font-size="18" font-weight="normal" fill="#315E8B">
+<tspan x="56" y="703.0">S23 Source: incident</tspan>
+</text>
+</a>
+<a href="../../atlas/README.html">
+<text id="S23_atlas_locator" font-family="Nimbus Sans" font-size="17" font-weight="normal" fill="#315E8B">
+<tspan x="660" y="702.0">Atlas: Overview / GEO 1 2 3 4 5 6 7</tspan>
+</text>
+</a>
+</svg>

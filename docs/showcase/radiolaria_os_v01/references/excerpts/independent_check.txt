@@ -1,0 +1,28 @@
+    body=checked['body'];E=body['offer'];source=proofs['publisher']['venue_work']
+    cross_work(source,rows['publisher'])
+    out=native_result(source,'VenueRoot',dict(request_json=canonical(r).decode(),inventory_json=canonical(event['inventory']).decode()))
+    need(out==dict(offer_json=canonical(E).decode()),'actual_E_not_substituted')
+    t=body['time_envelope'];st=material['STATUS']['value']
+    S=dict(publisher=body['publisher'],recipient=body['recipient'],request_revision=r['revision'],schedule_revision=event['inventory']['revision'],
+        offer_revision=body['source_revision'],observed_at=t['source_observed_at'],valid_from=t['valid_from'],valid_to=t['valid_to'],ttl=t['ttl_seconds'],pt=t['pt_created_at'],
+        status=checked['status_entry']['state'],status_checked=st['checked_at'],status_until=st['valid_until'])
+    report=proofs['requester']['report'];ep,case,rp=scalar_projection(E,event,report)
+    source_semantics(ep,case);source_selection(ep,case,S,starts[0]['material']['now'])
+    producer_consumer(E,report,r['operation'])
+    check_report(dict(case,evaluation_time=starts[-1]['material']['now'],allowed_statuses=['OFFER_READY'] if optimal_rank(case) is not None else ['NO_COMPLETE_OFFER','NEEDS_CONFIRMATION']),rp)
+    review=proofs['publisher']['source_review'];cross_root(review,rows['publisher'])
+    claim=dict(request_sha256=sha(r),inventory_sha256=sha(event['inventory']),consumed_offer=E,source_work_ref=source['artifact']['artifact_id'],booking=None,previous_source_ref=None,previous_review_ref=None)
+    need(body['source_work_ref']==source['artifact']['artifact_id'] and body['source_review_ref']==review['result']['decision_id'],'source_links')
+    root_record(review,'VenueRoot',source['artifact']['artifact_id'],claim,body['source_record_ref'])
+    for name,selected,claim,subject in (
+        ('publication_review',pointer['pointer_id'],dict(pointer=pointer,source_review_ref=body['source_review_ref']),body['source_record_ref']),
+        ('release_review',fetch['request_id'],dict(request=fetch,pointer_ref=pointer['pointer_id'],body_hash=sha(body),source_review_ref=body['source_review_ref']),pointer['pointer_id'])):
+        proof=proofs['publisher'][name];cross_root(proof,rows['publisher']);root_record(proof,'VenueRoot',selected,claim,subject)
+    release_root_join(material['BUNDLE']['release']['value'],proofs['publisher']['release_review'])
+    C=dict(body=body,source_projection=S);consumer=proofs['requester']['requester_work'];cross_work(consumer,rows['requester'])
+    semantic={k:v for k,v in report.items() if k!='native_refs'}
+    need(report['source']==S and proofs['requester']['consumption_context']==C,'independent_C_projection')
+    out=native_result(consumer,'ActivePlanetRoot',dict(request_json=canonical(r).decode(),offer_json=canonical(C).decode()))
+    need(out==dict(result_json=canonical(semantic).decode()),'full_canonical_consumer_report')
+    review=proofs['requester']['requester_review'];cross_root(review,rows['requester'])
+    root_record(review,'ActivePlanetRoot',consumer['artifact']['artifact_id'],dict(request_sha256=sha(r),offer_sha256=sha(body),result_sha256=sha(semantic)),r['request_id'])

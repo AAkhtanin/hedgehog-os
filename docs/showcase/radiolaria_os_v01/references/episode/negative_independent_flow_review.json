@@ -1,0 +1,70 @@
+{
+  "bookings": 0,
+  "case": "revoked_source",
+  "classification": "REVIEWED_REFERENCE_NATIVE_PROOF",
+  "events": {
+    "exact": {
+      "counts": {
+        "publisher": {
+          "CALLBACK": 0,
+          "DISPATCH": 0,
+          "EFFECT": 0,
+          "EXECUTOR": 0,
+          "PURE": 1,
+          "STATE_WRITE": 0
+        },
+        "requester": {
+          "CALLBACK": 0,
+          "DISPATCH": 0,
+          "EFFECT": 0,
+          "EXECUTOR": 0,
+          "PURE": 0,
+          "STATE_WRITE": 0
+        }
+      },
+      "state_sha256": "61fc425c423ad3de96c729a7386139ce1e32b2d4cee111404489ac3169c500da",
+      "status": "REFUSED",
+      "verdict": [
+        {
+          "causes": [
+            "NONACTIVE_SOURCE"
+          ],
+          "classification": "CHECKED_REFUSAL"
+        }
+      ]
+    },
+    "shift": {
+      "counts": {
+        "publisher": {
+          "CALLBACK": 0,
+          "DISPATCH": 0,
+          "EFFECT": 0,
+          "EXECUTOR": 0,
+          "PURE": 1,
+          "STATE_WRITE": 0
+        },
+        "requester": {
+          "CALLBACK": 0,
+          "DISPATCH": 0,
+          "EFFECT": 0,
+          "EXECUTOR": 0,
+          "PURE": 0,
+          "STATE_WRITE": 0
+        }
+      },
+      "state_sha256": "61fc425c423ad3de96c729a7386139ce1e32b2d4cee111404489ac3169c500da",
+      "status": "REFUSED",
+      "verdict": [
+        {
+          "causes": [
+            "NONACTIVE_SOURCE"
+          ],
+          "classification": "CHECKED_REFUSAL"
+        }
+      ]
+    }
+  },
+  "reviewer_sha256": "a16333936aa5f6cab389f92444a1be478f256b77cab6ebe0b344b0c428f8af35",
+  "slots": 0,
+  "status": "PASS"
+}

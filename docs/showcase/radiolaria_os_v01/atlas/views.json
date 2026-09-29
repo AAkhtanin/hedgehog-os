@@ -1,0 +1,836 @@
+[
+  {
+    "id": "OVERVIEW",
+    "title": "Radiolaria OS: one activity, several concerns",
+    "entities": [
+      "CHILD",
+      "INTENT",
+      "MEMORY",
+      "RESULT",
+      "ROOT",
+      "SOURCE",
+      "SOURCE_ADMISSION",
+      "TIME",
+      "WORK"
+    ],
+    "relations": [
+      {
+        "id": "OVERVIEW_intake",
+        "source": "INTENT",
+        "target": "WORK",
+        "relation": "DATA",
+        "item": "typed input",
+        "source_object": "OVERVIEW_intent",
+        "target_object": "OVERVIEW_work"
+      },
+      {
+        "id": "OVERVIEW_return",
+        "source": "WORK",
+        "target": "RESULT",
+        "relation": "DATA",
+        "item": "actual fields",
+        "source_object": "OVERVIEW_work",
+        "target_object": "OVERVIEW_result"
+      },
+      {
+        "id": "OVERVIEW_child_invocation",
+        "source": "WORK",
+        "target": "CHILD",
+        "relation": "DATA",
+        "item": "bounded invocation",
+        "source_object": "OVERVIEW_work",
+        "target_object": "OVERVIEW_child"
+      },
+      {
+        "id": "OVERVIEW_review",
+        "source": "RESULT",
+        "target": "ROOT",
+        "relation": "DATA",
+        "item": "evidence",
+        "source_object": "OVERVIEW_result",
+        "target_object": "OVERVIEW_root"
+      },
+      {
+        "id": "OVERVIEW_context_edge0",
+        "source": "TIME",
+        "target": "WORK",
+        "relation": "CONCEPTUAL_CONTEXT",
+        "item": "Time qualifies Work; no permission",
+        "source_object": "OVERVIEW_context0",
+        "target_object": "OVERVIEW_work"
+      },
+      {
+        "id": "OVERVIEW_context_edge1",
+        "source": "MEMORY",
+        "target": "WORK",
+        "relation": "CONCEPTUAL_CONTEXT",
+        "item": "Memory qualifies Work; no permission",
+        "source_object": "OVERVIEW_context1",
+        "target_object": "OVERVIEW_work"
+      },
+      {
+        "id": "OVERVIEW_context_edge2",
+        "source": "SOURCE",
+        "target": "WORK",
+        "relation": "CONCEPTUAL_CONTEXT",
+        "item": "Source qualifies Work; no permission",
+        "source_object": "OVERVIEW_context2",
+        "target_object": "OVERVIEW_work"
+      },
+      {
+        "id": "OVERVIEW_context_edge3",
+        "source": "SOURCE_ADMISSION",
+        "target": "WORK",
+        "relation": "CONCEPTUAL_CONTEXT",
+        "item": "Source admission qualifies Work; no permission",
+        "source_object": "OVERVIEW_context3",
+        "target_object": "OVERVIEW_work"
+      }
+    ],
+    "text_equivalent": "One activity; several independent concerns\n\nCONCEPTUAL MAP / Relations are not a recorded composite execution or a global owner\n\nLOCAL ACTIVITY\n\nIntent\n\nParent Work\n\nConsumed\nresult\n\nBounded child Work\n\ntyped input\n\nactual fields\n\nbounded invocation\n\nLocal Root\nreview\n\nevidence\n\nOther owners retain\nindependent decisions.\n\nTime\n\nMemory\n\nSource\n\nSource admission\n\nTime, memory and source qualify use. Source admission binds implementation. Current effects need their own\npacket.\n\nOVERVIEW Source: architecture\n\nAtlas: Overview / GEO 1 2 3 4 5 6 7",
+    "source_refs": [
+      {
+        "label": "architecture",
+        "target": "https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/specs/current_architecture_lock_v01.md"
+      },
+      {
+        "label": "chapter",
+        "target": "../chapters/02_geometry.html"
+      }
+    ],
+    "svg": "OVERVIEW.svg",
+    "text": "OVERVIEW.md",
+    "class": "CONCEPTUAL OVERVIEW  /  Same entities across seven views, not one recorded composite execution",
+    "question": "How do activity, context, owners and development relate?",
+    "subject_boundary": "CONCEPTUAL OVERVIEW  /  Same entities across seven views, not one recorded composite execution",
+    "locator": [
+      "OVERVIEW",
+      "GEO-1",
+      "GEO-2",
+      "GEO-3",
+      "GEO-4",
+      "GEO-5",
+      "GEO-6",
+      "GEO-7"
+    ],
+    "legend": {
+      "DATA": "transferred evidence/value",
+      "PROPOSAL": "untrusted proposed material",
+      "PERMISSION": "current scoped packet only",
+      "CONTROL": "bounded operation organization",
+      "DERIVATION": "declared transformation",
+      "DOCUMENT_REFERENCE": "identity or document relation, no authority",
+      "CHRONOLOGY": "order, not a grant",
+      "CONCEPTUAL_CONTEXT": "explanatory context, not one executed trace"
+    }
+  },
+  {
+    "id": "GEO-1",
+    "title": "Intent becomes bounded, consuming Work",
+    "entities": [
+      "BSEP",
+      "CHILD",
+      "CONSUMPTION",
+      "MODEL",
+      "PROPOSAL",
+      "RESULT",
+      "TOPOLOGY",
+      "WORK"
+    ],
+    "relations": [
+      {
+        "id": "GEO-1_proposal_edge_0",
+        "source": "BSEP",
+        "target": "MODEL",
+        "relation": "DATA",
+        "item": "disclosed input",
+        "source_object": "GEO-1_proposal_0",
+        "target_object": "GEO-1_proposal_1"
+      },
+      {
+        "id": "GEO-1_proposal_edge_1",
+        "source": "MODEL",
+        "target": "PROPOSAL",
+        "relation": "PROPOSAL",
+        "item": "returned fields",
+        "source_object": "GEO-1_proposal_1",
+        "target_object": "GEO-1_proposal_2"
+      },
+      {
+        "id": "GEO-1_proposal_edge_2",
+        "source": "PROPOSAL",
+        "target": "TOPOLOGY",
+        "relation": "DERIVATION",
+        "item": "checked structure",
+        "source_object": "GEO-1_proposal_2",
+        "target_object": "GEO-1_proposal_3"
+      },
+      {
+        "id": "GEO-1_work_edge_0",
+        "source": "WORK",
+        "target": "CHILD",
+        "relation": "EXECUTION",
+        "item": "bounded invocation",
+        "source_object": "GEO-1_work_0",
+        "target_object": "GEO-1_work_1"
+      },
+      {
+        "id": "GEO-1_work_edge_1",
+        "source": "CHILD",
+        "target": "RESULT",
+        "relation": "DATA",
+        "item": "returned material",
+        "source_object": "GEO-1_work_1",
+        "target_object": "GEO-1_work_2"
+      },
+      {
+        "id": "GEO-1_work_edge_2",
+        "source": "RESULT",
+        "target": "CONSUMPTION",
+        "relation": "DATA",
+        "item": "exact field binding",
+        "source_object": "GEO-1_work_2",
+        "target_object": "GEO-1_work_3"
+      }
+    ],
+    "text_equivalent": "Intent becomes bounded, consuming Work\n\nCONCEPTUAL / Local intake and route acceptance precede semantic composition\n\nBSEP side\nprojection\n\nSemantic model\nparticipant\n\nReturned\nsemantic\nproposal\n\nLocally validated\nruntime topology\n\ndisclosed\ninput\n\nreturned\nfields\n\nchecked\nstructure\n\nParent Work\nactual input\n\nBounded child\nWork\n\nTyped child\nresult\n\nParent slot\nconsumes result\n\nbounded\ninvocation\n\nreturned\nmaterial\n\nexact field\nbinding\n\nRoot route/result reviews remain distinct. No arbitrary planner or universal child-memory search is demonstrated.\n\nGEO-1 Source: architecture\n\nAtlas: Overview / GEO 1 2 3 4 5 6 7",
+    "source_refs": [
+      {
+        "label": "architecture",
+        "target": "https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/specs/current_architecture_lock_v01.md"
+      },
+      {
+        "label": "chapter",
+        "target": "../chapters/02_geometry.html"
+      }
+    ],
+    "svg": "GEO-1.svg",
+    "text": "GEO-1.md",
+    "class": "CONCEPTUAL  /  Local intake and route acceptance precede semantic composition",
+    "question": "How does an intention become real, possibly nested Work?",
+    "subject_boundary": "CONCEPTUAL  /  Local intake and route acceptance precede semantic composition",
+    "locator": [
+      "OVERVIEW",
+      "GEO-1",
+      "GEO-2",
+      "GEO-3",
+      "GEO-4",
+      "GEO-5",
+      "GEO-6",
+      "GEO-7"
+    ],
+    "legend": {
+      "DATA": "transferred evidence/value",
+      "PROPOSAL": "untrusted proposed material",
+      "PERMISSION": "current scoped packet only",
+      "CONTROL": "bounded operation organization",
+      "DERIVATION": "declared transformation",
+      "DOCUMENT_REFERENCE": "identity or document relation, no authority",
+      "CHRONOLOGY": "order, not a grant",
+      "CONCEPTUAL_CONTEXT": "explanatory context, not one executed trace"
+    }
+  },
+  {
+    "id": "GEO-2",
+    "title": "Independent owners retain their own decisions",
+    "entities": [
+      "B",
+      "EXECUTOR",
+      "FIREWALL",
+      "PACKET",
+      "RECEIPT",
+      "REQUESTER",
+      "VENUE"
+    ],
+    "relations": [
+      {
+        "id": "GEO-2_owners_edge_0",
+        "source": "VENUE",
+        "target": "B",
+        "relation": "DATA",
+        "item": "published body",
+        "source_object": "GEO-2_owners_0",
+        "target_object": "GEO-2_owners_1"
+      },
+      {
+        "id": "GEO-2_owners_edge_1",
+        "source": "B",
+        "target": "REQUESTER",
+        "relation": "DATA",
+        "item": "current checked input",
+        "source_object": "GEO-2_owners_1",
+        "target_object": "GEO-2_owners_2"
+      },
+      {
+        "id": "GEO-2_booking_edge_0",
+        "source": "PACKET",
+        "target": "FIREWALL",
+        "relation": "PERMISSION",
+        "item": "scoped permission",
+        "source_object": "GEO-2_booking_0",
+        "target_object": "GEO-2_booking_1"
+      },
+      {
+        "id": "GEO-2_booking_edge_1",
+        "source": "FIREWALL",
+        "target": "EXECUTOR",
+        "relation": "EXECUTION",
+        "item": "checked operation",
+        "source_object": "GEO-2_booking_1",
+        "target_object": "GEO-2_booking_2"
+      },
+      {
+        "id": "GEO-2_booking_edge_2",
+        "source": "EXECUTOR",
+        "target": "RECEIPT",
+        "relation": "DATA",
+        "item": "effect evidence",
+        "source_object": "GEO-2_booking_2",
+        "target_object": "GEO-2_booking_3"
+      }
+    ],
+    "text_equivalent": "Independent owners retain their own decisions\n\nCONCEPTUAL PATTERN + FOOTBALL INSET / VenueRoot and ActivePlanetRoot are separate instances\n\nVenueRoot\noffer review\n\nReleased offer\nevidence\n\nActivePlanetRoot\nlocal review\n\npublished body\n\ncurrent checked\ninput\n\nVenueRoot\ncurrent\nBOOK packet\n\nHost / Firewall\nenforcement\n\nBounded mock\nbooking executor\n\nBooking result\nand receipt\n\nscoped\npermission\n\nchecked\noperation\n\neffect\nevidence\n\nAirline is a separate case with ClientRoot, AirlineRoot and BankRoot. No common business SuperRoot or new\naction service.\n\nGEO-2 Source: football\n\nAtlas: Overview / GEO 1 2 3 4 5 6 7",
+    "source_refs": [
+      {
+        "label": "football",
+        "target": "../references/episode_sources.json"
+      },
+      {
+        "label": "chapter",
+        "target": "../chapters/07_football.html"
+      }
+    ],
+    "svg": "GEO-2.svg",
+    "text": "GEO-2.md",
+    "class": "CONCEPTUAL PATTERN + FOOTBALL INSET  /  VenueRoot and ActivePlanetRoot are separate instances",
+    "question": "Who proposes, decides, executes and admits source?",
+    "subject_boundary": "CONCEPTUAL PATTERN + FOOTBALL INSET  /  VenueRoot and ActivePlanetRoot are separate instances",
+    "locator": [
+      "OVERVIEW",
+      "GEO-1",
+      "GEO-2",
+      "GEO-3",
+      "GEO-4",
+      "GEO-5",
+      "GEO-6",
+      "GEO-7"
+    ],
+    "legend": {
+      "DATA": "transferred evidence/value",
+      "PROPOSAL": "untrusted proposed material",
+      "PERMISSION": "current scoped packet only",
+      "CONTROL": "bounded operation organization",
+      "DERIVATION": "declared transformation",
+      "DOCUMENT_REFERENCE": "identity or document relation, no authority",
+      "CHRONOLOGY": "order, not a grant",
+      "CONCEPTUAL_CONTEXT": "explanatory context, not one executed trace"
+    }
+  },
+  {
+    "id": "GEO-3",
+    "title": "Useful work can outlive a changed resource",
+    "entities": [
+      "CURRENTNESS",
+      "ENV",
+      "EXECUTOR",
+      "RECEIPT",
+      "ROOT",
+      "WORK"
+    ],
+    "relations": [
+      {
+        "id": "GEO-3_media_edge_0",
+        "source": "ENV",
+        "target": "CURRENTNESS",
+        "relation": "DATA",
+        "item": "changed-source data",
+        "source_object": "GEO-3_media_0",
+        "target_object": "GEO-3_media_1"
+      },
+      {
+        "id": "GEO-3_media_edge_1",
+        "source": "CURRENTNESS",
+        "target": "WORK",
+        "relation": "DATA",
+        "item": "new current basis",
+        "source_object": "GEO-3_media_1",
+        "target_object": "GEO-3_media_2"
+      },
+      {
+        "id": "GEO-3_save_edge_0",
+        "source": "ROOT",
+        "target": "EXECUTOR",
+        "relation": "PERMISSION",
+        "item": "bound bytes",
+        "source_object": "GEO-3_save_0",
+        "target_object": "GEO-3_save_1"
+      },
+      {
+        "id": "GEO-3_save_edge_1",
+        "source": "EXECUTOR",
+        "target": "RECEIPT",
+        "relation": "DATA",
+        "item": "completed result",
+        "source_object": "GEO-3_save_1",
+        "target_object": "GEO-3_save_2"
+      }
+    ],
+    "text_equivalent": "Useful work can outlive a changed resource\n\nRECORDED EWS3R2 PRINCIPAL LANE / Separate clocks below, no receipt-controlled cleanup\n\nAudio loss\nreturn code -9\n\nOld packet refused\nfresh observation\n\nAffected media\n4 to 16 frames\n\nchanged-source\ndata\n\nnew current basis\n\nRETAINED PHOTO Same state and preview SHA. Producer count remains 3.\n\nSeparate save\ndecision / packet\n\nActual write\n250-byte sidecar\n\nWrite receipt\nevidence\n\nbound bytes\n\ncompleted result\n\nRESOURCE END: owner-lifecycle cleanup. Audio ALREADY_EXITED, no graceful receipt.\nHISTORICAL EWS3: separate summary, later SUMMARY_ONLY descent and fresh Root review.\n\nSave precedes recorded closure chronologically. The receipt does not command cleanup or authorize another\nwrite.\n\nGEO-3 Source: ews\n\nAtlas: Overview / GEO 1 2 3 4 5 6 7",
+    "source_refs": [
+      {
+        "label": "ews",
+        "target": "../references/ews/source_ledger.json"
+      },
+      {
+        "label": "chapter",
+        "target": "../chapters/09_workspace.html"
+      }
+    ],
+    "svg": "GEO-3.svg",
+    "text": "GEO-3.md",
+    "class": "RECORDED EWS3R2 PRINCIPAL LANE  /  Separate clocks below, no receipt-controlled cleanup",
+    "question": "What persists when a condition or environment changes?",
+    "subject_boundary": "RECORDED EWS3R2 PRINCIPAL LANE  /  Separate clocks below, no receipt-controlled cleanup",
+    "locator": [
+      "OVERVIEW",
+      "GEO-1",
+      "GEO-2",
+      "GEO-3",
+      "GEO-4",
+      "GEO-5",
+      "GEO-6",
+      "GEO-7"
+    ],
+    "legend": {
+      "DATA": "transferred evidence/value",
+      "PROPOSAL": "untrusted proposed material",
+      "PERMISSION": "current scoped packet only",
+      "CONTROL": "bounded operation organization",
+      "DERIVATION": "declared transformation",
+      "DOCUMENT_REFERENCE": "identity or document relation, no authority",
+      "CHRONOLOGY": "order, not a grant",
+      "CONCEPTUAL_CONTEXT": "explanatory context, not one executed trace"
+    }
+  },
+  {
+    "id": "GEO-4",
+    "title": "A source body becomes checked local input",
+    "entities": [
+      "B",
+      "C",
+      "CURRENTNESS",
+      "E",
+      "STATUS",
+      "WORK"
+    ],
+    "relations": [
+      {
+        "id": "GEO-4_flow0",
+        "source": "E",
+        "target": "B",
+        "relation": "DATA",
+        "item": "value",
+        "source_object": "GEO-4_body0",
+        "target_object": "GEO-4_body1"
+      },
+      {
+        "id": "GEO-4_flow1",
+        "source": "B",
+        "target": "CURRENTNESS",
+        "relation": "DATA",
+        "item": "source",
+        "source_object": "GEO-4_body1",
+        "target_object": "GEO-4_body2"
+      },
+      {
+        "id": "GEO-4_flow2",
+        "source": "CURRENTNESS",
+        "target": "C",
+        "relation": "DATA",
+        "item": "qualified",
+        "source_object": "GEO-4_body2",
+        "target_object": "GEO-4_body3"
+      },
+      {
+        "id": "GEO-4_refused",
+        "source": "CURRENTNESS",
+        "target": "CURRENTNESS",
+        "relation": "DATA",
+        "item": "refused branch",
+        "source_object": "GEO-4_body2",
+        "target_object": "GEO-4_refusal"
+      },
+      {
+        "id": "GEO-4_positive",
+        "source": "C",
+        "target": "WORK",
+        "relation": "DATA",
+        "item": "only valid C",
+        "source_object": "GEO-4_body3",
+        "target_object": "GEO-4_consumer"
+      }
+    ],
+    "text_equivalent": "Qualified context reaches Work; refusal stops\n\nRECORDED FOOTBALL RELATIONS / E is a value inside B; B is material inside C\n\nProducer E\noffer_json\n\nReleased B\nB.offer = E\n\nLocal checks\nbody / status\n\nQualified C\nC.body = B\n\nvalue\n\nsource\n\nqualified\n\nAuthenticated STATUS\nand source address\n\nDATA, not control\n\nREVOKED / invalid\nSTOP: no consumption\n\nrefused branch\n\nRequester Work\nconsumes offer field\n\nonly valid C\n\nNo arrow leads from refusal to Work. Booking still requires a separate current Root packet and action.\n\nGEO-4 Source: football\n\nAtlas: Overview / GEO 1 2 3 4 5 6 7",
+    "source_refs": [
+      {
+        "label": "football",
+        "target": "../references/episode_sources.json"
+      },
+      {
+        "label": "chapter",
+        "target": "../chapters/07_football.html"
+      }
+    ],
+    "svg": "GEO-4.svg",
+    "text": "GEO-4.md",
+    "class": "RECORDED FOOTBALL RELATIONS  /  Address, body, current status and consumer have distinct roles",
+    "question": "Which material was actually consumed and under which current conditions?",
+    "subject_boundary": "RECORDED FOOTBALL RELATIONS  /  Address, body, current status and consumer have distinct roles",
+    "locator": [
+      "OVERVIEW",
+      "GEO-1",
+      "GEO-2",
+      "GEO-3",
+      "GEO-4",
+      "GEO-5",
+      "GEO-6",
+      "GEO-7"
+    ],
+    "legend": {
+      "DATA": "transferred evidence/value",
+      "PROPOSAL": "untrusted proposed material",
+      "PERMISSION": "current scoped packet only",
+      "CONTROL": "bounded operation organization",
+      "DERIVATION": "declared transformation",
+      "DOCUMENT_REFERENCE": "identity or document relation, no authority",
+      "CHRONOLOGY": "order, not a grant",
+      "CONCEPTUAL_CONTEXT": "explanatory context, not one executed trace"
+    }
+  },
+  {
+    "id": "GEO-5",
+    "title": "Different computations share checked consumption",
+    "entities": [
+      "CHECKER",
+      "COMPILER",
+      "CONSUMPTION",
+      "DECODER",
+      "ENV",
+      "PROPOSAL",
+      "QPU",
+      "ROOT",
+      "WORK"
+    ],
+    "relations": [
+      {
+        "id": "GEO-5_compute_edge_0",
+        "source": "PROPOSAL",
+        "target": "COMPILER",
+        "relation": "DATA",
+        "item": "locally bound input",
+        "source_object": "GEO-5_compute_0",
+        "target_object": "GEO-5_compute_1"
+      },
+      {
+        "id": "GEO-5_compute_edge_1",
+        "source": "COMPILER",
+        "target": "QPU",
+        "relation": "EXECUTION",
+        "item": "explicit backend call",
+        "source_object": "GEO-5_compute_1",
+        "target_object": "GEO-5_compute_2"
+      },
+      {
+        "id": "GEO-5_consume_edge_0",
+        "source": "DECODER",
+        "target": "CHECKER",
+        "relation": "DATA",
+        "item": "candidate seating",
+        "source_object": "GEO-5_consume_0",
+        "target_object": "GEO-5_consume_1"
+      },
+      {
+        "id": "GEO-5_consume_edge_1",
+        "source": "CHECKER",
+        "target": "CONSUMPTION",
+        "relation": "DATA",
+        "item": "checked material",
+        "source_object": "GEO-5_consume_1",
+        "target_object": "GEO-5_consume_2"
+      },
+      {
+        "id": "GEO-5_consume_edge_2",
+        "source": "CONSUMPTION",
+        "target": "ROOT",
+        "relation": "DATA",
+        "item": "result + save request",
+        "source_object": "GEO-5_consume_2",
+        "target_object": "GEO-5_consume_3"
+      },
+      {
+        "id": "GEO-5_remote_return",
+        "source": "QPU",
+        "target": "DECODER",
+        "relation": "DATA",
+        "item": "raw return",
+        "source_object": "GEO-5_compute_2",
+        "target_object": "GEO-5_consume_0"
+      },
+      {
+        "id": "GEO-5_ews_data",
+        "source": "ENV",
+        "target": "WORK",
+        "relation": "DATA",
+        "item": "observations / pixels",
+        "source_object": "GEO-5_ews_resources",
+        "target_object": "GEO-5_ews_preview"
+      }
+    ],
+    "text_equivalent": "Different computations share checked consumption\n\nRECORDED W4 REVISION 1 / Captured W3 meaning is input, not permission for a QPU request\n\nCaptured semantics\nKEEP / MIX\n\nLocal compiler\n10-qubit encoding\n\nREMOTE Rigetti\nraw measurements\n\nlocally bound input\n\nexplicit backend\ncall\n\nLOCAL decode\nmeasuredQubits\norder\n\nOriginal-condition\nchecker\n\nNative Work\nqpu_consume\n\nSeparate local\nsave review\n\ncandidate\nseating\n\nchecked\nmaterial\n\nresult +\nsave\nrequest\n\nraw return\n\nW3 classical search uses SOLVER; SR2 is a separate record.\n\nSeparate EWS: local services\n\nPreview Work and result\n\nobservations / pixels\n\n36-indicator QUBO differs from ten-qubit up-to-four-local encoding. The EWS inset is a separate local\nenvironment.\n\nGEO-5 Source: wedding\n\nAtlas: Overview / GEO 1 2 3 4 5 6 7",
+    "source_refs": [
+      {
+        "label": "wedding",
+        "target": "../references/wedding/SOURCE_LEDGER.json"
+      },
+      {
+        "label": "chapter",
+        "target": "../chapters/08_wedding.html"
+      }
+    ],
+    "svg": "GEO-5.svg",
+    "text": "GEO-5.md",
+    "class": "RECORDED W4 REVISION 1  /  Captured W3 meaning is input, not permission for a QPU request",
+    "question": "Which different participants contribute inside which boundary?",
+    "subject_boundary": "RECORDED W4 REVISION 1  /  Captured W3 meaning is input, not permission for a QPU request",
+    "locator": [
+      "OVERVIEW",
+      "GEO-1",
+      "GEO-2",
+      "GEO-3",
+      "GEO-4",
+      "GEO-5",
+      "GEO-6",
+      "GEO-7"
+    ],
+    "legend": {
+      "DATA": "transferred evidence/value",
+      "PROPOSAL": "untrusted proposed material",
+      "PERMISSION": "current scoped packet only",
+      "CONTROL": "bounded operation organization",
+      "DERIVATION": "declared transformation",
+      "DOCUMENT_REFERENCE": "identity or document relation, no authority",
+      "CHRONOLOGY": "order, not a grant",
+      "CONCEPTUAL_CONTEXT": "explanatory context, not one executed trace"
+    }
+  },
+  {
+    "id": "GEO-6",
+    "title": "Recorded experience changes finite expenditure",
+    "entities": [
+      "ADVICE",
+      "ALLOCATION",
+      "DRS",
+      "OFE",
+      "OUTCOME",
+      "PRESSURE",
+      "WORK"
+    ],
+    "relations": [
+      {
+        "id": "GEO-6_history_edge_0",
+        "source": "OUTCOME",
+        "target": "OFE",
+        "relation": "DERIVATION",
+        "item": "qualified event",
+        "source_object": "GEO-6_history_0",
+        "target_object": "GEO-6_history_1"
+      },
+      {
+        "id": "GEO-6_history_edge_1",
+        "source": "OFE",
+        "target": "DRS",
+        "relation": "DATA",
+        "item": "stored evidence",
+        "source_object": "GEO-6_history_1",
+        "target_object": "GEO-6_history_2"
+      },
+      {
+        "id": "GEO-6_history_edge_2",
+        "source": "DRS",
+        "target": "ADVICE",
+        "relation": "DATA",
+        "item": "eligible material",
+        "source_object": "GEO-6_history_2",
+        "target_object": "GEO-6_history_3"
+      },
+      {
+        "id": "GEO-6_spend_edge_0",
+        "source": "PRESSURE",
+        "target": "ALLOCATION",
+        "relation": "DERIVATION",
+        "item": "integer allocation",
+        "source_object": "GEO-6_spend_0",
+        "target_object": "GEO-6_spend_1"
+      },
+      {
+        "id": "GEO-6_spend_edge_1",
+        "source": "ALLOCATION",
+        "target": "WORK",
+        "relation": "EXECUTION",
+        "item": "bounded dispatch",
+        "source_object": "GEO-6_spend_1",
+        "target_object": "GEO-6_spend_2"
+      },
+      {
+        "id": "GEO-6_current_advice",
+        "source": "ADVICE",
+        "target": "PRESSURE",
+        "relation": "DATA",
+        "item": "current comparison input",
+        "source_object": "GEO-6_history_3",
+        "target_object": "GEO-6_spend_0"
+      }
+    ],
+    "text_equivalent": "Recorded experience changes finite expenditure\n\nG3 / G4 RECORDED MECHANISMS / Eligibility and Root descent precede current advisory use\n\nSource-bound\noutcome event\n\nOFE record; then\nfold / retained\nhistory\n\nDRS read; then\ncurrent Root\ndescent\n\nAdvisory values\ncurrent\ncomparison\n\nqualified\nevent\n\nstored\nevidence\n\neligible\nmaterial\n\nFinite pressure\nand apportionment\n\n7 allocation units\n4 / 3 becomes 3 / 4\n\nActual Work\ndispatch budget 9\n\ninteger allocation\n\nbounded dispatch\n\ncurrent comparison input\n\nBudget 9 = 1 spent + 1 reserved + 7 allocated. N4-04 is a separate 1-to-0 domain-call witness with current reads\nand reviews.\n\nGEO-6 Source: experience\n\nAtlas: Overview / GEO 1 2 3 4 5 6 7",
+    "source_refs": [
+      {
+        "label": "experience",
+        "target": "../references/experience/source_ledger.md"
+      },
+      {
+        "label": "chapter",
+        "target": "../chapters/05_experience.html"
+      }
+    ],
+    "svg": "GEO-6.svg",
+    "text": "GEO-6.md",
+    "class": "G3 / G4 RECORDED MECHANISMS  /  Eligibility and Root descent precede current advisory use",
+    "question": "How can prior outcomes change current inspection without deciding for Root?",
+    "subject_boundary": "G3 / G4 RECORDED MECHANISMS  /  Eligibility and Root descent precede current advisory use",
+    "locator": [
+      "OVERVIEW",
+      "GEO-1",
+      "GEO-2",
+      "GEO-3",
+      "GEO-4",
+      "GEO-5",
+      "GEO-6",
+      "GEO-7"
+    ],
+    "legend": {
+      "DATA": "transferred evidence/value",
+      "PROPOSAL": "untrusted proposed material",
+      "PERMISSION": "current scoped packet only",
+      "CONTROL": "bounded operation organization",
+      "DERIVATION": "declared transformation",
+      "DOCUMENT_REFERENCE": "identity or document relation, no authority",
+      "CHRONOLOGY": "order, not a grant",
+      "CONCEPTUAL_CONTEXT": "explanatory context, not one executed trace"
+    }
+  },
+  {
+    "id": "GEO-7",
+    "title": "Creating a component and using it are separate acts",
+    "entities": [
+      "AUTHOR",
+      "CANDIDATE",
+      "EXAMINER",
+      "KIT",
+      "SOURCE_ADMISSION",
+      "WHAT",
+      "WORK"
+    ],
+    "relations": [
+      {
+        "id": "GEO-7_how_input",
+        "source": "KIT",
+        "target": "AUTHOR",
+        "relation": "DATA",
+        "item": "reference",
+        "source_object": "GEO-7_kit",
+        "target_object": "GEO-7_author"
+      },
+      {
+        "id": "GEO-7_what_input",
+        "source": "WHAT",
+        "target": "AUTHOR",
+        "relation": "DATA",
+        "item": "task",
+        "source_object": "GEO-7_what",
+        "target_object": "GEO-7_author"
+      },
+      {
+        "id": "GEO-7_creates",
+        "source": "AUTHOR",
+        "target": "CANDIDATE",
+        "relation": "DATA",
+        "item": "creates",
+        "source_object": "GEO-7_author",
+        "target_object": "GEO-7_candidate"
+      },
+      {
+        "id": "GEO-7_examines",
+        "source": "CANDIDATE",
+        "target": "EXAMINER",
+        "relation": "DATA",
+        "item": "checks actual material",
+        "source_object": "GEO-7_candidate",
+        "target_object": "GEO-7_exam"
+      },
+      {
+        "id": "GEO-7_review",
+        "source": "EXAMINER",
+        "target": "SOURCE_ADMISSION",
+        "relation": "DATA",
+        "item": "review",
+        "source_object": "GEO-7_exam",
+        "target_object": "GEO-7_admission"
+      },
+      {
+        "id": "GEO-7_identity",
+        "source": "SOURCE_ADMISSION",
+        "target": "WORK",
+        "relation": "DATA",
+        "item": "identity",
+        "source_object": "GEO-7_admission",
+        "target_object": "GEO-7_work"
+      }
+    ],
+    "text_equivalent": "Creating a component does not grant its authority\n\nCONCEPTUAL / HOW and WHAT are separate; candidate material is not its author\n\nHOW: interfaces\n\nWHAT: task\n\nExternal author\n\nCandidate bytes\n\nreference\n\ntask\n\ncreates\n\nIndependent exam\n\nOwner source admission\n\nNew bounded Work\n\nchecks actual material\n\nreview\n\nidentity\n\nNew current inputs and Root decisions remain required. No stored runtime grant.\n\nG54B1/G54D remain INCOMPLETE. G54D1 includes explicitly authorized correction 4; the audit packet is not the\nkit.\n\nGEO-7 Source: author\n\nAtlas: Overview / GEO 1 2 3 4 5 6 7",
+    "source_refs": [
+      {
+        "label": "author",
+        "target": "https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/gate5_authoring_kit_v01/START_HERE.md"
+      },
+      {
+        "label": "chapter",
+        "target": "../chapters/11_integration.html"
+      }
+    ],
+    "svg": "GEO-7.svg",
+    "text": "GEO-7.md",
+    "class": "CONCEPTUAL DESIGN / RUNTIME BANDS  /  G54D1 retained lineage includes authorized correction 4",
+    "question": "How can another developer add a component without admitting it?",
+    "subject_boundary": "CONCEPTUAL DESIGN / RUNTIME BANDS  /  G54D1 retained lineage includes authorized correction 4",
+    "locator": [
+      "OVERVIEW",
+      "GEO-1",
+      "GEO-2",
+      "GEO-3",
+      "GEO-4",
+      "GEO-5",
+      "GEO-6",
+      "GEO-7"
+    ],
+    "legend": {
+      "DATA": "transferred evidence/value",
+      "PROPOSAL": "untrusted proposed material",
+      "PERMISSION": "current scoped packet only",
+      "CONTROL": "bounded operation organization",
+      "DERIVATION": "declared transformation",
+      "DOCUMENT_REFERENCE": "identity or document relation, no authority",
+      "CHRONOLOGY": "order, not a grant",
+      "CONCEPTUAL_CONTEXT": "explanatory context, not one executed trace"
+    }
+  }
+]

@@ -1,0 +1,107 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 1280 720" role="img" aria-labelledby="title desc">
+<title id="title">Different computations share checked consumption</title>
+<desc id="desc">RECORDED W4 REVISION 1  /  Captured W3 meaning is input, not permission for a QPU request</desc>
+<defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L9,3 z" fill="#176B68"/></marker></defs>
+<rect width="1280" height="720" fill="white"/>
+<text id="GEO-5_title" font-family="Nimbus Sans" font-size="42" font-weight="bold" fill="#16282B">
+<tspan x="54" y="78.0">Different computations share checked consumption</tspan>
+</text>
+<text id="GEO-5_scope" font-family="Nimbus Sans" font-size="23" font-weight="normal" fill="#43595D">
+<tspan x="56" y="136.0">RECORDED W4 REVISION 1 / Captured W3 meaning is input, not permission for a QPU request</tspan>
+</text>
+<rect x="56.0" y="195" width="290" height="110" id="GEO-5_compute_0" fill="#EFF5F3" stroke="#176B68" stroke-width="2"/>
+<text id="GEO-5_compute_0_label" font-family="Nimbus Sans" font-size="24" font-weight="normal" fill="#16282B">
+<tspan x="69.0" y="231.0">Captured semantics</tspan>
+<tspan x="69.0" y="258.6">KEEP / MIX</tspan>
+</text>
+<rect x="495.0" y="195" width="290" height="110" id="GEO-5_compute_1" fill="#EFF5F3" stroke="#176B68" stroke-width="2"/>
+<text id="GEO-5_compute_1_label" font-family="Nimbus Sans" font-size="24" font-weight="normal" fill="#16282B">
+<tspan x="508.0" y="231.0">Local compiler</tspan>
+<tspan x="508.0" y="258.6">10-qubit encoding</tspan>
+</text>
+<rect x="934.0" y="195" width="290" height="110" id="GEO-5_compute_2" fill="#EFF5F3" stroke="#176B68" stroke-width="2"/>
+<text id="GEO-5_compute_2_label" font-family="Nimbus Sans" font-size="24" font-weight="normal" fill="#16282B">
+<tspan x="947.0" y="231.0">REMOTE Rigetti</tspan>
+<tspan x="947.0" y="258.6">raw measurements</tspan>
+</text>
+<line id="GEO-5_compute_edge_0" x1="346.0" y1="250.0" x2="495.0" y2="250.0" stroke="#176B68" stroke-width="2" marker-end="url(#arrow)"/>
+<text id="GEO-5_compute_edge_0_label" font-family="Nimbus Sans" font-size="17" font-weight="normal" fill="#43595D">
+<tspan x="350.0" y="185.0">locally bound input</tspan>
+</text>
+<line id="GEO-5_compute_edge_1" x1="785.0" y1="250.0" x2="934.0" y2="250.0" stroke="#176B68" stroke-width="2" marker-end="url(#arrow)"/>
+<text id="GEO-5_compute_edge_1_label" font-family="Nimbus Sans" font-size="17" font-weight="normal" fill="#43595D">
+<tspan x="789.0" y="185.0">explicit backend</tspan>
+<tspan x="789.0" y="204.55">call</tspan>
+</text>
+<rect x="999.0" y="380" width="225" height="110" id="GEO-5_consume_0" fill="#EFF5F3" stroke="#176B68" stroke-width="2"/>
+<text id="GEO-5_consume_0_label" font-family="Nimbus Sans" font-size="24" font-weight="normal" fill="#16282B">
+<tspan x="1012.0" y="416.0">LOCAL decode</tspan>
+<tspan x="1012.0" y="443.6">measuredQubits</tspan>
+<tspan x="1012.0" y="471.2">order</tspan>
+</text>
+<rect x="684.6666666666666" y="380" width="225" height="110" id="GEO-5_consume_1" fill="#EFF5F3" stroke="#176B68" stroke-width="2"/>
+<text id="GEO-5_consume_1_label" font-family="Nimbus Sans" font-size="24" font-weight="normal" fill="#16282B">
+<tspan x="697.6666666666666" y="416.0">Original-condition</tspan>
+<tspan x="697.6666666666666" y="443.6">checker</tspan>
+</text>
+<rect x="370.3333333333333" y="380" width="225" height="110" id="GEO-5_consume_2" fill="#EFF5F3" stroke="#176B68" stroke-width="2"/>
+<text id="GEO-5_consume_2_label" font-family="Nimbus Sans" font-size="24" font-weight="normal" fill="#16282B">
+<tspan x="383.3333333333333" y="416.0">Native Work</tspan>
+<tspan x="383.3333333333333" y="443.6">qpu_consume</tspan>
+</text>
+<rect x="56.0" y="380" width="225" height="110" id="GEO-5_consume_3" fill="#EFF5F3" stroke="#176B68" stroke-width="2"/>
+<text id="GEO-5_consume_3_label" font-family="Nimbus Sans" font-size="24" font-weight="normal" fill="#16282B">
+<tspan x="69.0" y="416.0">Separate local</tspan>
+<tspan x="69.0" y="443.6">save review</tspan>
+</text>
+<line id="GEO-5_consume_edge_0" x1="999.0" y1="435.0" x2="909.6666666666666" y2="435.0" stroke="#176B68" stroke-width="2" marker-end="url(#arrow)"/>
+<text id="GEO-5_consume_edge_0_label" font-family="Nimbus Sans" font-size="17" font-weight="normal" fill="#43595D">
+<tspan x="913.6666666666666" y="370.0">candidate</tspan>
+<tspan x="913.6666666666666" y="389.55">seating</tspan>
+</text>
+<line id="GEO-5_consume_edge_1" x1="684.6666666666666" y1="435.0" x2="595.3333333333333" y2="435.0" stroke="#176B68" stroke-width="2" marker-end="url(#arrow)"/>
+<text id="GEO-5_consume_edge_1_label" font-family="Nimbus Sans" font-size="17" font-weight="normal" fill="#43595D">
+<tspan x="599.3333333333333" y="370.0">checked</tspan>
+<tspan x="599.3333333333333" y="389.55">material</tspan>
+</text>
+<line id="GEO-5_consume_edge_2" x1="370.3333333333333" y1="435.0" x2="281.0" y2="435.0" stroke="#176B68" stroke-width="2" marker-end="url(#arrow)"/>
+<text id="GEO-5_consume_edge_2_label" font-family="Nimbus Sans" font-size="17" font-weight="normal" fill="#43595D">
+<tspan x="285.0" y="370.0">result +</tspan>
+<tspan x="285.0" y="389.55">save</tspan>
+<tspan x="285.0" y="409.1">request</tspan>
+</text>
+<line id="GEO-5_remote_return" x1="1079.0" y1="305" x2="1111.5" y2="380" stroke="#176B68" stroke-width="2" marker-end="url(#arrow)"/>
+<text id="GEO-5_remote_return_label" font-family="Nimbus Sans" font-size="19" font-weight="normal" fill="#43595D">
+<tspan x="883" y="349.0">raw return</tspan>
+</text>
+<text id="GEO-5_separate_revision" font-family="Nimbus Sans" font-size="23" font-weight="normal" fill="#16282B">
+<tspan x="56" y="341.0">W3 classical search uses SOLVER; SR2 is a separate record.</tspan>
+</text>
+<rect x="56" y="544" width="400" height="44" id="GEO-5_ews_resources" fill="#EFF5F3" stroke="#176B68" stroke-width="2"/>
+<text id="GEO-5_ews_resources_label" font-family="Nimbus Sans" font-size="20" font-weight="normal" fill="#16282B">
+<tspan x="69" y="570.0">Separate EWS: local services</tspan>
+</text>
+<rect x="854" y="544" width="370" height="44" id="GEO-5_ews_preview" fill="#EFF5F3" stroke="#176B68" stroke-width="2"/>
+<text id="GEO-5_ews_preview_label" font-family="Nimbus Sans" font-size="20" font-weight="normal" fill="#16282B">
+<tspan x="867" y="570.0">Preview Work and result</tspan>
+</text>
+<line id="GEO-5_ews_data" x1="456" y1="566.0" x2="854" y2="566.0" stroke="#176B68" stroke-width="2" marker-end="url(#arrow)"/>
+<text id="GEO-5_ews_data_label" font-family="Nimbus Sans" font-size="19" font-weight="normal" fill="#43595D">
+<tspan x="484" y="550.0">observations / pixels</tspan>
+</text>
+<text id="GEO-5_qualification" font-family="Nimbus Sans" font-size="23" font-weight="normal" fill="#43595D">
+<tspan x="56" y="619.0">36-indicator QUBO differs from ten-qubit up-to-four-local encoding. The EWS inset is a separate local</tspan>
+<tspan x="56" y="645.45">environment.</tspan>
+</text>
+<line id="GEO-5_rule" x1="56" y1="671" x2="1218" y2="671" stroke="#B8C8C6" stroke-width="1"/>
+<a href="../references/wedding/SOURCE_LEDGER.json">
+<text id="GEO-5_source_link" font-family="Nimbus Sans" font-size="18" font-weight="normal" fill="#315E8B">
+<tspan x="56" y="703.0">GEO-5 Source: wedding</tspan>
+</text>
+</a>
+<a href="../atlas/README.html">
+<text id="GEO-5_atlas_locator" font-family="Nimbus Sans" font-size="17" font-weight="normal" fill="#315E8B">
+<tspan x="660" y="702.0">Atlas: Overview / GEO 1 2 3 4 5 6 7</tspan>
+</text>
+</a>
+</svg>

@@ -1,0 +1,1211 @@
+{
+  "version": "g6b1.pilots.v01",
+  "canvas": [
+    1280,
+    720
+  ],
+  "font": "Helvetica / Helvetica-Bold PDF core fonts; browser Arial fallback in SVG",
+  "slides": [
+    {
+      "title": "Computing, assembled around intent",
+      "class": "CL01-CL03 / Useful activity; bounded recorded example",
+      "link": "../README.md",
+      "objects": [
+        {
+          "kind": "text",
+          "x": 56,
+          "y": 47,
+          "value": "RADIOLARIA OS  /  EDITORIAL PILOT",
+          "size": 14,
+          "color": "#6E6E73",
+          "bold": false
+        },
+        {
+          "kind": "text",
+          "x": 56,
+          "y": 99,
+          "value": "Computing, assembled around intent",
+          "size": 40,
+          "color": "#1D1D1F",
+          "bold": true
+        },
+        {
+          "kind": "line",
+          "x1": 56,
+          "y1": 650,
+          "x2": 1224,
+          "y2": 650,
+          "color": "#D2D2D7",
+          "width": 2
+        },
+        {
+          "kind": "text",
+          "x": 56,
+          "y": 681,
+          "value": "CL01-CL03 / Useful activity; bounded recorded example",
+          "size": 13,
+          "color": "#6E6E73",
+          "bold": false
+        },
+        {
+          "kind": "text",
+          "x": 1130,
+          "y": 681,
+          "value": "01 / 05",
+          "size": 14,
+          "color": "#6E6E73",
+          "bold": false
+        },
+        {
+          "kind": "link",
+          "x": 56,
+          "y": 662,
+          "w": 960,
+          "h": 29,
+          "target": "../README.md"
+        },
+        {
+          "kind": "text",
+          "x": 56,
+          "y": 198,
+          "value": "Three football sessions.",
+          "size": 32,
+          "color": "#1D1D1F",
+          "bold": true
+        },
+        {
+          "kind": "text",
+          "x": 56,
+          "y": 242,
+          "value": "Natural grass. A EUR 70 limit.",
+          "size": 26,
+          "color": "#1D1D1F",
+          "bold": false
+        },
+        {
+          "kind": "text",
+          "x": 56,
+          "y": 317,
+          "value": "Compute an offer.",
+          "size": 26,
+          "color": "#0071E3",
+          "bold": false
+        },
+        {
+          "kind": "text",
+          "x": 56,
+          "y": 360,
+          "value": "Check it with another owner.",
+          "size": 26,
+          "color": "#1D1D1F",
+          "bold": false
+        },
+        {
+          "kind": "text",
+          "x": 56,
+          "y": 403,
+          "value": "Book only with separate consent.",
+          "size": 26,
+          "color": "#1D1D1F",
+          "bold": false
+        },
+        {
+          "kind": "image",
+          "x": 667,
+          "y": 150,
+          "w": 557,
+          "h": 313,
+          "path": "assets/radiolaria_reference_cover.png"
+        },
+        {
+          "kind": "text",
+          "x": 693,
+          "y": 483,
+          "value": "Approved conceptual artwork, not evidence.",
+          "size": 14,
+          "color": "#6E6E73",
+          "bold": false
+        },
+        {
+          "kind": "text",
+          "x": 56,
+          "y": 548,
+          "value": "An application execution kernel for models, code and services.",
+          "size": 22,
+          "color": "#1D1D1F",
+          "bold": false
+        },
+        {
+          "kind": "text",
+          "x": 56,
+          "y": 587,
+          "value": "Recorded reference code. Mock effects. No new runtime campaign.",
+          "size": 18,
+          "color": "#6E6E73",
+          "bold": false
+        }
+      ]
+    },
+    {
+      "title": "Independent owners, useful work",
+      "class": "ATLAS_A / CONCEPTUAL / CL01 / No SuperRoot",
+      "link": "../atlas/README.md#atlas_a",
+      "objects": [
+        {
+          "kind": "text",
+          "x": 56,
+          "y": 47,
+          "value": "RADIOLARIA OS  /  EDITORIAL PILOT",
+          "size": 14,
+          "color": "#6E6E73",
+          "bold": false
+        },
+        {
+          "kind": "text",
+          "x": 56,
+          "y": 99,
+          "value": "Independent owners, useful work",
+          "size": 40,
+          "color": "#1D1D1F",
+          "bold": true
+        },
+        {
+          "kind": "line",
+          "x1": 56,
+          "y1": 650,
+          "x2": 1224,
+          "y2": 650,
+          "color": "#D2D2D7",
+          "width": 2
+        },
+        {
+          "kind": "text",
+          "x": 56,
+          "y": 681,
+          "value": "ATLAS_A / CONCEPTUAL / CL01 / No SuperRoot",
+          "size": 13,
+          "color": "#6E6E73",
+          "bold": false
+        },
+        {
+          "kind": "text",
+          "x": 1130,
+          "y": 681,
+          "value": "02 / 05",
+          "size": 14,
+          "color": "#6E6E73",
+          "bold": false
+        },
+        {
+          "kind": "link",
+          "x": 56,
+          "y": 662,
+          "w": 960,
+          "h": 29,
+          "target": "../atlas/README.md#atlas_a"
+        },
+        {
+          "kind": "text",
+          "x": 56,
+          "y": 164,
+          "value": "A user or event supplies an intention; semantic proposals are not permission.",
+          "size": 23,
+          "color": "#1D1D1F",
+          "bold": false
+        },
+        {
+          "kind": "text",
+          "x": 64,
+          "y": 226,
+          "value": "VenueRoot",
+          "size": 29,
+          "color": "#1D1D1F",
+          "bold": true
+        },
+        {
+          "kind": "text",
+          "x": 724,
+          "y": 226,
+          "value": "ActivePlanetRoot",
+          "size": 29,
+          "color": "#1D1D1F",
+          "bold": true
+        },
+        {
+          "kind": "line",
+          "x1": 64,
+          "y1": 246,
+          "x2": 550,
+          "y2": 246,
+          "color": "#D2D2D7",
+          "width": 2
+        },
+        {
+          "kind": "line",
+          "x1": 724,
+          "y1": 246,
+          "x2": 1210,
+          "y2": 246,
+          "color": "#D2D2D7",
+          "width": 2
+        },
+        {
+          "kind": "text",
+          "x": 64,
+          "y": 293,
+          "value": "Bounded code computes availability",
+          "size": 22,
+          "color": "#1D1D1F",
+          "bold": false
+        },
+        {
+          "kind": "text",
+          "x": 724,
+          "y": 293,
+          "value": "Local Work consumes checked evidence",
+          "size": 22,
+          "color": "#1D1D1F",
+          "bold": false
+        },
+        {
+          "kind": "text",
+          "x": 64,
+          "y": 357,
+          "value": "Local Root reviews the result",
+          "size": 23,
+          "color": "#0071E3",
+          "bold": false
+        },
+        {
+          "kind": "text",
+          "x": 724,
+          "y": 357,
+          "value": "Its own Root decides locally",
+          "size": 23,
+          "color": "#0071E3",
+          "bold": false
+        },
+        {
+          "kind": "line",
+          "x1": 547,
+          "y1": 329,
+          "x2": 711,
+          "y2": 329,
+          "color": "#0071E3",
+          "width": 2
+        },
+        {
+          "kind": "line",
+          "x1": 702,
+          "y1": 324,
+          "x2": 711,
+          "y2": 329,
+          "color": "#0071E3",
+          "width": 2
+        },
+        {
+          "kind": "line",
+          "x1": 702,
+          "y1": 334,
+          "x2": 711,
+          "y2": 329,
+          "color": "#0071E3",
+          "width": 2
+        },
+        {
+          "kind": "text",
+          "x": 611.6645,
+          "y": 301,
+          "value": "DATA",
+          "size": 13,
+          "color": "#6E6E73",
+          "bold": false
+        },
+        {
+          "kind": "text",
+          "x": 64,
+          "y": 423,
+          "value": "PERMISSION: current packet -> Firewall",
+          "size": 20,
+          "color": "#1D1D1F",
+          "bold": false
+        },
+        {
+          "kind": "text",
+          "x": 724,
+          "y": 423,
+          "value": "Foreign approval is not permission",
+          "size": 22,
+          "color": "#1D1D1F",
+          "bold": false
+        },
+        {
+          "kind": "text",
+          "x": 64,
+          "y": 466,
+          "value": "EXECUTION: separately authorized effect",
+          "size": 20,
+          "color": "#6E6E73",
+          "bold": false
+        },
+        {
+          "kind": "text",
+          "x": 724,
+          "y": 466,
+          "value": "No write access to venue registry",
+          "size": 20,
+          "color": "#6E6E73",
+          "bold": false
+        },
+        {
+          "kind": "text",
+          "x": 64,
+          "y": 552,
+          "value": "Time and local memory inform each decision; neither retains action authority.",
+          "size": 23,
+          "color": "#1D1D1F",
+          "bold": false
+        },
+        {
+          "kind": "text",
+          "x": 64,
+          "y": 594,
+          "value": "Typed Work can compose child Work. Runtime owns topology, not final authority.",
+          "size": 19,
+          "color": "#6E6E73",
+          "bold": false
+        }
+      ],
+      "figure_id": "ATLAS_A",
+      "entity_ids": [
+        "INTENT",
+        "MODEL",
+        "VENUE",
+        "REQUESTER",
+        "WORK",
+        "ROOT",
+        "MEMORY",
+        "FIREWALL"
+      ],
+      "claim_ids": [
+        "CL01"
+      ],
+      "technical_sources": [
+        "specs/current_architecture_lock_v01.md"
+      ]
+    },
+    {
+      "title": "A result crosses; permission does not",
+      "class": "ATLAS_B / RECORDED_EXECUTION / CL02-CL03 / G54D1 main + revoked_source",
+      "link": "../episode/FOOTBALL.md",
+      "objects": [
+        {
+          "kind": "text",
+          "x": 56,
+          "y": 47,
+          "value": "RADIOLARIA OS  /  EDITORIAL PILOT",
+          "size": 14,
+          "color": "#6E6E73",
+          "bold": false
+        },
+        {
+          "kind": "text",
+          "x": 56,
+          "y": 99,
+          "value": "A result crosses; permission does not",
+          "size": 40,
+          "color": "#1D1D1F",
+          "bold": true
+        },
+        {
+          "kind": "line",
+          "x1": 56,
+          "y1": 650,
+          "x2": 1224,
+          "y2": 650,
+          "color": "#D2D2D7",
+          "width": 2
+        },
+        {
+          "kind": "text",
+          "x": 56,
+          "y": 681,
+          "value": "ATLAS_B / RECORDED_EXECUTION / CL02-CL03 / G54D1 main + revoked_source",
+          "size": 13,
+          "color": "#6E6E73",
+          "bold": false
+        },
+        {
+          "kind": "text",
+          "x": 1130,
+          "y": 681,
+          "value": "03 / 05",
+          "size": 14,
+          "color": "#6E6E73",
+          "bold": false
+        },
+        {
+          "kind": "link",
+          "x": 56,
+          "y": 662,
+          "w": 960,
+          "h": 29,
+          "target": "../episode/FOOTBALL.md"
+        },
+        {
+          "kind": "text",
+          "x": 56,
+          "y": 213,
+          "value": "E: computed offer",
+          "size": 30,
+          "color": "#1D1D1F",
+          "bold": true
+        },
+        {
+          "kind": "text",
+          "x": 56,
+          "y": 255,
+          "value": "VenueRoot native Work",
+          "size": 21,
+          "color": "#6E6E73",
+          "bold": false
+        },
+        {
+          "kind": "line",
+          "x1": 56,
+          "y1": 278,
+          "x2": 392,
+          "y2": 278,
+          "color": "#D2D2D7",
+          "width": 2
+        },
+        {
+          "kind": "text",
+          "x": 470,
+          "y": 213,
+          "value": "B: source body",
+          "size": 30,
+          "color": "#1D1D1F",
+          "bold": true
+        },
+        {
+          "kind": "text",
+          "x": 470,
+          "y": 255,
+          "value": "Offer + Work/review refs",
+          "size": 21,
+          "color": "#6E6E73",
+          "bold": false
+        },
+        {
+          "kind": "line",
+          "x1": 470,
+          "y1": 278,
+          "x2": 806,
+          "y2": 278,
+          "color": "#D2D2D7",
+          "width": 2
+        },
+        {
+          "kind": "text",
+          "x": 884,
+          "y": 213,
+          "value": "C: local Work input",
+          "size": 30,
+          "color": "#1D1D1F",
+          "bold": true
+        },
+        {
+          "kind": "text",
+          "x": 884,
+          "y": 255,
+          "value": "ActivePlanetRoot consumes",
+          "size": 21,
+          "color": "#6E6E73",
+          "bold": false
+        },
+        {
+          "kind": "line",
+          "x1": 884,
+          "y1": 278,
+          "x2": 1220,
+          "y2": 278,
+          "color": "#D2D2D7",
+          "width": 2
+        },
+        {
+          "kind": "line",
+          "x1": 402,
+          "y1": 212,
+          "x2": 451,
+          "y2": 212,
+          "color": "#0071E3",
+          "width": 2
+        },
+        {
+          "kind": "line",
+          "x1": 442,
+          "y1": 207,
+          "x2": 451,
+          "y2": 212,
+          "color": "#0071E3",
+          "width": 2
+        },
+        {
+          "kind": "line",
+          "x1": 442,
+          "y1": 217,
+          "x2": 451,
+          "y2": 212,
+          "color": "#0071E3",
+          "width": 2
+        },
+        {
+          "kind": "text",
+          "x": 386.772,
+          "y": 184,
+          "value": "DERIVATION",
+          "size": 13,
+          "color": "#6E6E73",
+          "bold": false
+        },
+        {
+          "kind": "line",
+          "x1": 816,
+          "y1": 212,
+          "x2": 865,
+          "y2": 212,
+          "color": "#0071E3",
+          "width": 2
+        },
+        {
+          "kind": "line",
+          "x1": 856,
+          "y1": 207,
+          "x2": 865,
+          "y2": 212,
+          "color": "#0071E3",
+          "width": 2
+        },
+        {
+          "kind": "line",
+          "x1": 856,
+          "y1": 217,
+          "x2": 865,
+          "y2": 212,
+          "color": "#0071E3",
+          "width": 2
+        },
+        {
+          "kind": "text",
+          "x": 823.1645,
+          "y": 184,
+          "value": "DATA",
+          "size": 13,
+          "color": "#6E6E73",
+          "bold": false
+        },
+        {
+          "kind": "text",
+          "x": 56,
+          "y": 326,
+          "value": "Three natural-grass slots",
+          "size": 21,
+          "color": "#1D1D1F",
+          "bold": false
+        },
+        {
+          "kind": "text",
+          "x": 56,
+          "y": 365,
+          "value": "6300 / 7000 minor EUR",
+          "size": 25,
+          "color": "#0071E3",
+          "bold": false
+        },
+        {
+          "kind": "text",
+          "x": 56,
+          "y": 401,
+          "value": "EUR 63 / EUR 70",
+          "size": 20,
+          "color": "#1D1D1F",
+          "bold": false
+        },
+        {
+          "kind": "text",
+          "x": 470,
+          "y": 326,
+          "value": "Address locates material",
+          "size": 21,
+          "color": "#1D1D1F",
+          "bold": false
+        },
+        {
+          "kind": "text",
+          "x": 470,
+          "y": 365,
+          "value": "Release binds delivery",
+          "size": 21,
+          "color": "#1D1D1F",
+          "bold": false
+        },
+        {
+          "kind": "text",
+          "x": 470,
+          "y": 401,
+          "value": "No booking permission",
+          "size": 21,
+          "color": "#1D1D1F",
+          "bold": false
+        },
+        {
+          "kind": "text",
+          "x": 884,
+          "y": 326,
+          "value": "Body + current ACTIVE status",
+          "size": 21,
+          "color": "#1D1D1F",
+          "bold": false
+        },
+        {
+          "kind": "text",
+          "x": 884,
+          "y": 365,
+          "value": "Local result review",
+          "size": 21,
+          "color": "#1D1D1F",
+          "bold": false
+        },
+        {
+          "kind": "text",
+          "x": 884,
+          "y": 401,
+          "value": "SHIFT: zero effects",
+          "size": 23,
+          "color": "#0071E3",
+          "bold": false
+        },
+        {
+          "kind": "line",
+          "x1": 56,
+          "y1": 452,
+          "x2": 1224,
+          "y2": 452,
+          "color": "#D2D2D7",
+          "width": 2
+        },
+        {
+          "kind": "text",
+          "x": 56,
+          "y": 494,
+          "value": "REVOKED -> status_not_active -> Root BLOCKED_FAIL_CLOSED",
+          "size": 22,
+          "color": "#8D2D32",
+          "bold": false
+        },
+        {
+          "kind": "text",
+          "x": 56,
+          "y": 532,
+          "value": "Native reason: hard_identity_violation. No successful consumer in that branch.",
+          "size": 19,
+          "color": "#6E6E73",
+          "bold": false
+        },
+        {
+          "kind": "text",
+          "x": 56,
+          "y": 587,
+          "value": "BOOK is separate: explicit consent -> VenueRoot -> one mock effect + receipt.",
+          "size": 22,
+          "color": "#1D1D1F",
+          "bold": false
+        }
+      ],
+      "figure_id": "ATLAS_B",
+      "entity_ids": [
+        "VENUE",
+        "E",
+        "B",
+        "POINTER",
+        "STATUS",
+        "C",
+        "REQUESTER"
+      ],
+      "claim_ids": [
+        "CL02",
+        "CL03"
+      ],
+      "technical_sources": [
+        "main_pub_shift_venue_work",
+        "main_pub_shift_offer_body",
+        "main_req_shift_requester_work",
+        "negative_shift_status"
+      ]
+    },
+    {
+      "title": "Authorship is not runtime permission",
+      "class": "ATLAS_C / CONCEPTUAL / CL04 / Historical admission remains source-bound",
+      "link": "../CONTRIBUTIONS.md",
+      "objects": [
+        {
+          "kind": "text",
+          "x": 56,
+          "y": 47,
+          "value": "RADIOLARIA OS  /  EDITORIAL PILOT",
+          "size": 14,
+          "color": "#6E6E73",
+          "bold": false
+        },
+        {
+          "kind": "text",
+          "x": 56,
+          "y": 99,
+          "value": "Authorship is not runtime permission",
+          "size": 40,
+          "color": "#1D1D1F",
+          "bold": true
+        },
+        {
+          "kind": "line",
+          "x1": 56,
+          "y1": 650,
+          "x2": 1224,
+          "y2": 650,
+          "color": "#D2D2D7",
+          "width": 2
+        },
+        {
+          "kind": "text",
+          "x": 56,
+          "y": 681,
+          "value": "ATLAS_C / CONCEPTUAL / CL04 / Historical admission remains source-bound",
+          "size": 13,
+          "color": "#6E6E73",
+          "bold": false
+        },
+        {
+          "kind": "text",
+          "x": 1130,
+          "y": 681,
+          "value": "04 / 05",
+          "size": 14,
+          "color": "#6E6E73",
+          "bold": false
+        },
+        {
+          "kind": "link",
+          "x": 56,
+          "y": 662,
+          "w": 960,
+          "h": 29,
+          "target": "../CONTRIBUTIONS.md"
+        },
+        {
+          "kind": "text",
+          "x": 56,
+          "y": 164,
+          "value": "DESIGN TIME",
+          "size": 15,
+          "color": "#6E6E73",
+          "bold": true
+        },
+        {
+          "kind": "text",
+          "x": 56,
+          "y": 239,
+          "value": "HOW + WHAT",
+          "size": 27,
+          "color": "#1D1D1F",
+          "bold": true
+        },
+        {
+          "kind": "text",
+          "x": 56,
+          "y": 283,
+          "value": "Public interfaces and task",
+          "size": 17,
+          "color": "#6E6E73",
+          "bold": false
+        },
+        {
+          "kind": "text",
+          "x": 385,
+          "y": 239,
+          "value": "Candidate",
+          "size": 27,
+          "color": "#1D1D1F",
+          "bold": true
+        },
+        {
+          "kind": "text",
+          "x": 385,
+          "y": 283,
+          "value": "Authored program",
+          "size": 17,
+          "color": "#6E6E73",
+          "bold": false
+        },
+        {
+          "kind": "text",
+          "x": 670,
+          "y": 239,
+          "value": "Independent exam",
+          "size": 27,
+          "color": "#1D1D1F",
+          "bold": true
+        },
+        {
+          "kind": "text",
+          "x": 670,
+          "y": 283,
+          "value": "Own inputs and oracle",
+          "size": 17,
+          "color": "#6E6E73",
+          "bold": false
+        },
+        {
+          "kind": "text",
+          "x": 1000,
+          "y": 239,
+          "value": "Admission",
+          "size": 27,
+          "color": "#1D1D1F",
+          "bold": true
+        },
+        {
+          "kind": "text",
+          "x": 1000,
+          "y": 283,
+          "value": "Reviewed source",
+          "size": 17,
+          "color": "#6E6E73",
+          "bold": false
+        },
+        {
+          "kind": "line",
+          "x1": 306,
+          "y1": 232,
+          "x2": 365,
+          "y2": 232,
+          "color": "#0071E3",
+          "width": 2
+        },
+        {
+          "kind": "line",
+          "x1": 356,
+          "y1": 227,
+          "x2": 365,
+          "y2": 232,
+          "color": "#0071E3",
+          "width": 2
+        },
+        {
+          "kind": "line",
+          "x1": 356,
+          "y1": 237,
+          "x2": 365,
+          "y2": 232,
+          "color": "#0071E3",
+          "width": 2
+        },
+        {
+          "kind": "text",
+          "x": 254.25,
+          "y": 204,
+          "value": "DOCUMENT_REFERENCE",
+          "size": 13,
+          "color": "#6E6E73",
+          "bold": false
+        },
+        {
+          "kind": "line",
+          "x1": 594,
+          "y1": 232,
+          "x2": 650,
+          "y2": 232,
+          "color": "#0071E3",
+          "width": 2
+        },
+        {
+          "kind": "line",
+          "x1": 641,
+          "y1": 227,
+          "x2": 650,
+          "y2": 232,
+          "color": "#0071E3",
+          "width": 2
+        },
+        {
+          "kind": "line",
+          "x1": 641,
+          "y1": 237,
+          "x2": 650,
+          "y2": 232,
+          "color": "#0071E3",
+          "width": 2
+        },
+        {
+          "kind": "text",
+          "x": 604.6645,
+          "y": 204,
+          "value": "DATA",
+          "size": 13,
+          "color": "#6E6E73",
+          "bold": false
+        },
+        {
+          "kind": "line",
+          "x1": 922,
+          "y1": 232,
+          "x2": 980,
+          "y2": 232,
+          "color": "#0071E3",
+          "width": 2
+        },
+        {
+          "kind": "line",
+          "x1": 971,
+          "y1": 227,
+          "x2": 980,
+          "y2": 232,
+          "color": "#0071E3",
+          "width": 2
+        },
+        {
+          "kind": "line",
+          "x1": 971,
+          "y1": 237,
+          "x2": 980,
+          "y2": 232,
+          "color": "#0071E3",
+          "width": 2
+        },
+        {
+          "kind": "text",
+          "x": 915.237,
+          "y": 204,
+          "value": "PROPOSAL",
+          "size": 13,
+          "color": "#6E6E73",
+          "bold": false
+        },
+        {
+          "kind": "text",
+          "x": 56,
+          "y": 354,
+          "value": "G54D1 continued an existing lineage with authorized correction 4.",
+          "size": 25,
+          "color": "#0071E3",
+          "bold": false
+        },
+        {
+          "kind": "text",
+          "x": 56,
+          "y": 393,
+          "value": "G54B1 and G54D remain INCOMPLETE. This was not one-shot authorship.",
+          "size": 21,
+          "color": "#1D1D1F",
+          "bold": false
+        },
+        {
+          "kind": "line",
+          "x1": 56,
+          "y1": 442,
+          "x2": 1224,
+          "y2": 442,
+          "color": "#D2D2D7",
+          "width": 2
+        },
+        {
+          "kind": "text",
+          "x": 56,
+          "y": 489,
+          "value": "RUNTIME",
+          "size": 15,
+          "color": "#6E6E73",
+          "bold": true
+        },
+        {
+          "kind": "text",
+          "x": 56,
+          "y": 534,
+          "value": "New request -> current sources -> bounded Work -> local Root -> scoped effect",
+          "size": 23,
+          "color": "#1D1D1F",
+          "bold": false
+        },
+        {
+          "kind": "text",
+          "x": 56,
+          "y": 589,
+          "value": "The audit Reader explains evidence; it is not the Authoring Kit or hidden oracle.",
+          "size": 21,
+          "color": "#6E6E73",
+          "bold": false
+        }
+      ],
+      "figure_id": "ATLAS_C",
+      "entity_ids": [
+        "KIT",
+        "WHAT",
+        "CANDIDATE",
+        "EXAMINER",
+        "SOURCE_ADMISSION",
+        "READER"
+      ],
+      "claim_ids": [
+        "CL04"
+      ],
+      "technical_sources": [
+        "docs/gate5_authoring_kit_v01/START_HERE.md",
+        "docs/showcase/gate5_reference_v01/dossiers/A.md"
+      ]
+    },
+    {
+      "title": "A visible fingerprint, not authority",
+      "class": "VISUAL_SEAL / PROTOTYPE / Existing sibling outputs; not a fresh generation",
+      "link": "../VISUAL_SEAL.md",
+      "objects": [
+        {
+          "kind": "text",
+          "x": 56,
+          "y": 47,
+          "value": "RADIOLARIA OS  /  EDITORIAL PILOT",
+          "size": 14,
+          "color": "#6E6E73",
+          "bold": false
+        },
+        {
+          "kind": "text",
+          "x": 56,
+          "y": 99,
+          "value": "A visible fingerprint, not authority",
+          "size": 40,
+          "color": "#1D1D1F",
+          "bold": true
+        },
+        {
+          "kind": "line",
+          "x1": 56,
+          "y1": 650,
+          "x2": 1224,
+          "y2": 650,
+          "color": "#D2D2D7",
+          "width": 2
+        },
+        {
+          "kind": "text",
+          "x": 56,
+          "y": 681,
+          "value": "VISUAL_SEAL / PROTOTYPE / Existing sibling outputs; not a fresh generation",
+          "size": 13,
+          "color": "#6E6E73",
+          "bold": false
+        },
+        {
+          "kind": "text",
+          "x": 1130,
+          "y": 681,
+          "value": "05 / 05",
+          "size": 14,
+          "color": "#6E6E73",
+          "bold": false
+        },
+        {
+          "kind": "link",
+          "x": 56,
+          "y": 662,
+          "w": 960,
+          "h": 29,
+          "target": "../VISUAL_SEAL.md"
+        },
+        {
+          "kind": "text",
+          "x": 56,
+          "y": 199,
+          "value": "Evidence object -> digest -> picture",
+          "size": 27,
+          "color": "#1D1D1F",
+          "bold": true
+        },
+        {
+          "kind": "text",
+          "x": 56,
+          "y": 270,
+          "value": "Existing SVG and noncanonical PNG",
+          "size": 24,
+          "color": "#0071E3",
+          "bold": false
+        },
+        {
+          "kind": "text",
+          "x": 56,
+          "y": 312,
+          "value": "Source files and output hashes inspected",
+          "size": 22,
+          "color": "#1D1D1F",
+          "bold": false
+        },
+        {
+          "kind": "text",
+          "x": 56,
+          "y": 376,
+          "value": "No fresh repeatability or camera test",
+          "size": 22,
+          "color": "#1D1D1F",
+          "bold": false
+        },
+        {
+          "kind": "text",
+          "x": 56,
+          "y": 418,
+          "value": "No image-to-hash recovery or ECC",
+          "size": 22,
+          "color": "#1D1D1F",
+          "bold": false
+        },
+        {
+          "kind": "text",
+          "x": 56,
+          "y": 460,
+          "value": "No permission, signature or uniqueness proof",
+          "size": 21,
+          "color": "#1D1D1F",
+          "bold": false
+        },
+        {
+          "kind": "image",
+          "x": 814,
+          "y": 159,
+          "w": 365,
+          "h": 365,
+          "path": "assets/visual_seal_NONCANONICAL_PREVIEW.png"
+        },
+        {
+          "kind": "text",
+          "x": 817,
+          "y": 553,
+          "value": "B1R3 NONCANONICAL PREVIEW",
+          "size": 15,
+          "color": "#6E6E73",
+          "bold": false
+        },
+        {
+          "kind": "text",
+          "x": 56,
+          "y": 591,
+          "value": "Lookup needs an explicit interface. A picture does not restore evidence or authority.",
+          "size": 20,
+          "color": "#1D1D1F",
+          "bold": false
+        }
+      ]
+    }
+  ],
+  "editable_pptx_status": "BUILT_IN_WORK_SUCCESSOR; OWNER_MEANING_REVIEW_PENDING",
+  "source": "Data-only shared slide objects; no flattened-page substitute",
+  "original_slide_spec_sha256": "7cd8637e247aa3bd25fec0ce2cc29fec92f7e99b696b10bebf6121657f9493ad",
+  "slide_objects_changed_from_original": false
+}

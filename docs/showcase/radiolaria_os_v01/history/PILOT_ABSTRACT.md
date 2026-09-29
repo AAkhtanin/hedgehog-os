@@ -1,0 +1,7 @@
+# Abstract
+
+Radiolaria OS is an application execution kernel for assembling continuing activity around a practical intention. An integrator supplies a domain profile: typed inputs and outputs, bounded work, current source observations, local policies and effect adapters. Probabilistic interpretation can propose useful work; ordinary code computes results; independent local owners decide what may be accepted and acted on. The kernel connects these stages without treating a model response, memory entry or foreign approval as permission.
+
+This pilot explains that separation through a recorded football booking example. VenueRoot computes an offer for three natural-grass sessions. A checked exchange carries the result and its provenance to ActivePlanetRoot, where a different local Work consumes it. The offer costs EUR 63 against a EUR 70 limit. Exchanging it does not book the venue. A later explicit consent and VenueRoot action decision lead to one mock booking; a revoked neighboring source is refused.
+
+The materials connect architecture, primary recorded objects and an independently reconstructed data path. They also distinguish runtime requests from external authoring and admission of new domain programs. The accepted technical package combines fresh and retained evidence; these editorial checks are not a new runtime campaign. Production security, universal correctness, live venue integration and Gate 6 closure are not claimed.

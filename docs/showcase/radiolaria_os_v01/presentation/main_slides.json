@@ -1,0 +1,1523 @@
+[
+  {
+    "id": "S01",
+    "title": "Radiolaria OS",
+    "scope": "Computing, assembled around intent",
+    "notes_ru": "Начинаем с практической цели: полезная работа продолжается при изменении условий. Иллюстрация является редакционным изображением, а не доказательством исполнения.",
+    "source_refs": [
+      {
+        "label": "architecture",
+        "target": "https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/specs/current_architecture_lock_v01.md"
+      },
+      {
+        "label": "chapter",
+        "target": "../chapters/02_geometry.html"
+      }
+    ],
+    "relations": [],
+    "reading_order": [
+      "S01_title",
+      "S01_scope",
+      "S01_cover",
+      "S01_task",
+      "S01_outcome",
+      "S01_qualification",
+      "S01_rule",
+      "S01_source_link",
+      "S01_atlas_locator"
+    ],
+    "notes_en": "Computing, assembled around intent\n\nRadiolaria OS Computing, assembled around intent Review photos. Adjust the plan. Continue useful work. Capabilities cooperate around a task. Each owner retains its decisions. Accepted finite reference implementation. This review corpus explains its mechanisms and recorded examples.\n\nThis is an editorial explanation of the named recorded or conceptual scope, not a new runtime result. Follow the source references for exact fields and limitations. B5 and final publication are not performed."
+  },
+  {
+    "id": "S02",
+    "title": "A task has a life beyond one response",
+    "scope": "CONCEPTUAL LIFETIME  /  Work and permission have different lifetimes",
+    "notes_ru": "Эта схема показывает жизнь задачи, а не общий обзор системы. Изменение данных ведёт к новому основанию использования; сохранённый результат остаётся историческим.",
+    "source_refs": [
+      {
+        "label": "time",
+        "target": "../references/cases/source_ledger.json"
+      },
+      {
+        "label": "chapter",
+        "target": "../chapters/03_time_memory.html"
+      }
+    ],
+    "relations": [
+      {
+        "id": "S02_lifetime_edge_0",
+        "source": "INTENT",
+        "target": "WORK",
+        "relation": "CONTROL",
+        "item": "organize",
+        "source_object": "S02_lifetime_0",
+        "target_object": "S02_lifetime_1"
+      },
+      {
+        "id": "S02_lifetime_edge_1",
+        "source": "WORK",
+        "target": "RESULT",
+        "relation": "DATA",
+        "item": "preserve / qualify",
+        "source_object": "S02_lifetime_1",
+        "target_object": "S02_lifetime_2"
+      },
+      {
+        "id": "S02_lifetime_edge_2",
+        "source": "RESULT",
+        "target": "ENV",
+        "relation": "CHRONOLOGY",
+        "item": "lifecycle order",
+        "source_object": "S02_lifetime_2",
+        "target_object": "S02_lifetime_3"
+      }
+    ],
+    "reading_order": [
+      "S02_title",
+      "S02_scope",
+      "S02_lifetime_0",
+      "S02_lifetime_0_label",
+      "S02_lifetime_1",
+      "S02_lifetime_1_label",
+      "S02_lifetime_2",
+      "S02_lifetime_2_label",
+      "S02_lifetime_3",
+      "S02_lifetime_3_label",
+      "S02_lifetime_edge_0",
+      "S02_lifetime_edge_0_label",
+      "S02_lifetime_edge_1",
+      "S02_lifetime_edge_1_label",
+      "S02_lifetime_edge_2",
+      "S02_lifetime_edge_2_label",
+      "S02_change",
+      "S02_change_label",
+      "S02_change_effect",
+      "S02_qualification",
+      "S02_rule",
+      "S02_source_link",
+      "S02_atlas_locator"
+    ],
+    "notes_en": "CONCEPTUAL LIFETIME  /  Work and permission have different lifetimes\n\nA task has a life beyond one response CONCEPTUAL LIFETIME / Work and permission have different lifetimes Intent and current conditions Useful bounded Work Retained result when still applicable Task ends owned resources close organize preserve / qualify lifecycle order A condition changes Affected work obtains a new current basis. Unaffected history stays inspectable. Continuity follows profile-specific time and scope checks. A preserved record alone does not establish truth or permission.\n\nThis is an editorial explanation of the named recorded or conceptual scope, not a new runtime result. Follow the source references for exact fields and limitations. B5 and final publication are not performed."
+  },
+  {
+    "id": "S03",
+    "title": "One permitted shift makes the football request fit",
+    "scope": "RECORDED FOOTBALL  /  Three natural-grass sessions, total EUR 63 within EUR 70",
+    "notes_ru": "Меняется только 8 января на плюс 30 минут. EXACT и разрешённый SHIFT различаются. Публикация предложения и отдельный BOOK не сливаются.",
+    "source_refs": [
+      {
+        "label": "football",
+        "target": "../references/episode_sources.json"
+      },
+      {
+        "label": "chapter",
+        "target": "../chapters/07_football.html"
+      }
+    ],
+    "relations": [],
+    "reading_order": [
+      "S03_title",
+      "S03_scope",
+      "S03_before_label",
+      "S03_after_label",
+      "S03_before0",
+      "S03_change0",
+      "S03_after0",
+      "S03_before1",
+      "S03_change1",
+      "S03_after1",
+      "S03_before2",
+      "S03_change2",
+      "S03_after2",
+      "S03_price",
+      "S03_qualification",
+      "S03_rule",
+      "S03_source_link",
+      "S03_atlas_locator"
+    ],
+    "notes_en": "RECORDED FOOTBALL  /  Three natural-grass sessions, total EUR 63 within EUR 70\n\nOne permitted shift makes the football request fit RECORDED FOOTBALL / Three natural-grass sessions, total EUR 63 within EUR 70 REQUEST ACCEPTABLE OFFER Jan 07: 16:30-18:00 Jan 07: 16:30-18:00 Jan 08: 11:00-12:30 Jan 08: 11:30-13:00 (+30 min) Jan 09: 11:00-12:30 Jan 09: 11:00-12:30 EUR 63 / 70 Natural grass Separate BOOK consent and one mock effect All dates are in 2027. Only Jan 08 shifts. The offer is computed evidence; it does not reserve the venue by itself.\n\nThis is an editorial explanation of the named recorded or conceptual scope, not a new runtime result. Follow the source references for exact fields and limitations. B5 and final publication are not performed."
+  },
+  {
+    "id": "S04",
+    "title": "The requester consumes the offered value",
+    "scope": "RECORDED FOOTBALL  /  Value inclusion binds the actual Work input",
+    "notes_ru": "Три объекта различаются по полному составу. Равенства относятся к включённому значению, не ко всем байтам E, B и C.",
+    "source_refs": [
+      {
+        "label": "football",
+        "target": "../references/episode_sources.json"
+      },
+      {
+        "label": "chapter",
+        "target": "../chapters/07_football.html"
+      }
+    ],
+    "relations": [
+      {
+        "id": "S04_values_edge_0",
+        "source": "E",
+        "target": "B",
+        "relation": "DERIVATION",
+        "item": "included value",
+        "source_object": "S04_values_0",
+        "target_object": "S04_values_1"
+      },
+      {
+        "id": "S04_values_edge_1",
+        "source": "B",
+        "target": "C",
+        "relation": "DATA",
+        "item": "included body",
+        "source_object": "S04_values_1",
+        "target_object": "S04_values_2"
+      },
+      {
+        "id": "S04_actual_consumption",
+        "source": "C",
+        "target": "CONSUMPTION",
+        "relation": "DATA",
+        "item": "qualified input actually consumed",
+        "source_object": "S04_values_2",
+        "target_object": "S04_consume"
+      }
+    ],
+    "reading_order": [
+      "S04_title",
+      "S04_scope",
+      "S04_values_0",
+      "S04_values_0_label",
+      "S04_values_1",
+      "S04_values_1_label",
+      "S04_values_2",
+      "S04_values_2_label",
+      "S04_values_edge_0",
+      "S04_values_edge_0_label",
+      "S04_values_edge_1",
+      "S04_values_edge_1_label",
+      "S04_consume",
+      "S04_consume_label",
+      "S04_checked",
+      "S04_qualification",
+      "S04_rule",
+      "S04_source_link",
+      "S04_atlas_locator",
+      "S04_actual_consumption"
+    ],
+    "notes_en": "RECORDED FOOTBALL  /  Value inclusion binds the actual Work input\n\nThe requester consumes the offered value RECORDED FOOTBALL / Value inclusion binds the actual Work input E offer_json B B.offer = E C C.body = B included value included body Requester Work input uses the bound offer field Independent source and STATUS reconstruction qualify C before consumption. A source hash is one check, not its own oracle. Full source identities and selectors remain in the field ledger.\n\nThis is an editorial explanation of the named recorded or conceptual scope, not a new runtime result. Follow the source references for exact fields and limitations. B5 and final publication are not performed."
+  },
+  {
+    "id": "S05",
+    "title": "One activity; several independent concerns",
+    "scope": "CONCEPTUAL MAP / Relations are not a recorded composite execution or a global owner",
+    "source_refs": [
+      {
+        "label": "architecture",
+        "target": "https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/specs/current_architecture_lock_v01.md"
+      },
+      {
+        "label": "chapter",
+        "target": "../chapters/02_geometry.html"
+      }
+    ],
+    "relations": [
+      {
+        "id": "S05_intake",
+        "source": "INTENT",
+        "target": "WORK",
+        "relation": "DATA",
+        "item": "typed input",
+        "source_object": "S05_intent",
+        "target_object": "S05_work"
+      },
+      {
+        "id": "S05_return",
+        "source": "WORK",
+        "target": "RESULT",
+        "relation": "DATA",
+        "item": "actual fields",
+        "source_object": "S05_work",
+        "target_object": "S05_result"
+      },
+      {
+        "id": "S05_child_invocation",
+        "source": "WORK",
+        "target": "CHILD",
+        "relation": "DATA",
+        "item": "bounded invocation",
+        "source_object": "S05_work",
+        "target_object": "S05_child"
+      },
+      {
+        "id": "S05_review",
+        "source": "RESULT",
+        "target": "ROOT",
+        "relation": "DATA",
+        "item": "evidence",
+        "source_object": "S05_result",
+        "target_object": "S05_root"
+      },
+      {
+        "id": "S05_context_edge0",
+        "source": "TIME",
+        "target": "WORK",
+        "relation": "CONCEPTUAL_CONTEXT",
+        "item": "Time qualifies Work; no permission",
+        "source_object": "S05_context0",
+        "target_object": "S05_work"
+      },
+      {
+        "id": "S05_context_edge1",
+        "source": "MEMORY",
+        "target": "WORK",
+        "relation": "CONCEPTUAL_CONTEXT",
+        "item": "Memory qualifies Work; no permission",
+        "source_object": "S05_context1",
+        "target_object": "S05_work"
+      },
+      {
+        "id": "S05_context_edge2",
+        "source": "SOURCE",
+        "target": "WORK",
+        "relation": "CONCEPTUAL_CONTEXT",
+        "item": "Source qualifies Work; no permission",
+        "source_object": "S05_context2",
+        "target_object": "S05_work"
+      },
+      {
+        "id": "S05_context_edge3",
+        "source": "SOURCE_ADMISSION",
+        "target": "WORK",
+        "relation": "CONCEPTUAL_CONTEXT",
+        "item": "Source admission qualifies Work; no permission",
+        "source_object": "S05_context3",
+        "target_object": "S05_work"
+      }
+    ],
+    "reading_order": [
+      "S05_title",
+      "S05_scope",
+      "S05_activity_region",
+      "S05_local",
+      "S05_intent",
+      "S05_intent_label",
+      "S05_work",
+      "S05_work_label",
+      "S05_result",
+      "S05_result_label",
+      "S05_child",
+      "S05_child_label",
+      "S05_intake",
+      "S05_intake_label",
+      "S05_return",
+      "S05_return_label",
+      "S05_child_invocation",
+      "S05_child_invocation_label",
+      "S05_root",
+      "S05_root_label",
+      "S05_review",
+      "S05_review_label",
+      "S05_other_owner",
+      "S05_context0",
+      "S05_context0_label",
+      "S05_context_edge0",
+      "S05_context1",
+      "S05_context1_label",
+      "S05_context_edge1",
+      "S05_context2",
+      "S05_context2_label",
+      "S05_context_edge2",
+      "S05_context3",
+      "S05_context3_label",
+      "S05_context_edge3",
+      "S05_qualification",
+      "S05_rule",
+      "S05_source_link",
+      "S05_atlas_locator"
+    ],
+    "notes_ru": "Общий вид связывает деятельность, контекст и решения. Семь видов отвечают на разные вопросы; это не единый записанный запуск.",
+    "notes_en": "CONCEPTUAL MAP / Relations are not a recorded composite execution or a global owner\n\nOne activity; several independent concerns CONCEPTUAL MAP / Relations are not a recorded composite execution or a global owner LOCAL ACTIVITY Intent Parent Work Consumed result Bounded child Work typed input actual fields bounded invocation Local Root review evidence Other owners retain independent decisions. Time Memory Source Source admission Time, memory and source qualify use. Source admission binds implementation. Current effects need their own packet.\n\nThis is an editorial explanation of the named recorded or conceptual scope, not a new runtime result. Follow the source references for exact fields and limitations. B5 and final publication are not performed."
+  },
+  {
+    "id": "S06",
+    "title": "Owners exchange evidence and decide independently",
+    "scope": "CONCEPTUAL PATTERN + FOOTBALL INSET  /  VenueRoot and ActivePlanetRoot are separate instances",
+    "notes_ru": "Предложение площадки является данными для получателя, а не переносом полномочий. BOOK отдельно рассматривается VenueRoot. Firewall и исполнитель могут быть одним проверенным компонентом.",
+    "source_refs": [
+      {
+        "label": "football",
+        "target": "../references/episode_sources.json"
+      },
+      {
+        "label": "chapter",
+        "target": "../chapters/07_football.html"
+      }
+    ],
+    "relations": [
+      {
+        "id": "S06_owners_edge_0",
+        "source": "VENUE",
+        "target": "B",
+        "relation": "DATA",
+        "item": "published body",
+        "source_object": "S06_owners_0",
+        "target_object": "S06_owners_1"
+      },
+      {
+        "id": "S06_owners_edge_1",
+        "source": "B",
+        "target": "REQUESTER",
+        "relation": "DATA",
+        "item": "current checked input",
+        "source_object": "S06_owners_1",
+        "target_object": "S06_owners_2"
+      },
+      {
+        "id": "S06_booking_edge_0",
+        "source": "PACKET",
+        "target": "FIREWALL",
+        "relation": "PERMISSION",
+        "item": "scoped permission",
+        "source_object": "S06_booking_0",
+        "target_object": "S06_booking_1"
+      },
+      {
+        "id": "S06_booking_edge_1",
+        "source": "FIREWALL",
+        "target": "EXECUTOR",
+        "relation": "EXECUTION",
+        "item": "checked operation",
+        "source_object": "S06_booking_1",
+        "target_object": "S06_booking_2"
+      },
+      {
+        "id": "S06_booking_edge_2",
+        "source": "EXECUTOR",
+        "target": "RECEIPT",
+        "relation": "DATA",
+        "item": "effect evidence",
+        "source_object": "S06_booking_2",
+        "target_object": "S06_booking_3"
+      }
+    ],
+    "reading_order": [
+      "S06_title",
+      "S06_scope",
+      "S06_owners_0",
+      "S06_owners_0_label",
+      "S06_owners_1",
+      "S06_owners_1_label",
+      "S06_owners_2",
+      "S06_owners_2_label",
+      "S06_owners_edge_0",
+      "S06_owners_edge_0_label",
+      "S06_owners_edge_1",
+      "S06_owners_edge_1_label",
+      "S06_booking_0",
+      "S06_booking_0_label",
+      "S06_booking_1",
+      "S06_booking_1_label",
+      "S06_booking_2",
+      "S06_booking_2_label",
+      "S06_booking_3",
+      "S06_booking_3_label",
+      "S06_booking_edge_0",
+      "S06_booking_edge_0_label",
+      "S06_booking_edge_1",
+      "S06_booking_edge_1_label",
+      "S06_booking_edge_2",
+      "S06_booking_edge_2_label",
+      "S06_qualification",
+      "S06_rule",
+      "S06_source_link",
+      "S06_atlas_locator"
+    ],
+    "notes_en": "CONCEPTUAL PATTERN + FOOTBALL INSET  /  VenueRoot and ActivePlanetRoot are separate instances\n\nOwners exchange evidence and decide independently CONCEPTUAL PATTERN + FOOTBALL INSET / VenueRoot and ActivePlanetRoot are separate instances VenueRoot offer review Released offer evidence ActivePlanetRoot local review published body current checked input VenueRoot current BOOK packet Host / Firewall enforcement Bounded mock booking executor Booking result and receipt scoped permission checked operation effect evidence Airline is a separate case with ClientRoot, AirlineRoot and BankRoot. No common business SuperRoot or new action service.\n\nThis is an editorial explanation of the named recorded or conceptual scope, not a new runtime result. Follow the source references for exact fields and limitations. B5 and final publication are not performed."
+  },
+  {
+    "id": "S07",
+    "title": "A result reaches an action through current authority",
+    "scope": "CONCEPTUAL AUTHORITY PATTERN  /  Real carrier roles, no extra process implied",
+    "notes_ru": "Возвращённый результат поддерживает рассмотрение. Root создаёт текущий ограниченный пакет; Host и Firewall проверяют его перед эффектом. Квитанция фиксирует результат.",
+    "source_refs": [
+      {
+        "label": "architecture",
+        "target": "https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/specs/current_architecture_lock_v01.md"
+      },
+      {
+        "label": "chapter",
+        "target": "../chapters/02_geometry.html"
+      }
+    ],
+    "relations": [
+      {
+        "id": "S07_review_edge_0",
+        "source": "RESULT",
+        "target": "ROOT",
+        "relation": "DATA",
+        "item": "review input",
+        "source_object": "S07_review_0",
+        "target_object": "S07_review_1"
+      },
+      {
+        "id": "S07_review_edge_1",
+        "source": "ROOT",
+        "target": "PACKET",
+        "relation": "PERMISSION",
+        "item": "local action decision",
+        "source_object": "S07_review_1",
+        "target_object": "S07_review_2"
+      },
+      {
+        "id": "S07_execute_edge_0",
+        "source": "FIREWALL",
+        "target": "EXECUTOR",
+        "relation": "EXECUTION",
+        "item": "checked invocation",
+        "source_object": "S07_execute_0",
+        "target_object": "S07_execute_1"
+      },
+      {
+        "id": "S07_execute_edge_1",
+        "source": "EXECUTOR",
+        "target": "RECEIPT",
+        "relation": "DATA",
+        "item": "result evidence",
+        "source_object": "S07_execute_1",
+        "target_object": "S07_execute_2"
+      },
+      {
+        "id": "S07_packet_consumption",
+        "source": "PACKET",
+        "target": "FIREWALL",
+        "relation": "PERMISSION",
+        "item": "actual current packet",
+        "source_object": "S07_review_2",
+        "target_object": "S07_execute_0"
+      }
+    ],
+    "reading_order": [
+      "S07_title",
+      "S07_scope",
+      "S07_review_0",
+      "S07_review_0_label",
+      "S07_review_1",
+      "S07_review_1_label",
+      "S07_review_2",
+      "S07_review_2_label",
+      "S07_review_edge_0",
+      "S07_review_edge_0_label",
+      "S07_review_edge_1",
+      "S07_review_edge_1_label",
+      "S07_execute_0",
+      "S07_execute_0_label",
+      "S07_execute_1",
+      "S07_execute_1_label",
+      "S07_execute_2",
+      "S07_execute_2_label",
+      "S07_execute_edge_0",
+      "S07_execute_edge_0_label",
+      "S07_execute_edge_1",
+      "S07_execute_edge_1_label",
+      "S07_packet_consumption",
+      "S07_packet_consumption_label",
+      "S07_qualification",
+      "S07_rule",
+      "S07_source_link",
+      "S07_atlas_locator"
+    ],
+    "notes_en": "CONCEPTUAL AUTHORITY PATTERN  /  Real carrier roles, no extra process implied\n\nA result reaches an action through current authority CONCEPTUAL AUTHORITY PATTERN / Real carrier roles, no extra process implied Proposed result and evidence Current local Root review Scoped current ActionCommitPacket review input local action decision Host / Firewall prestart enforcement Bounded executor actual effect EvidenceReceipt completed outcome checked invocation result evidence actual current packet The packet feeds enforcement. Receipt may inform a later review, but grants no new action and orders no cleanup.\n\nThis is an editorial explanation of the named recorded or conceptual scope, not a new runtime result. Follow the source references for exact fields and limitations. B5 and final publication are not performed."
+  },
+  {
+    "id": "S08",
+    "title": "One paid period, distinct session decisions",
+    "scope": "RECORDED ATLAS T2  /  Lawful main and expiry control use separate Device Hosts",
+    "notes_ru": "Это две независимые ветви, не записанное продление после истечения. Основной Host не продвигался и не отзывался отрицательными контролями. В основной ветви время 1790115596; expiry-контроль использует конец сеанса 1790115652.",
+    "source_refs": [
+      {
+        "label": "incident",
+        "target": "https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/showcase/incident_to_proof_atlas_v01/evidence/atlas_package.json"
+      },
+      {
+        "label": "chapter",
+        "target": "../chapters/10_cross_case.html"
+      }
+    ],
+    "relations": [],
+    "reading_order": [
+      "S08_title",
+      "S08_scope",
+      "S08_period",
+      "S08_paid",
+      "S08_session",
+      "S08_old",
+      "S08_refusal",
+      "S08_fresh",
+      "S08_new",
+      "S08_lawful",
+      "S08_qualification",
+      "S08_rule",
+      "S08_source_link",
+      "S08_atlas_locator"
+    ],
+    "notes_en": "RECORDED ATLAS T2  /  Lawful main and expiry control use separate Device Hosts\n\nOne paid period, distinct session decisions RECORDED ATLAS T2 / Lawful main and expiry control use separate Device Hosts PAID PERIOD EXPIRY CONTROL At 1790115652: refuses LAWFUL MAIN Main time 1790115596; session [1790115592, 1790115652). Main Host was not advanced or revoked by these controls. Branch bars are not a chronological scale. Retained paid history is context, not a standing permission or proof of later renewal.\n\nThis is an editorial explanation of the named recorded or conceptual scope, not a new runtime result. Follow the source references for exact fields and limitations. B5 and final publication are not performed."
+  },
+  {
+    "id": "S09",
+    "title": "Reuse avoids one domain calculation",
+    "scope": "RECORDED N4-04  /  Calls in the measured current process and thread",
+    "notes_ru": "Сравниваются конкретные счётчики: холодный расчёт 1, тёплый 0. При тёплом использовании остаются чтение и два решения Root. Активность детей не наблюдалась и не равна нулю.",
+    "source_refs": [
+      {
+        "label": "experience",
+        "target": "../references/experience/source_ledger.md"
+      },
+      {
+        "label": "chapter",
+        "target": "../chapters/05_experience.html"
+      }
+    ],
+    "relations": [],
+    "reading_order": [
+      "S09_title",
+      "S09_scope",
+      "S09_cold",
+      "S09_cold_bar",
+      "S09_cold_count",
+      "S09_warm",
+      "S09_warm_zero",
+      "S09_warm_count",
+      "S09_remaining",
+      "S09_qualification",
+      "S09_rule",
+      "S09_source_link",
+      "S09_atlas_locator"
+    ],
+    "notes_en": "RECORDED N4-04  /  Calls in the measured current process and thread\n\nReuse avoids one domain calculation RECORDED N4-04 / Calls in the measured current process and thread COLD 1 WARM 0 Warm: 1 stored read + 2 Root decision calls Same exact correction 1/1 for readings [8, 10, 9], reference 10 Child activity UNOBSERVED_NOT_ZERO. Different measurement windows exclude setup/writeback. No wall-clock speedup claim.\n\nThis is an editorial explanation of the named recorded or conceptual scope, not a new runtime result. Follow the source references for exact fields and limitations. B5 and final publication are not performed."
+  },
+  {
+    "id": "S10",
+    "title": "Returned amendments change the seating work",
+    "scope": "RECORDED W3  /  Request changes guests 07/08; the solver also moves 09/10",
+    "notes_ru": "SR2 вернул два REPLACE ALLOWED_TABLES для гостей 07/08 на table_1. Перемещение 09/10 на table_2 является вычисленным следствием. SR3 только проверяет существующий план, не решает заново.",
+    "source_refs": [
+      {
+        "label": "wedding",
+        "target": "../references/wedding/SOURCE_LEDGER.json"
+      },
+      {
+        "label": "chapter",
+        "target": "../chapters/08_wedding.html"
+      }
+    ],
+    "relations": [],
+    "reading_order": [
+      "S10_title",
+      "S10_scope",
+      "S10_fields",
+      "S10_labels",
+      "S10_pair_0",
+      "S10_pair_1",
+      "S10_pair_2",
+      "S10_pair_3",
+      "S10_pair_4",
+      "S10_pair_5",
+      "S10_SR1",
+      "S10_SR1_0",
+      "S10_SR1_1",
+      "S10_SR1_2",
+      "S10_SR1_3",
+      "S10_SR1_4",
+      "S10_SR1_5",
+      "S10_SR2",
+      "S10_SR2_0",
+      "S10_SR2_1",
+      "S10_SR2_2",
+      "S10_SR2_3",
+      "S10_SR2_4",
+      "S10_SR2_5",
+      "S10_consume",
+      "S10_qualification",
+      "S10_rule",
+      "S10_source_link",
+      "S10_atlas_locator"
+    ],
+    "notes_en": "RECORDED W3  /  Request changes guests 07/08; the solver also moves 09/10\n\nReturned amendments change the seating work RECORDED W3 / Request changes guests 07/08; the solver also moves 09/10 Actual fields: REPLACE ALLOWED_TABLES, guests 07/08, tables=[table_1] Guests 01/02 03/04 05/06 07/08 09/10 11/12 SR1 Table 1 Table 2 Table 3 Table 2 Table 1 Table 3 SR2 Table 1 Table 2 Table 3 Table 1 Table 2 Table 3 Review material consumed by compile, solve, original validation and consume. SR3: VALIDATE_EXISTING, no new objective or search, same SR2 result. Displayed table names map source codes 0/1/2 to table_1/2/3. Eight protected base conditions and MIX objective remain.\n\nThis is an editorial explanation of the named recorded or conceptual scope, not a new runtime result. Follow the source references for exact fields and limitations. B5 and final publication are not performed."
+  },
+  {
+    "id": "S11",
+    "title": "A measured candidate becomes a checked result",
+    "scope": "RECORDED W4 KEEP, REVISION 1  /  Separate from the W3 SR2 amendment",
+    "notes_ru": "Строка measurements[63] имеет нулевую индексацию. Порядок measuredQubits даёт 1+4+512=517. Проверка исходных условий и qpu_consume предшествуют отдельному сохранению. 33 из 1000 являются допустимыми кандидатами, не оценкой аппаратного шума.",
+    "source_refs": [
+      {
+        "label": "wedding",
+        "target": "../references/wedding/SOURCE_LEDGER.json"
+      },
+      {
+        "label": "chapter",
+        "target": "../chapters/08_wedding.html"
+      }
+    ],
+    "relations": [
+      {
+        "id": "S11_measurement_edge_0",
+        "source": "QPU",
+        "target": "DECODER",
+        "relation": "DATA",
+        "item": "raw bits",
+        "source_object": "S11_measurement_0",
+        "target_object": "S11_measurement_1"
+      },
+      {
+        "id": "S11_measurement_edge_1",
+        "source": "DECODER",
+        "target": "CHECKER",
+        "relation": "DATA",
+        "item": "decoded seating",
+        "source_object": "S11_measurement_1",
+        "target_object": "S11_measurement_2"
+      },
+      {
+        "id": "S11_measurement_edge_2",
+        "source": "CHECKER",
+        "target": "CONSUMPTION",
+        "relation": "DATA",
+        "item": "checked result",
+        "source_object": "S11_measurement_2",
+        "target_object": "S11_measurement_3"
+      }
+    ],
+    "reading_order": [
+      "S11_title",
+      "S11_scope",
+      "S11_measurement_0",
+      "S11_measurement_0_label",
+      "S11_measurement_1",
+      "S11_measurement_1_label",
+      "S11_measurement_2",
+      "S11_measurement_2_label",
+      "S11_measurement_3",
+      "S11_measurement_3_label",
+      "S11_measurement_edge_0",
+      "S11_measurement_edge_0_label",
+      "S11_measurement_edge_1",
+      "S11_measurement_edge_1_label",
+      "S11_measurement_edge_2",
+      "S11_measurement_edge_2_label",
+      "S11_decode",
+      "S11_count",
+      "S11_qualification",
+      "S11_rule",
+      "S11_source_link",
+      "S11_atlas_locator"
+    ],
+    "notes_en": "RECORDED W4 KEEP, REVISION 1  /  Separate from the W3 SR2 amendment\n\nA measured candidate becomes a checked result RECORDED W4 KEEP, REVISION 1 / Separate from the W3 SR2 amendment measurements[63] [1,0,1,0,0,0,0,0,0,1] Recorded order basis 517 Original conditions all satisfied qpu_consume actual material raw bits decoded seating checked result q0 and q2 and q9 are 1: 1 + 4 + 512 = 517 Seating [1,1,1,1,0,0,0,0,2,2,2,2], hard penalty 0, objective 0 33 valid / 1000 measured candidates. No local repair. Separate Root save decision records a 520-byte JSON write. 10-qubit up-to-four-local representation, not the 36-indicator QUBO. No quantum advantage or hardware-noise-rate claim.\n\nThis is an editorial explanation of the named recorded or conceptual scope, not a new runtime result. Follow the source references for exact fields and limitations. B5 and final publication are not performed."
+  },
+  {
+    "id": "S12",
+    "title": "The photo result survives a media change",
+    "scope": "RECORDED EWS3R2 PRINCIPAL LANE  /  Separate clocks below, no receipt-controlled cleanup",
+    "notes_ru": "Основной EWS: аудио завершается с -9, старый пакет не допускается, новые наблюдения позволяют продолжить медиа. Фото сохраняется. Сохранение и уборка ресурсов имеют разные основания.",
+    "source_refs": [
+      {
+        "label": "ews",
+        "target": "../references/ews/source_ledger.json"
+      },
+      {
+        "label": "chapter",
+        "target": "../chapters/09_workspace.html"
+      }
+    ],
+    "relations": [
+      {
+        "id": "S12_media_edge_0",
+        "source": "ENV",
+        "target": "CURRENTNESS",
+        "relation": "DATA",
+        "item": "changed-source data",
+        "source_object": "S12_media_0",
+        "target_object": "S12_media_1"
+      },
+      {
+        "id": "S12_media_edge_1",
+        "source": "CURRENTNESS",
+        "target": "WORK",
+        "relation": "DATA",
+        "item": "new current basis",
+        "source_object": "S12_media_1",
+        "target_object": "S12_media_2"
+      },
+      {
+        "id": "S12_save_edge_0",
+        "source": "ROOT",
+        "target": "EXECUTOR",
+        "relation": "PERMISSION",
+        "item": "bound bytes",
+        "source_object": "S12_save_0",
+        "target_object": "S12_save_1"
+      },
+      {
+        "id": "S12_save_edge_1",
+        "source": "EXECUTOR",
+        "target": "RECEIPT",
+        "relation": "DATA",
+        "item": "completed result",
+        "source_object": "S12_save_1",
+        "target_object": "S12_save_2"
+      }
+    ],
+    "reading_order": [
+      "S12_title",
+      "S12_scope",
+      "S12_media_0",
+      "S12_media_0_label",
+      "S12_media_1",
+      "S12_media_1_label",
+      "S12_media_2",
+      "S12_media_2_label",
+      "S12_media_edge_0",
+      "S12_media_edge_0_label",
+      "S12_media_edge_1",
+      "S12_media_edge_1_label",
+      "S12_photo",
+      "S12_save_0",
+      "S12_save_0_label",
+      "S12_save_1",
+      "S12_save_1_label",
+      "S12_save_2",
+      "S12_save_2_label",
+      "S12_save_edge_0",
+      "S12_save_edge_0_label",
+      "S12_save_edge_1",
+      "S12_save_edge_1_label",
+      "S12_cleanup",
+      "S12_qualification",
+      "S12_rule",
+      "S12_source_link",
+      "S12_atlas_locator"
+    ],
+    "notes_en": "RECORDED EWS3R2 PRINCIPAL LANE  /  Separate clocks below, no receipt-controlled cleanup\n\nThe photo result survives a media change RECORDED EWS3R2 PRINCIPAL LANE / Separate clocks below, no receipt-controlled cleanup Audio loss return code -9 Old packet refused fresh observation Affected media 4 to 16 frames changed-source data new current basis RETAINED PHOTO Same state and preview SHA. Producer count remains 3. Separate save decision / packet Actual write 250-byte sidecar Write receipt evidence bound bytes completed result RESOURCE END: owner-lifecycle cleanup. Audio ALREADY_EXITED, no graceful receipt. HISTORICAL EWS3: separate summary, later SUMMARY_ONLY descent and fresh Root review. Save precedes recorded closure chronologically. The receipt does not command cleanup or authorize another write.\n\nThis is an editorial explanation of the named recorded or conceptual scope, not a new runtime result. Follow the source references for exact fields and limitations. B5 and final publication are not performed."
+  },
+  {
+    "id": "S13",
+    "title": "Different cases expose different relations",
+    "scope": "SELECTED MATRIX CELLS  /  Ten cases, ten relations in the linked full matrix",
+    "notes_ru": "Таблица сопоставляет архитектурные отношения, а не десять одинаковых успехов. Непоказанная связь остаётся не показанной; это не доказательство отсутствия механизма.",
+    "source_refs": [
+      {
+        "label": "cases",
+        "target": "../corpus/case_property_matrix.json"
+      },
+      {
+        "label": "chapter",
+        "target": "../chapters/10_cross_case.html"
+      }
+    ],
+    "relations": [],
+    "reading_order": [
+      "S13_title",
+      "S13_scope",
+      "S13_case0",
+      "S13_relation0",
+      "S13_value0",
+      "S13_case1",
+      "S13_relation1",
+      "S13_value1",
+      "S13_case2",
+      "S13_relation2",
+      "S13_value2",
+      "S13_case3",
+      "S13_relation3",
+      "S13_value3",
+      "S13_case4",
+      "S13_relation4",
+      "S13_value4",
+      "S13_qualification",
+      "S13_rule",
+      "S13_source_link",
+      "S13_atlas_locator"
+    ],
+    "notes_en": "SELECTED MATRIX CELLS  /  Ten cases, ten relations in the linked full matrix\n\nDifferent cases expose different relations SELECTED MATRIX CELLS / Ten cases, ten relations in the linked full matrix Wedding Returned semantics Typed amendment changes consumed Work EWS Selective continuity Media changes; photo bytes remain Football Independent owners Checked offer is input, not BOOK permission G3 / G4 Experience and expenditure Current eligible history changes allocation Authoring Creation and admission Exam evidence precedes owner source operation Each cell carries its own source, selector, method and limit. Related examples did not execute as one composite transaction.\n\nThis is an editorial explanation of the named recorded or conceptual scope, not a new runtime result. Follow the source references for exact fields and limitations. B5 and final publication are not performed."
+  },
+  {
+    "id": "S14",
+    "title": "A refused neighbor makes the boundary visible",
+    "scope": "RECORDED INCIDENT ATLAS S1 / S4  /  Controlled Water Filter operations",
+    "notes_ru": "Сохраняем точную точку отказа. Имена поставщиков A и B сами по себе не означают два принимающих решения Root. Свидетельства прямого исполнения и общих потребителей различаются.",
+    "source_refs": [
+      {
+        "label": "incident",
+        "target": "https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/showcase/incident_to_proof_atlas_v01/evidence/atlas_package.json"
+      },
+      {
+        "label": "chapter",
+        "target": "../chapters/10_cross_case.html"
+      }
+    ],
+    "relations": [],
+    "reading_order": [
+      "S14_title",
+      "S14_scope",
+      "S14_allow",
+      "S14_allow_label",
+      "S14_deny",
+      "S14_deny_label",
+      "S14_allow_effect",
+      "S14_deny_effect",
+      "S14_classes",
+      "S14_qualification",
+      "S14_rule",
+      "S14_source_link",
+      "S14_atlas_locator"
+    ],
+    "notes_en": "RECORDED INCIDENT ATLAS S1 / S4  /  Controlled Water Filter operations\n\nA refused neighbor makes the boundary visible RECORDED INCIDENT ATLAS S1 / S4 / Controlled Water Filter operations Supplier A permitted bounded operation Local Root reviews Supplier B's unsafe recipient proposal Current review permits one controlled mock effect Root refuses: no packet zero effects from ADV-1 S1: DIRECT_CAUSAL S4: SHARED_DOMAIN_PROOF_POST_CONSUMER_CONTROL Shared domain proof is separate from direct causality; S4 controls follow the consumer. Supplier labels alone establish no second Root.\n\nThis is an editorial explanation of the named recorded or conceptual scope, not a new runtime result. Follow the source references for exact fields and limitations. B5 and final publication are not performed."
+  },
+  {
+    "id": "S15",
+    "title": "Recorded experience changes finite expenditure",
+    "scope": "G3 / G4 RECORDED MECHANISMS  /  Eligibility and Root descent precede current advisory use",
+    "notes_ru": "Исходное событие, OFE, терминальное GT и текущая рекомендация различаются. История проходит текущий допуск, затем влияет на давление и конечное распределение. Это не полномочие и не измеренный speedup.",
+    "source_refs": [
+      {
+        "label": "experience",
+        "target": "../references/experience/source_ledger.md"
+      },
+      {
+        "label": "chapter",
+        "target": "../chapters/05_experience.html"
+      }
+    ],
+    "relations": [
+      {
+        "id": "S15_history_edge_0",
+        "source": "OUTCOME",
+        "target": "OFE",
+        "relation": "DERIVATION",
+        "item": "qualified event",
+        "source_object": "S15_history_0",
+        "target_object": "S15_history_1"
+      },
+      {
+        "id": "S15_history_edge_1",
+        "source": "OFE",
+        "target": "DRS",
+        "relation": "DATA",
+        "item": "stored evidence",
+        "source_object": "S15_history_1",
+        "target_object": "S15_history_2"
+      },
+      {
+        "id": "S15_history_edge_2",
+        "source": "DRS",
+        "target": "ADVICE",
+        "relation": "DATA",
+        "item": "eligible material",
+        "source_object": "S15_history_2",
+        "target_object": "S15_history_3"
+      },
+      {
+        "id": "S15_spend_edge_0",
+        "source": "PRESSURE",
+        "target": "ALLOCATION",
+        "relation": "DERIVATION",
+        "item": "integer allocation",
+        "source_object": "S15_spend_0",
+        "target_object": "S15_spend_1"
+      },
+      {
+        "id": "S15_spend_edge_1",
+        "source": "ALLOCATION",
+        "target": "WORK",
+        "relation": "EXECUTION",
+        "item": "bounded dispatch",
+        "source_object": "S15_spend_1",
+        "target_object": "S15_spend_2"
+      },
+      {
+        "id": "S15_current_advice",
+        "source": "ADVICE",
+        "target": "PRESSURE",
+        "relation": "DATA",
+        "item": "current comparison input",
+        "source_object": "S15_history_3",
+        "target_object": "S15_spend_0"
+      }
+    ],
+    "reading_order": [
+      "S15_title",
+      "S15_scope",
+      "S15_history_0",
+      "S15_history_0_label",
+      "S15_history_1",
+      "S15_history_1_label",
+      "S15_history_2",
+      "S15_history_2_label",
+      "S15_history_3",
+      "S15_history_3_label",
+      "S15_history_edge_0",
+      "S15_history_edge_0_label",
+      "S15_history_edge_1",
+      "S15_history_edge_1_label",
+      "S15_history_edge_2",
+      "S15_history_edge_2_label",
+      "S15_spend_0",
+      "S15_spend_0_label",
+      "S15_spend_1",
+      "S15_spend_1_label",
+      "S15_spend_2",
+      "S15_spend_2_label",
+      "S15_spend_edge_0",
+      "S15_spend_edge_0_label",
+      "S15_spend_edge_1",
+      "S15_spend_edge_1_label",
+      "S15_current_advice",
+      "S15_current_advice_label",
+      "S15_qualification",
+      "S15_rule",
+      "S15_source_link",
+      "S15_atlas_locator"
+    ],
+    "notes_en": "G3 / G4 RECORDED MECHANISMS  /  Eligibility and Root descent precede current advisory use\n\nRecorded experience changes finite expenditure G3 / G4 RECORDED MECHANISMS / Eligibility and Root descent precede current advisory use Source-bound outcome event OFE record; then fold / retained history DRS read; then current Root descent Advisory values current comparison qualified event stored evidence eligible material Finite pressure and apportionment 7 allocation units 4 / 3 becomes 3 / 4 Actual Work dispatch budget 9 integer allocation bounded dispatch current comparison input Budget 9 = 1 spent + 1 reserved + 7 allocated. N4-04 is a separate 1-to-0 domain-call witness with current reads and reviews.\n\nThis is an editorial explanation of the named recorded or conceptual scope, not a new runtime result. Follow the source references for exact fields and limitations. B5 and final publication are not performed."
+  },
+  {
+    "id": "S16",
+    "title": "Qualified context reaches Work; refusal stops",
+    "scope": "RECORDED FOOTBALL RELATIONS / E is a value inside B; B is material inside C",
+    "source_refs": [
+      {
+        "label": "football",
+        "target": "../references/episode_sources.json"
+      },
+      {
+        "label": "chapter",
+        "target": "../chapters/07_football.html"
+      }
+    ],
+    "relations": [
+      {
+        "id": "S16_flow0",
+        "source": "E",
+        "target": "B",
+        "relation": "DATA",
+        "item": "value",
+        "source_object": "S16_body0",
+        "target_object": "S16_body1"
+      },
+      {
+        "id": "S16_flow1",
+        "source": "B",
+        "target": "CURRENTNESS",
+        "relation": "DATA",
+        "item": "source",
+        "source_object": "S16_body1",
+        "target_object": "S16_body2"
+      },
+      {
+        "id": "S16_flow2",
+        "source": "CURRENTNESS",
+        "target": "C",
+        "relation": "DATA",
+        "item": "qualified",
+        "source_object": "S16_body2",
+        "target_object": "S16_body3"
+      },
+      {
+        "id": "S16_refused",
+        "source": "CURRENTNESS",
+        "target": "CURRENTNESS",
+        "relation": "DATA",
+        "item": "refused branch",
+        "source_object": "S16_body2",
+        "target_object": "S16_refusal"
+      },
+      {
+        "id": "S16_positive",
+        "source": "C",
+        "target": "WORK",
+        "relation": "DATA",
+        "item": "only valid C",
+        "source_object": "S16_body3",
+        "target_object": "S16_consumer"
+      }
+    ],
+    "reading_order": [
+      "S16_title",
+      "S16_scope",
+      "S16_body0",
+      "S16_body0_label",
+      "S16_body1",
+      "S16_body1_label",
+      "S16_body2",
+      "S16_body2_label",
+      "S16_body3",
+      "S16_body3_label",
+      "S16_flow0",
+      "S16_flow0_label",
+      "S16_flow1",
+      "S16_flow1_label",
+      "S16_flow2",
+      "S16_flow2_label",
+      "S16_status",
+      "S16_status_label",
+      "S16_status_input",
+      "S16_status_relation_label",
+      "S16_refusal",
+      "S16_refusal_label",
+      "S16_refused",
+      "S16_refused_label",
+      "S16_consumer",
+      "S16_consumer_label",
+      "S16_positive",
+      "S16_positive_label",
+      "S16_qualification",
+      "S16_rule",
+      "S16_source_link",
+      "S16_atlas_locator"
+    ],
+    "notes_ru": "E вложен в B.offer, B вложен в C.body. STATUS предоставляет данные локальному проверяющему. Отозванный источник блокирует потребление до Work; подпись не приказывает Root.",
+    "notes_en": "RECORDED FOOTBALL RELATIONS / E is a value inside B; B is material inside C\n\nQualified context reaches Work; refusal stops RECORDED FOOTBALL RELATIONS / E is a value inside B; B is material inside C Producer E offer_json Released B B.offer = E Local checks body / status Qualified C C.body = B value source qualified Authenticated STATUS and source address DATA, not control REVOKED / invalid STOP: no consumption refused branch Requester Work consumes offer field only valid C No arrow leads from refusal to Work. Booking still requires a separate current Root packet and action.\n\nThis is an editorial explanation of the named recorded or conceptual scope, not a new runtime result. Follow the source references for exact fields and limitations. B5 and final publication are not performed."
+  },
+  {
+    "id": "S17",
+    "title": "Creating a component does not grant its authority",
+    "scope": "CONCEPTUAL / HOW and WHAT are separate; candidate material is not its author",
+    "source_refs": [
+      {
+        "label": "author",
+        "target": "https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/gate5_authoring_kit_v01/START_HERE.md"
+      },
+      {
+        "label": "chapter",
+        "target": "../chapters/11_integration.html"
+      }
+    ],
+    "relations": [
+      {
+        "id": "S17_how_input",
+        "source": "KIT",
+        "target": "AUTHOR",
+        "relation": "DATA",
+        "item": "reference",
+        "source_object": "S17_kit",
+        "target_object": "S17_author"
+      },
+      {
+        "id": "S17_what_input",
+        "source": "WHAT",
+        "target": "AUTHOR",
+        "relation": "DATA",
+        "item": "task",
+        "source_object": "S17_what",
+        "target_object": "S17_author"
+      },
+      {
+        "id": "S17_creates",
+        "source": "AUTHOR",
+        "target": "CANDIDATE",
+        "relation": "DATA",
+        "item": "creates",
+        "source_object": "S17_author",
+        "target_object": "S17_candidate"
+      },
+      {
+        "id": "S17_examines",
+        "source": "CANDIDATE",
+        "target": "EXAMINER",
+        "relation": "DATA",
+        "item": "checks actual material",
+        "source_object": "S17_candidate",
+        "target_object": "S17_exam"
+      },
+      {
+        "id": "S17_review",
+        "source": "EXAMINER",
+        "target": "SOURCE_ADMISSION",
+        "relation": "DATA",
+        "item": "review",
+        "source_object": "S17_exam",
+        "target_object": "S17_admission"
+      },
+      {
+        "id": "S17_identity",
+        "source": "SOURCE_ADMISSION",
+        "target": "WORK",
+        "relation": "DATA",
+        "item": "identity",
+        "source_object": "S17_admission",
+        "target_object": "S17_work"
+      }
+    ],
+    "reading_order": [
+      "S17_title",
+      "S17_scope",
+      "S17_kit",
+      "S17_kit_label",
+      "S17_what",
+      "S17_what_label",
+      "S17_author",
+      "S17_author_label",
+      "S17_candidate",
+      "S17_candidate_label",
+      "S17_how_input",
+      "S17_how_input_label",
+      "S17_what_input",
+      "S17_what_input_label",
+      "S17_creates",
+      "S17_creates_label",
+      "S17_exam",
+      "S17_exam_label",
+      "S17_admission",
+      "S17_admission_label",
+      "S17_work",
+      "S17_work_label",
+      "S17_examines",
+      "S17_examines_label",
+      "S17_review",
+      "S17_review_label",
+      "S17_identity",
+      "S17_identity_label",
+      "S17_current",
+      "S17_qualification",
+      "S17_rule",
+      "S17_source_link",
+      "S17_atlas_locator"
+    ],
+    "notes_ru": "Автор получает HOW и WHAT раздельно. Независимый экзамен и проверка предшествуют внесению точных исходников владельцем. Нижняя полоса начинается с новой задачи, источников и текущих решений.",
+    "notes_en": "CONCEPTUAL / HOW and WHAT are separate; candidate material is not its author\n\nCreating a component does not grant its authority CONCEPTUAL / HOW and WHAT are separate; candidate material is not its author HOW: interfaces WHAT: task External author Candidate bytes reference task creates Independent exam Owner source admission New bounded Work checks actual material review identity New current inputs and Root decisions remain required. No stored runtime grant. G54B1/G54D remain INCOMPLETE. G54D1 includes explicitly authorized correction 4; the audit packet is not the kit.\n\nThis is an editorial explanation of the named recorded or conceptual scope, not a new runtime result. Follow the source references for exact fields and limitations. B5 and final publication are not performed."
+  },
+  {
+    "id": "S18",
+    "title": "The entry boundary defines the audit question",
+    "scope": "METHOD / THREAT MODEL  /  No new exploit trial in this publication",
+    "notes_ru": "Предоставленный заранее административный доступ и вход недоверенных данных являются разными предпосылками. Достижимое нарушение через разрешённый вход нельзя исключить постфактум. Это схема метода, не новый результат атаки.",
+    "source_refs": [
+      {
+        "label": "method",
+        "target": "https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/gate6_reference_v01/FINITE_COMPLETION.md"
+      },
+      {
+        "label": "chapter",
+        "target": "../chapters/06_method.html"
+      }
+    ],
+    "relations": [
+      {
+        "id": "S18_admin_edge_0",
+        "source": "METHOD_ADMIN",
+        "target": "METHOD_STATE_EDIT",
+        "relation": "CONTROL",
+        "item": "already privileged",
+        "source_object": "S18_admin_0",
+        "target_object": "S18_admin_1"
+      },
+      {
+        "id": "S18_untrusted_edge_0",
+        "source": "PROPOSAL",
+        "target": "CHECKER",
+        "relation": "DATA",
+        "item": "candidate data",
+        "source_object": "S18_untrusted_0",
+        "target_object": "S18_untrusted_1"
+      },
+      {
+        "id": "S18_untrusted_edge_1",
+        "source": "CHECKER",
+        "target": "WORK",
+        "relation": "CONTROL",
+        "item": "only admitted input",
+        "source_object": "S18_untrusted_1",
+        "target_object": "S18_untrusted_2"
+      }
+    ],
+    "reading_order": [
+      "S18_title",
+      "S18_scope",
+      "S18_admin_0",
+      "S18_admin_0_label",
+      "S18_admin_1",
+      "S18_admin_1_label",
+      "S18_admin_edge_0",
+      "S18_admin_edge_0_label",
+      "S18_untrusted_0",
+      "S18_untrusted_0_label",
+      "S18_untrusted_1",
+      "S18_untrusted_1_label",
+      "S18_untrusted_2",
+      "S18_untrusted_2_label",
+      "S18_untrusted_edge_0",
+      "S18_untrusted_edge_0_label",
+      "S18_untrusted_edge_1",
+      "S18_untrusted_edge_1_label",
+      "S18_qualification",
+      "S18_rule",
+      "S18_source_link",
+      "S18_atlas_locator"
+    ],
+    "notes_en": "METHOD / THREAT MODEL  /  No new exploit trial in this publication\n\nThe entry boundary defines the audit question METHOD / THREAT MODEL / No new exploit trial in this publication Pre-granted admin access Direct trusted-state modification already privileged Allowed untrusted input Declared validation boundary Reviewed reference execution candidate data only admitted input An exploit reachable from an allowed input remains in scope. Reviewed-reference assumptions do not certify universal isolation.\n\nThis is an editorial explanation of the named recorded or conceptual scope, not a new runtime result. Follow the source references for exact fields and limitations. B5 and final publication are not performed."
+  },
+  {
+    "id": "S19",
+    "title": "A visual companion helps recognize a record",
+    "scope": "CONCEPTUAL VISUAL SEAL  /  NONCANONICAL preview, actual receipt-to-image binding unknown",
+    "notes_ru": "Это существующий некaнонический прототип. По изображению нельзя вывести подпись, уникальность или действительную привязку к квитанции. Криптографическое свидетельство остаётся отдельной сущностью.",
+    "source_refs": [
+      {
+        "label": "identity",
+        "target": "../VISUAL_SEAL.html"
+      },
+      {
+        "label": "chapter",
+        "target": "../chapters/14_identity.html"
+      }
+    ],
+    "relations": [],
+    "reading_order": [
+      "S19_title",
+      "S19_scope",
+      "S19_seal",
+      "S19_distinction",
+      "S19_unknown",
+      "S19_qualification",
+      "S19_rule",
+      "S19_source_link",
+      "S19_atlas_locator"
+    ],
+    "notes_en": "CONCEPTUAL VISUAL SEAL  /  NONCANONICAL preview, actual receipt-to-image binding unknown\n\nA visual companion helps recognize a record CONCEPTUAL VISUAL SEAL / NONCANONICAL preview, actual receipt-to-image binding unknown VISUAL_SEAL Human-facing companion  CRYPTO_SEAL Bound evidence and its verification No invented digest, decoder or signature from this picture. The companion can support recognition. Its existence does not establish the truth, authority or completeness of a record.\n\nThis is an editorial explanation of the named recorded or conceptual scope, not a new runtime result. Follow the source references for exact fields and limitations. B5 and final publication are not performed."
+  },
+  {
+    "id": "S20",
+    "title": "Integration supplies meaning within common boundaries",
+    "scope": "INTEGRATOR VIEW  /  Existing HOW route, no claimed customer deployment",
+    "notes_ru": "Общее ядро даёт контракты, текущее рассмотрение и доказательство потребления. Интеграция предоставляет предметную семантику и реальные системы. Новая реализация требует отдельного независимого допуска.",
+    "source_refs": [
+      {
+        "label": "author",
+        "target": "https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/gate5_authoring_kit_v01/START_HERE.md"
+      },
+      {
+        "label": "chapter",
+        "target": "../chapters/11_integration.html"
+      }
+    ],
+    "relations": [
+      {
+        "id": "S20_integrate_edge_0",
+        "source": "KERNEL",
+        "target": "CANDIDATE",
+        "relation": "DOCUMENT_REFERENCE",
+        "item": "documented HOW",
+        "source_object": "S20_integrate_0",
+        "target_object": "S20_integrate_1"
+      },
+      {
+        "id": "S20_integrate_edge_1",
+        "source": "CANDIDATE",
+        "target": "EXAMINER",
+        "relation": "DATA",
+        "item": "observable evidence",
+        "source_object": "S20_integrate_1",
+        "target_object": "S20_integrate_2"
+      }
+    ],
+    "reading_order": [
+      "S20_title",
+      "S20_scope",
+      "S20_integrate_0",
+      "S20_integrate_0_label",
+      "S20_integrate_1",
+      "S20_integrate_1_label",
+      "S20_integrate_2",
+      "S20_integrate_2_label",
+      "S20_integrate_edge_0",
+      "S20_integrate_edge_0_label",
+      "S20_integrate_edge_1",
+      "S20_integrate_edge_1_label",
+      "S20_details",
+      "S20_qualification",
+      "S20_rule",
+      "S20_source_link",
+      "S20_atlas_locator"
+    ],
+    "notes_en": "INTEGRATOR VIEW  /  Existing HOW route, no claimed customer deployment\n\nIntegration supplies meaning within common boundaries INTEGRATOR VIEW / Existing HOW route, no claimed customer deployment Kernel provides typed Work, time, Root Integration supplies sources and adapters Independent review checks exact candidate documented HOW observable evidence Source observations, payload schemas and effect mapping remain integration work. IAM, policy engines and cloud services are possible integrations, not endorsements. Source admission and every current runtime action remain separate. The HOW link opens accepted source documentation.\n\nThis is an editorial explanation of the named recorded or conceptual scope, not a new runtime result. Follow the source references for exact fields and limitations. B5 and final publication are not performed."
+  },
+  {
+    "id": "S21",
+    "title": "Technical evidence, publication and archive differ",
+    "scope": "PUBLICATION IDENTITY NOTATION  /  These A/B/C labels are not Football E/B/C",
+    "notes_ru": "Техническая версия A принята. Текущая редакция B не опубликована и не имеет собственного commit или DOI. Архивная идентичность C возникает отдельно. Технические результаты состоят из свежих и сохранённых свидетельств.",
+    "source_refs": [
+      {
+        "label": "verify",
+        "target": "../VERIFY.html"
+      },
+      {
+        "label": "chapter",
+        "target": "../chapters/13_verification.html"
+      }
+    ],
+    "relations": [
+      {
+        "id": "S21_identities_edge_0",
+        "source": "TECHNICAL_A",
+        "target": "PUBLICATION_B",
+        "relation": "DOCUMENT_REFERENCE",
+        "item": "explained by",
+        "source_object": "S21_identities_0",
+        "target_object": "S21_identities_1"
+      },
+      {
+        "id": "S21_identities_edge_1",
+        "source": "PUBLICATION_B",
+        "target": "ARCHIVE_C",
+        "relation": "DOCUMENT_REFERENCE",
+        "item": "future exact deposit",
+        "source_object": "S21_identities_1",
+        "target_object": "S21_identities_2"
+      }
+    ],
+    "reading_order": [
+      "S21_title",
+      "S21_scope",
+      "S21_identities_0",
+      "S21_identities_0_label",
+      "S21_identities_1",
+      "S21_identities_1_label",
+      "S21_identities_2",
+      "S21_identities_2_label",
+      "S21_identities_edge_0",
+      "S21_identities_edge_0_label",
+      "S21_identities_edge_1",
+      "S21_identities_edge_1_label",
+      "S21_evidence_scope",
+      "S21_qualification",
+      "S21_rule",
+      "S21_source_link",
+      "S21_atlas_locator"
+    ],
+    "notes_en": "PUBLICATION IDENTITY NOTATION  /  These A/B/C labels are not Football E/B/C\n\nTechnical evidence, publication and archive differ PUBLICATION IDENTITY NOTATION / These A/B/C labels are not Football E/B/C A: technical source 2e965ec... B: this review corpus unpublished successor C: eventual deposit no DOI assigned explained by future exact deposit 69 obligations satisfied, 4 explicitly deferred. Two fresh and nine retained final profiles: mixed source-bound evidence. N1-18, N1-19, N4-12 and N4-13 remain deferred. The review TAR is a deliverable, not a public archive deposit.\n\nThis is an editorial explanation of the named recorded or conceptual scope, not a new runtime result. Follow the source references for exact fields and limitations. B5 and final publication are not performed."
+  },
+  {
+    "id": "S23",
+    "title": "Published problems become bounded questions",
+    "scope": "INCIDENT ATLAS ORIGINS / 15 risk families; 20 cards; five domains",
+    "source_refs": [
+      {
+        "label": "accepted catalog",
+        "target": "../references/current/external_sources.json"
+      },
+      {
+        "label": "case routes",
+        "target": "../references/current/CASE_ROUTES.json"
+      }
+    ],
+    "relations": [],
+    "reading_order": [
+      "S23_title",
+      "S23_scope",
+      "S23_label0",
+      "S23_body0",
+      "S23_label1",
+      "S23_body1",
+      "S23_label2",
+      "S23_body2",
+      "S23_qualification",
+      "S23_rule",
+      "S23_source_link",
+      "S23_atlas_locator"
+    ],
+    "notes_en": "INCIDENT ATLAS ORIGINS / 15 risk families; 20 cards; five domains\n\nPublished problems become bounded questions INCIDENT ATLAS ORIGINS / 15 risk families; 20 cards; five domains Incidents / experiments Scope leakage, carried instructions and disclosure become source/account/operation checks, not claims of replaying external exploits. Requirements / context AP2 asks for exact authorization. AISI asks for observed outcomes. E15 is project context, not another independent incident. Lawful continuation Preserve useful evidence; review current qualified input. The accepted catalog keeps I / E / R / E-R / P-R distinct. 15 E context records plus four M method records. Australia is later context, not the Atlas origin.\n\nThis is an editorial explanation of the named recorded or conceptual scope, not a new runtime result. Follow the source references for exact fields and limitations. B5 and final publication are not performed."
+  },
+  {
+    "id": "S24",
+    "title": "Research informs a testable software response",
+    "scope": "SENTINEL / 12 references; ten authored mappings; no field-performance transfer",
+    "source_refs": [
+      {
+        "label": "accepted research map",
+        "target": "../references/current/research_context_v01.json"
+      }
+    ],
+    "relations": [],
+    "reading_order": [
+      "S24_title",
+      "S24_scope",
+      "S24_label0",
+      "S24_body0",
+      "S24_label1",
+      "S24_body1",
+      "S24_label2",
+      "S24_body2",
+      "S24_qualification",
+      "S24_rule",
+      "S24_source_link",
+      "S24_atlas_locator"
+    ],
+    "notes_en": "SENTINEL / 12 references; ten authored mappings; no field-performance transfer\n\nResearch informs a testable software response SENTINEL / 12 references; ten authored mappings; no field-performance transfer R04 / Rotolon Monitoring interruption -> distinguish reserve from insufficient evidence -> C03/S3 -> D02,D05. R07 / rainfall telemetry Observation interval is not delivery time -> C02 currentness checks -> D02,D03,D06. R10 / multiple surges Silence is not recovery -> fresh measured sequence and separate OFF -> C07/S5 -> D02,D03. Accepted source map inspected. Omitted raw return members remain raw-not-inspected. No researcher endorsement.\n\nThis is an editorial explanation of the named recorded or conceptual scope, not a new runtime result. Follow the source references for exact fields and limitations. B5 and final publication are not performed."
+  },
+  {
+    "id": "S25",
+    "title": "Useful data, permitted action and location differ",
+    "scope": "EXTERNAL CONTEXT / Primary-source descriptions, not comparative experiments",
+    "source_refs": [
+      {
+        "label": "primary context",
+        "target": "../references/current/external_context.json"
+      },
+      {
+        "label": "comparison",
+        "target": "../chapters/12_context.html"
+      }
+    ],
+    "relations": [],
+    "reading_order": [
+      "S25_title",
+      "S25_scope",
+      "S25_label0",
+      "S25_body0",
+      "S25_label1",
+      "S25_body1",
+      "S25_label2",
+      "S25_body2",
+      "S25_qualification",
+      "S25_rule",
+      "S25_source_link",
+      "S25_atlas_locator"
+    ],
+    "notes_en": "EXTERNAL CONTEXT / Primary-source descriptions, not comparative experiments\n\nUseful data, permitted action and location differ EXTERNAL CONTEXT / Primary-source descriptions, not comparative experiments Microsoft IFC / FIDES Integrity and confidentiality labels propagate; policy checks precede tools. Experimental defaults and approval limits remain. Apple local computation The dated manufacturer announcement illustrates possible local participants. No Radiolaria performance or adapter result. Independent owners A local model, an organization and a remote service may contribute data. None inherits another owner's final authority. Current packets and actual consumption remain distinct. No endorsement, superiority result or new integration claimed.\n\nThis is an editorial explanation of the named recorded or conceptual scope, not a new runtime result. Follow the source references for exact fields and limitations. B5 and final publication are not performed."
+  },
+  {
+    "id": "S22",
+    "title": "One file to inspect; one bundle to go deeper",
+    "scope": "REVIEW LINKS  /  Offline bundle routes are distinct from accepted-source HTTPS",
+    "notes_ru": "Понимание, проверка, интеграция и машинное чтение используют один корпус. Показан конкретный путь утверждения к полю источника; новые публикационные адреса пока не объявляются действующими.",
+    "source_refs": [
+      {
+        "label": "verify",
+        "target": "../VERIFY.html"
+      },
+      {
+        "label": "chapter",
+        "target": "../chapters/13_verification.html"
+      }
+    ],
+    "relations": [],
+    "reading_order": [
+      "S22_title",
+      "S22_scope",
+      "S22_link0",
+      "S22_desc0",
+      "S22_link1",
+      "S22_desc1",
+      "S22_link2",
+      "S22_desc2",
+      "S22_link3",
+      "S22_desc3",
+      "S22_chain",
+      "S22_qualification",
+      "S22_rule",
+      "S22_source_link",
+      "S22_atlas_locator"
+    ],
+    "notes_en": "REVIEW LINKS  /  Offline bundle routes are distinct from accepted-source HTTPS\n\nOne file to inspect; one bundle to go deeper REVIEW LINKS / Offline bundle routes are distinct from accepted-source HTTPS Understand Whole argument and seven views Verify Recorded claims, fields and limits Build Accepted HOW and interfaces LLM READ_RADIOLARIA.xml / optional focused routes One file to understand and inspect; one bundle for deeper tool-assisted review. Reading evidence does not execute the project or restore authority. B5 reader trials and publication remain unrun.\n\nThis is an editorial explanation of the named recorded or conceptual scope, not a new runtime result. Follow the source references for exact fields and limitations. B5 and final publication are not performed."
+  }
+]

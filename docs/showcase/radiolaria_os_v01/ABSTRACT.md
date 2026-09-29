@@ -1,0 +1,9 @@
+# Radiolaria OS
+
+## Computing, Assembled Around Intent
+
+Practical AI applications must coordinate useful work while requirements, resources and permissions change. Radiolaria OS provides an execution kernel for this activity. Semantic participants propose task meaning; runtime materializes bounded Work; programs, services and numerical tools contribute typed results. Local owners retain decisions about acceptance and consequential actions. An integration supplies domain knowledge, capabilities and validation rather than granting a model unrestricted control.
+
+The reference cases expose complementary relationships. Football connects a permitted schedule change to another owner's computed offer and a separately authorized mock booking. Wedding follows model-returned fields into actual computation, and historical quantum measurements through original-condition checks, consumption and separate saves. Ephemeral Workspace adapts media work after audio loss while retaining photo results, then completes its resource cleanup. Finite experience profiles change subsequent inspection or allocation without making advice a permission. External authorship demonstrates a separately examined domain implementation whose author did not acquire admission authority.
+
+The contribution is a common organization of execution, continuation and extension, not a substitute for domain expertise, numerical methods or deployment safeguards. Source-linked records make each case and its limits inspectable. The evidence combines explicitly distinguished fresh and historical profiles, including controlled execution, captured provider responses and mock effects; it establishes neither universal security nor quantum advantage. The resulting application kernel gives integrators a concrete basis for applications in which intelligence contributes to work without owning its consequences.

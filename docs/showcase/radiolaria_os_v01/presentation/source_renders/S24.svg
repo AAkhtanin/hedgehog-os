@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 1280 720" role="img" aria-labelledby="title desc">
+<title id="title">Research informs a testable software response</title>
+<desc id="desc">SENTINEL / 12 references; ten authored mappings; no field-performance transfer</desc>
+<defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L9,3 z" fill="#176B68"/></marker></defs>
+<rect width="1280" height="720" fill="white"/>
+<text id="S24_title" font-family="Nimbus Sans" font-size="42" font-weight="bold" fill="#16282B">
+<tspan x="54" y="78.0">Research informs a testable software response</tspan>
+</text>
+<text id="S24_scope" font-family="Nimbus Sans" font-size="23" font-weight="normal" fill="#43595D">
+<tspan x="56" y="136.0">SENTINEL / 12 references; ten authored mappings; no field-performance transfer</tspan>
+</text>
+<text id="S24_label0" font-family="Nimbus Sans" font-size="26" font-weight="bold" fill="#16282B">
+<tspan x="56" y="219.0">R04 / Rotolon</tspan>
+</text>
+<text id="S24_body0" font-family="Nimbus Sans" font-size="25" font-weight="normal" fill="#16282B">
+<tspan x="385" y="218.0">Monitoring interruption -&gt; distinguish reserve from insufficient evidence -&gt;</tspan>
+<tspan x="385" y="246.75">C03/S3 -&gt; D02,D05.</tspan>
+</text>
+<text id="S24_label1" font-family="Nimbus Sans" font-size="26" font-weight="bold" fill="#16282B">
+<tspan x="56" y="341.0">R07 / rainfall telemetry</tspan>
+</text>
+<text id="S24_body1" font-family="Nimbus Sans" font-size="25" font-weight="normal" fill="#16282B">
+<tspan x="385" y="340.0">Observation interval is not delivery time -&gt; C02 currentness checks -&gt;</tspan>
+<tspan x="385" y="368.75">D02,D03,D06.</tspan>
+</text>
+<text id="S24_label2" font-family="Nimbus Sans" font-size="26" font-weight="bold" fill="#16282B">
+<tspan x="56" y="463.0">R10 / multiple surges</tspan>
+</text>
+<text id="S24_body2" font-family="Nimbus Sans" font-size="25" font-weight="normal" fill="#16282B">
+<tspan x="385" y="462.0">Silence is not recovery -&gt; fresh measured sequence and separate OFF -&gt;</tspan>
+<tspan x="385" y="490.75">C07/S5 -&gt; D02,D03.</tspan>
+</text>
+<text id="S24_qualification" font-family="Nimbus Sans" font-size="23" font-weight="normal" fill="#43595D">
+<tspan x="56" y="619.0">Accepted source map inspected. Omitted raw return members remain raw-not-inspected. No researcher</tspan>
+<tspan x="56" y="645.45">endorsement.</tspan>
+</text>
+<line id="S24_rule" x1="56" y1="671" x2="1218" y2="671" stroke="#B8C8C6" stroke-width="1"/>
+<a href="../../corpus/case_property_matrix.json">
+<text id="S24_source_link" font-family="Nimbus Sans" font-size="18" font-weight="normal" fill="#315E8B">
+<tspan x="56" y="703.0">S24 Source: cases</tspan>
+</text>
+</a>
+<a href="../../atlas/README.html">
+<text id="S24_atlas_locator" font-family="Nimbus Sans" font-size="17" font-weight="normal" fill="#315E8B">
+<tspan x="660" y="702.0">Atlas: Overview / GEO 1 2 3 4 5 6 7</tspan>
+</text>
+</a>
+</svg>

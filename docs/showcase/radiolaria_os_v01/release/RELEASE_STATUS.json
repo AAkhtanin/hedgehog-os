@@ -1,0 +1,30 @@
+{
+  "schema": "g6b6.release_status.v01",
+  "technical_A": {
+    "commit": "2e965ecb18e545e428380eb8e9aa5a7037a388be",
+    "tree": "59a43cc0da470886804aab6c9af87fe17dfbd685",
+    "status": "ACCEPTED_BY_EXTERNAL_INPUT"
+  },
+  "publication_B": "A_PLUS_EXACT_M_AND_P_DELTAS",
+  "archive_C": null,
+  "B4": "IMMUTABLE_PREDECESSOR_WITH_FINALIZED_DERIVATIVES",
+  "B5": {
+    "A": "16/16",
+    "B": "20/20",
+    "human": "HUMAN_NOT_RUN",
+    "scope": "Historical exact tested inputs only; successor Reader not newly model-tested"
+  },
+  "B6": "FINAL_BYTES_PREPARATION_FOR_INDEPENDENT_REVIEW",
+  "admission": "OWNER_M_P_UNADMITTED",
+  "Gate6": "NOT_CLOSED",
+  "technical_deferments": [
+    "N1-18",
+    "N1-19",
+    "N4-12",
+    "N4-13"
+  ],
+  "future_commit": null,
+  "doi": null,
+  "planned_tag": "radiolaria-os-reference-g6b6f-v01",
+  "external_publication": "PENDING_NOT_EXECUTED"
+}

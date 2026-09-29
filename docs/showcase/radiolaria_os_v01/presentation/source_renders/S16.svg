@@ -1,0 +1,85 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 1280 720" role="img" aria-labelledby="title desc">
+<title id="title">Qualified context reaches Work; refusal stops</title>
+<desc id="desc">RECORDED FOOTBALL RELATIONS / E is a value inside B; B is material inside C</desc>
+<defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L9,3 z" fill="#176B68"/></marker></defs>
+<rect width="1280" height="720" fill="white"/>
+<text id="S16_title" font-family="Nimbus Sans" font-size="42" font-weight="bold" fill="#16282B">
+<tspan x="54" y="78.0">Qualified context reaches Work; refusal stops</tspan>
+</text>
+<text id="S16_scope" font-family="Nimbus Sans" font-size="23" font-weight="normal" fill="#43595D">
+<tspan x="56" y="136.0">RECORDED FOOTBALL RELATIONS / E is a value inside B; B is material inside C</tspan>
+</text>
+<rect x="56" y="212" width="225" height="100" id="S16_body0" fill="#EFF5F3" stroke="#176B68" stroke-width="2"/>
+<text id="S16_body0_label" font-family="Nimbus Sans" font-size="24" font-weight="normal" fill="#16282B">
+<tspan x="69" y="248.0">Producer E</tspan>
+<tspan x="69" y="275.6">offer_json</tspan>
+</text>
+<rect x="357" y="212" width="225" height="100" id="S16_body1" fill="#EFF5F3" stroke="#176B68" stroke-width="2"/>
+<text id="S16_body1_label" font-family="Nimbus Sans" font-size="24" font-weight="normal" fill="#16282B">
+<tspan x="370" y="248.0">Released B</tspan>
+<tspan x="370" y="275.6">B.offer = E</tspan>
+</text>
+<rect x="658" y="212" width="225" height="100" id="S16_body2" fill="#EFF5F3" stroke="#176B68" stroke-width="2"/>
+<text id="S16_body2_label" font-family="Nimbus Sans" font-size="24" font-weight="normal" fill="#16282B">
+<tspan x="671" y="248.0">Local checks</tspan>
+<tspan x="671" y="275.6">body / status</tspan>
+</text>
+<rect x="959" y="212" width="225" height="100" id="S16_body3" fill="#EFF5F3" stroke="#176B68" stroke-width="2"/>
+<text id="S16_body3_label" font-family="Nimbus Sans" font-size="24" font-weight="normal" fill="#16282B">
+<tspan x="972" y="248.0">Qualified C</tspan>
+<tspan x="972" y="275.6">C.body = B</tspan>
+</text>
+<line id="S16_flow0" x1="281" y1="262.0" x2="357" y2="262.0" stroke="#176B68" stroke-width="2" marker-end="url(#arrow)"/>
+<text id="S16_flow0_label" font-family="Nimbus Sans" font-size="19" font-weight="normal" fill="#43595D">
+<tspan x="282" y="199.0">value</tspan>
+</text>
+<line id="S16_flow1" x1="582" y1="262.0" x2="658" y2="262.0" stroke="#176B68" stroke-width="2" marker-end="url(#arrow)"/>
+<text id="S16_flow1_label" font-family="Nimbus Sans" font-size="19" font-weight="normal" fill="#43595D">
+<tspan x="583" y="199.0">source</tspan>
+</text>
+<line id="S16_flow2" x1="883" y1="262.0" x2="959" y2="262.0" stroke="#176B68" stroke-width="2" marker-end="url(#arrow)"/>
+<text id="S16_flow2_label" font-family="Nimbus Sans" font-size="19" font-weight="normal" fill="#43595D">
+<tspan x="884" y="199.0">qualified</tspan>
+</text>
+<rect x="56" y="433" width="328" height="100" id="S16_status" fill="#EFF5F3" stroke="#176B68" stroke-width="2"/>
+<text id="S16_status_label" font-family="Nimbus Sans" font-size="24" font-weight="normal" fill="#16282B">
+<tspan x="69" y="469.0">Authenticated STATUS</tspan>
+<tspan x="69" y="496.6">and source address</tspan>
+</text>
+<line id="S16_status_input" x1="384" y1="483" x2="770.5" y2="312" stroke="#176B68" stroke-width="2" marker-end="url(#arrow)"/>
+<text id="S16_status_relation_label" font-family="Nimbus Sans" font-size="22" font-weight="normal" fill="#16282B">
+<tspan x="400" y="493.0">DATA, not control</tspan>
+</text>
+<rect x="487" y="510" width="350" height="70" id="S16_refusal" fill="#FFF4F2" stroke="#A13D32" stroke-width="2"/>
+<text id="S16_refusal_label" font-family="Nimbus Sans" font-size="21" font-weight="normal" fill="#16282B">
+<tspan x="500" y="538.0">REVOKED / invalid</tspan>
+<tspan x="500" y="562.15">STOP: no consumption</tspan>
+</text>
+<line id="S16_refused" x1="770.5" y1="312" x2="662.0" y2="510" stroke="#176B68" stroke-width="2" marker-end="url(#arrow)"/>
+<text id="S16_refused_label" font-family="Nimbus Sans" font-size="19" font-weight="normal" fill="#43595D">
+<tspan x="743" y="439.0">refused branch</tspan>
+</text>
+<rect x="959" y="433" width="265" height="100" id="S16_consumer" fill="#EFF5F3" stroke="#176B68" stroke-width="2"/>
+<text id="S16_consumer_label" font-family="Nimbus Sans" font-size="24" font-weight="normal" fill="#16282B">
+<tspan x="972" y="469.0">Requester Work</tspan>
+<tspan x="972" y="496.6">consumes offer field</tspan>
+</text>
+<line id="S16_positive" x1="1071.5" y1="312" x2="1091.5" y2="433" stroke="#176B68" stroke-width="2" marker-end="url(#arrow)"/>
+<text id="S16_positive_label" font-family="Nimbus Sans" font-size="19" font-weight="normal" fill="#43595D">
+<tspan x="878" y="373.0">only valid C</tspan>
+</text>
+<text id="S16_qualification" font-family="Nimbus Sans" font-size="23" font-weight="normal" fill="#43595D">
+<tspan x="56" y="619.0">No arrow leads from refusal to Work. Booking still requires a separate current Root packet and action.</tspan>
+</text>
+<line id="S16_rule" x1="56" y1="671" x2="1218" y2="671" stroke="#B8C8C6" stroke-width="1"/>
+<a href="../../references/episode_sources.json">
+<text id="S16_source_link" font-family="Nimbus Sans" font-size="18" font-weight="normal" fill="#315E8B">
+<tspan x="56" y="703.0">S16 Source: football</tspan>
+</text>
+</a>
+<a href="../../atlas/README.html">
+<text id="S16_atlas_locator" font-family="Nimbus Sans" font-size="17" font-weight="normal" fill="#315E8B">
+<tspan x="660" y="702.0">Atlas: Overview / GEO 1 2 3 4 5 6 7</tspan>
+</text>
+</a>
+</svg>

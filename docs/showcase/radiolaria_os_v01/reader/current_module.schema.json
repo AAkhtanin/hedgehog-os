@@ -1,0 +1,78 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "properties": {
+    "B5": {
+      "const": "NOT_RUN"
+    },
+    "dependencies": {
+      "type": "object"
+    },
+    "format_version": {
+      "const": "reader-editorial-r1-v01"
+    },
+    "module_id": {
+      "enum": [
+        "M0",
+        "CORE",
+        "M2_FOOTBALL",
+        "M2_WEDDING",
+        "M2_ENVIRONMENT"
+      ]
+    },
+    "publication_version": {
+      "type": "string"
+    },
+    "source_entries": {
+      "items": {
+        "properties": {
+          "byte_length": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "original_path": {
+            "type": "string"
+          },
+          "representation_kind": {
+            "const": "embedded_exact"
+          },
+          "sha256": {
+            "pattern": "^[0-9a-f]{64}$",
+            "type": "string"
+          },
+          "source_id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "source_id",
+          "original_path",
+          "byte_length",
+          "sha256",
+          "source_role",
+          "representation_kind"
+        ],
+        "type": "object"
+      },
+      "minItems": 1,
+      "type": "array"
+    },
+    "technical_basis": {
+      "type": "object"
+    },
+    "token_inventory": {
+      "type": "object"
+    }
+  },
+  "required": [
+    "module_id",
+    "format_version",
+    "publication_version",
+    "technical_basis",
+    "source_entries",
+    "dependencies",
+    "token_inventory",
+    "B5"
+  ],
+  "title": "Current editorial Reader metadata",
+  "type": "object"
+}

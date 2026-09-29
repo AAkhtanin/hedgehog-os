@@ -1,0 +1,42 @@
+Here, S1–S8 mean `M2_FOOTBALL-S1`–`M2_FOOTBALL-S8`. Nested source IDs are within S1. “Original” below means labelled as an embedded recorded original, not independently authenticated here.
+
+1. **Q1 — What Radiolaria organizes.** It organizes bounded activity around the request: venue computation, publication and retrieval of evidence, requester Work, local decisions, and a separately authorized booking effect. This extends beyond filtering model responses because computed material becomes another participant’s actual Work input, with explicit ownership and execution boundaries. The example does not require raw model responses. This is a finite architectural example, not proof of universal safety.  
+   **Sources:** S1, `shared_context/purpose_intent_centred_activity`, `semantic_proposal_vs_authority_vs_execution`, and `exclusions`; S4, `GCL01.a` and its limitation.
+
+2. **Q2 — Request → E → B → C → requester Work.** Revision 2 permits only January 8 to shift by 30 minutes; January 7 and 9 retain zero shift allowance. The selected January 8 session becomes 11:30–13:00. The recorded path is:
+   - **E:** the venue’s computed offer, represented by decoded `VIEW_producer /outputs/offer_json`.
+   - **B:** the published body, containing E at `/offer`, plus source Work/review references, revision and time envelope.
+   - **C:** `{body: B, source_projection: …}`, adding the checked status/currentness fields.
+   - **Requester input:** decoded `VIEW_consumer /inputs/offer_json` contains C; `/inputs/request_json` contains the revised request.
+
+   The consumption mechanism is explicit: `CODE_run` passes `context` to `perform('requester',…)`; `CODE_native/execute_requester` passes the invocation’s `offer_json` to `consume`. `CODE_independent_check` specifies reconstructing expected C independently before checking the consumer invocation. These are **code excerpts**, while the Work and parent-observer views are **derived selections**, not full execution wrappers.  
+   **Sources:** original `main_pub_shift_offer_body /offer/request`, `/offer/slots`, `/source_work_ref`, `/source_review_ref`; derived `VIEW_parent_input /original_SHIFT_event`, `/observed_causal_order`; the views and excerpts above.
+
+3. **Q3 — Evidence suppliers and decision owners.** Venue Work supplies E; requester Work supplies the consumed result. Post V&V supplies checks, GT supplies advice, and observer/examiner records support examination. Models, when involved, supply proposals; this focused trace does not establish a model call.
+
+   **ActivePlanetRoot** owns local acceptance/consumption and result review. **VenueRoot** owns venue publication and the separate BOOK decision. BOOK carries `CONFIRM_MOCK_BOOKING` and `consent:controlled:booking`; the policy excerpt requires consent to match both the confirmation request and offer request. The documented effect path additionally requires a current scoped ActionCommitPacket and Firewall enforcement.
+
+   Prior ACCEPT records support later review; receipts support history/readback and duplicate avoidance. Neither grants reusable permission. Both displayed source and action-review results have `/permission_created=false`; the booking receipt has `/authority_class="EVIDENCE_ONLY"`.  
+   **Sources:** S1, `shared_context`; `CODE_booking_policy/approve_booking`; original `main_pub_book_original_event /request`; derived `VIEW_source_review`, `VIEW_action_review /target_root_id`, and `VIEW_booking`.
+
+4. **Q4 — Address, material, status and permission.** A pointer locates material. B supplies the material. The derived account describes a release binding the body hash, recipient, request, nonce and deadline; the full release is not embedded here. STATUS supplies a time-bounded observation: the original `main_req_shift_status` records ACTIVE with `/value/checked_at=1790359281` and `/value/valid_until=1790359341`. B’s separate validity ends at `1790359581`. Neither possession, signature nor TTL grants local permission.
+
+   The **separate REVOKED neighbor** records `/value/entry/state="REVOKED"` in original `negative_shift_status`. Original `negative_shift_refusal` records `REFUSED` and `status_not_active`; derived `VIEW_negative_root` records `BLOCKED_FAIL_CLOSED` with `/reason_code="hard_identity_violation"`. These are application and Root reporting layers, not proof here of a bad signature. S3 reports no successful requester consumer or effect for this SHIFT branch.  
+   **Sources:** S3, “Address, material, release, currentness, permission” and “Negative neighbor”; `CODE_status/check_status`; objects above. `CODE_refusal` also cautions that a confirmation refusal cannot universally certify that no earlier source effect occurred.
+
+5. **Q5 — Price and booking check.** **2100 + 2100 + 2100 = 6300 EUR minor units (€63)**, below the **7000 (€70)** budget by **700 (€7)**. The embedded original `main_pub_shift_offer_body` supports this directly through `/offer/slots`—three `price_minor=2100` entries—`/offer/total_minor=6300`, `/offer/currency="EUR"` and `/offer/request/budget_minor=7000`.
+
+   **This computation did not book anything:** that original has `/booking=null` and `/offer/status="OFFER_READY"`. Decoded derived `VIEW_consumer /outputs/result_json` additionally records `/counts/dispatch=0`, `/counts/mutations=0` and `/receipt_ref=null`.
+
+6. **Q7 — Saved inspection versus fresh execution.** With the necessary originals, saved-package checks could establish packaging consistency, recorded object relationships, invocation bindings and the specified finite validation results. Independent provenance additionally needs separately accepted trust anchors. `VERIFY_SAVED` executes validation workers over retained material; it does not establish a fresh business execution or current permission.
+
+   Fresh native Football work requires current inputs and its reviewed image, Docker endpoint and operator setup. Fresh live-provider evidence requires actual authorized provider calls with credentials and budget; live venue facts require current venue evidence.
+
+   **Here I only read the supplied XML text, compared displayed fields and checked the arithmetic.** I accessed no files or external references, executed nothing, and verified no hashes or signatures.  
+   **Source:** S2, `INSPECT_SAVED`, `VERIFY_SAVED`, `RUN_DETERMINISTIC_REFERENCE`, `RUN_LIVE_OPTIONAL`, and “Trust and reproducibility.”
+
+7. **Q9 — Missing deeper check.** **MISSING_EVIDENCE for a full cryptographic consumption audit:** complete Work wrappers, the full observer receipt and the signed bundle/release are not embedded in this focused selection. For example, `references/episode/main_pub_shift_bundle.json` is an **external-to-this-text reference** listed in S8/F02, not an original I accessed. Consequently, displayed value agreement cannot independently attest execution.  
+   **Sources:** S1, `dependencies/deep_audit`, `exclusions`, and `VIEW_consumer` coverage; S4, `GCL01.a/Limit`.
+
+8. **Q10 — Real-world settlement reference.** **MISSING_EVIDENCE.** The supplied evidence establishes no independently verified real-world payment-settlement reference. It describes a synthetic venue and `CONFIRM_MOCK_BOOKING`; its EvidenceReceipt concerns that mock booking. Missing evidence would include a bank/payment-processor settlement record linked to this Football transaction and independent verification of that linkage.  
+   **Sources:** original `main_pub_book_original_event /inventory/venue_ref` and `/request/operation`; derived `VIEW_booking`; S3, “BOOK is a new permission boundary.”

@@ -1,0 +1,2990 @@
+{
+  "schema": "G6B3WeddingExactSelectedFieldsV02",
+  "note": "Original raw-source hashes bind complete files. EXACT_SELECTED_VALUE preserves a selected semantic value, not source serialization. REDACTED_DERIVED records disclose their path-only transformation and keep separate original-value and published-value hashes. Decode steps identify JSON strings. All content is inert.",
+  "projections": [
+    {
+      "projection_id": "KEEP_FAMILIAR_V01-raw:/taskMetadata",
+      "source_id": "src-ea2b539fccc5e138cc2a",
+      "source_path": "docs/showcase/wedding_seating_v01/evidence/portable/w4/provider/KEEP_FAMILIAR_V01_results.json",
+      "source_raw_sha256": "746f6671f68dff12c31f9637c9ddefc4fa1f1692868d569316275abb144bad0e",
+      "json_pointer": "/taskMetadata",
+      "container_decoding_steps": [],
+      "derivative_sha256": "20e0da0d570f3ad7c7aabfbd27c67d150b6d1d85d7546b7d0b7c7c05ac5c1671",
+      "serialization": "UTF8_RECURSIVELY_SORTED_COMPACT_JSON_NO_TRAILING_NEWLINE; not raw source bytes",
+      "value": {
+        "braketSchemaHeader": {
+          "name": "braket.task_result.task_metadata",
+          "version": "1"
+        },
+        "deviceParameters": {
+          "braketSchemaHeader": {
+            "name": "braket.device_schema.rigetti.rigetti_device_parameters",
+            "version": "1"
+          },
+          "paradigmParameters": {
+            "braketSchemaHeader": {
+              "name": "braket.device_schema.gate_model_parameters",
+              "version": "1"
+            },
+            "qubitCount": 10,
+            "disableQubitRewiring": false
+          }
+        },
+        "id": "arn:aws:braket:us-west-1:296280725196:quantum-task/2c896911-1bd9-4c72-9d03-873fb782b59b",
+        "shots": 1000,
+        "status": "COMPLETED",
+        "deviceId": "arn:aws:braket:us-west-1::device/qpu/rigetti/Cepheus-1-108Q",
+        "createdAt": "2026-09-24T07:18:23.886Z",
+        "endedAt": "2026-09-24T09:00:12.621Z"
+      },
+      "value_class": "EXACT_SELECTED_VALUE"
+    },
+    {
+      "projection_id": "KEEP_FAMILIAR_V01-raw:/measuredQubits",
+      "source_id": "src-ea2b539fccc5e138cc2a",
+      "source_path": "docs/showcase/wedding_seating_v01/evidence/portable/w4/provider/KEEP_FAMILIAR_V01_results.json",
+      "source_raw_sha256": "746f6671f68dff12c31f9637c9ddefc4fa1f1692868d569316275abb144bad0e",
+      "json_pointer": "/measuredQubits",
+      "container_decoding_steps": [],
+      "derivative_sha256": "6c301cda718f48575f1c55c0f3ae8b643bad3d8a7967046ce3f8fad0abde4343",
+      "serialization": "UTF8_RECURSIVELY_SORTED_COMPACT_JSON_NO_TRAILING_NEWLINE; not raw source bytes",
+      "value": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "value_class": "EXACT_SELECTED_VALUE"
+    },
+    {
+      "projection_id": "KEEP_FAMILIAR_V01-raw:/measurements/63",
+      "source_id": "src-ea2b539fccc5e138cc2a",
+      "source_path": "docs/showcase/wedding_seating_v01/evidence/portable/w4/provider/KEEP_FAMILIAR_V01_results.json",
+      "source_raw_sha256": "746f6671f68dff12c31f9637c9ddefc4fa1f1692868d569316275abb144bad0e",
+      "json_pointer": "/measurements/63",
+      "container_decoding_steps": [],
+      "derivative_sha256": "9467fb348153fc3827924e0a8ec4051b011fd8f5ca078e73aa4040c484f6fe76",
+      "serialization": "UTF8_RECURSIVELY_SORTED_COMPACT_JSON_NO_TRAILING_NEWLINE; not raw source bytes",
+      "value": [
+        1,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "value_class": "EXACT_SELECTED_VALUE"
+    },
+    {
+      "projection_id": "KEEP_FAMILIAR_V01-raw:/measurements/2",
+      "source_id": "src-ea2b539fccc5e138cc2a",
+      "source_path": "docs/showcase/wedding_seating_v01/evidence/portable/w4/provider/KEEP_FAMILIAR_V01_results.json",
+      "source_raw_sha256": "746f6671f68dff12c31f9637c9ddefc4fa1f1692868d569316275abb144bad0e",
+      "json_pointer": "/measurements/2",
+      "container_decoding_steps": [],
+      "derivative_sha256": "983cc73b6943a50c5be19be718c82d4fe413c3de8f1cb5e484a375936af88cb6",
+      "serialization": "UTF8_RECURSIVELY_SORTED_COMPACT_JSON_NO_TRAILING_NEWLINE; not raw source bytes",
+      "value": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0
+      ],
+      "value_class": "EXACT_SELECTED_VALUE"
+    },
+    {
+      "projection_id": "KEEP_FAMILIAR_V01-samples:/task_arn",
+      "source_id": "src-f26dbc5ae33a1e32db61",
+      "source_path": "docs/showcase/wedding_seating_v01/evidence/portable/w4/provider/KEEP_FAMILIAR_V01_sample_validation.json",
+      "source_raw_sha256": "b03040927dd92cf843683a54ff9996e5158b425440b682584b79f2ad49181574",
+      "json_pointer": "/task_arn",
+      "container_decoding_steps": [],
+      "derivative_sha256": "2e12ba4b3058bd58c7ed0313882b4edae713928052d743198b0effa1aa695951",
+      "serialization": "UTF8_RECURSIVELY_SORTED_COMPACT_JSON_NO_TRAILING_NEWLINE; not raw source bytes",
+      "value": "arn:aws:braket:us-west-1:296280725196:quantum-task/2c896911-1bd9-4c72-9d03-873fb782b59b",
+      "value_class": "EXACT_SELECTED_VALUE"
+    },
+    {
+      "projection_id": "KEEP_FAMILIAR_V01-samples:/raw_sha256",
+      "source_id": "src-f26dbc5ae33a1e32db61",
+      "source_path": "docs/showcase/wedding_seating_v01/evidence/portable/w4/provider/KEEP_FAMILIAR_V01_sample_validation.json",
+      "source_raw_sha256": "b03040927dd92cf843683a54ff9996e5158b425440b682584b79f2ad49181574",
+      "json_pointer": "/raw_sha256",
+      "container_decoding_steps": [],
+      "derivative_sha256": "f67f67ae2454903b2a4141a08ebf8e1f254b63c9ae3e90491de312138fa3ce57",
+      "serialization": "UTF8_RECURSIVELY_SORTED_COMPACT_JSON_NO_TRAILING_NEWLINE; not raw source bytes",
+      "value": "746f6671f68dff12c31f9637c9ddefc4fa1f1692868d569316275abb144bad0e",
+      "value_class": "EXACT_SELECTED_VALUE"
+    },
+    {
+      "projection_id": "KEEP_FAMILIAR_V01-samples:/requested_shots",
+      "source_id": "src-f26dbc5ae33a1e32db61",
+      "source_path": "docs/showcase/wedding_seating_v01/evidence/portable/w4/provider/KEEP_FAMILIAR_V01_sample_validation.json",
+      "source_raw_sha256": "b03040927dd92cf843683a54ff9996e5158b425440b682584b79f2ad49181574",
+      "json_pointer": "/requested_shots",
+      "container_decoding_steps": [],
+      "derivative_sha256": "40510175845988f13f6162ed8526f0b09f73384467fa855e1e79b44a56562a58",
+      "serialization": "UTF8_RECURSIVELY_SORTED_COMPACT_JSON_NO_TRAILING_NEWLINE; not raw source bytes",
+      "value": 1000,
+      "value_class": "EXACT_SELECTED_VALUE"
+    },
+    {
+      "projection_id": "KEEP_FAMILIAR_V01-samples:/successful_shots",
+      "source_id": "src-f26dbc5ae33a1e32db61",
+      "source_path": "docs/showcase/wedding_seating_v01/evidence/portable/w4/provider/KEEP_FAMILIAR_V01_sample_validation.json",
+      "source_raw_sha256": "b03040927dd92cf843683a54ff9996e5158b425440b682584b79f2ad49181574",
+      "json_pointer": "/successful_shots",
+      "container_decoding_steps": [],
+      "derivative_sha256": "40510175845988f13f6162ed8526f0b09f73384467fa855e1e79b44a56562a58",
+      "serialization": "UTF8_RECURSIVELY_SORTED_COMPACT_JSON_NO_TRAILING_NEWLINE; not raw source bytes",
+      "value": 1000,
+      "value_class": "EXACT_SELECTED_VALUE"
+    },
+    {
+      "projection_id": "KEEP_FAMILIAR_V01-samples:/valid_samples",
+      "source_id": "src-f26dbc5ae33a1e32db61",
+      "source_path": "docs/showcase/wedding_seating_v01/evidence/portable/w4/provider/KEEP_FAMILIAR_V01_sample_validation.json",
+      "source_raw_sha256": "b03040927dd92cf843683a54ff9996e5158b425440b682584b79f2ad49181574",
+      "json_pointer": "/valid_samples",
+      "container_decoding_steps": [],
+      "derivative_sha256": "c6f3ac57944a531490cd39902d0f777715fd005efac9a30622d5f5205e7f6894",
+      "serialization": "UTF8_RECURSIVELY_SORTED_COMPACT_JSON_NO_TRAILING_NEWLINE; not raw source bytes",
+      "value": 33,
+      "value_class": "EXACT_SELECTED_VALUE"
+    },
+    {
+      "projection_id": "KEEP_FAMILIAR_V01-samples:/invalid_samples",
+      "source_id": "src-f26dbc5ae33a1e32db61",
+      "source_path": "docs/showcase/wedding_seating_v01/evidence/portable/w4/provider/KEEP_FAMILIAR_V01_sample_validation.json",
+      "source_raw_sha256": "b03040927dd92cf843683a54ff9996e5158b425440b682584b79f2ad49181574",
+      "json_pointer": "/invalid_samples",
+      "container_decoding_steps": [],
+      "derivative_sha256": "40a7ae9a07a94bf510c89d41b034787f768cc960e7471746dec613c8c6287c11",
+      "serialization": "UTF8_RECURSIVELY_SORTED_COMPACT_JSON_NO_TRAILING_NEWLINE; not raw source bytes",
+      "value": 967,
+      "value_class": "EXACT_SELECTED_VALUE"
+    },
+    {
+      "projection_id": "KEEP_FAMILIAR_V01-samples:/distinct_valid_plans",
+      "source_id": "src-f26dbc5ae33a1e32db61",
+      "source_path": "docs/showcase/wedding_seating_v01/evidence/portable/w4/provider/KEEP_FAMILIAR_V01_sample_validation.json",
+      "source_raw_sha256": "b03040927dd92cf843683a54ff9996e5158b425440b682584b79f2ad49181574",
+      "json_pointer": "/distinct_valid_plans",
+      "container_decoding_steps": [],
+      "derivative_sha256": "b17ef6d19c7a5b1ee83b907c595526dcb1eb06db8227d650d5dda0a9f4ce8cd9",
+      "serialization": "UTF8_RECURSIVELY_SORTED_COMPACT_JSON_NO_TRAILING_NEWLINE; not raw source bytes",
+      "value": 16,
+      "value_class": "EXACT_SELECTED_VALUE"
+    },
+    {
+      "projection_id": "KEEP_FAMILIAR_V01-samples:/selected",
+      "source_id": "src-f26dbc5ae33a1e32db61",
+      "source_path": "docs/showcase/wedding_seating_v01/evidence/portable/w4/provider/KEEP_FAMILIAR_V01_sample_validation.json",
+      "source_raw_sha256": "b03040927dd92cf843683a54ff9996e5158b425440b682584b79f2ad49181574",
+      "json_pointer": "/selected",
+      "container_decoding_steps": [],
+      "derivative_sha256": "ebafe9bf0ab88ca7615302eac9cd0ed8072f30909f72f9f472b5eca72d5a0b7d",
+      "serialization": "UTF8_RECURSIVELY_SORTED_COMPACT_JSON_NO_TRAILING_NEWLINE; not raw source bytes",
+      "value": {
+        "assignment": [
+          1,
+          1,
+          1,
+          1,
+          0,
+          0,
+          0,
+          0,
+          2,
+          2,
+          2,
+          2
+        ],
+        "basis_index": 517,
+        "shot_index": 63,
+        "status": "VALID",
+        "validation": {
+          "assignment": [
+            1,
+            1,
+            1,
+            1,
+            0,
+            0,
+            0,
+            0,
+            2,
+            2,
+            2,
+            2
+          ],
+          "binding": {
+            "mapping_ref": "acda8b7f9c2a018e16a16753cc27d0b006e75dd58495e9a9b977b9ce34740ed3",
+            "objective_profile": "KEEP_FAMILIAR_V01",
+            "owner_root_id": "organizer:w1",
+            "problem_ref": "16704ff36b942ba84ca41618bf59da407478c1e1a3ef7fa3779990fdea432c17",
+            "problem_revision": 1,
+            "source_bundle_hash": "f9b46b070624407e150424008fb3e933773751f54d7b5dacff834ae6855e9fa4",
+            "time_context_ref": "time:w1:static"
+          },
+          "components": {
+            "hard": 0,
+            "keep": 0,
+            "mix": 12,
+            "objective": 0
+          },
+          "condition_verdicts": [
+            {
+              "condition_id": "builtin:capacity:table_1",
+              "satisfied": true,
+              "source_ref": "original:table_records"
+            },
+            {
+              "condition_id": "builtin:capacity:table_2",
+              "satisfied": true,
+              "source_ref": "original:table_records"
+            },
+            {
+              "condition_id": "builtin:capacity:table_3",
+              "satisfied": true,
+              "source_ref": "original:table_records"
+            },
+            {
+              "condition_id": "condition_01",
+              "satisfied": true,
+              "source_ref": "source:w1:hard"
+            },
+            {
+              "condition_id": "condition_02",
+              "satisfied": true,
+              "source_ref": "source:w1:hard"
+            },
+            {
+              "condition_id": "condition_03",
+              "satisfied": true,
+              "source_ref": "source:w1:hard"
+            },
+            {
+              "condition_id": "condition_04",
+              "satisfied": true,
+              "source_ref": "source:w1:hard"
+            },
+            {
+              "condition_id": "condition_05",
+              "satisfied": true,
+              "source_ref": "source:w1:hard"
+            },
+            {
+              "condition_id": "condition_06",
+              "satisfied": true,
+              "source_ref": "source:w1:hard"
+            },
+            {
+              "condition_id": "condition_07",
+              "satisfied": true,
+              "source_ref": "source:w1:hard"
+            },
+            {
+              "condition_id": "condition_08",
+              "satisfied": true,
+              "source_ref": "source:w1:hard"
+            }
+          ],
+          "coverage": "ORIGINAL_ALL_CONDITIONS",
+          "hard_violations": [],
+          "ranking_key": [
+            false,
+            0,
+            [
+              1,
+              1,
+              1,
+              1,
+              0,
+              0,
+              0,
+              0,
+              2,
+              2,
+              2,
+              2
+            ]
+          ],
+          "schema_version": "SeatingValidationReportV01",
+          "status": "VALID",
+          "validator_id": "ORIGINAL_12_GUEST_VALIDATOR_V01"
+        }
+      },
+      "value_class": "EXACT_SELECTED_VALUE"
+    },
+    {
+      "projection_id": "KEEP_FAMILIAR_V01-samples:/lineage/2",
+      "source_id": "src-f26dbc5ae33a1e32db61",
+      "source_path": "docs/showcase/wedding_seating_v01/evidence/portable/w4/provider/KEEP_FAMILIAR_V01_sample_validation.json",
+      "source_raw_sha256": "b03040927dd92cf843683a54ff9996e5158b425440b682584b79f2ad49181574",
+      "json_pointer": "/lineage/2",
+      "container_decoding_steps": [],
+      "derivative_sha256": "a1842af9b29df1c121e28c733e1d386714a2d34db226fb8eb3c303765fff19f3",
+      "serialization": "UTF8_RECURSIVELY_SORTED_COMPACT_JSON_NO_TRAILING_NEWLINE; not raw source bytes",
+      "value": {
+        "assignment": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          2,
+          2,
+          0,
+          0,
+          2,
+          2
+        ],
+        "basis_index": 128,
+        "shot_index": 2,
+        "status": "INVALID",
+        "validation": {
+          "assignment": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            2,
+            2,
+            0,
+            0,
+            2,
+            2
+          ],
+          "binding": {
+            "mapping_ref": "acda8b7f9c2a018e16a16753cc27d0b006e75dd58495e9a9b977b9ce34740ed3",
+            "objective_profile": "KEEP_FAMILIAR_V01",
+            "owner_root_id": "organizer:w1",
+            "problem_ref": "16704ff36b942ba84ca41618bf59da407478c1e1a3ef7fa3779990fdea432c17",
+            "problem_revision": 1,
+            "source_bundle_hash": "f9b46b070624407e150424008fb3e933773751f54d7b5dacff834ae6855e9fa4",
+            "time_context_ref": "time:w1:static"
+          },
+          "components": {
+            "hard": 33,
+            "keep": 16,
+            "mix": 4,
+            "objective": 16
+          },
+          "condition_verdicts": [
+            {
+              "condition_id": "builtin:capacity:table_1",
+              "satisfied": false,
+              "source_ref": "original:table_records"
+            },
+            {
+              "condition_id": "builtin:capacity:table_2",
+              "satisfied": false,
+              "source_ref": "original:table_records"
+            },
+            {
+              "condition_id": "builtin:capacity:table_3",
+              "satisfied": true,
+              "source_ref": "original:table_records"
+            },
+            {
+              "condition_id": "condition_01",
+              "satisfied": true,
+              "source_ref": "source:w1:hard"
+            },
+            {
+              "condition_id": "condition_02",
+              "satisfied": true,
+              "source_ref": "source:w1:hard"
+            },
+            {
+              "condition_id": "condition_03",
+              "satisfied": true,
+              "source_ref": "source:w1:hard"
+            },
+            {
+              "condition_id": "condition_04",
+              "satisfied": true,
+              "source_ref": "source:w1:hard"
+            },
+            {
+              "condition_id": "condition_05",
+              "satisfied": true,
+              "source_ref": "source:w1:hard"
+            },
+            {
+              "condition_id": "condition_06",
+              "satisfied": true,
+              "source_ref": "source:w1:hard"
+            },
+            {
+              "condition_id": "condition_07",
+              "satisfied": false,
+              "source_ref": "source:w1:hard"
+            },
+            {
+              "condition_id": "condition_08",
+              "satisfied": true,
+              "source_ref": "source:w1:hard"
+            }
+          ],
+          "coverage": "ORIGINAL_ALL_CONDITIONS",
+          "hard_violations": [
+            "builtin:capacity:table_1",
+            "builtin:capacity:table_2",
+            "condition_07"
+          ],
+          "ranking_key": [
+            true,
+            16,
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              2,
+              2,
+              0,
+              0,
+              2,
+              2
+            ]
+          ],
+          "schema_version": "SeatingValidationReportV01",
+          "status": "INVALID",
+          "validator_id": "ORIGINAL_12_GUEST_VALIDATOR_V01"
+        }
+      },
+      "value_class": "EXACT_SELECTED_VALUE"
+    },
+    {
+      "projection_id": "KEEP_FAMILIAR_V01-samples:/postselection",
+      "source_id": "src-f26dbc5ae33a1e32db61",
+      "source_path": "docs/showcase/wedding_seating_v01/evidence/portable/w4/provider/KEEP_FAMILIAR_V01_sample_validation.json",
+      "source_raw_sha256": "b03040927dd92cf843683a54ff9996e5158b425440b682584b79f2ad49181574",
+      "json_pointer": "/postselection",
+      "container_decoding_steps": [],
+      "derivative_sha256": "2e716e308387a8d0e5d4993bdbb0df0c4ae981d1dbfe493f215f6df007c85ee1",
+      "serialization": "UTF8_RECURSIVELY_SORTED_COMPACT_JSON_NO_TRAILING_NEWLINE; not raw source bytes",
+      "value": "CLASSICAL_OBJECTIVE_THEN_ASSIGNMENT_THEN_SHOT",
+      "value_class": "EXACT_SELECTED_VALUE"
+    },
+    {
+      "projection_id": "KEEP_FAMILIAR_V01-samples:/local_repair",
+      "source_id": "src-f26dbc5ae33a1e32db61",
+      "source_path": "docs/showcase/wedding_seating_v01/evidence/portable/w4/provider/KEEP_FAMILIAR_V01_sample_validation.json",
+      "source_raw_sha256": "b03040927dd92cf843683a54ff9996e5158b425440b682584b79f2ad49181574",
+      "json_pointer": "/local_repair",
+      "container_decoding_steps": [],
+      "derivative_sha256": "fcbcf165908dd18a9e49f7ff27810176db8e9f63b4352213741664245224f8aa",
+      "serialization": "UTF8_RECURSIVELY_SORTED_COMPACT_JSON_NO_TRAILING_NEWLINE; not raw source bytes",
+      "value": false,
+      "value_class": "EXACT_SELECTED_VALUE"
+    },
+    {
+      "projection_id": "KEEP_FAMILIAR_V01-samples:/local_reference_objective",
+      "source_id": "src-f26dbc5ae33a1e32db61",
+      "source_path": "docs/showcase/wedding_seating_v01/evidence/portable/w4/provider/KEEP_FAMILIAR_V01_sample_validation.json",
+      "source_raw_sha256": "b03040927dd92cf843683a54ff9996e5158b425440b682584b79f2ad49181574",
+      "json_pointer": "/local_reference_objective",
+      "container_decoding_steps": [],
+      "derivative_sha256": "5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9",
+      "serialization": "UTF8_RECURSIVELY_SORTED_COMPACT_JSON_NO_TRAILING_NEWLINE; not raw source bytes",
+      "value": 0,
+      "value_class": "EXACT_SELECTED_VALUE"
+    },
+    {
+      "projection_id": "KEEP_FAMILIAR_V01-samples:/objective_gap",
+      "source_id": "src-f26dbc5ae33a1e32db61",
+      "source_path": "docs/showcase/wedding_seating_v01/evidence/portable/w4/provider/KEEP_FAMILIAR_V01_sample_validation.json",
+      "source_raw_sha256": "b03040927dd92cf843683a54ff9996e5158b425440b682584b79f2ad49181574",
+      "json_pointer": "/objective_gap",
+      "container_decoding_steps": [],
+      "derivative_sha256": "5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9",
+      "serialization": "UTF8_RECURSIVELY_SORTED_COMPACT_JSON_NO_TRAILING_NEWLINE; not raw source bytes",
+      "value": 0,
+      "value_class": "EXACT_SELECTED_VALUE"
+    },
+    {
+      "projection_id": "KEEP_FAMILIAR_V01-native:/classification",
+      "source_id": "src-56534fab13950379c82b",
+      "source_path": "docs/showcase/wedding_seating_v01/evidence/portable/w4/native/KEEP_FAMILIAR_V01/consume.json",
+      "source_raw_sha256": "4b98e74ed4d3e50b125cd1a34b8b385e962052ba6b4f9cd3eab06cc0ed4d03f9",
+      "json_pointer": "/classification",
+      "container_decoding_steps": [],
+      "derivative_sha256": "5b58bc3be5502bde23adabc8e2635d442b22d0b983ed089f2f680763adbc39bf",
+      "serialization": "UTF8_RECURSIVELY_SORTED_COMPACT_JSON_NO_TRAILING_NEWLINE; not raw source bytes",
+      "value": "QPU_RAW_DECODED_CURRENT_NATIVE_CONSUMPTION",
+      "value_class": "EXACT_SELECTED_VALUE"
+    },
+    {
+      "projection_id": "KEEP_FAMILIAR_V01-native:/owner/request_ref",
+      "source_id": "src-56534fab13950379c82b",
+      "source_path": "docs/showcase/wedding_seating_v01/evidence/portable/w4/native/KEEP_FAMILIAR_V01/consume.json",
+      "source_raw_sha256": "4b98e74ed4d3e50b125cd1a34b8b385e962052ba6b4f9cd3eab06cc0ed4d03f9",
+      "json_pointer": "/owner/request_ref",
+      "container_decoding_steps": [],
+      "derivative_sha256": "c0f95d69c8138f0fc1bb94dad877f79c795716fa07aebb98881a8322b4165cb4",
+      "serialization": "UTF8_RECURSIVELY_SORTED_COMPACT_JSON_NO_TRAILING_NEWLINE; not raw source bytes",
+      "value": "request:w4:xExg43mO:KEEP_FAMILIAR_V01:raw-consumption",
+      "value_class": "EXACT_SELECTED_VALUE"
+    },
+    {
+      "projection_id": "KEEP_FAMILIAR_V01-native:/program/ordered_work_ids",
+      "source_id": "src-56534fab13950379c82b",
+      "source_path": "docs/showcase/wedding_seating_v01/evidence/portable/w4/native/KEEP_FAMILIAR_V01/consume.json",
+      "source_raw_sha256": "4b98e74ed4d3e50b125cd1a34b8b385e962052ba6b4f9cd3eab06cc0ed4d03f9",
+      "json_pointer": "/program/ordered_work_ids",
+      "container_decoding_steps": [],
+      "derivative_sha256": "4d6ee8c1c08cb08931a5c21c2a230922679fd6e35005a94cd7dad6ddb8540b93",
+      "serialization": "UTF8_RECURSIVELY_SORTED_COMPACT_JSON_NO_TRAILING_NEWLINE; not raw source bytes",
+      "value": [
+        "qpu_validate",
+        "qpu_consume"
+      ],
+      "value_class": "EXACT_SELECTED_VALUE"
+    },
+    {
+      "projection_id": "KEEP_FAMILIAR_V01-native:/artifact/artifact_id",
+      "source_id": "src-56534fab13950379c82b",
+      "source_path": "docs/showcase/wedding_seating_v01/evidence/portable/w4/native/KEEP_FAMILIAR_V01/consume.json",
+      "source_raw_sha256": "4b98e74ed4d3e50b125cd1a34b8b385e962052ba6b4f9cd3eab06cc0ed4d03f9",
+      "json_pointer": "/artifact/artifact_id",
+      "container_decoding_steps": [],
+      "derivative_sha256": "080938ca2b8d6c0c6504a1225032420c86d1456b0b3efc6bb5395c22c7c85c23",
+      "serialization": "UTF8_RECURSIVELY_SORTED_COMPACT_JSON_NO_TRAILING_NEWLINE; not raw source bytes",
+      "value": "work_results:7d9cc252e33a1f0c51195748d86b09af8f4cea1d1ae3d3bdec144f4adc74ed83",
+      "value_class": "EXACT_SELECTED_VALUE"
+    },
+    {
+      "projection_id": "KEEP_FAMILIAR_V01-native:/output",
+      "source_id": "src-56534fab13950379c82b",
+      "source_path": "docs/showcase/wedding_seating_v01/evidence/portable/w4/native/KEEP_FAMILIAR_V01/consume.json",
+      "source_raw_sha256": "4b98e74ed4d3e50b125cd1a34b8b385e962052ba6b4f9cd3eab06cc0ed4d03f9",
+      "json_pointer": "/output",
+      "container_decoding_steps": [],
+      "derivative_sha256": "3756378338308c7f97d438519fabb3a64ae98b3c861b96e10aa46976666689c5",
+      "serialization": "UTF8_RECURSIVELY_SORTED_COMPACT_JSON_NO_TRAILING_NEWLINE; not raw source bytes",
+      "value": {
+        "assignment": [
+          1,
+          1,
+          1,
+          1,
+          0,
+          0,
+          0,
+          0,
+          2,
+          2,
+          2,
+          2
+        ],
+        "basis_index": 517,
+        "local_repair": false,
+        "objective_gap": 0,
+        "origin": "LIVE_QPU_RAW_DECODED_POSTSELECTED",
+        "problem_ref": "16704ff36b942ba84ca41618bf59da407478c1e1a3ef7fa3779990fdea432c17",
+        "profile": "KEEP_FAMILIAR_V01",
+        "raw_sha256": "746f6671f68dff12c31f9637c9ddefc4fa1f1692868d569316275abb144bad0e",
+        "request_ref": "request:w4:xExg43mO:KEEP_FAMILIAR_V01:raw-consumption",
+        "shot_index": 63,
+        "task_arn": "arn:aws:braket:us-west-1:296280725196:quantum-task/2c896911-1bd9-4c72-9d03-873fb782b59b"
+      },
+      "value_class": "EXACT_SELECTED_VALUE"
+    },
+    {
+      "projection_id": "KEEP_FAMILIAR_V01-native:/root_result",
+      "source_id": "src-56534fab13950379c82b",
+      "source_path": "docs/showcase/wedding_seating_v01/evidence/portable/w4/native/KEEP_FAMILIAR_V01/consume.json",
+      "source_raw_sha256": "4b98e74ed4d3e50b125cd1a34b8b385e962052ba6b4f9cd3eab06cc0ed4d03f9",
+      "json_pointer": "/root_result",
+      "container_decoding_steps": [],
+      "derivative_sha256": "a8b46f2c0fcfa8a0eaa5310268fd476a2765c77c9e84e828c203bc56d236dbf7",
+      "serialization": "UTF8_RECURSIVELY_SORTED_COMPACT_JSON_NO_TRAILING_NEWLINE; not raw source bytes",
+      "value": {
+        "conflict_set_ids": [],
+        "decision": "ACCEPT",
+        "decision_id": "dbfcb1fac1d7960f83c80c0f99175133449747c50c939070785c600f64593b7f",
+        "decision_input_id": "fe8b17205207286831e8fb748e2ddb5aac6e67a65886f4cff2d1308ce2a8705d",
+        "effect_requested": false,
+        "final_output_created": false,
+        "hard_failure_reasons": [],
+        "missing_evidence_refs": [],
+        "permission_created": false,
+        "prior_decision_id": null,
+        "reason_code": "validated_candidate_accepted",
+        "root_commit_created": true,
+        "selected_candidate_id": "wedding_result:3756378338308c7f97d438519fabb3a64ae98b3c861b96e10aa46976666689c5",
+        "target_root_id": "organizer:w1",
+        "transaction_id": "transaction:request:w4:xExg43mO:KEEP_FAMILIAR_V01:raw-consumption",
+        "transition_decision": {
+          "abi_major_version": 1,
+          "actor_role": "gt",
+          "attempted_effect": "CREATE_ROOT_DECISION",
+          "decision": "RETURN_TO_ROOT",
+          "decision_id": "85eff0e7c3a8a4da444edd85f36a3a2c91929bd85b5ab85eed585a6574976e07",
+          "matched": true,
+          "missing_guards": [],
+          "reason_code": "gt_advisory_returns_to_root",
+          "registry_id": "336c082d1520d49cf9b23d1c6d983637b7835d8fa863a83dbbae82a11bfa26be",
+          "required_guards": [
+            "artifact_valid",
+            "post_vv_passed",
+            "advisory_only"
+          ],
+          "root_commit_present": false,
+          "root_commit_required": true,
+          "rule_id": "gt_advisory_to_root_decision",
+          "satisfied_guards": [
+            "artifact_valid",
+            "post_vv_passed",
+            "advisory_only"
+          ],
+          "source_artifact_type": "GTAdvisoryReport",
+          "source_lifecycle_state": "VALIDATED",
+          "target_artifact_type": "RootDecision"
+        }
+      },
+      "value_class": "EXACT_SELECTED_VALUE"
+    },
+    {
+      "projection_id": "KEEP_FAMILIAR_V01-native:/material/backend_selection",
+      "source_id": "src-56534fab13950379c82b",
+      "source_path": "docs/showcase/wedding_seating_v01/evidence/portable/w4/native/KEEP_FAMILIAR_V01/consume.json",
+      "source_raw_sha256": "4b98e74ed4d3e50b125cd1a34b8b385e962052ba6b4f9cd3eab06cc0ed4d03f9",
+      "json_pointer": "/material/backend_selection",
+      "container_decoding_steps": [],
+      "derivative_sha256": "0ee76ce95de355501bf567ecf78a1e4f8ade7bae870ac172d93285de7c7330f7",
+      "serialization": "UTF8_RECURSIVELY_SORTED_COMPACT_JSON_NO_TRAILING_NEWLINE; not raw source bytes",
+      "value": {
+        "backend": "LIVE_QPU_EXPLICIT_PROVIDER_BRIDGE",
+        "origin": "CURRENT_W4_OWNER_INTAKE",
+        "prior_work_needs": "HISTORICAL_LOCAL_EXACT_NOT_MODEL_QPU_PERMISSION"
+      },
+      "value_class": "EXACT_SELECTED_VALUE"
+    },
+    {
+      "projection_id": "KEEP_FAMILIAR_V01-native:/material/historical_semantic_request_ref",
+      "source_id": "src-56534fab13950379c82b",
+      "source_path": "docs/showcase/wedding_seating_v01/evidence/portable/w4/native/KEEP_FAMILIAR_V01/consume.json",
+      "source_raw_sha256": "4b98e74ed4d3e50b125cd1a34b8b385e962052ba6b4f9cd3eab06cc0ed4d03f9",
+      "json_pointer": "/material/historical_semantic_request_ref",
+      "container_decoding_steps": [],
+      "derivative_sha256": "e8114c0093f915ccc59bb63914327c5b534bbc689730d4b423da35220bcd48f4",
+      "serialization": "UTF8_RECURSIVELY_SORTED_COMPACT_JSON_NO_TRAILING_NEWLINE; not raw source bytes",
+      "value": "request:w3:v02:a",
+      "value_class": "EXACT_SELECTED_VALUE"
+    },
+    {
+      "projection_id": "KEEP_FAMILIAR_V01-native:/material/semantic_parent_ref",
+      "source_id": "src-56534fab13950379c82b",
+      "source_path": "docs/showcase/wedding_seating_v01/evidence/portable/w4/native/KEEP_FAMILIAR_V01/consume.json",
+      "source_raw_sha256": "4b98e74ed4d3e50b125cd1a34b8b385e962052ba6b4f9cd3eab06cc0ed4d03f9",
+      "json_pointer": "/material/semantic_parent_ref",
+      "container_decoding_steps": [],
+      "derivative_sha256": "f1c9ecf951befbf845579060eb3ea7196fe08455da56f99b5f3c960cef6cf02f",
+      "serialization": "UTF8_RECURSIVELY_SORTED_COMPACT_JSON_NO_TRAILING_NEWLINE; not raw source bytes",
+      "value": "w3_captured_roles:21016d863a1ee39c7e73216b2bbbf481331bb2900284242897da3b41dae5a138",
+      "value_class": "EXACT_SELECTED_VALUE"
+    },
+    {
+      "projection_id": "KEEP_FAMILIAR_V01-native:/material/prepare_result_ref",
+      "source_id": "src-56534fab13950379c82b",
+      "source_path": "docs/showcase/wedding_seating_v01/evidence/portable/w4/native/KEEP_FAMILIAR_V01/consume.json",
+      "source_raw_sha256": "4b98e74ed4d3e50b125cd1a34b8b385e962052ba6b4f9cd3eab06cc0ed4d03f9",
+      "json_pointer": "/material/prepare_result_ref",
+      "container_decoding_steps": [],
+      "derivative_sha256": "c48ad65e6ec6f6012c8401611473d2a84626907718216d42615e5be5b2ab10f6",
+      "serialization": "UTF8_RECURSIVELY_SORTED_COMPACT_JSON_NO_TRAILING_NEWLINE; not raw source bytes",
+      "value": "work_results:17e93a13ec84ef0add500bd28fc390e81c24a704398e557513e8dc3106e2e2b9",
+      "value_class": "EXACT_SELECTED_VALUE"
+    },
+    {
+      "projection_id": "KEEP_FAMILIAR_V01-native:/material/submission_prepare_result_ref",
+      "source_id": "src-56534fab13950379c82b",
+      "source_path": "docs/showcase/wedding_seating_v01/evidence/portable/w4/native/KEEP_FAMILIAR_V01/consume.json",
+      "source_raw_sha256": "4b98e74ed4d3e50b125cd1a34b8b385e962052ba6b4f9cd3eab06cc0ed4d03f9",
+      "json_pointer": "/material/submission_prepare_result_ref",
+      "container_decoding_steps": [],
+      "derivative_sha256": "cd6e081d47a179df2af17d48cc4ddc8abd681dcbc1688966e9a6867561089957",
+      "serialization": "UTF8_RECURSIVELY_SORTED_COMPACT_JSON_NO_TRAILING_NEWLINE; not raw source bytes",
+      "value": "work_results:414886ebc2287cb88c449c3ecbcaf3ab6c5d7c7baf8569eed570adda12bc5c77",
+      "value_class": "EXACT_SELECTED_VALUE"
+    },
+    {
+      "projection_id": "KEEP_FAMILIAR_V01-native:/results/1/consumed_fields",
+      "source_id": "src-56534fab13950379c82b",
+      "source_path": "docs/showcase/wedding_seating_v01/evidence/portable/w4/native/KEEP_FAMILIAR_V01/consume.json",
+      "source_raw_sha256": "4b98e74ed4d3e50b125cd1a34b8b385e962052ba6b4f9cd3eab06cc0ed4d03f9",
+      "json_pointer": "/results/1/consumed_fields",
+      "container_decoding_steps": [],
+      "derivative_sha256": "cf68ca369964421805fd2cae9ab7ae46447d5672710ef56318e421aee1b3dd0a",
+      "serialization": "UTF8_RECURSIVELY_SORTED_COMPACT_JSON_NO_TRAILING_NEWLINE; not raw source bytes",
+      "value": [
+        {
+          "consumer_component": "work_composition",
+          "decision_effect": "bind_input",
+          "disposition": "USED",
+          "downstream_artifact_id": "work_instance:ac81b9fe1474a76a34c896f49c044cda106dfa17376c7339ccbd89e81b001813",
+          "output_field": "/material",
+          "producer_actor_id": "qpu_validate",
+          "reason_code": "used:actual_output_field",
+          "source_artifact_id": "capability_result:26a1bb93f6d7fb1c54728390004db14fe7cd35390032bdbc5512b781e59fe341",
+          "trace_refs": [
+            "request:w4:xExg43mO:KEEP_FAMILIAR_V01:raw-consumption",
+            "work_revision:821fe64d014143fc8fa7b4a8f5ad9c69ee16bdf61a95a5a7ce021eb6ed9d336a",
+            "capability_invocation:a827b5cf6e6da60c2da7b63dcdd924358cc0de3f889511f495504a3bca3a25d5",
+            "qpu_consume"
+          ]
+        }
+      ],
+      "value_class": "EXACT_SELECTED_VALUE"
+    },
+    {
+      "projection_id": "KEEP_FAMILIAR_V01-native:/results/0/result/result_id",
+      "source_id": "src-56534fab13950379c82b",
+      "source_path": "docs/showcase/wedding_seating_v01/evidence/portable/w4/native/KEEP_FAMILIAR_V01/consume.json",
+      "source_raw_sha256": "4b98e74ed4d3e50b125cd1a34b8b385e962052ba6b4f9cd3eab06cc0ed4d03f9",
+      "json_pointer": "/results/0/result/result_id",
+      "container_decoding_steps": [],
+      "derivative_sha256": "86ce052d9b0e3034c7c46ac6d0f4fe800a2bcc341cd86669bb29cfc1a22f64d3",
+      "serialization": "UTF8_RECURSIVELY_SORTED_COMPACT_JSON_NO_TRAILING_NEWLINE; not raw source bytes",
+      "value": "capability_result:26a1bb93f6d7fb1c54728390004db14fe7cd35390032bdbc5512b781e59fe341",
+      "value_class": "EXACT_SELECTED_VALUE"
+    },
+    {
+      "projection_id": "KEEP_FAMILIAR_V01-native:/results/1/invocation/work_instance_id",
+      "source_id": "src-56534fab13950379c82b",
+      "source_path": "docs/showcase/wedding_seating_v01/evidence/portable/w4/native/KEEP_FAMILIAR_V01/consume.json",
+      "source_raw_sha256": "4b98e74ed4d3e50b125cd1a34b8b385e962052ba6b4f9cd3eab06cc0ed4d03f9",
+      "json_pointer": "/results/1/invocation/work_instance_id",
+      "container_decoding_steps": [],
+      "derivative_sha256": "12a075d931a3529d3e4a2c631b003c249df5c23f6958ccbe759f02d2f6ae594e",
+      "serialization": "UTF8_RECURSIVELY_SORTED_COMPACT_JSON_NO_TRAILING_NEWLINE; not raw source bytes",
+      "value": "work_instance:ac81b9fe1474a76a34c896f49c044cda106dfa17376c7339ccbd89e81b001813",
+      "value_class": "EXACT_SELECTED_VALUE"
+    },
+    {
+      "projection_id": "KEEP_FAMILIAR_V01-native-result:/safe_output",
+      "source_id": "src-56534fab13950379c82b",
+      "source_path": "docs/showcase/wedding_seating_v01/evidence/portable/w4/native/KEEP_FAMILIAR_V01/consume.json",
+      "source_raw_sha256": "4b98e74ed4d3e50b125cd1a34b8b385e962052ba6b4f9cd3eab06cc0ed4d03f9",
+      "json_pointer": "/safe_output",
+      "container_decoding_steps": [
+        {
+          "json_pointer": "/results/1/result/output/0/value",
+          "decode": "JSON.parse on exact JSON string value",
+          "decoded_string_utf8_sha256": "45e037f4e1186a101e11ac74a7421926d98b793df31b348e01791a888c51cfcb"
+        }
+      ],
+      "derivative_sha256": "3756378338308c7f97d438519fabb3a64ae98b3c861b96e10aa46976666689c5",
+      "serialization": "UTF8_RECURSIVELY_SORTED_COMPACT_JSON_NO_TRAILING_NEWLINE; not raw source bytes",
+      "value": {
+        "assignment": [
+          1,
+          1,
+          1,
+          1,
+          0,
+          0,
+          0,
+          0,
+          2,
+          2,
+          2,
+          2
+        ],
+        "basis_index": 517,
+        "local_repair": false,
+        "objective_gap": 0,
+        "origin": "LIVE_QPU_RAW_DECODED_POSTSELECTED",
+        "problem_ref": "16704ff36b942ba84ca41618bf59da407478c1e1a3ef7fa3779990fdea432c17",
+        "profile": "KEEP_FAMILIAR_V01",
+        "raw_sha256": "746f6671f68dff12c31f9637c9ddefc4fa1f1692868d569316275abb144bad0e",
+        "request_ref": "request:w4:xExg43mO:KEEP_FAMILIAR_V01:raw-consumption",
+        "shot_index": 63,
+        "task_arn": "arn:aws:braket:us-west-1:296280725196:quantum-task/2c896911-1bd9-4c72-9d03-873fb782b59b"
+      },
+      "value_class": "EXACT_SELECTED_VALUE"
+    },
+    {
+      "projection_id": "KEEP_FAMILIAR_V01-native-result:/validation",
+      "source_id": "src-56534fab13950379c82b",
+      "source_path": "docs/showcase/wedding_seating_v01/evidence/portable/w4/native/KEEP_FAMILIAR_V01/consume.json",
+      "source_raw_sha256": "4b98e74ed4d3e50b125cd1a34b8b385e962052ba6b4f9cd3eab06cc0ed4d03f9",
+      "json_pointer": "/validation",
+      "container_decoding_steps": [
+        {
+          "json_pointer": "/results/1/result/output/0/value",
+          "decode": "JSON.parse on exact JSON string value",
+          "decoded_string_utf8_sha256": "45e037f4e1186a101e11ac74a7421926d98b793df31b348e01791a888c51cfcb"
+        }
+      ],
+      "derivative_sha256": "c090f3d80eb22ca00b7c0f1342bc0c99cb5910b83156db06fbd87937afc9529a",
+      "serialization": "UTF8_RECURSIVELY_SORTED_COMPACT_JSON_NO_TRAILING_NEWLINE; not raw source bytes",
+      "value": {
+        "assignment": [
+          1,
+          1,
+          1,
+          1,
+          0,
+          0,
+          0,
+          0,
+          2,
+          2,
+          2,
+          2
+        ],
+        "binding": {
+          "mapping_ref": "acda8b7f9c2a018e16a16753cc27d0b006e75dd58495e9a9b977b9ce34740ed3",
+          "objective_profile": "KEEP_FAMILIAR_V01",
+          "owner_root_id": "organizer:w1",
+          "problem_ref": "16704ff36b942ba84ca41618bf59da407478c1e1a3ef7fa3779990fdea432c17",
+          "problem_revision": 1,
+          "source_bundle_hash": "f9b46b070624407e150424008fb3e933773751f54d7b5dacff834ae6855e9fa4",
+          "time_context_ref": "time:w1:static"
+        },
+        "components": {
+          "hard": 0,
+          "keep": 0,
+          "mix": 12,
+          "objective": 0
+        },
+        "condition_verdicts": [
+          {
+            "condition_id": "builtin:capacity:table_1",
+            "satisfied": true,
+            "source_ref": "original:table_records"
+          },
+          {
+            "condition_id": "builtin:capacity:table_2",
+            "satisfied": true,
+            "source_ref": "original:table_records"
+          },
+          {
+            "condition_id": "builtin:capacity:table_3",
+            "satisfied": true,
+            "source_ref": "original:table_records"
+          },
+          {
+            "condition_id": "condition_01",
+            "satisfied": true,
+            "source_ref": "source:w1:hard"
+          },
+          {
+            "condition_id": "condition_02",
+            "satisfied": true,
+            "source_ref": "source:w1:hard"
+          },
+          {
+            "condition_id": "condition_03",
+            "satisfied": true,
+            "source_ref": "source:w1:hard"
+          },
+          {
+            "condition_id": "condition_04",
+            "satisfied": true,
+            "source_ref": "source:w1:hard"
+          },
+          {
+            "condition_id": "condition_05",
+            "satisfied": true,
+            "source_ref": "source:w1:hard"
+          },
+          {
+            "condition_id": "condition_06",
+            "satisfied": true,
+            "source_ref": "source:w1:hard"
+          },
+          {
+            "condition_id": "condition_07",
+            "satisfied": true,
+            "source_ref": "source:w1:hard"
+          },
+          {
+            "condition_id": "condition_08",
+            "satisfied": true,
+            "source_ref": "source:w1:hard"
+          }
+        ],
+        "coverage": "ORIGINAL_ALL_CONDITIONS",
+        "hard_violations": [],
+        "ranking_key": [
+          false,
+          0,
+          [
+            1,
+            1,
+            1,
+            1,
+            0,
+            0,
+            0,
+            0,
+            2,
+            2,
+            2,
+            2
+          ]
+        ],
+        "schema_version": "SeatingValidationReportV01",
+        "status": "VALID",
+        "validator_id": "ORIGINAL_12_GUEST_VALIDATOR_V01"
+      },
+      "value_class": "EXACT_SELECTED_VALUE"
+    },
+    {
+      "projection_id": "KEEP_FAMILIAR_V01-native-selected",
+      "source_id": "src-56534fab13950379c82b",
+      "source_path": "docs/showcase/wedding_seating_v01/evidence/portable/w4/native/KEEP_FAMILIAR_V01/consume.json",
+      "source_raw_sha256": "4b98e74ed4d3e50b125cd1a34b8b385e962052ba6b4f9cd3eab06cc0ed4d03f9",
+      "json_pointer": "/sample_validation/selected",
+      "container_decoding_steps": [
+        {
+          "json_pointer": "/results/1/invocation/inputs/0/value",
+          "decode": "JSON.parse on exact JSON string value",
+          "decoded_string_utf8_sha256": "4db830b4e7a50f793956fcdbafda14e50efaed578b47bfbd74ffa0a9eb75ea1c"
+        }
+      ],
+      "derivative_sha256": "ebafe9bf0ab88ca7615302eac9cd0ed8072f30909f72f9f472b5eca72d5a0b7d",
+      "serialization": "UTF8_RECURSIVELY_SORTED_COMPACT_JSON_NO_TRAILING_NEWLINE; not raw source bytes",
+      "value": {
+        "assignment": [
+          1,
+          1,
+          1,
+          1,
+          0,
+          0,
+          0,
+          0,
+          2,
+          2,
+          2,
+          2
+        ],
+        "basis_index": 517,
+        "shot_index": 63,
+        "status": "VALID",
+        "validation": {
+          "assignment": [
+            1,
+            1,
+            1,
+            1,
+            0,
+            0,
+            0,
+            0,
+            2,
+            2,
+            2,
+            2
+          ],
+          "binding": {
+            "mapping_ref": "acda8b7f9c2a018e16a16753cc27d0b006e75dd58495e9a9b977b9ce34740ed3",
+            "objective_profile": "KEEP_FAMILIAR_V01",
+            "owner_root_id": "organizer:w1",
+            "problem_ref": "16704ff36b942ba84ca41618bf59da407478c1e1a3ef7fa3779990fdea432c17",
+            "problem_revision": 1,
+            "source_bundle_hash": "f9b46b070624407e150424008fb3e933773751f54d7b5dacff834ae6855e9fa4",
+            "time_context_ref": "time:w1:static"
+          },
+          "components": {
+            "hard": 0,
+            "keep": 0,
+            "mix": 12,
+            "objective": 0
+          },
+          "condition_verdicts": [
+            {
+              "condition_id": "builtin:capacity:table_1",
+              "satisfied": true,
+              "source_ref": "original:table_records"
+            },
+            {
+              "condition_id": "builtin:capacity:table_2",
+              "satisfied": true,
+              "source_ref": "original:table_records"
+            },
+            {
+              "condition_id": "builtin:capacity:table_3",
+              "satisfied": true,
+              "source_ref": "original:table_records"
+            },
+            {
+              "condition_id": "condition_01",
+              "satisfied": true,
+              "source_ref": "source:w1:hard"
+            },
+            {
+              "condition_id": "condition_02",
+              "satisfied": true,
+              "source_ref": "source:w1:hard"
+            },
+            {
+              "condition_id": "condition_03",
+              "satisfied": true,
+              "source_ref": "source:w1:hard"
+            },
+            {
+              "condition_id": "condition_04",
+              "satisfied": true,
+              "source_ref": "source:w1:hard"
+            },
+            {
+              "condition_id": "condition_05",
+              "satisfied": true,
+              "source_ref": "source:w1:hard"
+            },
+            {
+              "condition_id": "condition_06",
+              "satisfied": true,
+              "source_ref": "source:w1:hard"
+            },
+            {
+              "condition_id": "condition_07",
+              "satisfied": true,
+              "source_ref": "source:w1:hard"
+            },
+            {
+              "condition_id": "condition_08",
+              "satisfied": true,
+              "source_ref": "source:w1:hard"
+            }
+          ],
+          "coverage": "ORIGINAL_ALL_CONDITIONS",
+          "hard_violations": [],
+          "ranking_key": [
+            false,
+            0,
+            [
+              1,
+              1,
+              1,
+              1,
+              0,
+              0,
+              0,
+              0,
+              2,
+              2,
+              2,
+              2
+            ]
+          ],
+          "schema_version": "SeatingValidationReportV01",
+          "status": "VALID",
+          "validator_id": "ORIGINAL_12_GUEST_VALIDATOR_V01"
+        }
+      },
+      "value_class": "EXACT_SELECTED_VALUE"
+    },
+    {
+      "projection_id": "KEEP_FAMILIAR_V01-save0:/0/claim",
+      "source_id": "src-c90d9d6fb99961e295db",
+      "source_path": "docs/showcase/wedding_seating_v01/evidence/portable/w4/outputs/KEEP_FAMILIAR_V01/save_receipts.json",
+      "source_raw_sha256": "5fb635f0448ecfe573f235fc8491a302d7457a15ebd7613432b817875c4f8606",
+      "json_pointer": "/0/claim",
+      "container_decoding_steps": [],
+      "derivative_sha256": "630253db402d1256685d86c74e1d95b6c95878d52ac270118e59e65e68324e4f",
+      "serialization": "UTF8_RECURSIVELY_SORTED_COMPACT_JSON_NO_TRAILING_NEWLINE; not raw source bytes",
+      "value": {
+        "bytes": 520,
+        "expires": 1790241212,
+        "owner_scope": "W4_NEW_TASK_OWNED_OUTPUT_ONLY",
+        "path": "external-recorded-location:seating.json",
+        "sha256": "3756378338308c7f97d438519fabb3a64ae98b3c861b96e10aa46976666689c5"
+      },
+      "original_selected_value_sha256": "e9fba3fdd300e3b0e3b237569e614045016711dfaa6522cc9690a5a5f6ef0697",
+      "value_class": "REDACTED_DERIVED",
+      "transformation": "Replace owner-local absolute path strings with external-recorded-location:<basename>. All other fields retained. Original selected-value digest is separate from the published derivative digest."
+    },
+    {
+      "projection_id": "KEEP_FAMILIAR_V01-save0:/0/status",
+      "source_id": "src-c90d9d6fb99961e295db",
+      "source_path": "docs/showcase/wedding_seating_v01/evidence/portable/w4/outputs/KEEP_FAMILIAR_V01/save_receipts.json",
+      "source_raw_sha256": "5fb635f0448ecfe573f235fc8491a302d7457a15ebd7613432b817875c4f8606",
+      "json_pointer": "/0/status",
+      "container_decoding_steps": [],
+      "derivative_sha256": "53e0e528e2803ddd3cbe0be7bc708796c977ccec5688d160a753a9ccf516d8d5",
+      "serialization": "UTF8_RECURSIVELY_SORTED_COMPACT_JSON_NO_TRAILING_NEWLINE; not raw source bytes",
+      "value": "SAVED_READBACK_VERIFIED",
+      "value_class": "EXACT_SELECTED_VALUE"
+    },
+    {
+      "projection_id": "KEEP_FAMILIAR_V01-save0:/0/root_result",
+      "source_id": "src-c90d9d6fb99961e295db",
+      "source_path": "docs/showcase/wedding_seating_v01/evidence/portable/w4/outputs/KEEP_FAMILIAR_V01/save_receipts.json",
+      "source_raw_sha256": "5fb635f0448ecfe573f235fc8491a302d7457a15ebd7613432b817875c4f8606",
+      "json_pointer": "/0/root_result",
+      "container_decoding_steps": [],
+      "derivative_sha256": "1da7050388b92237e62f5592c3553e360290f6ae499a107e063dbc3ca872e27e",
+      "serialization": "UTF8_RECURSIVELY_SORTED_COMPACT_JSON_NO_TRAILING_NEWLINE; not raw source bytes",
+      "value": {
+        "conflict_set_ids": [],
+        "decision": "ACCEPT",
+        "decision_id": "0dc285a99ff051c846282169206a265199545c6f5c7380df01c0620776fc4e2d",
+        "decision_input_id": "d7d5724945b09d5a15aa08c750c15ccc75d18b51c5bdf9db5a43e9f97709db8f",
+        "effect_requested": false,
+        "final_output_created": false,
+        "hard_failure_reasons": [],
+        "missing_evidence_refs": [],
+        "permission_created": false,
+        "prior_decision_id": null,
+        "reason_code": "validated_candidate_accepted",
+        "root_commit_created": true,
+        "selected_candidate_id": "wedding_save:e9fba3fdd300e3b0e3b237569e614045016711dfaa6522cc9690a5a5f6ef0697",
+        "target_root_id": "organizer:w1",
+        "transaction_id": "transaction:request:w4:xExg43mO:KEEP_FAMILIAR_V01:raw-consumption",
+        "transition_decision": {
+          "abi_major_version": 1,
+          "actor_role": "gt",
+          "attempted_effect": "CREATE_ROOT_DECISION",
+          "decision": "RETURN_TO_ROOT",
+          "decision_id": "85eff0e7c3a8a4da444edd85f36a3a2c91929bd85b5ab85eed585a6574976e07",
+          "matched": true,
+          "missing_guards": [],
+          "reason_code": "gt_advisory_returns_to_root",
+          "registry_id": "336c082d1520d49cf9b23d1c6d983637b7835d8fa863a83dbbae82a11bfa26be",
+          "required_guards": [
+            "artifact_valid",
+            "post_vv_passed",
+            "advisory_only"
+          ],
+          "root_commit_present": false,
+          "root_commit_required": true,
+          "rule_id": "gt_advisory_to_root_decision",
+          "satisfied_guards": [
+            "artifact_valid",
+            "post_vv_passed",
+            "advisory_only"
+          ],
+          "source_artifact_type": "GTAdvisoryReport",
+          "source_lifecycle_state": "VALIDATED",
+          "target_artifact_type": "RootDecision"
+        }
+      },
+      "value_class": "EXACT_SELECTED_VALUE"
+    },
+    {
+      "projection_id": "KEEP_FAMILIAR_V01-save0:/0/root_input/post_vv_bundle/items",
+      "source_id": "src-c90d9d6fb99961e295db",
+      "source_path": "docs/showcase/wedding_seating_v01/evidence/portable/w4/outputs/KEEP_FAMILIAR_V01/save_receipts.json",
+      "source_raw_sha256": "5fb635f0448ecfe573f235fc8491a302d7457a15ebd7613432b817875c4f8606",
+      "json_pointer": "/0/root_input/post_vv_bundle/items",
+      "container_decoding_steps": [],
+      "derivative_sha256": "af289b81912304f0e93dc6521d50377a9a548e0a1154cc80046be5b7ba7820c2",
+      "serialization": "UTF8_RECURSIVELY_SORTED_COMPACT_JSON_NO_TRAILING_NEWLINE; not raw source bytes",
+      "value": [
+        [
+          "bundle_id",
+          "checks:fa438f6237751d91c7bfca3ca383edd1d0a99ae1c95f86ba34f15fddd1259c82"
+        ],
+        [
+          "hard_failure_reasons",
+          []
+        ],
+        [
+          "post_vv_passed",
+          true
+        ],
+        [
+          "provided_evidence_refs",
+          [
+            "work_results:7d9cc252e33a1f0c51195748d86b09af8f4cea1d1ae3d3bdec144f4adc74ed83"
+          ]
+        ],
+        [
+          "rejected_candidate_ids",
+          []
+        ],
+        [
+          "required_evidence_refs",
+          [
+            "work_results:7d9cc252e33a1f0c51195748d86b09af8f4cea1d1ae3d3bdec144f4adc74ed83"
+          ]
+        ],
+        [
+          "validated_candidate_ids",
+          [
+            "wedding_save:e9fba3fdd300e3b0e3b237569e614045016711dfaa6522cc9690a5a5f6ef0697"
+          ]
+        ]
+      ],
+      "value_class": "EXACT_SELECTED_VALUE"
+    },
+    {
+      "projection_id": "KEEP_FAMILIAR_V01-save1:/1/claim",
+      "source_id": "src-c90d9d6fb99961e295db",
+      "source_path": "docs/showcase/wedding_seating_v01/evidence/portable/w4/outputs/KEEP_FAMILIAR_V01/save_receipts.json",
+      "source_raw_sha256": "5fb635f0448ecfe573f235fc8491a302d7457a15ebd7613432b817875c4f8606",
+      "json_pointer": "/1/claim",
+      "container_decoding_steps": [],
+      "derivative_sha256": "9f98d70bcb8e2e8691bed8d3f7aed1ce8c1b26b6edc3133f6ee53ef819693bc8",
+      "serialization": "UTF8_RECURSIVELY_SORTED_COMPACT_JSON_NO_TRAILING_NEWLINE; not raw source bytes",
+      "value": {
+        "bytes": 2243,
+        "expires": 1790241212,
+        "owner_scope": "W4_NEW_TASK_OWNED_OUTPUT_ONLY",
+        "path": "external-recorded-location:seating.html",
+        "sha256": "0105a85f0757e8b1c3b27bd30589bdc67a8d40d5b04abd1b7194f63fc30deff8"
+      },
+      "original_selected_value_sha256": "2ba7cb144be067e63b1b6e28352797541acb8602dc240c28ed93948b54d872c3",
+      "value_class": "REDACTED_DERIVED",
+      "transformation": "Replace owner-local absolute path strings with external-recorded-location:<basename>. All other fields retained. Original selected-value digest is separate from the published derivative digest."
+    },
+    {
+      "projection_id": "KEEP_FAMILIAR_V01-save1:/1/status",
+      "source_id": "src-c90d9d6fb99961e295db",
+      "source_path": "docs/showcase/wedding_seating_v01/evidence/portable/w4/outputs/KEEP_FAMILIAR_V01/save_receipts.json",
+      "source_raw_sha256": "5fb635f0448ecfe573f235fc8491a302d7457a15ebd7613432b817875c4f8606",
+      "json_pointer": "/1/status",
+      "container_decoding_steps": [],
+      "derivative_sha256": "53e0e528e2803ddd3cbe0be7bc708796c977ccec5688d160a753a9ccf516d8d5",
+      "serialization": "UTF8_RECURSIVELY_SORTED_COMPACT_JSON_NO_TRAILING_NEWLINE; not raw source bytes",
+      "value": "SAVED_READBACK_VERIFIED",
+      "value_class": "EXACT_SELECTED_VALUE"
+    },
+    {
+      "projection_id": "KEEP_FAMILIAR_V01-save1:/1/root_result",
+      "source_id": "src-c90d9d6fb99961e295db",
+      "source_path": "docs/showcase/wedding_seating_v01/evidence/portable/w4/outputs/KEEP_FAMILIAR_V01/save_receipts.json",
+      "source_raw_sha256": "5fb635f0448ecfe573f235fc8491a302d7457a15ebd7613432b817875c4f8606",
+      "json_pointer": "/1/root_result",
+      "container_decoding_steps": [],
+      "derivative_sha256": "f5276d70b411899bfbd7299ba8b3559ae3f7cb5ef447e77fa0d099028f48a979",
+      "serialization": "UTF8_RECURSIVELY_SORTED_COMPACT_JSON_NO_TRAILING_NEWLINE; not raw source bytes",
+      "value": {
+        "conflict_set_ids": [],
+        "decision": "ACCEPT",
+        "decision_id": "510c8ea2a2680a885a735406e094af54fd02533f8ea065c1aed7b32425239497",
+        "decision_input_id": "9c95280781465d241b962027eedaec2d5f62f26dde2c58dcaf606277f30c49f7",
+        "effect_requested": false,
+        "final_output_created": false,
+        "hard_failure_reasons": [],
+        "missing_evidence_refs": [],
+        "permission_created": false,
+        "prior_decision_id": null,
+        "reason_code": "validated_candidate_accepted",
+        "root_commit_created": true,
+        "selected_candidate_id": "wedding_save:2ba7cb144be067e63b1b6e28352797541acb8602dc240c28ed93948b54d872c3",
+        "target_root_id": "organizer:w1",
+        "transaction_id": "transaction:request:w4:xExg43mO:KEEP_FAMILIAR_V01:raw-consumption",
+        "transition_decision": {
+          "abi_major_version": 1,
+          "actor_role": "gt",
+          "attempted_effect": "CREATE_ROOT_DECISION",
+          "decision": "RETURN_TO_ROOT",
+          "decision_id": "85eff0e7c3a8a4da444edd85f36a3a2c91929bd85b5ab85eed585a6574976e07",
+          "matched": true,
+          "missing_guards": [],
+          "reason_code": "gt_advisory_returns_to_root",
+          "registry_id": "336c082d1520d49cf9b23d1c6d983637b7835d8fa863a83dbbae82a11bfa26be",
+          "required_guards": [
+            "artifact_valid",
+            "post_vv_passed",
+            "advisory_only"
+          ],
+          "root_commit_present": false,
+          "root_commit_required": true,
+          "rule_id": "gt_advisory_to_root_decision",
+          "satisfied_guards": [
+            "artifact_valid",
+            "post_vv_passed",
+            "advisory_only"
+          ],
+          "source_artifact_type": "GTAdvisoryReport",
+          "source_lifecycle_state": "VALIDATED",
+          "target_artifact_type": "RootDecision"
+        }
+      },
+      "value_class": "EXACT_SELECTED_VALUE"
+    },
+    {
+      "projection_id": "KEEP_FAMILIAR_V01-save1:/1/root_input/post_vv_bundle/items",
+      "source_id": "src-c90d9d6fb99961e295db",
+      "source_path": "docs/showcase/wedding_seating_v01/evidence/portable/w4/outputs/KEEP_FAMILIAR_V01/save_receipts.json",
+      "source_raw_sha256": "5fb635f0448ecfe573f235fc8491a302d7457a15ebd7613432b817875c4f8606",
+      "json_pointer": "/1/root_input/post_vv_bundle/items",
+      "container_decoding_steps": [],
+      "derivative_sha256": "fe301eacffe77ec365c7bc16f8db8639f8aa63793402cc82d4ebde7a77422f13",
+      "serialization": "UTF8_RECURSIVELY_SORTED_COMPACT_JSON_NO_TRAILING_NEWLINE; not raw source bytes",
+      "value": [
+        [
+          "bundle_id",
+          "checks:fa438f6237751d91c7bfca3ca383edd1d0a99ae1c95f86ba34f15fddd1259c82"
+        ],
+        [
+          "hard_failure_reasons",
+          []
+        ],
+        [
+          "post_vv_passed",
+          true
+        ],
+        [
+          "provided_evidence_refs",
+          [
+            "work_results:7d9cc252e33a1f0c51195748d86b09af8f4cea1d1ae3d3bdec144f4adc74ed83"
+          ]
+        ],
+        [
+          "rejected_candidate_ids",
+          []
+        ],
+        [
+          "required_evidence_refs",
+          [
+            "work_results:7d9cc252e33a1f0c51195748d86b09af8f4cea1d1ae3d3bdec144f4adc74ed83"
+          ]
+        ],
+        [
+          "validated_candidate_ids",
+          [
+            "wedding_save:2ba7cb144be067e63b1b6e28352797541acb8602dc240c28ed93948b54d872c3"
+          ]
+        ]
+      ],
+      "value_class": "EXACT_SELECTED_VALUE"
+    },
+    {
+      "projection_id": "KEEP_FAMILIAR_V01-saved-output",
+      "source_id": "src-4c3d723416cf2a237964",
+      "source_path": "docs/showcase/wedding_seating_v01/evidence/portable/w4/outputs/KEEP_FAMILIAR_V01/seating.json",
+      "source_raw_sha256": "3756378338308c7f97d438519fabb3a64ae98b3c861b96e10aa46976666689c5",
+      "json_pointer": "",
+      "container_decoding_steps": [],
+      "derivative_sha256": "3756378338308c7f97d438519fabb3a64ae98b3c861b96e10aa46976666689c5",
+      "serialization": "UTF8_RECURSIVELY_SORTED_COMPACT_JSON_NO_TRAILING_NEWLINE; not raw source bytes",
+      "value": {
+        "assignment": [
+          1,
+          1,
+          1,
+          1,
+          0,
+          0,
+          0,
+          0,
+          2,
+          2,
+          2,
+          2
+        ],
+        "basis_index": 517,
+        "local_repair": false,
+        "objective_gap": 0,
+        "origin": "LIVE_QPU_RAW_DECODED_POSTSELECTED",
+        "problem_ref": "16704ff36b942ba84ca41618bf59da407478c1e1a3ef7fa3779990fdea432c17",
+        "profile": "KEEP_FAMILIAR_V01",
+        "raw_sha256": "746f6671f68dff12c31f9637c9ddefc4fa1f1692868d569316275abb144bad0e",
+        "request_ref": "request:w4:xExg43mO:KEEP_FAMILIAR_V01:raw-consumption",
+        "shot_index": 63,
+        "task_arn": "arn:aws:braket:us-west-1:296280725196:quantum-task/2c896911-1bd9-4c72-9d03-873fb782b59b"
+      },
+      "value_class": "EXACT_SELECTED_VALUE"
+    },
+    {
+      "projection_id": "KEEP_FAMILIAR_V01-numeric:/profile",
+      "source_id": "src-f2639feaf002470af69d",
+      "source_path": "docs/showcase/wedding_seating_v01/evidence/portable/w4/numeric/KEEP_FAMILIAR_V01/numeric.json",
+      "source_raw_sha256": "d90273cc9e0d806aace2f0b8b666236222183a6b00705ba851446b911dea9335",
+      "json_pointer": "/profile",
+      "container_decoding_steps": [],
+      "derivative_sha256": "131f1d9548697bee8e5e9d1d83c09c06d5e37bbe432bd99ad4fb3b658e90cf8c",
+      "serialization": "UTF8_RECURSIVELY_SORTED_COMPACT_JSON_NO_TRAILING_NEWLINE; not raw source bytes",
+      "value": "KEEP_FAMILIAR_V01",
+      "value_class": "EXACT_SELECTED_VALUE"
+    },
+    {
+      "projection_id": "KEEP_FAMILIAR_V01-numeric:/encoding/schema_version",
+      "source_id": "src-f2639feaf002470af69d",
+      "source_path": "docs/showcase/wedding_seating_v01/evidence/portable/w4/numeric/KEEP_FAMILIAR_V01/numeric.json",
+      "source_raw_sha256": "d90273cc9e0d806aace2f0b8b666236222183a6b00705ba851446b911dea9335",
+      "json_pointer": "/encoding/schema_version",
+      "container_decoding_steps": [],
+      "derivative_sha256": "04366debc6e427c88912bdd4a5b1d6e2305902829d59813e78efc0a1444d1994",
+      "serialization": "UTF8_RECURSIVELY_SORTED_COMPACT_JSON_NO_TRAILING_NEWLINE; not raw source bytes",
+      "value": "PAIR_BINARY_10Q_V02",
+      "value_class": "EXACT_SELECTED_VALUE"
+    },
+    {
+      "projection_id": "KEEP_FAMILIAR_V01-numeric:/encoding/qubits",
+      "source_id": "src-f2639feaf002470af69d",
+      "source_path": "docs/showcase/wedding_seating_v01/evidence/portable/w4/numeric/KEEP_FAMILIAR_V01/numeric.json",
+      "source_raw_sha256": "d90273cc9e0d806aace2f0b8b666236222183a6b00705ba851446b911dea9335",
+      "json_pointer": "/encoding/qubits",
+      "container_decoding_steps": [],
+      "derivative_sha256": "4a44dc15364204a80fe80e9039455cc1608281820fe2b24f1e5233ade6af1dd5",
+      "serialization": "UTF8_RECURSIVELY_SORTED_COMPACT_JSON_NO_TRAILING_NEWLINE; not raw source bytes",
+      "value": 10,
+      "value_class": "EXACT_SELECTED_VALUE"
+    },
+    {
+      "projection_id": "KEEP_FAMILIAR_V01-numeric:/encoding/variable_pairs",
+      "source_id": "src-f2639feaf002470af69d",
+      "source_path": "docs/showcase/wedding_seating_v01/evidence/portable/w4/numeric/KEEP_FAMILIAR_V01/numeric.json",
+      "source_raw_sha256": "d90273cc9e0d806aace2f0b8b666236222183a6b00705ba851446b911dea9335",
+      "json_pointer": "/encoding/variable_pairs",
+      "container_decoding_steps": [],
+      "derivative_sha256": "82f2251eb4bb0fe81a7152e6998d07eb44020187e827d0c2e719e2e68b6e575d",
+      "serialization": "UTF8_RECURSIVELY_SORTED_COMPACT_JSON_NO_TRAILING_NEWLINE; not raw source bytes",
+      "value": [
+        [
+          0,
+          1
+        ],
+        [
+          2,
+          3
+        ],
+        [
+          4,
+          5
+        ],
+        [
+          6,
+          7
+        ],
+        [
+          8,
+          9
+        ]
+      ],
+      "value_class": "EXACT_SELECTED_VALUE"
+    },
+    {
+      "projection_id": "KEEP_FAMILIAR_V01-numeric:/encoding/fixed_pair",
+      "source_id": "src-f2639feaf002470af69d",
+      "source_path": "docs/showcase/wedding_seating_v01/evidence/portable/w4/numeric/KEEP_FAMILIAR_V01/numeric.json",
+      "source_raw_sha256": "d90273cc9e0d806aace2f0b8b666236222183a6b00705ba851446b911dea9335",
+      "json_pointer": "/encoding/fixed_pair",
+      "container_decoding_steps": [],
+      "derivative_sha256": "43a2d66e5f850f64677fc2fae986fcdbdf190e6b6f026167f70b21d8860826b3",
+      "serialization": "UTF8_RECURSIVELY_SORTED_COMPACT_JSON_NO_TRAILING_NEWLINE; not raw source bytes",
+      "value": [
+        10,
+        11
+      ],
+      "value_class": "EXACT_SELECTED_VALUE"
+    },
+    {
+      "projection_id": "KEEP_FAMILIAR_V01-numeric:/encoding/fixed_table",
+      "source_id": "src-f2639feaf002470af69d",
+      "source_path": "docs/showcase/wedding_seating_v01/evidence/portable/w4/numeric/KEEP_FAMILIAR_V01/numeric.json",
+      "source_raw_sha256": "d90273cc9e0d806aace2f0b8b666236222183a6b00705ba851446b911dea9335",
+      "json_pointer": "/encoding/fixed_table",
+      "container_decoding_steps": [],
+      "derivative_sha256": "d4735e3a265e16eee03f59718b9b5d03019c07d8b6c51f90da3a666eec13ab35",
+      "serialization": "UTF8_RECURSIVELY_SORTED_COMPACT_JSON_NO_TRAILING_NEWLINE; not raw source bytes",
+      "value": 2,
+      "value_class": "EXACT_SELECTED_VALUE"
+    },
+    {
+      "projection_id": "KEEP_FAMILIAR_V01-numeric:/encoding/invalid_code",
+      "source_id": "src-f2639feaf002470af69d",
+      "source_path": "docs/showcase/wedding_seating_v01/evidence/portable/w4/numeric/KEEP_FAMILIAR_V01/numeric.json",
+      "source_raw_sha256": "d90273cc9e0d806aace2f0b8b666236222183a6b00705ba851446b911dea9335",
+      "json_pointer": "/encoding/invalid_code",
+      "container_decoding_steps": [],
+      "derivative_sha256": "4e07408562bedb8b60ce05c1decfe3ad16b72230967de01f640b7e4729b49fce",
+      "serialization": "UTF8_RECURSIVELY_SORTED_COMPACT_JSON_NO_TRAILING_NEWLINE; not raw source bytes",
+      "value": 3,
+      "value_class": "EXACT_SELECTED_VALUE"
+    },
+    {
+      "projection_id": "KEEP_FAMILIAR_V01-numeric:/selected_grid",
+      "source_id": "src-f2639feaf002470af69d",
+      "source_path": "docs/showcase/wedding_seating_v01/evidence/portable/w4/numeric/KEEP_FAMILIAR_V01/numeric.json",
+      "source_raw_sha256": "d90273cc9e0d806aace2f0b8b666236222183a6b00705ba851446b911dea9335",
+      "json_pointer": "/selected_grid",
+      "container_decoding_steps": [],
+      "derivative_sha256": "15e393ce274a2b34d06479cc34b70bf55808988e37dcfc673c84f9623d641b6d",
+      "serialization": "UTF8_RECURSIVELY_SORTED_COMPACT_JSON_NO_TRAILING_NEWLINE; not raw source bytes",
+      "value": {
+        "encoding_ref": "e75e59afd54a367215dda1d8e4d0dd4fb615888edbd0d8958f9aa4f13e4caacf",
+        "scale": 4096,
+        "selected": {
+          "beta_index": 22,
+          "gamma_index": 9,
+          "loss": 270.033063603532,
+          "loss_key": 270033063603532
+        },
+        "source_sha256": "1668e5846d919b040f935f620753da93e6bec94373fac381dc11c07749df2c9d"
+      },
+      "value_class": "EXACT_SELECTED_VALUE"
+    },
+    {
+      "projection_id": "KEEP_FAMILIAR_V01-numeric:/backend",
+      "source_id": "src-f2639feaf002470af69d",
+      "source_path": "docs/showcase/wedding_seating_v01/evidence/portable/w4/numeric/KEEP_FAMILIAR_V01/numeric.json",
+      "source_raw_sha256": "d90273cc9e0d806aace2f0b8b666236222183a6b00705ba851446b911dea9335",
+      "json_pointer": "/backend",
+      "container_decoding_steps": [],
+      "derivative_sha256": "8652935c727d17d03efd1e67d74c144641a638caeb58c7a494cac9401d8b57e6",
+      "serialization": "UTF8_RECURSIVELY_SORTED_COMPACT_JSON_NO_TRAILING_NEWLINE; not raw source bytes",
+      "value": "LIVE_QPU_EXPLICIT_PROVIDER_BRIDGE",
+      "value_class": "EXACT_SELECTED_VALUE"
+    },
+    {
+      "projection_id": "MIX_CIRCLES_V01-raw:/taskMetadata",
+      "source_id": "src-8fe6c9a72f940d537140",
+      "source_path": "docs/showcase/wedding_seating_v01/evidence/portable/w4/provider/MIX_CIRCLES_V01_results.json",
+      "source_raw_sha256": "73c29d59ba439450cbdecb7c059b5a0dccb8d951f4ac69c0c5c1f820de1da755",
+      "json_pointer": "/taskMetadata",
+      "container_decoding_steps": [],
+      "derivative_sha256": "7554a3941591787c567f7fa2b0e58590094a094d8fd1f5c3b1dc3e77fd9b549a",
+      "serialization": "UTF8_RECURSIVELY_SORTED_COMPACT_JSON_NO_TRAILING_NEWLINE; not raw source bytes",
+      "value": {
+        "braketSchemaHeader": {
+          "name": "braket.task_result.task_metadata",
+          "version": "1"
+        },
+        "deviceParameters": {
+          "braketSchemaHeader": {
+            "name": "braket.device_schema.rigetti.rigetti_device_parameters",
+            "version": "1"
+          },
+          "paradigmParameters": {
+            "braketSchemaHeader": {
+              "name": "braket.device_schema.gate_model_parameters",
+              "version": "1"
+            },
+            "qubitCount": 10,
+            "disableQubitRewiring": false
+          }
+        },
+        "id": "arn:aws:braket:us-west-1:296280725196:quantum-task/470b472c-590e-42ad-b4f1-6b597be40f6d",
+        "shots": 1000,
+        "status": "COMPLETED",
+        "deviceId": "arn:aws:braket:us-west-1::device/qpu/rigetti/Cepheus-1-108Q",
+        "createdAt": "2026-09-24T07:18:47.069Z",
+        "endedAt": "2026-09-24T09:00:13.377Z"
+      },
+      "value_class": "EXACT_SELECTED_VALUE"
+    },
+    {
+      "projection_id": "MIX_CIRCLES_V01-raw:/measuredQubits",
+      "source_id": "src-8fe6c9a72f940d537140",
+      "source_path": "docs/showcase/wedding_seating_v01/evidence/portable/w4/provider/MIX_CIRCLES_V01_results.json",
+      "source_raw_sha256": "73c29d59ba439450cbdecb7c059b5a0dccb8d951f4ac69c0c5c1f820de1da755",
+      "json_pointer": "/measuredQubits",
+      "container_decoding_steps": [],
+      "derivative_sha256": "6c301cda718f48575f1c55c0f3ae8b643bad3d8a7967046ce3f8fad0abde4343",
+      "serialization": "UTF8_RECURSIVELY_SORTED_COMPACT_JSON_NO_TRAILING_NEWLINE; not raw source bytes",
+      "value": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "value_class": "EXACT_SELECTED_VALUE"
+    },
+    {
+      "projection_id": "MIX_CIRCLES_V01-raw:/measurements/31",
+      "source_id": "src-8fe6c9a72f940d537140",
+      "source_path": "docs/showcase/wedding_seating_v01/evidence/portable/w4/provider/MIX_CIRCLES_V01_results.json",
+      "source_raw_sha256": "73c29d59ba439450cbdecb7c059b5a0dccb8d951f4ac69c0c5c1f820de1da755",
+      "json_pointer": "/measurements/31",
+      "container_decoding_steps": [],
+      "derivative_sha256": "f0983e117d0cab15cde917093cd52c843487a37705680016b36e181505118f28",
+      "serialization": "UTF8_RECURSIVELY_SORTED_COMPACT_JSON_NO_TRAILING_NEWLINE; not raw source bytes",
+      "value": [
+        0,
+        0,
+        1,
+        0,
+        0,
+        1,
+        0,
+        0,
+        1,
+        0
+      ],
+      "value_class": "EXACT_SELECTED_VALUE"
+    },
+    {
+      "projection_id": "MIX_CIRCLES_V01-raw:/measurements/2",
+      "source_id": "src-8fe6c9a72f940d537140",
+      "source_path": "docs/showcase/wedding_seating_v01/evidence/portable/w4/provider/MIX_CIRCLES_V01_results.json",
+      "source_raw_sha256": "73c29d59ba439450cbdecb7c059b5a0dccb8d951f4ac69c0c5c1f820de1da755",
+      "json_pointer": "/measurements/2",
+      "container_decoding_steps": [],
+      "derivative_sha256": "3515c3d50f31538576083a711f0ba830209a8e93f82017e645e1f0c8e03f6fb4",
+      "serialization": "UTF8_RECURSIVELY_SORTED_COMPACT_JSON_NO_TRAILING_NEWLINE; not raw source bytes",
+      "value": [
+        1,
+        0,
+        1,
+        1,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0
+      ],
+      "value_class": "EXACT_SELECTED_VALUE"
+    },
+    {
+      "projection_id": "MIX_CIRCLES_V01-samples:/task_arn",
+      "source_id": "src-5ac44e563278c02a5f5b",
+      "source_path": "docs/showcase/wedding_seating_v01/evidence/portable/w4/provider/MIX_CIRCLES_V01_sample_validation.json",
+      "source_raw_sha256": "e3ac66213d4b9fca53664c548e0e87c08593be3b0c900bd4a6aa6af300d2e0c7",
+      "json_pointer": "/task_arn",
+      "container_decoding_steps": [],
+      "derivative_sha256": "372b6beb5db862bd87233024a91a518dfe26b000ee75f657a75db0ed906a5656",
+      "serialization": "UTF8_RECURSIVELY_SORTED_COMPACT_JSON_NO_TRAILING_NEWLINE; not raw source bytes",
+      "value": "arn:aws:braket:us-west-1:296280725196:quantum-task/470b472c-590e-42ad-b4f1-6b597be40f6d",
+      "value_class": "EXACT_SELECTED_VALUE"
+    },
+    {
+      "projection_id": "MIX_CIRCLES_V01-samples:/raw_sha256",
+      "source_id": "src-5ac44e563278c02a5f5b",
+      "source_path": "docs/showcase/wedding_seating_v01/evidence/portable/w4/provider/MIX_CIRCLES_V01_sample_validation.json",
+      "source_raw_sha256": "e3ac66213d4b9fca53664c548e0e87c08593be3b0c900bd4a6aa6af300d2e0c7",
+      "json_pointer": "/raw_sha256",
+      "container_decoding_steps": [],
+      "derivative_sha256": "94c36f6d38195160ca4c237e7efe66e2151e322368843492791089367c28dfb0",
+      "serialization": "UTF8_RECURSIVELY_SORTED_COMPACT_JSON_NO_TRAILING_NEWLINE; not raw source bytes",
+      "value": "73c29d59ba439450cbdecb7c059b5a0dccb8d951f4ac69c0c5c1f820de1da755",
+      "value_class": "EXACT_SELECTED_VALUE"
+    },
+    {
+      "projection_id": "MIX_CIRCLES_V01-samples:/requested_shots",
+      "source_id": "src-5ac44e563278c02a5f5b",
+      "source_path": "docs/showcase/wedding_seating_v01/evidence/portable/w4/provider/MIX_CIRCLES_V01_sample_validation.json",
+      "source_raw_sha256": "e3ac66213d4b9fca53664c548e0e87c08593be3b0c900bd4a6aa6af300d2e0c7",
+      "json_pointer": "/requested_shots",
+      "container_decoding_steps": [],
+      "derivative_sha256": "40510175845988f13f6162ed8526f0b09f73384467fa855e1e79b44a56562a58",
+      "serialization": "UTF8_RECURSIVELY_SORTED_COMPACT_JSON_NO_TRAILING_NEWLINE; not raw source bytes",
+      "value": 1000,
+      "value_class": "EXACT_SELECTED_VALUE"
+    },
+    {
+      "projection_id": "MIX_CIRCLES_V01-samples:/successful_shots",
+      "source_id": "src-5ac44e563278c02a5f5b",
+      "source_path": "docs/showcase/wedding_seating_v01/evidence/portable/w4/provider/MIX_CIRCLES_V01_sample_validation.json",
+      "source_raw_sha256": "e3ac66213d4b9fca53664c548e0e87c08593be3b0c900bd4a6aa6af300d2e0c7",
+      "json_pointer": "/successful_shots",
+      "container_decoding_steps": [],
+      "derivative_sha256": "40510175845988f13f6162ed8526f0b09f73384467fa855e1e79b44a56562a58",
+      "serialization": "UTF8_RECURSIVELY_SORTED_COMPACT_JSON_NO_TRAILING_NEWLINE; not raw source bytes",
+      "value": 1000,
+      "value_class": "EXACT_SELECTED_VALUE"
+    },
+    {
+      "projection_id": "MIX_CIRCLES_V01-samples:/valid_samples",
+      "source_id": "src-5ac44e563278c02a5f5b",
+      "source_path": "docs/showcase/wedding_seating_v01/evidence/portable/w4/provider/MIX_CIRCLES_V01_sample_validation.json",
+      "source_raw_sha256": "e3ac66213d4b9fca53664c548e0e87c08593be3b0c900bd4a6aa6af300d2e0c7",
+      "json_pointer": "/valid_samples",
+      "container_decoding_steps": [],
+      "derivative_sha256": "73475cb40a568e8da8a045ced110137e159f890ac4da883b6b17dc651b3a8049",
+      "serialization": "UTF8_RECURSIVELY_SORTED_COMPACT_JSON_NO_TRAILING_NEWLINE; not raw source bytes",
+      "value": 42,
+      "value_class": "EXACT_SELECTED_VALUE"
+    },
+    {
+      "projection_id": "MIX_CIRCLES_V01-samples:/invalid_samples",
+      "source_id": "src-5ac44e563278c02a5f5b",
+      "source_path": "docs/showcase/wedding_seating_v01/evidence/portable/w4/provider/MIX_CIRCLES_V01_sample_validation.json",
+      "source_raw_sha256": "e3ac66213d4b9fca53664c548e0e87c08593be3b0c900bd4a6aa6af300d2e0c7",
+      "json_pointer": "/invalid_samples",
+      "container_decoding_steps": [],
+      "derivative_sha256": "debc96817a3523d6f3cde58b00abaf6480477744625d0b1f4e406e644ae1763b",
+      "serialization": "UTF8_RECURSIVELY_SORTED_COMPACT_JSON_NO_TRAILING_NEWLINE; not raw source bytes",
+      "value": 958,
+      "value_class": "EXACT_SELECTED_VALUE"
+    },
+    {
+      "projection_id": "MIX_CIRCLES_V01-samples:/distinct_valid_plans",
+      "source_id": "src-5ac44e563278c02a5f5b",
+      "source_path": "docs/showcase/wedding_seating_v01/evidence/portable/w4/provider/MIX_CIRCLES_V01_sample_validation.json",
+      "source_raw_sha256": "e3ac66213d4b9fca53664c548e0e87c08593be3b0c900bd4a6aa6af300d2e0c7",
+      "json_pointer": "/distinct_valid_plans",
+      "container_decoding_steps": [],
+      "derivative_sha256": "f5ca38f748a1d6eaf726b8a42fb575c3c71f1864a8143301782de13da2d9202b",
+      "serialization": "UTF8_RECURSIVELY_SORTED_COMPACT_JSON_NO_TRAILING_NEWLINE; not raw source bytes",
+      "value": 20,
+      "value_class": "EXACT_SELECTED_VALUE"
+    },
+    {
+      "projection_id": "MIX_CIRCLES_V01-samples:/selected",
+      "source_id": "src-5ac44e563278c02a5f5b",
+      "source_path": "docs/showcase/wedding_seating_v01/evidence/portable/w4/provider/MIX_CIRCLES_V01_sample_validation.json",
+      "source_raw_sha256": "e3ac66213d4b9fca53664c548e0e87c08593be3b0c900bd4a6aa6af300d2e0c7",
+      "json_pointer": "/selected",
+      "container_decoding_steps": [],
+      "derivative_sha256": "6efcf2816964b1eac5c53d8f3b80251fe9a3e3a2d91fb55f5a1a70c84bdd00cc",
+      "serialization": "UTF8_RECURSIVELY_SORTED_COMPACT_JSON_NO_TRAILING_NEWLINE; not raw source bytes",
+      "value": {
+        "assignment": [
+          0,
+          0,
+          1,
+          1,
+          2,
+          2,
+          0,
+          0,
+          1,
+          1,
+          2,
+          2
+        ],
+        "basis_index": 292,
+        "shot_index": 31,
+        "status": "VALID",
+        "validation": {
+          "assignment": [
+            0,
+            0,
+            1,
+            1,
+            2,
+            2,
+            0,
+            0,
+            1,
+            1,
+            2,
+            2
+          ],
+          "binding": {
+            "mapping_ref": "acda8b7f9c2a018e16a16753cc27d0b006e75dd58495e9a9b977b9ce34740ed3",
+            "objective_profile": "MIX_CIRCLES_V01",
+            "owner_root_id": "organizer:w1",
+            "problem_ref": "16704ff36b942ba84ca41618bf59da407478c1e1a3ef7fa3779990fdea432c17",
+            "problem_revision": 1,
+            "source_bundle_hash": "f9b46b070624407e150424008fb3e933773751f54d7b5dacff834ae6855e9fa4",
+            "time_context_ref": "time:w1:static"
+          },
+          "components": {
+            "hard": 0,
+            "keep": 24,
+            "mix": 0,
+            "objective": 0
+          },
+          "condition_verdicts": [
+            {
+              "condition_id": "builtin:capacity:table_1",
+              "satisfied": true,
+              "source_ref": "original:table_records"
+            },
+            {
+              "condition_id": "builtin:capacity:table_2",
+              "satisfied": true,
+              "source_ref": "original:table_records"
+            },
+            {
+              "condition_id": "builtin:capacity:table_3",
+              "satisfied": true,
+              "source_ref": "original:table_records"
+            },
+            {
+              "condition_id": "condition_01",
+              "satisfied": true,
+              "source_ref": "source:w1:hard"
+            },
+            {
+              "condition_id": "condition_02",
+              "satisfied": true,
+              "source_ref": "source:w1:hard"
+            },
+            {
+              "condition_id": "condition_03",
+              "satisfied": true,
+              "source_ref": "source:w1:hard"
+            },
+            {
+              "condition_id": "condition_04",
+              "satisfied": true,
+              "source_ref": "source:w1:hard"
+            },
+            {
+              "condition_id": "condition_05",
+              "satisfied": true,
+              "source_ref": "source:w1:hard"
+            },
+            {
+              "condition_id": "condition_06",
+              "satisfied": true,
+              "source_ref": "source:w1:hard"
+            },
+            {
+              "condition_id": "condition_07",
+              "satisfied": true,
+              "source_ref": "source:w1:hard"
+            },
+            {
+              "condition_id": "condition_08",
+              "satisfied": true,
+              "source_ref": "source:w1:hard"
+            }
+          ],
+          "coverage": "ORIGINAL_ALL_CONDITIONS",
+          "hard_violations": [],
+          "ranking_key": [
+            false,
+            0,
+            [
+              0,
+              0,
+              1,
+              1,
+              2,
+              2,
+              0,
+              0,
+              1,
+              1,
+              2,
+              2
+            ]
+          ],
+          "schema_version": "SeatingValidationReportV01",
+          "status": "VALID",
+          "validator_id": "ORIGINAL_12_GUEST_VALIDATOR_V01"
+        }
+      },
+      "value_class": "EXACT_SELECTED_VALUE"
+    },
+    {
+      "projection_id": "MIX_CIRCLES_V01-samples:/lineage/2",
+      "source_id": "src-5ac44e563278c02a5f5b",
+      "source_path": "docs/showcase/wedding_seating_v01/evidence/portable/w4/provider/MIX_CIRCLES_V01_sample_validation.json",
+      "source_raw_sha256": "e3ac66213d4b9fca53664c548e0e87c08593be3b0c900bd4a6aa6af300d2e0c7",
+      "json_pointer": "/lineage/2",
+      "container_decoding_steps": [],
+      "derivative_sha256": "7cbc0115573892ea4c9285d14cab0e18d6fdfa2b661ee225a450d318f727e439",
+      "serialization": "UTF8_RECURSIVELY_SORTED_COMPACT_JSON_NO_TRAILING_NEWLINE; not raw source bytes",
+      "value": {
+        "assignment": [
+          1,
+          1,
+          -1,
+          -1,
+          0,
+          0,
+          2,
+          2,
+          0,
+          0,
+          2,
+          2
+        ],
+        "basis_index": 141,
+        "shot_index": 2,
+        "status": "INVALID_CODE_3",
+        "validation": null
+      },
+      "value_class": "EXACT_SELECTED_VALUE"
+    },
+    {
+      "projection_id": "MIX_CIRCLES_V01-samples:/postselection",
+      "source_id": "src-5ac44e563278c02a5f5b",
+      "source_path": "docs/showcase/wedding_seating_v01/evidence/portable/w4/provider/MIX_CIRCLES_V01_sample_validation.json",
+      "source_raw_sha256": "e3ac66213d4b9fca53664c548e0e87c08593be3b0c900bd4a6aa6af300d2e0c7",
+      "json_pointer": "/postselection",
+      "container_decoding_steps": [],
+      "derivative_sha256": "2e716e308387a8d0e5d4993bdbb0df0c4ae981d1dbfe493f215f6df007c85ee1",
+      "serialization": "UTF8_RECURSIVELY_SORTED_COMPACT_JSON_NO_TRAILING_NEWLINE; not raw source bytes",
+      "value": "CLASSICAL_OBJECTIVE_THEN_ASSIGNMENT_THEN_SHOT",
+      "value_class": "EXACT_SELECTED_VALUE"
+    },
+    {
+      "projection_id": "MIX_CIRCLES_V01-samples:/local_repair",
+      "source_id": "src-5ac44e563278c02a5f5b",
+      "source_path": "docs/showcase/wedding_seating_v01/evidence/portable/w4/provider/MIX_CIRCLES_V01_sample_validation.json",
+      "source_raw_sha256": "e3ac66213d4b9fca53664c548e0e87c08593be3b0c900bd4a6aa6af300d2e0c7",
+      "json_pointer": "/local_repair",
+      "container_decoding_steps": [],
+      "derivative_sha256": "fcbcf165908dd18a9e49f7ff27810176db8e9f63b4352213741664245224f8aa",
+      "serialization": "UTF8_RECURSIVELY_SORTED_COMPACT_JSON_NO_TRAILING_NEWLINE; not raw source bytes",
+      "value": false,
+      "value_class": "EXACT_SELECTED_VALUE"
+    },
+    {
+      "projection_id": "MIX_CIRCLES_V01-samples:/local_reference_objective",
+      "source_id": "src-5ac44e563278c02a5f5b",
+      "source_path": "docs/showcase/wedding_seating_v01/evidence/portable/w4/provider/MIX_CIRCLES_V01_sample_validation.json",
+      "source_raw_sha256": "e3ac66213d4b9fca53664c548e0e87c08593be3b0c900bd4a6aa6af300d2e0c7",
+      "json_pointer": "/local_reference_objective",
+      "container_decoding_steps": [],
+      "derivative_sha256": "5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9",
+      "serialization": "UTF8_RECURSIVELY_SORTED_COMPACT_JSON_NO_TRAILING_NEWLINE; not raw source bytes",
+      "value": 0,
+      "value_class": "EXACT_SELECTED_VALUE"
+    },
+    {
+      "projection_id": "MIX_CIRCLES_V01-samples:/objective_gap",
+      "source_id": "src-5ac44e563278c02a5f5b",
+      "source_path": "docs/showcase/wedding_seating_v01/evidence/portable/w4/provider/MIX_CIRCLES_V01_sample_validation.json",
+      "source_raw_sha256": "e3ac66213d4b9fca53664c548e0e87c08593be3b0c900bd4a6aa6af300d2e0c7",
+      "json_pointer": "/objective_gap",
+      "container_decoding_steps": [],
+      "derivative_sha256": "5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9",
+      "serialization": "UTF8_RECURSIVELY_SORTED_COMPACT_JSON_NO_TRAILING_NEWLINE; not raw source bytes",
+      "value": 0,
+      "value_class": "EXACT_SELECTED_VALUE"
+    },
+    {
+      "projection_id": "MIX_CIRCLES_V01-native:/classification",
+      "source_id": "src-5d755412c08413054521",
+      "source_path": "docs/showcase/wedding_seating_v01/evidence/portable/w4/native/MIX_CIRCLES_V01/consume.json",
+      "source_raw_sha256": "57919c29f7a326d8025bd84b0b2a91dddcc377682436b3ed13a967763d3dcde2",
+      "json_pointer": "/classification",
+      "container_decoding_steps": [],
+      "derivative_sha256": "5b58bc3be5502bde23adabc8e2635d442b22d0b983ed089f2f680763adbc39bf",
+      "serialization": "UTF8_RECURSIVELY_SORTED_COMPACT_JSON_NO_TRAILING_NEWLINE; not raw source bytes",
+      "value": "QPU_RAW_DECODED_CURRENT_NATIVE_CONSUMPTION",
+      "value_class": "EXACT_SELECTED_VALUE"
+    },
+    {
+      "projection_id": "MIX_CIRCLES_V01-native:/owner/request_ref",
+      "source_id": "src-5d755412c08413054521",
+      "source_path": "docs/showcase/wedding_seating_v01/evidence/portable/w4/native/MIX_CIRCLES_V01/consume.json",
+      "source_raw_sha256": "57919c29f7a326d8025bd84b0b2a91dddcc377682436b3ed13a967763d3dcde2",
+      "json_pointer": "/owner/request_ref",
+      "container_decoding_steps": [],
+      "derivative_sha256": "b8032c796bc7ed5a928e6f1ccdd6b853ef5843a5859953d623e557d05c00f50a",
+      "serialization": "UTF8_RECURSIVELY_SORTED_COMPACT_JSON_NO_TRAILING_NEWLINE; not raw source bytes",
+      "value": "request:w4:xExg43mO:MIX_CIRCLES_V01:raw-consumption",
+      "value_class": "EXACT_SELECTED_VALUE"
+    },
+    {
+      "projection_id": "MIX_CIRCLES_V01-native:/program/ordered_work_ids",
+      "source_id": "src-5d755412c08413054521",
+      "source_path": "docs/showcase/wedding_seating_v01/evidence/portable/w4/native/MIX_CIRCLES_V01/consume.json",
+      "source_raw_sha256": "57919c29f7a326d8025bd84b0b2a91dddcc377682436b3ed13a967763d3dcde2",
+      "json_pointer": "/program/ordered_work_ids",
+      "container_decoding_steps": [],
+      "derivative_sha256": "4d6ee8c1c08cb08931a5c21c2a230922679fd6e35005a94cd7dad6ddb8540b93",
+      "serialization": "UTF8_RECURSIVELY_SORTED_COMPACT_JSON_NO_TRAILING_NEWLINE; not raw source bytes",
+      "value": [
+        "qpu_validate",
+        "qpu_consume"
+      ],
+      "value_class": "EXACT_SELECTED_VALUE"
+    },
+    {
+      "projection_id": "MIX_CIRCLES_V01-native:/artifact/artifact_id",
+      "source_id": "src-5d755412c08413054521",
+      "source_path": "docs/showcase/wedding_seating_v01/evidence/portable/w4/native/MIX_CIRCLES_V01/consume.json",
+      "source_raw_sha256": "57919c29f7a326d8025bd84b0b2a91dddcc377682436b3ed13a967763d3dcde2",
+      "json_pointer": "/artifact/artifact_id",
+      "container_decoding_steps": [],
+      "derivative_sha256": "ea2e462246bd44e4855b198809d1c5bce989d96aa0fd8d1d8c9f69e7a01baaa6",
+      "serialization": "UTF8_RECURSIVELY_SORTED_COMPACT_JSON_NO_TRAILING_NEWLINE; not raw source bytes",
+      "value": "work_results:b8cbd4f95437707a8b90cbc7815c3d86beaaa0de63fddb152eb25932af76262a",
+      "value_class": "EXACT_SELECTED_VALUE"
+    },
+    {
+      "projection_id": "MIX_CIRCLES_V01-native:/output",
+      "source_id": "src-5d755412c08413054521",
+      "source_path": "docs/showcase/wedding_seating_v01/evidence/portable/w4/native/MIX_CIRCLES_V01/consume.json",
+      "source_raw_sha256": "57919c29f7a326d8025bd84b0b2a91dddcc377682436b3ed13a967763d3dcde2",
+      "json_pointer": "/output",
+      "container_decoding_steps": [],
+      "derivative_sha256": "f28b246e83cd56217f28c21fa0fed186ca03b66f2a93f443b6a4694fdf5b97bd",
+      "serialization": "UTF8_RECURSIVELY_SORTED_COMPACT_JSON_NO_TRAILING_NEWLINE; not raw source bytes",
+      "value": {
+        "assignment": [
+          0,
+          0,
+          1,
+          1,
+          2,
+          2,
+          0,
+          0,
+          1,
+          1,
+          2,
+          2
+        ],
+        "basis_index": 292,
+        "local_repair": false,
+        "objective_gap": 0,
+        "origin": "LIVE_QPU_RAW_DECODED_POSTSELECTED",
+        "problem_ref": "16704ff36b942ba84ca41618bf59da407478c1e1a3ef7fa3779990fdea432c17",
+        "profile": "MIX_CIRCLES_V01",
+        "raw_sha256": "73c29d59ba439450cbdecb7c059b5a0dccb8d951f4ac69c0c5c1f820de1da755",
+        "request_ref": "request:w4:xExg43mO:MIX_CIRCLES_V01:raw-consumption",
+        "shot_index": 31,
+        "task_arn": "arn:aws:braket:us-west-1:296280725196:quantum-task/470b472c-590e-42ad-b4f1-6b597be40f6d"
+      },
+      "value_class": "EXACT_SELECTED_VALUE"
+    },
+    {
+      "projection_id": "MIX_CIRCLES_V01-native:/root_result",
+      "source_id": "src-5d755412c08413054521",
+      "source_path": "docs/showcase/wedding_seating_v01/evidence/portable/w4/native/MIX_CIRCLES_V01/consume.json",
+      "source_raw_sha256": "57919c29f7a326d8025bd84b0b2a91dddcc377682436b3ed13a967763d3dcde2",
+      "json_pointer": "/root_result",
+      "container_decoding_steps": [],
+      "derivative_sha256": "a0acf68872fe8cf729cf1603a7c9927a54b873c90eb9619060908c8a1bf062fc",
+      "serialization": "UTF8_RECURSIVELY_SORTED_COMPACT_JSON_NO_TRAILING_NEWLINE; not raw source bytes",
+      "value": {
+        "conflict_set_ids": [],
+        "decision": "ACCEPT",
+        "decision_id": "7314078037001398b914cd1cbb7f8f867c09a9f29df80b82868f2cb504226a17",
+        "decision_input_id": "a29f5ede104bf091edc1e2ccbf204739e930d7499c19d7ae20afa2373422c2a8",
+        "effect_requested": false,
+        "final_output_created": false,
+        "hard_failure_reasons": [],
+        "missing_evidence_refs": [],
+        "permission_created": false,
+        "prior_decision_id": null,
+        "reason_code": "validated_candidate_accepted",
+        "root_commit_created": true,
+        "selected_candidate_id": "wedding_result:f28b246e83cd56217f28c21fa0fed186ca03b66f2a93f443b6a4694fdf5b97bd",
+        "target_root_id": "organizer:w1",
+        "transaction_id": "transaction:request:w4:xExg43mO:MIX_CIRCLES_V01:raw-consumption",
+        "transition_decision": {
+          "abi_major_version": 1,
+          "actor_role": "gt",
+          "attempted_effect": "CREATE_ROOT_DECISION",
+          "decision": "RETURN_TO_ROOT",
+          "decision_id": "85eff0e7c3a8a4da444edd85f36a3a2c91929bd85b5ab85eed585a6574976e07",
+          "matched": true,
+          "missing_guards": [],
+          "reason_code": "gt_advisory_returns_to_root",
+          "registry_id": "336c082d1520d49cf9b23d1c6d983637b7835d8fa863a83dbbae82a11bfa26be",
+          "required_guards": [
+            "artifact_valid",
+            "post_vv_passed",
+            "advisory_only"
+          ],
+          "root_commit_present": false,
+          "root_commit_required": true,
+          "rule_id": "gt_advisory_to_root_decision",
+          "satisfied_guards": [
+            "artifact_valid",
+            "post_vv_passed",
+            "advisory_only"
+          ],
+          "source_artifact_type": "GTAdvisoryReport",
+          "source_lifecycle_state": "VALIDATED",
+          "target_artifact_type": "RootDecision"
+        }
+      },
+      "value_class": "EXACT_SELECTED_VALUE"
+    },
+    {
+      "projection_id": "MIX_CIRCLES_V01-native:/material/backend_selection",
+      "source_id": "src-5d755412c08413054521",
+      "source_path": "docs/showcase/wedding_seating_v01/evidence/portable/w4/native/MIX_CIRCLES_V01/consume.json",
+      "source_raw_sha256": "57919c29f7a326d8025bd84b0b2a91dddcc377682436b3ed13a967763d3dcde2",
+      "json_pointer": "/material/backend_selection",
+      "container_decoding_steps": [],
+      "derivative_sha256": "0ee76ce95de355501bf567ecf78a1e4f8ade7bae870ac172d93285de7c7330f7",
+      "serialization": "UTF8_RECURSIVELY_SORTED_COMPACT_JSON_NO_TRAILING_NEWLINE; not raw source bytes",
+      "value": {
+        "backend": "LIVE_QPU_EXPLICIT_PROVIDER_BRIDGE",
+        "origin": "CURRENT_W4_OWNER_INTAKE",
+        "prior_work_needs": "HISTORICAL_LOCAL_EXACT_NOT_MODEL_QPU_PERMISSION"
+      },
+      "value_class": "EXACT_SELECTED_VALUE"
+    },
+    {
+      "projection_id": "MIX_CIRCLES_V01-native:/material/historical_semantic_request_ref",
+      "source_id": "src-5d755412c08413054521",
+      "source_path": "docs/showcase/wedding_seating_v01/evidence/portable/w4/native/MIX_CIRCLES_V01/consume.json",
+      "source_raw_sha256": "57919c29f7a326d8025bd84b0b2a91dddcc377682436b3ed13a967763d3dcde2",
+      "json_pointer": "/material/historical_semantic_request_ref",
+      "container_decoding_steps": [],
+      "derivative_sha256": "52b5ee6d96508978b5177d7aa459f253b7f43bd4dcaf28f201423026a42342ac",
+      "serialization": "UTF8_RECURSIVELY_SORTED_COMPACT_JSON_NO_TRAILING_NEWLINE; not raw source bytes",
+      "value": "request:w3:v02:b",
+      "value_class": "EXACT_SELECTED_VALUE"
+    },
+    {
+      "projection_id": "MIX_CIRCLES_V01-native:/material/semantic_parent_ref",
+      "source_id": "src-5d755412c08413054521",
+      "source_path": "docs/showcase/wedding_seating_v01/evidence/portable/w4/native/MIX_CIRCLES_V01/consume.json",
+      "source_raw_sha256": "57919c29f7a326d8025bd84b0b2a91dddcc377682436b3ed13a967763d3dcde2",
+      "json_pointer": "/material/semantic_parent_ref",
+      "container_decoding_steps": [],
+      "derivative_sha256": "779cdf63d0084b6962ef9a282335462191f956051546fb0e25f4525379fdfb6a",
+      "serialization": "UTF8_RECURSIVELY_SORTED_COMPACT_JSON_NO_TRAILING_NEWLINE; not raw source bytes",
+      "value": "w3_captured_roles:82c8fc1d613021bd0f7fe64c19682c2d6681a2fdf74c16afd2930994da8a93bd",
+      "value_class": "EXACT_SELECTED_VALUE"
+    },
+    {
+      "projection_id": "MIX_CIRCLES_V01-native:/material/prepare_result_ref",
+      "source_id": "src-5d755412c08413054521",
+      "source_path": "docs/showcase/wedding_seating_v01/evidence/portable/w4/native/MIX_CIRCLES_V01/consume.json",
+      "source_raw_sha256": "57919c29f7a326d8025bd84b0b2a91dddcc377682436b3ed13a967763d3dcde2",
+      "json_pointer": "/material/prepare_result_ref",
+      "container_decoding_steps": [],
+      "derivative_sha256": "332187f8090a8b16bdd8c23d89c30cc41c0b38081fea87279b4ba80675644af9",
+      "serialization": "UTF8_RECURSIVELY_SORTED_COMPACT_JSON_NO_TRAILING_NEWLINE; not raw source bytes",
+      "value": "work_results:099028b396f6f3aa86093a86a4b423a8766bac940be68882f50261cdf8cc9096",
+      "value_class": "EXACT_SELECTED_VALUE"
+    },
+    {
+      "projection_id": "MIX_CIRCLES_V01-native:/material/submission_prepare_result_ref",
+      "source_id": "src-5d755412c08413054521",
+      "source_path": "docs/showcase/wedding_seating_v01/evidence/portable/w4/native/MIX_CIRCLES_V01/consume.json",
+      "source_raw_sha256": "57919c29f7a326d8025bd84b0b2a91dddcc377682436b3ed13a967763d3dcde2",
+      "json_pointer": "/material/submission_prepare_result_ref",
+      "container_decoding_steps": [],
+      "derivative_sha256": "fd3434108fd9453297d42bddf5a29db8d0e824a284a4a525f5ea0d7392aa7732",
+      "serialization": "UTF8_RECURSIVELY_SORTED_COMPACT_JSON_NO_TRAILING_NEWLINE; not raw source bytes",
+      "value": "work_results:b3df5448ffe50cf1c68a7658f2203095b7fb08409e2df157ce656e8d87cf4450",
+      "value_class": "EXACT_SELECTED_VALUE"
+    },
+    {
+      "projection_id": "MIX_CIRCLES_V01-native:/results/1/consumed_fields",
+      "source_id": "src-5d755412c08413054521",
+      "source_path": "docs/showcase/wedding_seating_v01/evidence/portable/w4/native/MIX_CIRCLES_V01/consume.json",
+      "source_raw_sha256": "57919c29f7a326d8025bd84b0b2a91dddcc377682436b3ed13a967763d3dcde2",
+      "json_pointer": "/results/1/consumed_fields",
+      "container_decoding_steps": [],
+      "derivative_sha256": "016d858827d66ca0addd2702bed9eddb1a23323ebf47b7127926f2fd73d8d282",
+      "serialization": "UTF8_RECURSIVELY_SORTED_COMPACT_JSON_NO_TRAILING_NEWLINE; not raw source bytes",
+      "value": [
+        {
+          "consumer_component": "work_composition",
+          "decision_effect": "bind_input",
+          "disposition": "USED",
+          "downstream_artifact_id": "work_instance:e59d3bc3a41f263be14180e2ace834ef1451655f4b4f2bb1e02c439631482fcf",
+          "output_field": "/material",
+          "producer_actor_id": "qpu_validate",
+          "reason_code": "used:actual_output_field",
+          "source_artifact_id": "capability_result:ff880688d978a0c3a3f8fea5de078c3a7dac7e5df5fba04a1d5456742a23eb99",
+          "trace_refs": [
+            "request:w4:xExg43mO:MIX_CIRCLES_V01:raw-consumption",
+            "work_revision:801bbba1188fa4be9c1b065317be43a1f9aef6a6dee46eec3a03224f01b7b513",
+            "capability_invocation:d3fe39271830df55221c2531c2e170458d36e2d96a03114d42d7895eb3d49cfd",
+            "qpu_consume"
+          ]
+        }
+      ],
+      "value_class": "EXACT_SELECTED_VALUE"
+    },
+    {
+      "projection_id": "MIX_CIRCLES_V01-native:/results/0/result/result_id",
+      "source_id": "src-5d755412c08413054521",
+      "source_path": "docs/showcase/wedding_seating_v01/evidence/portable/w4/native/MIX_CIRCLES_V01/consume.json",
+      "source_raw_sha256": "57919c29f7a326d8025bd84b0b2a91dddcc377682436b3ed13a967763d3dcde2",
+      "json_pointer": "/results/0/result/result_id",
+      "container_decoding_steps": [],
+      "derivative_sha256": "be15b2da7716ad271ffc95ab6da2a7bc2092ade8aec7bad795edd0516590f0f9",
+      "serialization": "UTF8_RECURSIVELY_SORTED_COMPACT_JSON_NO_TRAILING_NEWLINE; not raw source bytes",
+      "value": "capability_result:ff880688d978a0c3a3f8fea5de078c3a7dac7e5df5fba04a1d5456742a23eb99",
+      "value_class": "EXACT_SELECTED_VALUE"
+    },
+    {
+      "projection_id": "MIX_CIRCLES_V01-native:/results/1/invocation/work_instance_id",
+      "source_id": "src-5d755412c08413054521",
+      "source_path": "docs/showcase/wedding_seating_v01/evidence/portable/w4/native/MIX_CIRCLES_V01/consume.json",
+      "source_raw_sha256": "57919c29f7a326d8025bd84b0b2a91dddcc377682436b3ed13a967763d3dcde2",
+      "json_pointer": "/results/1/invocation/work_instance_id",
+      "container_decoding_steps": [],
+      "derivative_sha256": "8d7e107fca2893601374bcecd39230bca784ace6727eea121014c2bca46ed931",
+      "serialization": "UTF8_RECURSIVELY_SORTED_COMPACT_JSON_NO_TRAILING_NEWLINE; not raw source bytes",
+      "value": "work_instance:e59d3bc3a41f263be14180e2ace834ef1451655f4b4f2bb1e02c439631482fcf",
+      "value_class": "EXACT_SELECTED_VALUE"
+    },
+    {
+      "projection_id": "MIX_CIRCLES_V01-native-result:/safe_output",
+      "source_id": "src-5d755412c08413054521",
+      "source_path": "docs/showcase/wedding_seating_v01/evidence/portable/w4/native/MIX_CIRCLES_V01/consume.json",
+      "source_raw_sha256": "57919c29f7a326d8025bd84b0b2a91dddcc377682436b3ed13a967763d3dcde2",
+      "json_pointer": "/safe_output",
+      "container_decoding_steps": [
+        {
+          "json_pointer": "/results/1/result/output/0/value",
+          "decode": "JSON.parse on exact JSON string value",
+          "decoded_string_utf8_sha256": "366c94de282c7a57443f72cf718683f1a7df8f3c6688467131dfb56892f7558f"
+        }
+      ],
+      "derivative_sha256": "f28b246e83cd56217f28c21fa0fed186ca03b66f2a93f443b6a4694fdf5b97bd",
+      "serialization": "UTF8_RECURSIVELY_SORTED_COMPACT_JSON_NO_TRAILING_NEWLINE; not raw source bytes",
+      "value": {
+        "assignment": [
+          0,
+          0,
+          1,
+          1,
+          2,
+          2,
+          0,
+          0,
+          1,
+          1,
+          2,
+          2
+        ],
+        "basis_index": 292,
+        "local_repair": false,
+        "objective_gap": 0,
+        "origin": "LIVE_QPU_RAW_DECODED_POSTSELECTED",
+        "problem_ref": "16704ff36b942ba84ca41618bf59da407478c1e1a3ef7fa3779990fdea432c17",
+        "profile": "MIX_CIRCLES_V01",
+        "raw_sha256": "73c29d59ba439450cbdecb7c059b5a0dccb8d951f4ac69c0c5c1f820de1da755",
+        "request_ref": "request:w4:xExg43mO:MIX_CIRCLES_V01:raw-consumption",
+        "shot_index": 31,
+        "task_arn": "arn:aws:braket:us-west-1:296280725196:quantum-task/470b472c-590e-42ad-b4f1-6b597be40f6d"
+      },
+      "value_class": "EXACT_SELECTED_VALUE"
+    },
+    {
+      "projection_id": "MIX_CIRCLES_V01-native-result:/validation",
+      "source_id": "src-5d755412c08413054521",
+      "source_path": "docs/showcase/wedding_seating_v01/evidence/portable/w4/native/MIX_CIRCLES_V01/consume.json",
+      "source_raw_sha256": "57919c29f7a326d8025bd84b0b2a91dddcc377682436b3ed13a967763d3dcde2",
+      "json_pointer": "/validation",
+      "container_decoding_steps": [
+        {
+          "json_pointer": "/results/1/result/output/0/value",
+          "decode": "JSON.parse on exact JSON string value",
+          "decoded_string_utf8_sha256": "366c94de282c7a57443f72cf718683f1a7df8f3c6688467131dfb56892f7558f"
+        }
+      ],
+      "derivative_sha256": "feb91324a559860d130d92728411f5c48697af83480e5aee2dacb3bcde1689d5",
+      "serialization": "UTF8_RECURSIVELY_SORTED_COMPACT_JSON_NO_TRAILING_NEWLINE; not raw source bytes",
+      "value": {
+        "assignment": [
+          0,
+          0,
+          1,
+          1,
+          2,
+          2,
+          0,
+          0,
+          1,
+          1,
+          2,
+          2
+        ],
+        "binding": {
+          "mapping_ref": "acda8b7f9c2a018e16a16753cc27d0b006e75dd58495e9a9b977b9ce34740ed3",
+          "objective_profile": "MIX_CIRCLES_V01",
+          "owner_root_id": "organizer:w1",
+          "problem_ref": "16704ff36b942ba84ca41618bf59da407478c1e1a3ef7fa3779990fdea432c17",
+          "problem_revision": 1,
+          "source_bundle_hash": "f9b46b070624407e150424008fb3e933773751f54d7b5dacff834ae6855e9fa4",
+          "time_context_ref": "time:w1:static"
+        },
+        "components": {
+          "hard": 0,
+          "keep": 24,
+          "mix": 0,
+          "objective": 0
+        },
+        "condition_verdicts": [
+          {
+            "condition_id": "builtin:capacity:table_1",
+            "satisfied": true,
+            "source_ref": "original:table_records"
+          },
+          {
+            "condition_id": "builtin:capacity:table_2",
+            "satisfied": true,
+            "source_ref": "original:table_records"
+          },
+          {
+            "condition_id": "builtin:capacity:table_3",
+            "satisfied": true,
+            "source_ref": "original:table_records"
+          },
+          {
+            "condition_id": "condition_01",
+            "satisfied": true,
+            "source_ref": "source:w1:hard"
+          },
+          {
+            "condition_id": "condition_02",
+            "satisfied": true,
+            "source_ref": "source:w1:hard"
+          },
+          {
+            "condition_id": "condition_03",
+            "satisfied": true,
+            "source_ref": "source:w1:hard"
+          },
+          {
+            "condition_id": "condition_04",
+            "satisfied": true,
+            "source_ref": "source:w1:hard"
+          },
+          {
+            "condition_id": "condition_05",
+            "satisfied": true,
+            "source_ref": "source:w1:hard"
+          },
+          {
+            "condition_id": "condition_06",
+            "satisfied": true,
+            "source_ref": "source:w1:hard"
+          },
+          {
+            "condition_id": "condition_07",
+            "satisfied": true,
+            "source_ref": "source:w1:hard"
+          },
+          {
+            "condition_id": "condition_08",
+            "satisfied": true,
+            "source_ref": "source:w1:hard"
+          }
+        ],
+        "coverage": "ORIGINAL_ALL_CONDITIONS",
+        "hard_violations": [],
+        "ranking_key": [
+          false,
+          0,
+          [
+            0,
+            0,
+            1,
+            1,
+            2,
+            2,
+            0,
+            0,
+            1,
+            1,
+            2,
+            2
+          ]
+        ],
+        "schema_version": "SeatingValidationReportV01",
+        "status": "VALID",
+        "validator_id": "ORIGINAL_12_GUEST_VALIDATOR_V01"
+      },
+      "value_class": "EXACT_SELECTED_VALUE"
+    },
+    {
+      "projection_id": "MIX_CIRCLES_V01-native-selected",
+      "source_id": "src-5d755412c08413054521",
+      "source_path": "docs/showcase/wedding_seating_v01/evidence/portable/w4/native/MIX_CIRCLES_V01/consume.json",
+      "source_raw_sha256": "57919c29f7a326d8025bd84b0b2a91dddcc377682436b3ed13a967763d3dcde2",
+      "json_pointer": "/sample_validation/selected",
+      "container_decoding_steps": [
+        {
+          "json_pointer": "/results/1/invocation/inputs/0/value",
+          "decode": "JSON.parse on exact JSON string value",
+          "decoded_string_utf8_sha256": "5c5c90b071d6652594bc71e9b61a33bea3f5e4e2ad1c760807714acb9686efde"
+        }
+      ],
+      "derivative_sha256": "6efcf2816964b1eac5c53d8f3b80251fe9a3e3a2d91fb55f5a1a70c84bdd00cc",
+      "serialization": "UTF8_RECURSIVELY_SORTED_COMPACT_JSON_NO_TRAILING_NEWLINE; not raw source bytes",
+      "value": {
+        "assignment": [
+          0,
+          0,
+          1,
+          1,
+          2,
+          2,
+          0,
+          0,
+          1,
+          1,
+          2,
+          2
+        ],
+        "basis_index": 292,
+        "shot_index": 31,
+        "status": "VALID",
+        "validation": {
+          "assignment": [
+            0,
+            0,
+            1,
+            1,
+            2,
+            2,
+            0,
+            0,
+            1,
+            1,
+            2,
+            2
+          ],
+          "binding": {
+            "mapping_ref": "acda8b7f9c2a018e16a16753cc27d0b006e75dd58495e9a9b977b9ce34740ed3",
+            "objective_profile": "MIX_CIRCLES_V01",
+            "owner_root_id": "organizer:w1",
+            "problem_ref": "16704ff36b942ba84ca41618bf59da407478c1e1a3ef7fa3779990fdea432c17",
+            "problem_revision": 1,
+            "source_bundle_hash": "f9b46b070624407e150424008fb3e933773751f54d7b5dacff834ae6855e9fa4",
+            "time_context_ref": "time:w1:static"
+          },
+          "components": {
+            "hard": 0,
+            "keep": 24,
+            "mix": 0,
+            "objective": 0
+          },
+          "condition_verdicts": [
+            {
+              "condition_id": "builtin:capacity:table_1",
+              "satisfied": true,
+              "source_ref": "original:table_records"
+            },
+            {
+              "condition_id": "builtin:capacity:table_2",
+              "satisfied": true,
+              "source_ref": "original:table_records"
+            },
+            {
+              "condition_id": "builtin:capacity:table_3",
+              "satisfied": true,
+              "source_ref": "original:table_records"
+            },
+            {
+              "condition_id": "condition_01",
+              "satisfied": true,
+              "source_ref": "source:w1:hard"
+            },
+            {
+              "condition_id": "condition_02",
+              "satisfied": true,
+              "source_ref": "source:w1:hard"
+            },
+            {
+              "condition_id": "condition_03",
+              "satisfied": true,
+              "source_ref": "source:w1:hard"
+            },
+            {
+              "condition_id": "condition_04",
+              "satisfied": true,
+              "source_ref": "source:w1:hard"
+            },
+            {
+              "condition_id": "condition_05",
+              "satisfied": true,
+              "source_ref": "source:w1:hard"
+            },
+            {
+              "condition_id": "condition_06",
+              "satisfied": true,
+              "source_ref": "source:w1:hard"
+            },
+            {
+              "condition_id": "condition_07",
+              "satisfied": true,
+              "source_ref": "source:w1:hard"
+            },
+            {
+              "condition_id": "condition_08",
+              "satisfied": true,
+              "source_ref": "source:w1:hard"
+            }
+          ],
+          "coverage": "ORIGINAL_ALL_CONDITIONS",
+          "hard_violations": [],
+          "ranking_key": [
+            false,
+            0,
+            [
+              0,
+              0,
+              1,
+              1,
+              2,
+              2,
+              0,
+              0,
+              1,
+              1,
+              2,
+              2
+            ]
+          ],
+          "schema_version": "SeatingValidationReportV01",
+          "status": "VALID",
+          "validator_id": "ORIGINAL_12_GUEST_VALIDATOR_V01"
+        }
+      },
+      "value_class": "EXACT_SELECTED_VALUE"
+    },
+    {
+      "projection_id": "MIX_CIRCLES_V01-save0:/0/claim",
+      "source_id": "src-872931764b8a11e53334",
+      "source_path": "docs/showcase/wedding_seating_v01/evidence/portable/w4/outputs/MIX_CIRCLES_V01/save_receipts.json",
+      "source_raw_sha256": "aa0370961c6300ec4ae041eda5ba0d9ba05c74d9d6e0afc12e5e03208def928d",
+      "json_pointer": "/0/claim",
+      "container_decoding_steps": [],
+      "derivative_sha256": "a9ffddcb1e083af0a5185a2d459c3eb9920ce5f7c7b6547e78294c4c99b70265",
+      "serialization": "UTF8_RECURSIVELY_SORTED_COMPACT_JSON_NO_TRAILING_NEWLINE; not raw source bytes",
+      "value": {
+        "bytes": 516,
+        "expires": 1790241259,
+        "owner_scope": "W4_NEW_TASK_OWNED_OUTPUT_ONLY",
+        "path": "external-recorded-location:seating.json",
+        "sha256": "f28b246e83cd56217f28c21fa0fed186ca03b66f2a93f443b6a4694fdf5b97bd"
+      },
+      "original_selected_value_sha256": "be9fd50cdf4b5904c1a076402166adc37c364d6d78f557deb452c56a1a3e680e",
+      "value_class": "REDACTED_DERIVED",
+      "transformation": "Replace owner-local absolute path strings with external-recorded-location:<basename>. All other fields retained. Original selected-value digest is separate from the published derivative digest."
+    },
+    {
+      "projection_id": "MIX_CIRCLES_V01-save0:/0/status",
+      "source_id": "src-872931764b8a11e53334",
+      "source_path": "docs/showcase/wedding_seating_v01/evidence/portable/w4/outputs/MIX_CIRCLES_V01/save_receipts.json",
+      "source_raw_sha256": "aa0370961c6300ec4ae041eda5ba0d9ba05c74d9d6e0afc12e5e03208def928d",
+      "json_pointer": "/0/status",
+      "container_decoding_steps": [],
+      "derivative_sha256": "53e0e528e2803ddd3cbe0be7bc708796c977ccec5688d160a753a9ccf516d8d5",
+      "serialization": "UTF8_RECURSIVELY_SORTED_COMPACT_JSON_NO_TRAILING_NEWLINE; not raw source bytes",
+      "value": "SAVED_READBACK_VERIFIED",
+      "value_class": "EXACT_SELECTED_VALUE"
+    },
+    {
+      "projection_id": "MIX_CIRCLES_V01-save0:/0/root_result",
+      "source_id": "src-872931764b8a11e53334",
+      "source_path": "docs/showcase/wedding_seating_v01/evidence/portable/w4/outputs/MIX_CIRCLES_V01/save_receipts.json",
+      "source_raw_sha256": "aa0370961c6300ec4ae041eda5ba0d9ba05c74d9d6e0afc12e5e03208def928d",
+      "json_pointer": "/0/root_result",
+      "container_decoding_steps": [],
+      "derivative_sha256": "773546ab2fd50198e4ada6993122bc257ad0373db0b4edbe737d99120f2ed967",
+      "serialization": "UTF8_RECURSIVELY_SORTED_COMPACT_JSON_NO_TRAILING_NEWLINE; not raw source bytes",
+      "value": {
+        "conflict_set_ids": [],
+        "decision": "ACCEPT",
+        "decision_id": "0965a17e2cae473182ed0376b35a85e349656bfe9211e708aa4eeefd0dc97769",
+        "decision_input_id": "2b3de396953bfe423002d77008660ef07c7e2194535934734c39871ed0ed5b73",
+        "effect_requested": false,
+        "final_output_created": false,
+        "hard_failure_reasons": [],
+        "missing_evidence_refs": [],
+        "permission_created": false,
+        "prior_decision_id": null,
+        "reason_code": "validated_candidate_accepted",
+        "root_commit_created": true,
+        "selected_candidate_id": "wedding_save:be9fd50cdf4b5904c1a076402166adc37c364d6d78f557deb452c56a1a3e680e",
+        "target_root_id": "organizer:w1",
+        "transaction_id": "transaction:request:w4:xExg43mO:MIX_CIRCLES_V01:raw-consumption",
+        "transition_decision": {
+          "abi_major_version": 1,
+          "actor_role": "gt",
+          "attempted_effect": "CREATE_ROOT_DECISION",
+          "decision": "RETURN_TO_ROOT",
+          "decision_id": "85eff0e7c3a8a4da444edd85f36a3a2c91929bd85b5ab85eed585a6574976e07",
+          "matched": true,
+          "missing_guards": [],
+          "reason_code": "gt_advisory_returns_to_root",
+          "registry_id": "336c082d1520d49cf9b23d1c6d983637b7835d8fa863a83dbbae82a11bfa26be",
+          "required_guards": [
+            "artifact_valid",
+            "post_vv_passed",
+            "advisory_only"
+          ],
+          "root_commit_present": false,
+          "root_commit_required": true,
+          "rule_id": "gt_advisory_to_root_decision",
+          "satisfied_guards": [
+            "artifact_valid",
+            "post_vv_passed",
+            "advisory_only"
+          ],
+          "source_artifact_type": "GTAdvisoryReport",
+          "source_lifecycle_state": "VALIDATED",
+          "target_artifact_type": "RootDecision"
+        }
+      },
+      "value_class": "EXACT_SELECTED_VALUE"
+    },
+    {
+      "projection_id": "MIX_CIRCLES_V01-save0:/0/root_input/post_vv_bundle/items",
+      "source_id": "src-872931764b8a11e53334",
+      "source_path": "docs/showcase/wedding_seating_v01/evidence/portable/w4/outputs/MIX_CIRCLES_V01/save_receipts.json",
+      "source_raw_sha256": "aa0370961c6300ec4ae041eda5ba0d9ba05c74d9d6e0afc12e5e03208def928d",
+      "json_pointer": "/0/root_input/post_vv_bundle/items",
+      "container_decoding_steps": [],
+      "derivative_sha256": "e8cf8032f4e66bf8d59778b30bc66a76dccc213e60f5b5b28a6ffe2d41dc48b8",
+      "serialization": "UTF8_RECURSIVELY_SORTED_COMPACT_JSON_NO_TRAILING_NEWLINE; not raw source bytes",
+      "value": [
+        [
+          "bundle_id",
+          "checks:fa438f6237751d91c7bfca3ca383edd1d0a99ae1c95f86ba34f15fddd1259c82"
+        ],
+        [
+          "hard_failure_reasons",
+          []
+        ],
+        [
+          "post_vv_passed",
+          true
+        ],
+        [
+          "provided_evidence_refs",
+          [
+            "work_results:b8cbd4f95437707a8b90cbc7815c3d86beaaa0de63fddb152eb25932af76262a"
+          ]
+        ],
+        [
+          "rejected_candidate_ids",
+          []
+        ],
+        [
+          "required_evidence_refs",
+          [
+            "work_results:b8cbd4f95437707a8b90cbc7815c3d86beaaa0de63fddb152eb25932af76262a"
+          ]
+        ],
+        [
+          "validated_candidate_ids",
+          [
+            "wedding_save:be9fd50cdf4b5904c1a076402166adc37c364d6d78f557deb452c56a1a3e680e"
+          ]
+        ]
+      ],
+      "value_class": "EXACT_SELECTED_VALUE"
+    },
+    {
+      "projection_id": "MIX_CIRCLES_V01-save1:/1/claim",
+      "source_id": "src-872931764b8a11e53334",
+      "source_path": "docs/showcase/wedding_seating_v01/evidence/portable/w4/outputs/MIX_CIRCLES_V01/save_receipts.json",
+      "source_raw_sha256": "aa0370961c6300ec4ae041eda5ba0d9ba05c74d9d6e0afc12e5e03208def928d",
+      "json_pointer": "/1/claim",
+      "container_decoding_steps": [],
+      "derivative_sha256": "66c6de9b19329cb400b89769639f6c674b20445bc968ddcb3cc2157cf1b18076",
+      "serialization": "UTF8_RECURSIVELY_SORTED_COMPACT_JSON_NO_TRAILING_NEWLINE; not raw source bytes",
+      "value": {
+        "bytes": 2241,
+        "expires": 1790241259,
+        "owner_scope": "W4_NEW_TASK_OWNED_OUTPUT_ONLY",
+        "path": "external-recorded-location:seating.html",
+        "sha256": "843c56e3b005f6e15e48c2fed6da94d1196ecccbac5b16c84c091a00e1bb5ef8"
+      },
+      "original_selected_value_sha256": "a852f720587d756cc388b69434663ffa69e637aaddb04fcaf04d3667113ba356",
+      "value_class": "REDACTED_DERIVED",
+      "transformation": "Replace owner-local absolute path strings with external-recorded-location:<basename>. All other fields retained. Original selected-value digest is separate from the published derivative digest."
+    },
+    {
+      "projection_id": "MIX_CIRCLES_V01-save1:/1/status",
+      "source_id": "src-872931764b8a11e53334",
+      "source_path": "docs/showcase/wedding_seating_v01/evidence/portable/w4/outputs/MIX_CIRCLES_V01/save_receipts.json",
+      "source_raw_sha256": "aa0370961c6300ec4ae041eda5ba0d9ba05c74d9d6e0afc12e5e03208def928d",
+      "json_pointer": "/1/status",
+      "container_decoding_steps": [],
+      "derivative_sha256": "53e0e528e2803ddd3cbe0be7bc708796c977ccec5688d160a753a9ccf516d8d5",
+      "serialization": "UTF8_RECURSIVELY_SORTED_COMPACT_JSON_NO_TRAILING_NEWLINE; not raw source bytes",
+      "value": "SAVED_READBACK_VERIFIED",
+      "value_class": "EXACT_SELECTED_VALUE"
+    },
+    {
+      "projection_id": "MIX_CIRCLES_V01-save1:/1/root_result",
+      "source_id": "src-872931764b8a11e53334",
+      "source_path": "docs/showcase/wedding_seating_v01/evidence/portable/w4/outputs/MIX_CIRCLES_V01/save_receipts.json",
+      "source_raw_sha256": "aa0370961c6300ec4ae041eda5ba0d9ba05c74d9d6e0afc12e5e03208def928d",
+      "json_pointer": "/1/root_result",
+      "container_decoding_steps": [],
+      "derivative_sha256": "a227298c805da064c197f29dc6e1029600dcd73108d1e31001f94e59fe9d1c0a",
+      "serialization": "UTF8_RECURSIVELY_SORTED_COMPACT_JSON_NO_TRAILING_NEWLINE; not raw source bytes",
+      "value": {
+        "conflict_set_ids": [],
+        "decision": "ACCEPT",
+        "decision_id": "e0d9c2c2372449871f425b28233e202ce9d8558c64f838283cea4d583bcf235e",
+        "decision_input_id": "909a5dea9699ba75c0ee79c8d7a2c184c9e993d6c558c7446598b8aa05656347",
+        "effect_requested": false,
+        "final_output_created": false,
+        "hard_failure_reasons": [],
+        "missing_evidence_refs": [],
+        "permission_created": false,
+        "prior_decision_id": null,
+        "reason_code": "validated_candidate_accepted",
+        "root_commit_created": true,
+        "selected_candidate_id": "wedding_save:a852f720587d756cc388b69434663ffa69e637aaddb04fcaf04d3667113ba356",
+        "target_root_id": "organizer:w1",
+        "transaction_id": "transaction:request:w4:xExg43mO:MIX_CIRCLES_V01:raw-consumption",
+        "transition_decision": {
+          "abi_major_version": 1,
+          "actor_role": "gt",
+          "attempted_effect": "CREATE_ROOT_DECISION",
+          "decision": "RETURN_TO_ROOT",
+          "decision_id": "85eff0e7c3a8a4da444edd85f36a3a2c91929bd85b5ab85eed585a6574976e07",
+          "matched": true,
+          "missing_guards": [],
+          "reason_code": "gt_advisory_returns_to_root",
+          "registry_id": "336c082d1520d49cf9b23d1c6d983637b7835d8fa863a83dbbae82a11bfa26be",
+          "required_guards": [
+            "artifact_valid",
+            "post_vv_passed",
+            "advisory_only"
+          ],
+          "root_commit_present": false,
+          "root_commit_required": true,
+          "rule_id": "gt_advisory_to_root_decision",
+          "satisfied_guards": [
+            "artifact_valid",
+            "post_vv_passed",
+            "advisory_only"
+          ],
+          "source_artifact_type": "GTAdvisoryReport",
+          "source_lifecycle_state": "VALIDATED",
+          "target_artifact_type": "RootDecision"
+        }
+      },
+      "value_class": "EXACT_SELECTED_VALUE"
+    },
+    {
+      "projection_id": "MIX_CIRCLES_V01-save1:/1/root_input/post_vv_bundle/items",
+      "source_id": "src-872931764b8a11e53334",
+      "source_path": "docs/showcase/wedding_seating_v01/evidence/portable/w4/outputs/MIX_CIRCLES_V01/save_receipts.json",
+      "source_raw_sha256": "aa0370961c6300ec4ae041eda5ba0d9ba05c74d9d6e0afc12e5e03208def928d",
+      "json_pointer": "/1/root_input/post_vv_bundle/items",
+      "container_decoding_steps": [],
+      "derivative_sha256": "a3c32d767032eb573a777efc9ceec1109fd5bc29cbb6bbcef45a580c31b2d7cf",
+      "serialization": "UTF8_RECURSIVELY_SORTED_COMPACT_JSON_NO_TRAILING_NEWLINE; not raw source bytes",
+      "value": [
+        [
+          "bundle_id",
+          "checks:fa438f6237751d91c7bfca3ca383edd1d0a99ae1c95f86ba34f15fddd1259c82"
+        ],
+        [
+          "hard_failure_reasons",
+          []
+        ],
+        [
+          "post_vv_passed",
+          true
+        ],
+        [
+          "provided_evidence_refs",
+          [
+            "work_results:b8cbd4f95437707a8b90cbc7815c3d86beaaa0de63fddb152eb25932af76262a"
+          ]
+        ],
+        [
+          "rejected_candidate_ids",
+          []
+        ],
+        [
+          "required_evidence_refs",
+          [
+            "work_results:b8cbd4f95437707a8b90cbc7815c3d86beaaa0de63fddb152eb25932af76262a"
+          ]
+        ],
+        [
+          "validated_candidate_ids",
+          [
+            "wedding_save:a852f720587d756cc388b69434663ffa69e637aaddb04fcaf04d3667113ba356"
+          ]
+        ]
+      ],
+      "value_class": "EXACT_SELECTED_VALUE"
+    },
+    {
+      "projection_id": "MIX_CIRCLES_V01-saved-output",
+      "source_id": "src-cbc433b365ff9a56e29b",
+      "source_path": "docs/showcase/wedding_seating_v01/evidence/portable/w4/outputs/MIX_CIRCLES_V01/seating.json",
+      "source_raw_sha256": "f28b246e83cd56217f28c21fa0fed186ca03b66f2a93f443b6a4694fdf5b97bd",
+      "json_pointer": "",
+      "container_decoding_steps": [],
+      "derivative_sha256": "f28b246e83cd56217f28c21fa0fed186ca03b66f2a93f443b6a4694fdf5b97bd",
+      "serialization": "UTF8_RECURSIVELY_SORTED_COMPACT_JSON_NO_TRAILING_NEWLINE; not raw source bytes",
+      "value": {
+        "assignment": [
+          0,
+          0,
+          1,
+          1,
+          2,
+          2,
+          0,
+          0,
+          1,
+          1,
+          2,
+          2
+        ],
+        "basis_index": 292,
+        "local_repair": false,
+        "objective_gap": 0,
+        "origin": "LIVE_QPU_RAW_DECODED_POSTSELECTED",
+        "problem_ref": "16704ff36b942ba84ca41618bf59da407478c1e1a3ef7fa3779990fdea432c17",
+        "profile": "MIX_CIRCLES_V01",
+        "raw_sha256": "73c29d59ba439450cbdecb7c059b5a0dccb8d951f4ac69c0c5c1f820de1da755",
+        "request_ref": "request:w4:xExg43mO:MIX_CIRCLES_V01:raw-consumption",
+        "shot_index": 31,
+        "task_arn": "arn:aws:braket:us-west-1:296280725196:quantum-task/470b472c-590e-42ad-b4f1-6b597be40f6d"
+      },
+      "value_class": "EXACT_SELECTED_VALUE"
+    },
+    {
+      "projection_id": "MIX_CIRCLES_V01-numeric:/profile",
+      "source_id": "src-d33f798ab78212126ded",
+      "source_path": "docs/showcase/wedding_seating_v01/evidence/portable/w4/numeric/MIX_CIRCLES_V01/numeric.json",
+      "source_raw_sha256": "da836faa6cb40114c1235b17bd2dbe7c7019bd1aac271d75b995d04401bb73ae",
+      "json_pointer": "/profile",
+      "container_decoding_steps": [],
+      "derivative_sha256": "3a7bf59e974180debd445f1b2dc3fbdf767f69a764ab0543f3b626be5a676f3c",
+      "serialization": "UTF8_RECURSIVELY_SORTED_COMPACT_JSON_NO_TRAILING_NEWLINE; not raw source bytes",
+      "value": "MIX_CIRCLES_V01",
+      "value_class": "EXACT_SELECTED_VALUE"
+    },
+    {
+      "projection_id": "MIX_CIRCLES_V01-numeric:/encoding/schema_version",
+      "source_id": "src-d33f798ab78212126ded",
+      "source_path": "docs/showcase/wedding_seating_v01/evidence/portable/w4/numeric/MIX_CIRCLES_V01/numeric.json",
+      "source_raw_sha256": "da836faa6cb40114c1235b17bd2dbe7c7019bd1aac271d75b995d04401bb73ae",
+      "json_pointer": "/encoding/schema_version",
+      "container_decoding_steps": [],
+      "derivative_sha256": "04366debc6e427c88912bdd4a5b1d6e2305902829d59813e78efc0a1444d1994",
+      "serialization": "UTF8_RECURSIVELY_SORTED_COMPACT_JSON_NO_TRAILING_NEWLINE; not raw source bytes",
+      "value": "PAIR_BINARY_10Q_V02",
+      "value_class": "EXACT_SELECTED_VALUE"
+    },
+    {
+      "projection_id": "MIX_CIRCLES_V01-numeric:/encoding/qubits",
+      "source_id": "src-d33f798ab78212126ded",
+      "source_path": "docs/showcase/wedding_seating_v01/evidence/portable/w4/numeric/MIX_CIRCLES_V01/numeric.json",
+      "source_raw_sha256": "da836faa6cb40114c1235b17bd2dbe7c7019bd1aac271d75b995d04401bb73ae",
+      "json_pointer": "/encoding/qubits",
+      "container_decoding_steps": [],
+      "derivative_sha256": "4a44dc15364204a80fe80e9039455cc1608281820fe2b24f1e5233ade6af1dd5",
+      "serialization": "UTF8_RECURSIVELY_SORTED_COMPACT_JSON_NO_TRAILING_NEWLINE; not raw source bytes",
+      "value": 10,
+      "value_class": "EXACT_SELECTED_VALUE"
+    },
+    {
+      "projection_id": "MIX_CIRCLES_V01-numeric:/encoding/variable_pairs",
+      "source_id": "src-d33f798ab78212126ded",
+      "source_path": "docs/showcase/wedding_seating_v01/evidence/portable/w4/numeric/MIX_CIRCLES_V01/numeric.json",
+      "source_raw_sha256": "da836faa6cb40114c1235b17bd2dbe7c7019bd1aac271d75b995d04401bb73ae",
+      "json_pointer": "/encoding/variable_pairs",
+      "container_decoding_steps": [],
+      "derivative_sha256": "82f2251eb4bb0fe81a7152e6998d07eb44020187e827d0c2e719e2e68b6e575d",
+      "serialization": "UTF8_RECURSIVELY_SORTED_COMPACT_JSON_NO_TRAILING_NEWLINE; not raw source bytes",
+      "value": [
+        [
+          0,
+          1
+        ],
+        [
+          2,
+          3
+        ],
+        [
+          4,
+          5
+        ],
+        [
+          6,
+          7
+        ],
+        [
+          8,
+          9
+        ]
+      ],
+      "value_class": "EXACT_SELECTED_VALUE"
+    },
+    {
+      "projection_id": "MIX_CIRCLES_V01-numeric:/encoding/fixed_pair",
+      "source_id": "src-d33f798ab78212126ded",
+      "source_path": "docs/showcase/wedding_seating_v01/evidence/portable/w4/numeric/MIX_CIRCLES_V01/numeric.json",
+      "source_raw_sha256": "da836faa6cb40114c1235b17bd2dbe7c7019bd1aac271d75b995d04401bb73ae",
+      "json_pointer": "/encoding/fixed_pair",
+      "container_decoding_steps": [],
+      "derivative_sha256": "43a2d66e5f850f64677fc2fae986fcdbdf190e6b6f026167f70b21d8860826b3",
+      "serialization": "UTF8_RECURSIVELY_SORTED_COMPACT_JSON_NO_TRAILING_NEWLINE; not raw source bytes",
+      "value": [
+        10,
+        11
+      ],
+      "value_class": "EXACT_SELECTED_VALUE"
+    },
+    {
+      "projection_id": "MIX_CIRCLES_V01-numeric:/encoding/fixed_table",
+      "source_id": "src-d33f798ab78212126ded",
+      "source_path": "docs/showcase/wedding_seating_v01/evidence/portable/w4/numeric/MIX_CIRCLES_V01/numeric.json",
+      "source_raw_sha256": "da836faa6cb40114c1235b17bd2dbe7c7019bd1aac271d75b995d04401bb73ae",
+      "json_pointer": "/encoding/fixed_table",
+      "container_decoding_steps": [],
+      "derivative_sha256": "d4735e3a265e16eee03f59718b9b5d03019c07d8b6c51f90da3a666eec13ab35",
+      "serialization": "UTF8_RECURSIVELY_SORTED_COMPACT_JSON_NO_TRAILING_NEWLINE; not raw source bytes",
+      "value": 2,
+      "value_class": "EXACT_SELECTED_VALUE"
+    },
+    {
+      "projection_id": "MIX_CIRCLES_V01-numeric:/encoding/invalid_code",
+      "source_id": "src-d33f798ab78212126ded",
+      "source_path": "docs/showcase/wedding_seating_v01/evidence/portable/w4/numeric/MIX_CIRCLES_V01/numeric.json",
+      "source_raw_sha256": "da836faa6cb40114c1235b17bd2dbe7c7019bd1aac271d75b995d04401bb73ae",
+      "json_pointer": "/encoding/invalid_code",
+      "container_decoding_steps": [],
+      "derivative_sha256": "4e07408562bedb8b60ce05c1decfe3ad16b72230967de01f640b7e4729b49fce",
+      "serialization": "UTF8_RECURSIVELY_SORTED_COMPACT_JSON_NO_TRAILING_NEWLINE; not raw source bytes",
+      "value": 3,
+      "value_class": "EXACT_SELECTED_VALUE"
+    },
+    {
+      "projection_id": "MIX_CIRCLES_V01-numeric:/selected_grid",
+      "source_id": "src-d33f798ab78212126ded",
+      "source_path": "docs/showcase/wedding_seating_v01/evidence/portable/w4/numeric/MIX_CIRCLES_V01/numeric.json",
+      "source_raw_sha256": "da836faa6cb40114c1235b17bd2dbe7c7019bd1aac271d75b995d04401bb73ae",
+      "json_pointer": "/selected_grid",
+      "container_decoding_steps": [],
+      "derivative_sha256": "07a25fb1c713cb0ec12bce20b8b1d4402d80c5c399e9d02c0af0d5b32823656d",
+      "serialization": "UTF8_RECURSIVELY_SORTED_COMPACT_JSON_NO_TRAILING_NEWLINE; not raw source bytes",
+      "value": {
+        "encoding_ref": "5bd4912868eb0f84e16a01cc69107bde749f1acb9758a9b58482483bde0e3ba4",
+        "scale": 4096,
+        "selected": {
+          "beta_index": 22,
+          "gamma_index": 16,
+          "loss": 134.31602268387667,
+          "loss_key": 134316022683877
+        },
+        "source_sha256": "39726a1a1f79324ad53c95d638a2ae937b00e5f66ec5bc2db856d48d9a628b0c"
+      },
+      "value_class": "EXACT_SELECTED_VALUE"
+    },
+    {
+      "projection_id": "MIX_CIRCLES_V01-numeric:/backend",
+      "source_id": "src-d33f798ab78212126ded",
+      "source_path": "docs/showcase/wedding_seating_v01/evidence/portable/w4/numeric/MIX_CIRCLES_V01/numeric.json",
+      "source_raw_sha256": "da836faa6cb40114c1235b17bd2dbe7c7019bd1aac271d75b995d04401bb73ae",
+      "json_pointer": "/backend",
+      "container_decoding_steps": [],
+      "derivative_sha256": "8652935c727d17d03efd1e67d74c144641a638caeb58c7a494cac9401d8b57e6",
+      "serialization": "UTF8_RECURSIVELY_SORTED_COMPACT_JSON_NO_TRAILING_NEWLINE; not raw source bytes",
+      "value": "LIVE_QPU_EXPLICIT_PROVIDER_BRIDGE",
+      "value_class": "EXACT_SELECTED_VALUE"
+    }
+  ]
+}

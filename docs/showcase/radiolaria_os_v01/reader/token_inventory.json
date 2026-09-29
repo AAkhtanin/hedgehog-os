@@ -1,0 +1,47 @@
+{
+  "xml": {
+    "bytes": 82732,
+    "sha256": "a9f73cee129498deca724f56783b8940de313dd4cab0cbb236f74306170e6b71",
+    "estimated_tokens": 20683,
+    "assumed_total_with_reserve": 25883,
+    "within_assumed_32768": true
+  },
+  "markdown": {
+    "bytes": 82506,
+    "sha256": "fd64b1358b6a831069199a4d9fee97f81b68efe594c33ef9397435f847e3f411",
+    "estimated_tokens": 20627,
+    "assumed_total_with_reserve": 25827,
+    "within_assumed_32768": true
+  },
+  "budget": {
+    "tokenizer_or_estimator": "UTF-8 byte-count / 4, ceil",
+    "method_version": "g6b1.bytes4.v01",
+    "estimated_or_measured": "ESTIMATED_TOKENS; MEASURED_BYTES",
+    "system_and_history_assumptions": {
+      "T_system": 2000,
+      "T_history": 0,
+      "T_question": 200
+    },
+    "response_reserve": 3000,
+    "C_available_assumption": 32768,
+    "budget_equation": "T_system + T_history + T_question + T_packet + T_response_reserve <= C_available",
+    "target_tokens": [
+      8000,
+      16000
+    ],
+    "counts": {
+      "embedded_exact_sources": 6,
+      "embedded_excerpts": 8,
+      "derived_views": 8,
+      "external_binary_sources": 0,
+      "external_text_sources": 0,
+      "omissions": 0,
+      "unique_sources": 21,
+      "logical_entries": 22,
+      "duplicate_references": 1,
+      "physical_files": 22,
+      "count_scope": "Embedded M2 source entries; accompanying capsule has a separate exact path ledger. Missing full wrappers are declared coverage exclusions, not claimed exact embeddings."
+    },
+    "warning": "Not a tokenizer or model capacity guarantee; substitute actual available context before use. No provider requests."
+  }
+}

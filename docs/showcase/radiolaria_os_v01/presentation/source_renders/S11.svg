@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 1280 720" role="img" aria-labelledby="title desc">
+<title id="title">A measured candidate becomes a checked result</title>
+<desc id="desc">RECORDED W4 KEEP, REVISION 1  /  Separate from the W3 SR2 amendment</desc>
+<defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L9,3 z" fill="#176B68"/></marker></defs>
+<rect width="1280" height="720" fill="white"/>
+<text id="S11_title" font-family="Nimbus Sans" font-size="42" font-weight="bold" fill="#16282B">
+<tspan x="54" y="78.0">A measured candidate becomes a checked result</tspan>
+</text>
+<text id="S11_scope" font-family="Nimbus Sans" font-size="23" font-weight="normal" fill="#43595D">
+<tspan x="56" y="136.0">RECORDED W4 KEEP, REVISION 1 / Separate from the W3 SR2 amendment</tspan>
+</text>
+<rect x="56.0" y="245" width="225" height="110" id="S11_measurement_0" fill="#EFF5F3" stroke="#176B68" stroke-width="2"/>
+<text id="S11_measurement_0_label" font-family="Nimbus Sans" font-size="22" font-weight="normal" fill="#16282B">
+<tspan x="69.0" y="279.0">measurements[63]</tspan>
+<tspan x="69.0" y="304.3">[1,0,1,0,0,0,0,0,0,1]</tspan>
+</text>
+<rect x="370.3333333333333" y="245" width="225" height="110" id="S11_measurement_1" fill="#EFF5F3" stroke="#176B68" stroke-width="2"/>
+<text id="S11_measurement_1_label" font-family="Nimbus Sans" font-size="24" font-weight="normal" fill="#16282B">
+<tspan x="383.3333333333333" y="281.0">Recorded order</tspan>
+<tspan x="383.3333333333333" y="308.6">basis 517</tspan>
+</text>
+<rect x="684.6666666666666" y="245" width="225" height="110" id="S11_measurement_2" fill="#EFF5F3" stroke="#176B68" stroke-width="2"/>
+<text id="S11_measurement_2_label" font-family="Nimbus Sans" font-size="24" font-weight="normal" fill="#16282B">
+<tspan x="697.6666666666666" y="281.0">Original conditions</tspan>
+<tspan x="697.6666666666666" y="308.6">all satisfied</tspan>
+</text>
+<rect x="999.0" y="245" width="225" height="110" id="S11_measurement_3" fill="#EFF5F3" stroke="#176B68" stroke-width="2"/>
+<text id="S11_measurement_3_label" font-family="Nimbus Sans" font-size="24" font-weight="normal" fill="#16282B">
+<tspan x="1012.0" y="281.0">qpu_consume</tspan>
+<tspan x="1012.0" y="308.6">actual material</tspan>
+</text>
+<line id="S11_measurement_edge_0" x1="281.0" y1="300.0" x2="370.3333333333333" y2="300.0" stroke="#176B68" stroke-width="2" marker-end="url(#arrow)"/>
+<text id="S11_measurement_edge_0_label" font-family="Nimbus Sans" font-size="17" font-weight="normal" fill="#43595D">
+<tspan x="285.0" y="235.0">raw bits</tspan>
+</text>
+<line id="S11_measurement_edge_1" x1="595.3333333333333" y1="300.0" x2="684.6666666666666" y2="300.0" stroke="#176B68" stroke-width="2" marker-end="url(#arrow)"/>
+<text id="S11_measurement_edge_1_label" font-family="Nimbus Sans" font-size="17" font-weight="normal" fill="#43595D">
+<tspan x="599.3333333333333" y="235.0">decoded</tspan>
+<tspan x="599.3333333333333" y="254.55">seating</tspan>
+</text>
+<line id="S11_measurement_edge_2" x1="909.6666666666666" y1="300.0" x2="999.0" y2="300.0" stroke="#176B68" stroke-width="2" marker-end="url(#arrow)"/>
+<text id="S11_measurement_edge_2_label" font-family="Nimbus Sans" font-size="17" font-weight="normal" fill="#43595D">
+<tspan x="913.6666666666666" y="235.0">checked</tspan>
+<tspan x="913.6666666666666" y="254.55">result</tspan>
+</text>
+<text id="S11_decode" font-family="Nimbus Sans" font-size="29" font-weight="normal" fill="#16282B">
+<tspan x="56" y="420.0">q0 and q2 and q9 are 1: 1 + 4 + 512 = 517</tspan>
+<tspan x="56" y="453.35">Seating [1,1,1,1,0,0,0,0,2,2,2,2], hard penalty 0, objective 0</tspan>
+</text>
+<text id="S11_count" font-family="Nimbus Sans" font-size="28" font-weight="normal" fill="#16282B">
+<tspan x="56" y="533.0">33 valid / 1000 measured candidates. No local repair.</tspan>
+<tspan x="56" y="565.2">Separate Root save decision records a 520-byte JSON write.</tspan>
+</text>
+<text id="S11_qualification" font-family="Nimbus Sans" font-size="23" font-weight="normal" fill="#43595D">
+<tspan x="56" y="619.0">10-qubit up-to-four-local representation, not the 36-indicator QUBO. No quantum advantage or</tspan>
+<tspan x="56" y="645.45">hardware-noise-rate claim.</tspan>
+</text>
+<line id="S11_rule" x1="56" y1="671" x2="1218" y2="671" stroke="#B8C8C6" stroke-width="1"/>
+<a href="../../references/wedding/SOURCE_LEDGER.json">
+<text id="S11_source_link" font-family="Nimbus Sans" font-size="18" font-weight="normal" fill="#315E8B">
+<tspan x="56" y="703.0">S11 Source: wedding</tspan>
+</text>
+</a>
+<a href="../../atlas/README.html">
+<text id="S11_atlas_locator" font-family="Nimbus Sans" font-size="17" font-weight="normal" fill="#315E8B">
+<tspan x="660" y="702.0">Atlas: Overview / GEO 1 2 3 4 5 6 7</tspan>
+</text>
+</a>
+</svg>

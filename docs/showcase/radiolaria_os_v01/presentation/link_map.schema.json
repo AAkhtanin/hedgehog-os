@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:g6b3r1:link-map:v1",
+  "type": "object", "additionalProperties": false,
+  "required": ["schema_version", "links"],
+  "properties": {
+    "schema_version": {"const": "g6b3r1-link-map-v1"},
+    "links": {
+      "type": "array", "items": {
+        "type": "object", "additionalProperties": false, "required": ["target", "url"],
+        "properties": {
+          "target": {"type": "string", "minLength": 1},
+          "url": {"type": "string", "minLength": 1}
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 1280 720" role="img" aria-labelledby="title desc">
+<title id="title">A visual companion helps recognize a record</title>
+<desc id="desc">CONCEPTUAL VISUAL SEAL  /  NONCANONICAL preview, actual receipt-to-image binding unknown</desc>
+<defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L9,3 z" fill="#176B68"/></marker></defs>
+<rect width="1280" height="720" fill="white"/>
+<text id="S19_title" font-family="Nimbus Sans" font-size="42" font-weight="bold" fill="#16282B">
+<tspan x="54" y="78.0">A visual companion helps recognize a record</tspan>
+</text>
+<text id="S19_scope" font-family="Nimbus Sans" font-size="23" font-weight="normal" fill="#43595D">
+<tspan x="56" y="136.0">CONCEPTUAL VISUAL SEAL / NONCANONICAL preview, actual receipt-to-image binding unknown</tspan>
+</text>
+<image id="S19_seal" href="../../assets/visual_seal_NONCANONICAL_PREVIEW.png" x="90" y="200" width="420" height="350" preserveAspectRatio="xMidYMid meet"/>
+<text id="S19_distinction" font-family="Nimbus Sans" font-size="34" font-weight="normal" fill="#16282B">
+<tspan x="596" y="259.0">VISUAL_SEAL</tspan>
+<tspan x="596" y="298.1">Human-facing companion</tspan>
+<tspan x="596" y="337.2"></tspan>
+<tspan x="596" y="376.29999999999995">CRYPTO_SEAL</tspan>
+<tspan x="596" y="415.4">Bound evidence and its verification</tspan>
+</text>
+<text id="S19_unknown" font-family="Nimbus Sans" font-size="29" font-weight="normal" fill="#16282B">
+<tspan x="596" y="540.0">No invented digest, decoder or signature from</tspan>
+<tspan x="596" y="573.35">this picture.</tspan>
+</text>
+<text id="S19_qualification" font-family="Nimbus Sans" font-size="23" font-weight="normal" fill="#43595D">
+<tspan x="56" y="619.0">The companion can support recognition. Its existence does not establish the truth, authority or completeness of a</tspan>
+<tspan x="56" y="645.45">record.</tspan>
+</text>
+<line id="S19_rule" x1="56" y1="671" x2="1218" y2="671" stroke="#B8C8C6" stroke-width="1"/>
+<a href="../../VISUAL_SEAL.html">
+<text id="S19_source_link" font-family="Nimbus Sans" font-size="18" font-weight="normal" fill="#315E8B">
+<tspan x="56" y="703.0">S19 Source: identity</tspan>
+</text>
+</a>
+<a href="../../atlas/README.html">
+<text id="S19_atlas_locator" font-family="Nimbus Sans" font-size="17" font-weight="normal" fill="#315E8B">
+<tspan x="660" y="702.0">Atlas: Overview / GEO 1 2 3 4 5 6 7</tspan>
+</text>
+</a>
+</svg>

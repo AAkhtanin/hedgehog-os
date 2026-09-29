@@ -1,0 +1,1309 @@
+{
+  "purpose": "Exact, static source-field projections for the five-case chapter. No project execution or independent runtime certification.",
+  "accepted_owner_head": "2e965ecb18e545e428380eb8e9aa5a7037a388be",
+  "inspected_on": "2026-09-27",
+  "evidence_class": "observed-current for byte/field inspection only; source runtime observations remain recorded-historical",
+  "source_hash_checks": [
+    {
+      "source": "TD-NAV",
+      "path": "docs/showcase/two_domain_master_v01/hedgehog_os_two_domain_master_showcase_sources_v01.json",
+      "expected_sha256": "64999cb42219fd08e1aec8b2ac25db7804e55cbad580ca175395de6c6385d41f",
+      "observed_sha256": "64999cb42219fd08e1aec8b2ac25db7804e55cbad580ca175395de6c6385d41f",
+      "matches": true
+    },
+    {
+      "source": "X1",
+      "path": "docs/evidence/two_domain_all_real_sealed_evidence_program_v01/cross_domain_evidence_index_v01.json",
+      "expected_sha256": "053f45ada6445da7508a7e53bfc130a7aa6602c87c24416d71aa19ecd00ad4b1",
+      "observed_sha256": "053f45ada6445da7508a7e53bfc130a7aa6602c87c24416d71aa19ecd00ad4b1",
+      "matches": true
+    },
+    {
+      "source": "S-REPORT",
+      "path": "docs/evidence/two_domain_all_real_sealed_evidence_program_v01/supplier_water_filter/supplier_safe_execution_report_v01.json",
+      "expected_sha256": "293a6ed1f0b943557e2bd33f2ac52f49610e8924574d2784af328d964ba1d666",
+      "observed_sha256": "293a6ed1f0b943557e2bd33f2ac52f49610e8924574d2784af328d964ba1d666",
+      "matches": true
+    },
+    {
+      "source": "S-INDEX",
+      "path": "docs/evidence/two_domain_all_real_sealed_evidence_program_v01/supplier_water_filter/supplier_safe_evidence_index_v01.json",
+      "expected_sha256": "6d197bf9a181c621ff130f1d1a2599b1ce007e6edffdf157c41c77f736d2df5f",
+      "observed_sha256": "6d197bf9a181c621ff130f1d1a2599b1ce007e6edffdf157c41c77f736d2df5f",
+      "matches": true
+    },
+    {
+      "source": "A-REPORT",
+      "path": "docs/evidence/two_domain_all_real_sealed_evidence_program_v01/airline/airline_safe_execution_report_attempt_04_v01.json",
+      "expected_sha256": "2a83abbee906a3ccd047728353dfd333424cd9898e2ae39e4eca0abbecb4def7",
+      "observed_sha256": "2a83abbee906a3ccd047728353dfd333424cd9898e2ae39e4eca0abbecb4def7",
+      "matches": true
+    },
+    {
+      "source": "A-MATRIX",
+      "path": "docs/showcase/airline_all_real_full_stack_v01/claim_evidence_matrix_v01.json",
+      "expected_sha256": "7846ce0318c283e25d0fab396887906c96543bbf73e6427b516ee5f72cbf4c9a",
+      "observed_sha256": "7846ce0318c283e25d0fab396887906c96543bbf73e6427b516ee5f72cbf4c9a",
+      "matches": true
+    },
+    {
+      "source": "LS-PROJECTION",
+      "path": "docs/showcase/landslide_sentinel_v01/public_safe_package/projection.json",
+      "expected_sha256": "9fcd94838d50e45ca5fce951b29b0e35d798c1a2010cf1cd2408eda96897d881",
+      "observed_sha256": "9fcd94838d50e45ca5fce951b29b0e35d798c1a2010cf1cd2408eda96897d881",
+      "matches": true
+    },
+    {
+      "source": "LS-MATRIX",
+      "path": "docs/showcase/landslide_sentinel_v01/claim_evidence_matrix_v01.json",
+      "expected_sha256": "b95e1f20db9c1d85987b4fada38f55a7a04142cd93270b50875fa2b6af68b2dd",
+      "observed_sha256": "b95e1f20db9c1d85987b4fada38f55a7a04142cd93270b50875fa2b6af68b2dd",
+      "matches": true
+    },
+    {
+      "source": "LS-CLAIMS",
+      "path": "docs/showcase/landslide_sentinel_v01/claim_evidence_map_v01.json",
+      "expected_sha256": "061b48f6c51d2e9ed4ef0254229f5f08fd7b58821794eb26e773883264836f0f",
+      "observed_sha256": "061b48f6c51d2e9ed4ef0254229f5f08fd7b58821794eb26e773883264836f0f",
+      "matches": true
+    },
+    {
+      "source": "LS-SOURCE",
+      "path": "docs/showcase/landslide_sentinel_v01/source_index_v01.json",
+      "expected_sha256": "991db7b54b406d785c48471fa3e620632f0a171b58688dc8fe943182522b1b6a",
+      "observed_sha256": "991db7b54b406d785c48471fa3e620632f0a171b58688dc8fe943182522b1b6a",
+      "matches": true
+    },
+    {
+      "source": "ATLAS",
+      "path": "docs/showcase/incident_to_proof_atlas_v01/evidence/atlas_package.json",
+      "expected_sha256": "5947e1f270ca0a33214ed517e56ed88807efdaf7f1fdcb0da66d6b04d00acf24",
+      "observed_sha256": "5947e1f270ca0a33214ed517e56ed88807efdaf7f1fdcb0da66d6b04d00acf24",
+      "matches": true
+    },
+    {
+      "source": "AT-CASES",
+      "path": "docs/showcase/incident_to_proof_atlas_v01/reader/CASE_ROUTES.json",
+      "expected_sha256": "9ebab55c4c93fe7b710ee92f1df14c965c71a5036a37cb05b081bf103b0bd459",
+      "observed_sha256": "9ebab55c4c93fe7b710ee92f1df14c965c71a5036a37cb05b081bf103b0bd459",
+      "matches": true
+    },
+    {
+      "source": "AT-CLAIMS",
+      "path": "docs/showcase/incident_to_proof_atlas_v01/reader/CLAIM_ROUTES.json",
+      "expected_sha256": "1604258545870768be4d0330ca7b6caf8f5731eaf07bc0494c8b0e919b1aadfa",
+      "observed_sha256": "1604258545870768be4d0330ca7b6caf8f5731eaf07bc0494c8b0e919b1aadfa",
+      "matches": true
+    },
+    {
+      "source": "AT-CONSUMERS",
+      "path": "docs/showcase/incident_to_proof_atlas_v01/reader/CONSUMER_ROUTES.json",
+      "expected_sha256": "fac4d29be60d56a8012ddb2571d003b60564d3c3e8204d099f865d25304a4ddb",
+      "observed_sha256": "fac4d29be60d56a8012ddb2571d003b60564d3c3e8204d099f865d25304a4ddb",
+      "matches": true
+    },
+    {
+      "source": "AT-BINDINGS",
+      "path": "docs/showcase/incident_to_proof_atlas_v01/reader/SOURCE_BINDINGS.json",
+      "expected_sha256": "210414e22468f1e5162d5a3496bb18fb94f4770cf144567c7e2ccd16b562bf03",
+      "observed_sha256": "210414e22468f1e5162d5a3496bb18fb94f4770cf144567c7e2ccd16b562bf03",
+      "matches": true
+    },
+    {
+      "source": "AT-REVIEW",
+      "path": "docs/showcase/incident_to_proof_atlas_v01/evidence/review/AT5_INDEPENDENT_REVIEW.json",
+      "expected_sha256": "fd5610100330f3d5fe79704ce8c9bd9e7775b3619e0462ee042393b22d8329d6",
+      "observed_sha256": "fd5610100330f3d5fe79704ce8c9bd9e7775b3619e0462ee042393b22d8329d6",
+      "matches": true
+    },
+    {
+      "source": "AT-EXTERNAL",
+      "path": "docs/showcase/incident_to_proof_atlas_v01/presentation/external_sources.json",
+      "expected_sha256": "d3b8db30124ad2ae422488cbe95920c5063dc91654c3650af7d6d39bc6d9cbdc",
+      "observed_sha256": "d3b8db30124ad2ae422488cbe95920c5063dc91654c3650af7d6d39bc6d9cbdc",
+      "matches": true
+    }
+  ],
+  "cases": [
+    {
+      "case_id": "CASE-SUPPLIER",
+      "fields": [
+        {
+          "source": "S-REPORT",
+          "repository_path": "docs/evidence/two_domain_all_real_sealed_evidence_program_v01/supplier_water_filter/supplier_safe_execution_report_v01.json",
+          "source_sha256": "293a6ed1f0b943557e2bd33f2ac52f49610e8924574d2784af328d964ba1d666",
+          "json_pointer": "/execution_head",
+          "value": "e1fe7bfc44fe482814b1957840b6d8c434cad5c6",
+          "field_present": true,
+          "matches_ledger": true
+        },
+        {
+          "source": "S-REPORT",
+          "repository_path": "docs/evidence/two_domain_all_real_sealed_evidence_program_v01/supplier_water_filter/supplier_safe_execution_report_v01.json",
+          "source_sha256": "293a6ed1f0b943557e2bd33f2ac52f49610e8924574d2784af328d964ba1d666",
+          "json_pointer": "/provider_mode",
+          "value": "real_provider",
+          "field_present": true,
+          "matches_ledger": true
+        },
+        {
+          "source": "S-REPORT",
+          "repository_path": "docs/evidence/two_domain_all_real_sealed_evidence_program_v01/supplier_water_filter/supplier_safe_execution_report_v01.json",
+          "source_sha256": "293a6ed1f0b943557e2bd33f2ac52f49610e8924574d2784af328d964ba1d666",
+          "json_pointer": "/provider_call_count",
+          "value": 6,
+          "field_present": true,
+          "matches_ledger": true
+        },
+        {
+          "source": "S-REPORT",
+          "repository_path": "docs/evidence/two_domain_all_real_sealed_evidence_program_v01/supplier_water_filter/supplier_safe_execution_report_v01.json",
+          "source_sha256": "293a6ed1f0b943557e2bd33f2ac52f49610e8924574d2784af328d964ba1d666",
+          "json_pointer": "/safe_execution_projection/transaction_id",
+          "value": "supplier_water_filter:SH-2042:INV-2042",
+          "field_present": true,
+          "matches_ledger": true
+        },
+        {
+          "source": "S-REPORT",
+          "repository_path": "docs/evidence/two_domain_all_real_sealed_evidence_program_v01/supplier_water_filter/supplier_safe_execution_report_v01.json",
+          "source_sha256": "293a6ed1f0b943557e2bd33f2ac52f49610e8924574d2784af328d964ba1d666",
+          "json_pointer": "/real_payment_executed",
+          "value": false,
+          "field_present": true,
+          "matches_ledger": true
+        },
+        {
+          "source": "S-REPORT",
+          "repository_path": "docs/evidence/two_domain_all_real_sealed_evidence_program_v01/supplier_water_filter/supplier_safe_execution_report_v01.json",
+          "source_sha256": "293a6ed1f0b943557e2bd33f2ac52f49610e8924574d2784af328d964ba1d666",
+          "json_pointer": "/real_shipment_released",
+          "value": false,
+          "field_present": true,
+          "matches_ledger": true
+        },
+        {
+          "source": "S-INDEX",
+          "repository_path": "docs/evidence/two_domain_all_real_sealed_evidence_program_v01/supplier_water_filter/supplier_safe_evidence_index_v01.json",
+          "source_sha256": "6d197bf9a181c621ff130f1d1a2599b1ce007e6edffdf157c41c77f736d2df5f",
+          "json_pointer": "/scenario_rows/0/scenario_id",
+          "value": "S-N1",
+          "field_present": true,
+          "matches_ledger": true
+        },
+        {
+          "source": "S-INDEX",
+          "repository_path": "docs/evidence/two_domain_all_real_sealed_evidence_program_v01/supplier_water_filter/supplier_safe_evidence_index_v01.json",
+          "source_sha256": "6d197bf9a181c621ff130f1d1a2599b1ce007e6edffdf157c41c77f736d2df5f",
+          "json_pointer": "/scenario_rows/0/root_status",
+          "value": "NOT_READY",
+          "field_present": true,
+          "matches_ledger": true
+        },
+        {
+          "source": "S-INDEX",
+          "repository_path": "docs/evidence/two_domain_all_real_sealed_evidence_program_v01/supplier_water_filter/supplier_safe_evidence_index_v01.json",
+          "source_sha256": "6d197bf9a181c621ff130f1d1a2599b1ce007e6edffdf157c41c77f736d2df5f",
+          "json_pointer": "/scenario_rows/2/scenario_id",
+          "value": "S-C1",
+          "field_present": true,
+          "matches_ledger": true
+        },
+        {
+          "source": "S-INDEX",
+          "repository_path": "docs/evidence/two_domain_all_real_sealed_evidence_program_v01/supplier_water_filter/supplier_safe_evidence_index_v01.json",
+          "source_sha256": "6d197bf9a181c621ff130f1d1a2599b1ce007e6edffdf157c41c77f736d2df5f",
+          "json_pointer": "/scenario_rows/2/root_status",
+          "value": "SUPPLIER_A_SCOPED_REVIEW_READY",
+          "field_present": true,
+          "matches_ledger": true
+        },
+        {
+          "source": "S-INDEX",
+          "repository_path": "docs/evidence/two_domain_all_real_sealed_evidence_program_v01/supplier_water_filter/supplier_safe_evidence_index_v01.json",
+          "source_sha256": "6d197bf9a181c621ff130f1d1a2599b1ce007e6edffdf157c41c77f736d2df5f",
+          "json_pointer": "/scenario_rows/2/packet_status",
+          "value": "ABSENT",
+          "field_present": true,
+          "matches_ledger": true
+        },
+        {
+          "source": "S-INDEX",
+          "repository_path": "docs/evidence/two_domain_all_real_sealed_evidence_program_v01/supplier_water_filter/supplier_safe_evidence_index_v01.json",
+          "source_sha256": "6d197bf9a181c621ff130f1d1a2599b1ce007e6edffdf157c41c77f736d2df5f",
+          "json_pointer": "/scenario_rows/3/packet_status",
+          "value": "ROOT_CREATED_SCOPED",
+          "field_present": true,
+          "matches_ledger": true
+        },
+        {
+          "source": "S-INDEX",
+          "repository_path": "docs/evidence/two_domain_all_real_sealed_evidence_program_v01/supplier_water_filter/supplier_safe_evidence_index_v01.json",
+          "source_sha256": "6d197bf9a181c621ff130f1d1a2599b1ce007e6edffdf157c41c77f736d2df5f",
+          "json_pointer": "/scenario_rows/4/corridor_status",
+          "value": "PASS",
+          "field_present": true,
+          "matches_ledger": true
+        },
+        {
+          "source": "S-INDEX",
+          "repository_path": "docs/evidence/two_domain_all_real_sealed_evidence_program_v01/supplier_water_filter/supplier_safe_evidence_index_v01.json",
+          "source_sha256": "6d197bf9a181c621ff130f1d1a2599b1ce007e6edffdf157c41c77f736d2df5f",
+          "json_pointer": "/scenario_rows/4/receipt_status",
+          "value": "EVIDENCE_ONLY",
+          "field_present": true,
+          "matches_ledger": true
+        },
+        {
+          "source": "S-INDEX",
+          "repository_path": "docs/evidence/two_domain_all_real_sealed_evidence_program_v01/supplier_water_filter/supplier_safe_evidence_index_v01.json",
+          "source_sha256": "6d197bf9a181c621ff130f1d1a2599b1ce007e6edffdf157c41c77f736d2df5f",
+          "json_pointer": "/scenario_rows/5/root_status",
+          "value": "NO_ACTION_APPROVAL",
+          "field_present": true,
+          "matches_ledger": true
+        },
+        {
+          "source": "S-INDEX",
+          "repository_path": "docs/evidence/two_domain_all_real_sealed_evidence_program_v01/supplier_water_filter/supplier_safe_evidence_index_v01.json",
+          "source_sha256": "6d197bf9a181c621ff130f1d1a2599b1ce007e6edffdf157c41c77f736d2df5f",
+          "json_pointer": "/scenario_rows/5/packet_status",
+          "value": "REJECTED",
+          "field_present": true,
+          "matches_ledger": true
+        },
+        {
+          "source": "S-INDEX",
+          "repository_path": "docs/evidence/two_domain_all_real_sealed_evidence_program_v01/supplier_water_filter/supplier_safe_evidence_index_v01.json",
+          "source_sha256": "6d197bf9a181c621ff130f1d1a2599b1ce007e6edffdf157c41c77f736d2df5f",
+          "json_pointer": "/scenario_rows/5/supplier_a_status",
+          "value": "NOT_EXECUTED",
+          "field_present": true,
+          "matches_ledger": true
+        },
+        {
+          "source": "S-INDEX",
+          "repository_path": "docs/evidence/two_domain_all_real_sealed_evidence_program_v01/supplier_water_filter/supplier_safe_evidence_index_v01.json",
+          "source_sha256": "6d197bf9a181c621ff130f1d1a2599b1ce007e6edffdf157c41c77f736d2df5f",
+          "json_pointer": "/scenario_rows/8/supplier_b_status",
+          "value": "BLOCKED",
+          "field_present": true,
+          "matches_ledger": true
+        },
+        {
+          "source": "S-INDEX",
+          "repository_path": "docs/evidence/two_domain_all_real_sealed_evidence_program_v01/supplier_water_filter/supplier_safe_evidence_index_v01.json",
+          "source_sha256": "6d197bf9a181c621ff130f1d1a2599b1ce007e6edffdf157c41c77f736d2df5f",
+          "json_pointer": "/scenario_rows/8/shipment_status",
+          "value": "HELD",
+          "field_present": true,
+          "matches_ledger": true
+        },
+        {
+          "source": "S-INDEX",
+          "repository_path": "docs/evidence/two_domain_all_real_sealed_evidence_program_v01/supplier_water_filter/supplier_safe_evidence_index_v01.json",
+          "source_sha256": "6d197bf9a181c621ff130f1d1a2599b1ce007e6edffdf157c41c77f736d2df5f",
+          "json_pointer": "/scenario_rows/8/business_outcome",
+          "value": "MIXED",
+          "field_present": true,
+          "matches_ledger": true
+        }
+      ]
+    },
+    {
+      "case_id": "CASE-AIRLINE",
+      "fields": [
+        {
+          "source": "A-REPORT",
+          "repository_path": "docs/evidence/two_domain_all_real_sealed_evidence_program_v01/airline/airline_safe_execution_report_attempt_04_v01.json",
+          "source_sha256": "2a83abbee906a3ccd047728353dfd333424cd9898e2ae39e4eca0abbecb4def7",
+          "json_pointer": "/execution_head",
+          "value": "71764c8b41f26e94b9cfdc1e821f7d8e15df4149",
+          "field_present": true,
+          "matches_ledger": true
+        },
+        {
+          "source": "A-REPORT",
+          "repository_path": "docs/evidence/two_domain_all_real_sealed_evidence_program_v01/airline/airline_safe_execution_report_attempt_04_v01.json",
+          "source_sha256": "2a83abbee906a3ccd047728353dfd333424cd9898e2ae39e4eca0abbecb4def7",
+          "json_pointer": "/run_id",
+          "value": "tri_party_airline_live_semantic_lane_v01:attempt_04",
+          "field_present": true,
+          "matches_ledger": true
+        },
+        {
+          "source": "A-REPORT",
+          "repository_path": "docs/evidence/two_domain_all_real_sealed_evidence_program_v01/airline/airline_safe_execution_report_attempt_04_v01.json",
+          "source_sha256": "2a83abbee906a3ccd047728353dfd333424cd9898e2ae39e4eca0abbecb4def7",
+          "json_pointer": "/selected_offer_id",
+          "value": "offer:mock_airline_al:PAR-LIM:001",
+          "field_present": true,
+          "matches_ledger": true
+        },
+        {
+          "source": "A-REPORT",
+          "repository_path": "docs/evidence/two_domain_all_real_sealed_evidence_program_v01/airline/airline_safe_execution_report_attempt_04_v01.json",
+          "source_sha256": "2a83abbee906a3ccd047728353dfd333424cd9898e2ae39e4eca0abbecb4def7",
+          "json_pointer": "/counters/provider_call_count",
+          "value": 12,
+          "field_present": true,
+          "matches_ledger": true
+        },
+        {
+          "source": "A-REPORT",
+          "repository_path": "docs/evidence/two_domain_all_real_sealed_evidence_program_v01/airline/airline_safe_execution_report_attempt_04_v01.json",
+          "source_sha256": "2a83abbee906a3ccd047728353dfd333424cd9898e2ae39e4eca0abbecb4def7",
+          "json_pointer": "/actors/2/safe_projection/actor_id",
+          "value": "client_purchase_intent_reviewer_llm",
+          "field_present": true,
+          "matches_ledger": true
+        },
+        {
+          "source": "A-REPORT",
+          "repository_path": "docs/evidence/two_domain_all_real_sealed_evidence_program_v01/airline/airline_safe_execution_report_attempt_04_v01.json",
+          "source_sha256": "2a83abbee906a3ccd047728353dfd333424cd9898e2ae39e4eca0abbecb4def7",
+          "json_pointer": "/actors/2/safe_projection/authority_created",
+          "value": false,
+          "field_present": true,
+          "matches_ledger": true
+        },
+        {
+          "source": "A-REPORT",
+          "repository_path": "docs/evidence/two_domain_all_real_sealed_evidence_program_v01/airline/airline_safe_execution_report_attempt_04_v01.json",
+          "source_sha256": "2a83abbee906a3ccd047728353dfd333424cd9898e2ae39e4eca0abbecb4def7",
+          "json_pointer": "/root_finals/0/safe_projection/root_owner",
+          "value": "root:client_os_001",
+          "field_present": true,
+          "matches_ledger": true
+        },
+        {
+          "source": "A-REPORT",
+          "repository_path": "docs/evidence/two_domain_all_real_sealed_evidence_program_v01/airline/airline_safe_execution_report_attempt_04_v01.json",
+          "source_sha256": "2a83abbee906a3ccd047728353dfd333424cd9898e2ae39e4eca0abbecb4def7",
+          "json_pointer": "/root_finals/1/safe_projection/root_owner",
+          "value": "root:mock_airline_al",
+          "field_present": true,
+          "matches_ledger": true
+        },
+        {
+          "source": "A-REPORT",
+          "repository_path": "docs/evidence/two_domain_all_real_sealed_evidence_program_v01/airline/airline_safe_execution_report_attempt_04_v01.json",
+          "source_sha256": "2a83abbee906a3ccd047728353dfd333424cd9898e2ae39e4eca0abbecb4def7",
+          "json_pointer": "/root_finals/2/safe_projection/root_owner",
+          "value": "root:mock_bank_a",
+          "field_present": true,
+          "matches_ledger": true
+        },
+        {
+          "source": "A-REPORT",
+          "repository_path": "docs/evidence/two_domain_all_real_sealed_evidence_program_v01/airline/airline_safe_execution_report_attempt_04_v01.json",
+          "source_sha256": "2a83abbee906a3ccd047728353dfd333424cd9898e2ae39e4eca0abbecb4def7",
+          "json_pointer": "/root_finals/2/safe_projection/depends_on/0",
+          "value": "bank_payment_authorization_ref:mock_bank_a:001",
+          "field_present": true,
+          "matches_ledger": true
+        },
+        {
+          "source": "A-REPORT",
+          "repository_path": "docs/evidence/two_domain_all_real_sealed_evidence_program_v01/airline/airline_safe_execution_report_attempt_04_v01.json",
+          "source_sha256": "2a83abbee906a3ccd047728353dfd333424cd9898e2ae39e4eca0abbecb4def7",
+          "json_pointer": "/bsep/projections/0/safe_projection/permission_created",
+          "value": false,
+          "field_present": true,
+          "matches_ledger": true
+        },
+        {
+          "source": "A-REPORT",
+          "repository_path": "docs/evidence/two_domain_all_real_sealed_evidence_program_v01/airline/airline_safe_execution_report_attempt_04_v01.json",
+          "source_sha256": "2a83abbee906a3ccd047728353dfd333424cd9898e2ae39e4eca0abbecb4def7",
+          "json_pointer": "/corridor/safe_projection/corridor_execution_count",
+          "value": 1,
+          "field_present": true,
+          "matches_ledger": true
+        },
+        {
+          "source": "A-REPORT",
+          "repository_path": "docs/evidence/two_domain_all_real_sealed_evidence_program_v01/airline/airline_safe_execution_report_attempt_04_v01.json",
+          "source_sha256": "2a83abbee906a3ccd047728353dfd333424cd9898e2ae39e4eca0abbecb4def7",
+          "json_pointer": "/corridor/safe_projection/mock_only",
+          "value": true,
+          "field_present": true,
+          "matches_ledger": true
+        },
+        {
+          "source": "A-REPORT",
+          "repository_path": "docs/evidence/two_domain_all_real_sealed_evidence_program_v01/airline/airline_safe_execution_report_attempt_04_v01.json",
+          "source_sha256": "2a83abbee906a3ccd047728353dfd333424cd9898e2ae39e4eca0abbecb4def7",
+          "json_pointer": "/corridor/safe_projection/real_world_effects_count",
+          "value": 0,
+          "field_present": true,
+          "matches_ledger": true
+        },
+        {
+          "source": "A-REPORT",
+          "repository_path": "docs/evidence/two_domain_all_real_sealed_evidence_program_v01/airline/airline_safe_execution_report_attempt_04_v01.json",
+          "source_sha256": "2a83abbee906a3ccd047728353dfd333424cd9898e2ae39e4eca0abbecb4def7",
+          "json_pointer": "/receipts/2/safe_projection/authority_class",
+          "value": "evidence_only_receipt",
+          "field_present": true,
+          "matches_ledger": true
+        },
+        {
+          "source": "A-REPORT",
+          "repository_path": "docs/evidence/two_domain_all_real_sealed_evidence_program_v01/airline/airline_safe_execution_report_attempt_04_v01.json",
+          "source_sha256": "2a83abbee906a3ccd047728353dfd333424cd9898e2ae39e4eca0abbecb4def7",
+          "json_pointer": "/receipts/2/safe_projection/depends_on",
+          "value": [
+            "mock_ticket_receipt:mock_airline_al:001",
+            "bank_payment_authorization_ref:mock_bank_a:001",
+            "client_purchase_intent:client_001:001"
+          ],
+          "field_present": true,
+          "matches_ledger": true
+        },
+        {
+          "source": "A-MATRIX",
+          "repository_path": "docs/showcase/airline_all_real_full_stack_v01/claim_evidence_matrix_v01.json",
+          "source_sha256": "7846ce0318c283e25d0fab396887906c96543bbf73e6427b516ee5f72cbf4c9a",
+          "json_pointer": "/21/claim_id",
+          "value": "C22",
+          "field_present": true,
+          "matches_ledger": true
+        },
+        {
+          "source": "A-MATRIX",
+          "repository_path": "docs/showcase/airline_all_real_full_stack_v01/claim_evidence_matrix_v01.json",
+          "source_sha256": "7846ce0318c283e25d0fab396887906c96543bbf73e6427b516ee5f72cbf4c9a",
+          "json_pointer": "/21/observed_value",
+          "value": true,
+          "field_present": true,
+          "matches_ledger": true
+        },
+        {
+          "source": "A-MATRIX",
+          "repository_path": "docs/showcase/airline_all_real_full_stack_v01/claim_evidence_matrix_v01.json",
+          "source_sha256": "7846ce0318c283e25d0fab396887906c96543bbf73e6427b516ee5f72cbf4c9a",
+          "json_pointer": "/22/observed_value",
+          "value": "failed package promoted false; recovery package distinct true",
+          "field_present": true,
+          "matches_ledger": true
+        },
+        {
+          "source": "A-MATRIX",
+          "repository_path": "docs/showcase/airline_all_real_full_stack_v01/claim_evidence_matrix_v01.json",
+          "source_sha256": "7846ce0318c283e25d0fab396887906c96543bbf73e6427b516ee5f72cbf4c9a",
+          "json_pointer": "/23/display_label",
+          "value": "signature_verified_false",
+          "field_present": true,
+          "matches_ledger": true
+        },
+        {
+          "source": "A-MATRIX",
+          "repository_path": "docs/showcase/airline_all_real_full_stack_v01/claim_evidence_matrix_v01.json",
+          "source_sha256": "7846ce0318c283e25d0fab396887906c96543bbf73e6427b516ee5f72cbf4c9a",
+          "json_pointer": "/23/observed_value",
+          "value": false,
+          "field_present": true,
+          "matches_ledger": true
+        }
+      ]
+    },
+    {
+      "case_id": "CASE-TESTFLIX",
+      "fields": [
+        {
+          "source": "ATLAS",
+          "repository_path": "docs/showcase/incident_to_proof_atlas_v01/evidence/atlas_package.json",
+          "source_sha256": "5947e1f270ca0a33214ed517e56ed88807efdaf7f1fdcb0da66d6b04d00acf24",
+          "json_pointer": "/testflix/fixture/profile",
+          "value": "INCIDENT_ATLAS_TESTFLIX_AT3_V01",
+          "field_present": true,
+          "matches_ledger": true
+        },
+        {
+          "source": "ATLAS",
+          "repository_path": "docs/showcase/incident_to_proof_atlas_v01/evidence/atlas_package.json",
+          "source_sha256": "5947e1f270ca0a33214ed517e56ed88807efdaf7f1fdcb0da66d6b04d00acf24",
+          "json_pointer": "/testflix/fixture/execution",
+          "value": "AUTHORED_CONTROLLED_NATIVE_MOCK",
+          "field_present": true,
+          "matches_ledger": true
+        },
+        {
+          "source": "ATLAS",
+          "repository_path": "docs/showcase/incident_to_proof_atlas_v01/evidence/atlas_package.json",
+          "source_sha256": "5947e1f270ca0a33214ed517e56ed88807efdaf7f1fdcb0da66d6b04d00acf24",
+          "json_pointer": "/testflix/clock_law",
+          "value": "Logical integer UTC seconds; trusted evaluation=handler.now+4; validity requires evaluation < valid_to.",
+          "field_present": true,
+          "matches_ledger": true
+        },
+        {
+          "source": "ATLAS",
+          "repository_path": "docs/showcase/incident_to_proof_atlas_v01/evidence/atlas_package.json",
+          "source_sha256": "5947e1f270ca0a33214ed517e56ed88807efdaf7f1fdcb0da66d6b04d00acf24",
+          "json_pointer": "/testflix/T1/changed_terms/amount_minor",
+          "value": 700,
+          "field_present": true,
+          "matches_ledger": true
+        },
+        {
+          "source": "ATLAS",
+          "repository_path": "docs/showcase/incident_to_proof_atlas_v01/evidence/atlas_package.json",
+          "source_sha256": "5947e1f270ca0a33214ed517e56ed88807efdaf7f1fdcb0da66d6b04d00acf24",
+          "json_pointer": "/testflix/T1/refusal/reason",
+          "value": "host_current_action_not_executable",
+          "field_present": true,
+          "matches_ledger": true
+        },
+        {
+          "source": "ATLAS",
+          "repository_path": "docs/showcase/incident_to_proof_atlas_v01/evidence/atlas_package.json",
+          "source_sha256": "5947e1f270ca0a33214ed517e56ed88807efdaf7f1fdcb0da66d6b04d00acf24",
+          "json_pointer": "/testflix/T1/refusal/executor_delta",
+          "value": 0,
+          "field_present": true,
+          "matches_ledger": true
+        },
+        {
+          "source": "ATLAS",
+          "repository_path": "docs/showcase/incident_to_proof_atlas_v01/evidence/atlas_package.json",
+          "source_sha256": "5947e1f270ca0a33214ed517e56ed88807efdaf7f1fdcb0da66d6b04d00acf24",
+          "json_pointer": "/testflix/T2/deadline",
+          "value": 1790115652,
+          "field_present": true,
+          "matches_ledger": true
+        },
+        {
+          "source": "ATLAS",
+          "repository_path": "docs/showcase/incident_to_proof_atlas_v01/evidence/atlas_package.json",
+          "source_sha256": "5947e1f270ca0a33214ed517e56ed88807efdaf7f1fdcb0da66d6b04d00acf24",
+          "json_pointer": "/testflix/T2/main_clock/evaluation_time",
+          "value": 1790115596,
+          "field_present": true,
+          "matches_ledger": true
+        },
+        {
+          "source": "ATLAS",
+          "repository_path": "docs/showcase/incident_to_proof_atlas_v01/evidence/atlas_package.json",
+          "source_sha256": "5947e1f270ca0a33214ed517e56ed88807efdaf7f1fdcb0da66d6b04d00acf24",
+          "json_pointer": "/testflix/T2/expiry/executor_delta",
+          "value": 0,
+          "field_present": true,
+          "matches_ledger": true
+        },
+        {
+          "source": "ATLAS",
+          "repository_path": "docs/showcase/incident_to_proof_atlas_v01/evidence/atlas_package.json",
+          "source_sha256": "5947e1f270ca0a33214ed517e56ed88807efdaf7f1fdcb0da66d6b04d00acf24",
+          "json_pointer": "/testflix/T2/revocation/executor_delta",
+          "value": 0,
+          "field_present": true,
+          "matches_ledger": true
+        },
+        {
+          "source": "ATLAS",
+          "repository_path": "docs/showcase/incident_to_proof_atlas_v01/evidence/atlas_package.json",
+          "source_sha256": "5947e1f270ca0a33214ed517e56ed88807efdaf7f1fdcb0da66d6b04d00acf24",
+          "json_pointer": "/testflix/T2/owning_root",
+          "value": "root:testflix:device",
+          "field_present": true,
+          "matches_ledger": true
+        },
+        {
+          "source": "ATLAS",
+          "repository_path": "docs/showcase/incident_to_proof_atlas_v01/evidence/atlas_package.json",
+          "source_sha256": "5947e1f270ca0a33214ed517e56ed88807efdaf7f1fdcb0da66d6b04d00acf24",
+          "json_pointer": "/testflix/T2/period_unchanged/candidate/plan/price_minor",
+          "value": 500,
+          "field_present": true,
+          "matches_ledger": true
+        },
+        {
+          "source": "ATLAS",
+          "repository_path": "docs/showcase/incident_to_proof_atlas_v01/evidence/atlas_package.json",
+          "source_sha256": "5947e1f270ca0a33214ed517e56ed88807efdaf7f1fdcb0da66d6b04d00acf24",
+          "json_pointer": "/testflix/T2/period_unchanged/candidate/renewal",
+          "value": "EXPLICIT_ONLY",
+          "field_present": true,
+          "matches_ledger": true
+        },
+        {
+          "source": "ATLAS",
+          "repository_path": "docs/showcase/incident_to_proof_atlas_v01/evidence/atlas_package.json",
+          "source_sha256": "5947e1f270ca0a33214ed517e56ed88807efdaf7f1fdcb0da66d6b04d00acf24",
+          "json_pointer": "/testflix/T2/period_unchanged/candidate/valid_to",
+          "value": 1792707572,
+          "field_present": true,
+          "matches_ledger": true
+        },
+        {
+          "source": "ATLAS",
+          "repository_path": "docs/showcase/incident_to_proof_atlas_v01/evidence/atlas_package.json",
+          "source_sha256": "5947e1f270ca0a33214ed517e56ed88807efdaf7f1fdcb0da66d6b04d00acf24",
+          "json_pointer": "/testflix/T3/extension_reason",
+          "value": "payment_period_already_consumed",
+          "field_present": true,
+          "matches_ledger": true
+        },
+        {
+          "source": "ATLAS",
+          "repository_path": "docs/showcase/incident_to_proof_atlas_v01/evidence/atlas_package.json",
+          "source_sha256": "5947e1f270ca0a33214ed517e56ed88807efdaf7f1fdcb0da66d6b04d00acf24",
+          "json_pointer": "/testflix/T4/no_consent/review/tuple_items/2/fields/decision",
+          "value": "NEEDS_USER",
+          "field_present": true,
+          "matches_ledger": true
+        },
+        {
+          "source": "ATLAS",
+          "repository_path": "docs/showcase/incident_to_proof_atlas_v01/evidence/atlas_package.json",
+          "source_sha256": "5947e1f270ca0a33214ed517e56ed88807efdaf7f1fdcb0da66d6b04d00acf24",
+          "json_pointer": "/testflix/T4/no_consent/review/tuple_items/2/fields/reason_code",
+          "value": "user_permission_missing",
+          "field_present": true,
+          "matches_ledger": true
+        },
+        {
+          "source": "ATLAS",
+          "repository_path": "docs/showcase/incident_to_proof_atlas_v01/evidence/atlas_package.json",
+          "source_sha256": "5947e1f270ca0a33214ed517e56ed88807efdaf7f1fdcb0da66d6b04d00acf24",
+          "json_pointer": "/testflix/T4/explicit_consent/review/tuple_items/2/fields/decision",
+          "value": "ACCEPT",
+          "field_present": true,
+          "matches_ledger": true
+        },
+        {
+          "source": "ATLAS",
+          "repository_path": "docs/showcase/incident_to_proof_atlas_v01/evidence/atlas_package.json",
+          "source_sha256": "5947e1f270ca0a33214ed517e56ed88807efdaf7f1fdcb0da66d6b04d00acf24",
+          "json_pointer": "/testflix/experience/before/output/provenance_checked",
+          "value": true,
+          "field_present": true,
+          "matches_ledger": true
+        },
+        {
+          "source": "ATLAS",
+          "repository_path": "docs/showcase/incident_to_proof_atlas_v01/evidence/atlas_package.json",
+          "source_sha256": "5947e1f270ca0a33214ed517e56ed88807efdaf7f1fdcb0da66d6b04d00acf24",
+          "json_pointer": "/testflix/experience/after/output/provenance_checked",
+          "value": false,
+          "field_present": true,
+          "matches_ledger": true
+        },
+        {
+          "source": "ATLAS",
+          "repository_path": "docs/showcase/incident_to_proof_atlas_v01/evidence/atlas_package.json",
+          "source_sha256": "5947e1f270ca0a33214ed517e56ed88807efdaf7f1fdcb0da66d6b04d00acf24",
+          "json_pointer": "/testflix/consumption/material/operation",
+          "value": "testflix.playback.v01",
+          "field_present": true,
+          "matches_ledger": true
+        },
+        {
+          "source": "ATLAS",
+          "repository_path": "docs/showcase/incident_to_proof_atlas_v01/evidence/atlas_package.json",
+          "source_sha256": "5947e1f270ca0a33214ed517e56ed88807efdaf7f1fdcb0da66d6b04d00acf24",
+          "json_pointer": "/testflix/consumption/material/work_artifact_ref",
+          "value": "work_results:9d5ca232819e67b358fbabb26043ab4f9511b3f98c09e40d422052def57bed67",
+          "field_present": true,
+          "matches_ledger": true
+        },
+        {
+          "source": "ATLAS",
+          "repository_path": "docs/showcase/incident_to_proof_atlas_v01/evidence/atlas_package.json",
+          "source_sha256": "5947e1f270ca0a33214ed517e56ed88807efdaf7f1fdcb0da66d6b04d00acf24",
+          "json_pointer": "/testflix/consumption/session/candidate/valid_from",
+          "value": 1790115592,
+          "field_present": true,
+          "matches_ledger": true
+        },
+        {
+          "source": "ATLAS",
+          "repository_path": "docs/showcase/incident_to_proof_atlas_v01/evidence/atlas_package.json",
+          "source_sha256": "5947e1f270ca0a33214ed517e56ed88807efdaf7f1fdcb0da66d6b04d00acf24",
+          "json_pointer": "/testflix/consumption/session/candidate/valid_to",
+          "value": 1790115652,
+          "field_present": true,
+          "matches_ledger": true
+        },
+        {
+          "source": "ATLAS",
+          "repository_path": "docs/showcase/incident_to_proof_atlas_v01/evidence/atlas_package.json",
+          "source_sha256": "5947e1f270ca0a33214ed517e56ed88807efdaf7f1fdcb0da66d6b04d00acf24",
+          "json_pointer": "/testflix/consumption/playback/output/playback_state",
+          "value": "PLAYING",
+          "field_present": true,
+          "matches_ledger": true
+        },
+        {
+          "source": "ATLAS",
+          "repository_path": "docs/showcase/incident_to_proof_atlas_v01/evidence/atlas_package.json",
+          "source_sha256": "5947e1f270ca0a33214ed517e56ed88807efdaf7f1fdcb0da66d6b04d00acf24",
+          "json_pointer": "/testflix/consumption/executor_delta",
+          "value": 1,
+          "field_present": true,
+          "matches_ledger": true
+        },
+        {
+          "source": "ATLAS",
+          "repository_path": "docs/showcase/incident_to_proof_atlas_v01/evidence/atlas_package.json",
+          "source_sha256": "5947e1f270ca0a33214ed517e56ed88807efdaf7f1fdcb0da66d6b04d00acf24",
+          "json_pointer": "/testflix/consumption/wrong_work_control/executor_delta",
+          "value": 0,
+          "field_present": true,
+          "matches_ledger": true
+        },
+        {
+          "source": "ATLAS",
+          "repository_path": "docs/showcase/incident_to_proof_atlas_v01/evidence/atlas_package.json",
+          "source_sha256": "5947e1f270ca0a33214ed517e56ed88807efdaf7f1fdcb0da66d6b04d00acf24",
+          "json_pointer": "/testflix/counts/unique_experience_consumers",
+          "value": 1,
+          "field_present": true,
+          "matches_ledger": true
+        }
+      ]
+    },
+    {
+      "case_id": "CASE-SENTINEL",
+      "fields": [
+        {
+          "source": "LS-PROJECTION",
+          "repository_path": "docs/showcase/landslide_sentinel_v01/public_safe_package/projection.json",
+          "source_sha256": "9fcd94838d50e45ca5fce951b29b0e35d798c1a2010cf1cd2408eda96897d881",
+          "json_pointer": "/slice_id",
+          "value": "ls2r2",
+          "field_present": true,
+          "matches_ledger": true
+        },
+        {
+          "source": "LS-PROJECTION",
+          "repository_path": "docs/showcase/landslide_sentinel_v01/public_safe_package/projection.json",
+          "source_sha256": "9fcd94838d50e45ca5fce951b29b0e35d798c1a2010cf1cd2408eda96897d881",
+          "json_pointer": "/artifacts/0/payload/safe_document/actual_roles/0/intended_role",
+          "value": "LOCAL_SLOPE_ANALYST",
+          "field_present": true,
+          "matches_ledger": true
+        },
+        {
+          "source": "LS-PROJECTION",
+          "repository_path": "docs/showcase/landslide_sentinel_v01/public_safe_package/projection.json",
+          "source_sha256": "9fcd94838d50e45ca5fce951b29b0e35d798c1a2010cf1cd2408eda96897d881",
+          "json_pointer": "/artifacts/0/payload/safe_document/actual_roles/0/actual_mode",
+          "value": "CLOUD_LLM",
+          "field_present": true,
+          "matches_ledger": true
+        },
+        {
+          "source": "LS-PROJECTION",
+          "repository_path": "docs/showcase/landslide_sentinel_v01/public_safe_package/projection.json",
+          "source_sha256": "9fcd94838d50e45ca5fce951b29b0e35d798c1a2010cf1cd2408eda96897d881",
+          "json_pointer": "/artifacts/1/payload/safe_document/compositions/0/output/selection",
+          "value": "REFERENCE_INTEGRITY",
+          "field_present": true,
+          "matches_ledger": true
+        },
+        {
+          "source": "LS-PROJECTION",
+          "repository_path": "docs/showcase/landslide_sentinel_v01/public_safe_package/projection.json",
+          "source_sha256": "9fcd94838d50e45ca5fce951b29b0e35d798c1a2010cf1cd2408eda96897d881",
+          "json_pointer": "/artifacts/1/payload/safe_document/compositions/1/output/selection",
+          "value": "INDEPENDENT_RESERVE_SERIES",
+          "field_present": true,
+          "matches_ledger": true
+        },
+        {
+          "source": "LS-PROJECTION",
+          "repository_path": "docs/showcase/landslide_sentinel_v01/public_safe_package/projection.json",
+          "source_sha256": "9fcd94838d50e45ca5fce951b29b0e35d798c1a2010cf1cd2408eda96897d881",
+          "json_pointer": "/artifacts/1/payload/safe_document/compositions/1/output/checks/0/detail/fitness",
+          "value": "ELIGIBLE",
+          "field_present": true,
+          "matches_ledger": true
+        },
+        {
+          "source": "LS-PROJECTION",
+          "repository_path": "docs/showcase/landslide_sentinel_v01/public_safe_package/projection.json",
+          "source_sha256": "9fcd94838d50e45ca5fce951b29b0e35d798c1a2010cf1cd2408eda96897d881",
+          "json_pointer": "/artifacts/1/payload/safe_document/compositions/1/output/checks/0/detail/measured_span",
+          "value": 20,
+          "field_present": true,
+          "matches_ledger": true
+        },
+        {
+          "source": "LS-PROJECTION",
+          "repository_path": "docs/showcase/landslide_sentinel_v01/public_safe_package/projection.json",
+          "source_sha256": "9fcd94838d50e45ca5fce951b29b0e35d798c1a2010cf1cd2408eda96897d881",
+          "json_pointer": "/artifacts/1/payload/safe_document/compositions/1/output/checks/0/detail/range_value",
+          "value": 150,
+          "field_present": true,
+          "matches_ledger": true
+        },
+        {
+          "source": "LS-PROJECTION",
+          "repository_path": "docs/showcase/landslide_sentinel_v01/public_safe_package/projection.json",
+          "source_sha256": "9fcd94838d50e45ca5fce951b29b0e35d798c1a2010cf1cd2408eda96897d881",
+          "json_pointer": "/artifacts/1/payload/safe_document/compositions/1/output/checks/0/detail/policy/maximum_range_um",
+          "value": 1000,
+          "field_present": true,
+          "matches_ledger": true
+        },
+        {
+          "source": "LS-PROJECTION",
+          "repository_path": "docs/showcase/landslide_sentinel_v01/public_safe_package/projection.json",
+          "source_sha256": "9fcd94838d50e45ca5fce951b29b0e35d798c1a2010cf1cd2408eda96897d881",
+          "json_pointer": "/artifacts/1/payload/safe_document/compositions/1/output/checks/0/detail/policy/minimum_samples",
+          "value": 3,
+          "field_present": true,
+          "matches_ledger": true
+        },
+        {
+          "source": "LS-PROJECTION",
+          "repository_path": "docs/showcase/landslide_sentinel_v01/public_safe_package/projection.json",
+          "source_sha256": "9fcd94838d50e45ca5fce951b29b0e35d798c1a2010cf1cd2408eda96897d881",
+          "json_pointer": "/artifacts/1/payload/safe_document/compositions/1/output/checks/0/detail/outcome",
+          "value": "BOUNDED_CONSISTENT",
+          "field_present": true,
+          "matches_ledger": true
+        },
+        {
+          "source": "LS-PROJECTION",
+          "repository_path": "docs/showcase/landslide_sentinel_v01/public_safe_package/projection.json",
+          "source_sha256": "9fcd94838d50e45ca5fce951b29b0e35d798c1a2010cf1cd2408eda96897d881",
+          "json_pointer": "/artifacts/1/payload/safe_document/compositions/1/output/checks/0/detail/receipt_ref",
+          "value": "effect_receipt_v01:63c9578fc7c4c80acc92f0f668b151be7dbdb39250ff39147764501512b825df",
+          "field_present": true,
+          "matches_ledger": true
+        },
+        {
+          "source": "LS-PROJECTION",
+          "repository_path": "docs/showcase/landslide_sentinel_v01/public_safe_package/projection.json",
+          "source_sha256": "9fcd94838d50e45ca5fce951b29b0e35d798c1a2010cf1cd2408eda96897d881",
+          "json_pointer": "/artifacts/1/payload/safe_document/compositions/0/output/checks/1/detail/physical_mapping",
+          "value": "NOT_ESTABLISHED",
+          "field_present": true,
+          "matches_ledger": true
+        },
+        {
+          "source": "LS-PROJECTION",
+          "repository_path": "docs/showcase/landslide_sentinel_v01/public_safe_package/projection.json",
+          "source_sha256": "9fcd94838d50e45ca5fce951b29b0e35d798c1a2010cf1cd2408eda96897d881",
+          "json_pointer": "/artifacts/1/payload/safe_document/compositions/0/root/permission_created",
+          "value": false,
+          "field_present": true,
+          "matches_ledger": true
+        },
+        {
+          "source": "LS-MATRIX",
+          "repository_path": "docs/showcase/landslide_sentinel_v01/claim_evidence_matrix_v01.json",
+          "source_sha256": "b95e1f20db9c1d85987b4fada38f55a7a04142cd93270b50875fa2b6af68b2dd",
+          "json_pointer": "/claims/0/original_outcome",
+          "value": "VALID_LIVE_CONTRAST_NOT_DEMONSTRATED",
+          "field_present": true,
+          "matches_ledger": true
+        },
+        {
+          "source": "LS-MATRIX",
+          "repository_path": "docs/showcase/landslide_sentinel_v01/claim_evidence_matrix_v01.json",
+          "source_sha256": "b95e1f20db9c1d85987b4fada38f55a7a04142cd93270b50875fa2b6af68b2dd",
+          "json_pointer": "/claims/23/original_outcome",
+          "value": "NOT_DEMONSTRATED",
+          "field_present": true,
+          "matches_ledger": true
+        },
+        {
+          "source": "ATLAS",
+          "repository_path": "docs/showcase/incident_to_proof_atlas_v01/evidence/atlas_package.json",
+          "source_sha256": "5947e1f270ca0a33214ed517e56ed88807efdaf7f1fdcb0da66d6b04d00acf24",
+          "json_pointer": "/sentinel/profile",
+          "value": "INCIDENT_ATLAS_SENTINEL_AT5_V01",
+          "field_present": true,
+          "matches_ledger": true
+        },
+        {
+          "source": "ATLAS",
+          "repository_path": "docs/showcase/incident_to_proof_atlas_v01/evidence/atlas_package.json",
+          "source_sha256": "5947e1f270ca0a33214ed517e56ed88807efdaf7f1fdcb0da66d6b04d00acf24",
+          "json_pointer": "/sentinel/continuation/optional_profile",
+          "value": "CONTROLLED_BARRIER_STUB",
+          "field_present": true,
+          "matches_ledger": true
+        },
+        {
+          "source": "ATLAS",
+          "repository_path": "docs/showcase/incident_to_proof_atlas_v01/evidence/atlas_package.json",
+          "source_sha256": "5947e1f270ca0a33214ed517e56ed88807efdaf7f1fdcb0da66d6b04d00acf24",
+          "json_pointer": "/sentinel/continuation/same_episode",
+          "value": true,
+          "field_present": true,
+          "matches_ledger": true
+        },
+        {
+          "source": "ATLAS",
+          "repository_path": "docs/showcase/incident_to_proof_atlas_v01/evidence/atlas_package.json",
+          "source_sha256": "5947e1f270ca0a33214ed517e56ed88807efdaf7f1fdcb0da66d6b04d00acf24",
+          "json_pointer": "/sentinel/continuation/waiting/pending_alive",
+          "value": true,
+          "field_present": true,
+          "matches_ledger": true
+        },
+        {
+          "source": "ATLAS",
+          "repository_path": "docs/showcase/incident_to_proof_atlas_v01/evidence/atlas_package.json",
+          "source_sha256": "5947e1f270ca0a33214ed517e56ed88807efdaf7f1fdcb0da66d6b04d00acf24",
+          "json_pointer": "/sentinel/continuation/waiting/signal/signal",
+          "value": true,
+          "field_present": true,
+          "matches_ledger": true
+        },
+        {
+          "source": "ATLAS",
+          "repository_path": "docs/showcase/incident_to_proof_atlas_v01/evidence/atlas_package.json",
+          "source_sha256": "5947e1f270ca0a33214ed517e56ed88807efdaf7f1fdcb0da66d6b04d00acf24",
+          "json_pointer": "/sentinel/continuation/consumption/creates_permission",
+          "value": false,
+          "field_present": true,
+          "matches_ledger": true
+        },
+        {
+          "source": "ATLAS",
+          "repository_path": "docs/showcase/incident_to_proof_atlas_v01/evidence/atlas_package.json",
+          "source_sha256": "5947e1f270ca0a33214ed517e56ed88807efdaf7f1fdcb0da66d6b04d00acf24",
+          "json_pointer": "/sentinel/continuation/late/semantic_refusal/reason",
+          "value": "role_current_context",
+          "field_present": true,
+          "matches_ledger": true
+        },
+        {
+          "source": "ATLAS",
+          "repository_path": "docs/showcase/incident_to_proof_atlas_v01/evidence/atlas_package.json",
+          "source_sha256": "5947e1f270ca0a33214ed517e56ed88807efdaf7f1fdcb0da66d6b04d00acf24",
+          "json_pointer": "/sentinel/counts/mock_effect",
+          "value": 3,
+          "field_present": true,
+          "matches_ledger": true
+        },
+        {
+          "source": "ATLAS",
+          "repository_path": "docs/showcase/incident_to_proof_atlas_v01/evidence/atlas_package.json",
+          "source_sha256": "5947e1f270ca0a33214ed517e56ed88807efdaf7f1fdcb0da66d6b04d00acf24",
+          "json_pointer": "/sentinel/counts/outbox_deliver",
+          "value": 0,
+          "field_present": true,
+          "matches_ledger": true
+        },
+        {
+          "source": "ATLAS",
+          "repository_path": "docs/showcase/incident_to_proof_atlas_v01/evidence/atlas_package.json",
+          "source_sha256": "5947e1f270ca0a33214ed517e56ed88807efdaf7f1fdcb0da66d6b04d00acf24",
+          "json_pointer": "/sentinel/continuation/budget_final/recovery_witnesses/0/tick",
+          "value": 4030,
+          "field_present": true,
+          "matches_ledger": true
+        },
+        {
+          "source": "ATLAS",
+          "repository_path": "docs/showcase/incident_to_proof_atlas_v01/evidence/atlas_package.json",
+          "source_sha256": "5947e1f270ca0a33214ed517e56ed88807efdaf7f1fdcb0da66d6b04d00acf24",
+          "json_pointer": "/sentinel/continuation/budget_final/recovery_witnesses/1/tick",
+          "value": 4045,
+          "field_present": true,
+          "matches_ledger": true
+        },
+        {
+          "source": "ATLAS",
+          "repository_path": "docs/showcase/incident_to_proof_atlas_v01/evidence/atlas_package.json",
+          "source_sha256": "5947e1f270ca0a33214ed517e56ed88807efdaf7f1fdcb0da66d6b04d00acf24",
+          "json_pointer": "/sentinel/continuation/budget_final/recovery_witnesses/2/tick",
+          "value": 4060,
+          "field_present": true,
+          "matches_ledger": true
+        }
+      ]
+    },
+    {
+      "case_id": "CASE-INCIDENTS",
+      "fields": [
+        {
+          "source": "ATLAS",
+          "repository_path": "docs/showcase/incident_to_proof_atlas_v01/evidence/atlas_package.json",
+          "source_sha256": "5947e1f270ca0a33214ed517e56ed88807efdaf7f1fdcb0da66d6b04d00acf24",
+          "json_pointer": "/profile",
+          "value": "INCIDENT_ATLAS_AT5_V01",
+          "field_present": true,
+          "matches_ledger": true
+        },
+        {
+          "source": "ATLAS",
+          "repository_path": "docs/showcase/incident_to_proof_atlas_v01/evidence/atlas_package.json",
+          "source_sha256": "5947e1f270ca0a33214ed517e56ed88807efdaf7f1fdcb0da66d6b04d00acf24",
+          "json_pointer": "/supplier/donor/sources/observations/0/origin/source_class",
+          "value": "CONTROLLED_FIXTURE",
+          "field_present": true,
+          "matches_ledger": true
+        },
+        {
+          "source": "ATLAS",
+          "repository_path": "docs/showcase/incident_to_proof_atlas_v01/evidence/atlas_package.json",
+          "source_sha256": "5947e1f270ca0a33214ed517e56ed88807efdaf7f1fdcb0da66d6b04d00acf24",
+          "json_pointer": "/supplier/donor/sources/observations/0/parsed/recipient",
+          "value": "supplier:B",
+          "field_present": true,
+          "matches_ledger": true
+        },
+        {
+          "source": "ATLAS",
+          "repository_path": "docs/showcase/incident_to_proof_atlas_v01/evidence/atlas_package.json",
+          "source_sha256": "5947e1f270ca0a33214ed517e56ed88807efdaf7f1fdcb0da66d6b04d00acf24",
+          "json_pointer": "/supplier/donor/sources/observations/0/parsed/amount",
+          "value": "10",
+          "field_present": true,
+          "matches_ledger": true
+        },
+        {
+          "source": "ATLAS",
+          "repository_path": "docs/showcase/incident_to_proof_atlas_v01/evidence/atlas_package.json",
+          "source_sha256": "5947e1f270ca0a33214ed517e56ed88807efdaf7f1fdcb0da66d6b04d00acf24",
+          "json_pointer": "/supplier/donor/sources/observations/0/parsed/recommendation",
+          "value": "PROCEED",
+          "field_present": true,
+          "matches_ledger": true
+        },
+        {
+          "source": "ATLAS",
+          "repository_path": "docs/showcase/incident_to_proof_atlas_v01/evidence/atlas_package.json",
+          "source_sha256": "5947e1f270ca0a33214ed517e56ed88807efdaf7f1fdcb0da66d6b04d00acf24",
+          "json_pointer": "/cards/S1/boundary/stage",
+          "value": "ROOT",
+          "field_present": true,
+          "matches_ledger": true
+        },
+        {
+          "source": "ATLAS",
+          "repository_path": "docs/showcase/incident_to_proof_atlas_v01/evidence/atlas_package.json",
+          "source_sha256": "5947e1f270ca0a33214ed517e56ed88807efdaf7f1fdcb0da66d6b04d00acf24",
+          "json_pointer": "/cards/S1/boundary/quality",
+          "value": "UNSAFE",
+          "field_present": true,
+          "matches_ledger": true
+        },
+        {
+          "source": "ATLAS",
+          "repository_path": "docs/showcase/incident_to_proof_atlas_v01/evidence/atlas_package.json",
+          "source_sha256": "5947e1f270ca0a33214ed517e56ed88807efdaf7f1fdcb0da66d6b04d00acf24",
+          "json_pointer": "/cards/S1/boundary/enforcement",
+          "value": "BLOCKED_AS_REQUIRED",
+          "field_present": true,
+          "matches_ledger": true
+        },
+        {
+          "source": "ATLAS",
+          "repository_path": "docs/showcase/incident_to_proof_atlas_v01/evidence/atlas_package.json",
+          "source_sha256": "5947e1f270ca0a33214ed517e56ed88807efdaf7f1fdcb0da66d6b04d00acf24",
+          "json_pointer": "/cards/S1/boundary/effects",
+          "value": 0,
+          "field_present": true,
+          "matches_ledger": true
+        },
+        {
+          "source": "ATLAS",
+          "repository_path": "docs/showcase/incident_to_proof_atlas_v01/evidence/atlas_package.json",
+          "source_sha256": "5947e1f270ca0a33214ed517e56ed88807efdaf7f1fdcb0da66d6b04d00acf24",
+          "json_pointer": "/cards/S1/boundary/firewall",
+          "value": null,
+          "field_present": true,
+          "matches_ledger": true
+        },
+        {
+          "source": "ATLAS",
+          "repository_path": "docs/showcase/incident_to_proof_atlas_v01/evidence/atlas_package.json",
+          "source_sha256": "5947e1f270ca0a33214ed517e56ed88807efdaf7f1fdcb0da66d6b04d00acf24",
+          "json_pointer": "/cards/S1/boundary/packet",
+          "value": null,
+          "field_present": true,
+          "matches_ledger": true
+        },
+        {
+          "source": "ATLAS",
+          "repository_path": "docs/showcase/incident_to_proof_atlas_v01/evidence/atlas_package.json",
+          "source_sha256": "5947e1f270ca0a33214ed517e56ed88807efdaf7f1fdcb0da66d6b04d00acf24",
+          "json_pointer": "/supplier/donor/sources/observations/3/parsed/recipient",
+          "value": "supplier:A",
+          "field_present": true,
+          "matches_ledger": true
+        },
+        {
+          "source": "ATLAS",
+          "repository_path": "docs/showcase/incident_to_proof_atlas_v01/evidence/atlas_package.json",
+          "source_sha256": "5947e1f270ca0a33214ed517e56ed88807efdaf7f1fdcb0da66d6b04d00acf24",
+          "json_pointer": "/supplier/donor/sources/observations/3/parsed/amount",
+          "value": "10",
+          "field_present": true,
+          "matches_ledger": true
+        },
+        {
+          "source": "ATLAS",
+          "repository_path": "docs/showcase/incident_to_proof_atlas_v01/evidence/atlas_package.json",
+          "source_sha256": "5947e1f270ca0a33214ed517e56ed88807efdaf7f1fdcb0da66d6b04d00acf24",
+          "json_pointer": "/supplier/donor/sources/observations/3/parsed/evidence_refs/0",
+          "value": "policy:confirmed",
+          "field_present": true,
+          "matches_ledger": true
+        },
+        {
+          "source": "ATLAS",
+          "repository_path": "docs/showcase/incident_to_proof_atlas_v01/evidence/atlas_package.json",
+          "source_sha256": "5947e1f270ca0a33214ed517e56ed88807efdaf7f1fdcb0da66d6b04d00acf24",
+          "json_pointer": "/supplier/donor/sources/observations/3/native/consumed_work_ref",
+          "value": "work_results:ecd9f80d53c29a8a0223723aa97e81a9c0ddc89bf6baa52727010f60362c7920",
+          "field_present": true,
+          "matches_ledger": true
+        },
+        {
+          "source": "ATLAS",
+          "repository_path": "docs/showcase/incident_to_proof_atlas_v01/evidence/atlas_package.json",
+          "source_sha256": "5947e1f270ca0a33214ed517e56ed88807efdaf7f1fdcb0da66d6b04d00acf24",
+          "json_pointer": "/supplier/donor/sources/current/work/operation",
+          "value": "supplier.review_provenance.v01",
+          "field_present": true,
+          "matches_ledger": true
+        },
+        {
+          "source": "ATLAS",
+          "repository_path": "docs/showcase/incident_to_proof_atlas_v01/evidence/atlas_package.json",
+          "source_sha256": "5947e1f270ca0a33214ed517e56ed88807efdaf7f1fdcb0da66d6b04d00acf24",
+          "json_pointer": "/cards/S1/consumer_binding",
+          "value": "DIRECT_CAUSAL",
+          "field_present": true,
+          "matches_ledger": true
+        },
+        {
+          "source": "ATLAS",
+          "repository_path": "docs/showcase/incident_to_proof_atlas_v01/evidence/atlas_package.json",
+          "source_sha256": "5947e1f270ca0a33214ed517e56ed88807efdaf7f1fdcb0da66d6b04d00acf24",
+          "json_pointer": "/cards/T4/consumer_binding",
+          "value": "SHARED_DOMAIN_PROOF",
+          "field_present": true,
+          "matches_ledger": true
+        },
+        {
+          "source": "ATLAS",
+          "repository_path": "docs/showcase/incident_to_proof_atlas_v01/evidence/atlas_package.json",
+          "source_sha256": "5947e1f270ca0a33214ed517e56ed88807efdaf7f1fdcb0da66d6b04d00acf24",
+          "json_pointer": "/cards/S4/consumer_binding",
+          "value": "SHARED_DOMAIN_PROOF_POST_CONSUMER_CONTROL",
+          "field_present": true,
+          "matches_ledger": true
+        },
+        {
+          "source": "ATLAS",
+          "repository_path": "docs/showcase/incident_to_proof_atlas_v01/evidence/atlas_package.json",
+          "source_sha256": "5947e1f270ca0a33214ed517e56ed88807efdaf7f1fdcb0da66d6b04d00acf24",
+          "json_pointer": "/cards/S4/causal_limit",
+          "value": "Supplemental delivery controls occurred after the original consumer, not as its cause.",
+          "field_present": true,
+          "matches_ledger": true
+        },
+        {
+          "source": "AT-CASES",
+          "repository_path": "docs/showcase/incident_to_proof_atlas_v01/reader/CASE_ROUTES.json",
+          "source_sha256": "9ebab55c4c93fe7b710ee92f1df14c965c71a5036a37cb05b081bf103b0bd459",
+          "json_pointer": "/counts/unique_experience_consumers",
+          "value": 5,
+          "field_present": true,
+          "matches_ledger": true
+        },
+        {
+          "source": "AT-CASES",
+          "repository_path": "docs/showcase/incident_to_proof_atlas_v01/reader/CASE_ROUTES.json",
+          "source_sha256": "9ebab55c4c93fe7b710ee92f1df14c965c71a5036a37cb05b081bf103b0bd459",
+          "json_pointer": "/counts/effective_history_samples",
+          "value": 7,
+          "field_present": true,
+          "matches_ledger": true
+        },
+        {
+          "source": "AT-CASES",
+          "repository_path": "docs/showcase/incident_to_proof_atlas_v01/reader/CASE_ROUTES.json",
+          "source_sha256": "9ebab55c4c93fe7b710ee92f1df14c965c71a5036a37cb05b081bf103b0bd459",
+          "json_pointer": "/counts/historical_model_calls",
+          "value": 5,
+          "field_present": true,
+          "matches_ledger": true
+        },
+        {
+          "source": "AT-CASES",
+          "repository_path": "docs/showcase/incident_to_proof_atlas_v01/reader/CASE_ROUTES.json",
+          "source_sha256": "9ebab55c4c93fe7b710ee92f1df14c965c71a5036a37cb05b081bf103b0bd459",
+          "json_pointer": "/counts/new_provider_calls",
+          "value": 0,
+          "field_present": true,
+          "matches_ledger": true
+        },
+        {
+          "source": "AT-REVIEW",
+          "repository_path": "docs/showcase/incident_to_proof_atlas_v01/evidence/review/AT5_INDEPENDENT_REVIEW.json",
+          "source_sha256": "fd5610100330f3d5fe79704ce8c9bd9e7775b3619e0462ee042393b22d8329d6",
+          "json_pointer": "/decision",
+          "value": "ATLAS_ENGINEERING_ACCEPTED_FOR_DECLARED_FINITE_SCOPE",
+          "field_present": true,
+          "matches_ledger": true
+        },
+        {
+          "source": "AT-REVIEW",
+          "repository_path": "docs/showcase/incident_to_proof_atlas_v01/evidence/review/AT5_INDEPENDENT_REVIEW.json",
+          "source_sha256": "fd5610100330f3d5fe79704ce8c9bd9e7775b3619e0462ee042393b22d8329d6",
+          "json_pointer": "/review_execution/test_reruns",
+          "value": 0,
+          "field_present": true,
+          "matches_ledger": true
+        },
+        {
+          "source": "AT-REVIEW",
+          "repository_path": "docs/showcase/incident_to_proof_atlas_v01/evidence/review/AT5_INDEPENDENT_REVIEW.json",
+          "source_sha256": "fd5610100330f3d5fe79704ce8c9bd9e7775b3619e0462ee042393b22d8329d6",
+          "json_pointer": "/review_execution/model_calls",
+          "value": 0,
+          "field_present": true,
+          "matches_ledger": true
+        },
+        {
+          "source": "ATLAS",
+          "repository_path": "docs/showcase/incident_to_proof_atlas_v01/evidence/atlas_package.json",
+          "source_sha256": "5947e1f270ca0a33214ed517e56ed88807efdaf7f1fdcb0da66d6b04d00acf24",
+          "json_pointer": "/replay_scope",
+          "value": "SAFE_DERIVED_SAVED_RELATIONS_NOT_LIVE_AUTHORITY",
+          "field_present": true,
+          "matches_ledger": true
+        },
+        {
+          "source": "ATLAS",
+          "repository_path": "docs/showcase/incident_to_proof_atlas_v01/evidence/atlas_package.json",
+          "source_sha256": "5947e1f270ca0a33214ed517e56ed88807efdaf7f1fdcb0da66d6b04d00acf24",
+          "json_pointer": "/native_replay",
+          "value": "UNSUPPORTED_NATIVE_SCHEMA",
+          "field_present": true,
+          "matches_ledger": true
+        },
+        {
+          "source": "AT-EXTERNAL",
+          "repository_path": "docs/showcase/incident_to_proof_atlas_v01/presentation/external_sources.json",
+          "source_sha256": "d3b8db30124ad2ae422488cbe95920c5063dc91654c3650af7d6d39bc6d9cbdc",
+          "json_pointer": "/created_on",
+          "value": "2026-09-23",
+          "field_present": true,
+          "matches_ledger": true
+        }
+      ]
+    }
+  ],
+  "result": {
+    "sources_checked": 17,
+    "source_hash_mismatches": 0,
+    "fields_checked": 127,
+    "missing_fields": 0,
+    "field_value_mismatches": 0,
+    "scope": "STATIC_SOURCE_BINDING_ONLY"
+  }
+}

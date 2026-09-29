@@ -1,0 +1,25 @@
+{
+  "schema": "g6b6.offline_archive_draft.v01",
+  "status": "OFFLINE_METADATA_READY_EXTERNAL_OPERATION_DEFERRED",
+  "title": "Radiolaria OS: Computing, assembled around intent",
+  "creators": [
+    {
+      "name": "Akhtanin Andrii"
+    }
+  ],
+  "doi": null,
+  "version": "G6B6F_FINAL_BYTES_V01",
+  "upload_type": "software",
+  "description": "Exact technical source snapshot plus separately identified publication candidate and recorded evidence.",
+  "license": "MIXED_TERMS_SEE_RIGHTS",
+  "missing_required_decisions": [],
+  "code_terms": "Existing AGPL-3.0-only and unchanged commercial note",
+  "external_actions": "NOT_EXECUTED",
+  "service_rules_check": "DEFERRED_UNTIL_EXPLICIT_EXTERNAL_AUTHORIZATION",
+  "later_asset_policy_check": "Verify whether the selected archive integration actually retains the full ZIP and detached XML; never assume GitHub release assets are automatically archived.",
+  "explanatory_work_license": "CC-BY-4.0",
+  "license_scope": "New explanatory author text and original diagrams only; code, verbatim excerpts, historical sources/evidence and third-party media retain their terms",
+  "account": "DEFERRED",
+  "record_id": "DEFERRED",
+  "site_domain": "DEFERRED"
+}

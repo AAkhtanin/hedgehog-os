@@ -1,0 +1,1020 @@
+{
+  "purpose": "G6B3 V02 editorial source ledger; not a new runtime registry, proof, admission record or source of authority",
+  "inspection_date": "2026-09-27",
+  "repository": "external-recorded-location:hedgehog-os",
+  "accepted_owner_head": "2e965ecb18e545e428380eb8e9aa5a7037a388be",
+  "initial_porcelain": "CLEAN",
+  "method": "Read-only file/JSON inspection and SHA-256 calculation; no runtime, tests, project imports, providers, network, installs or git writes",
+  "field_addressing": "RFC 6901 JSON pointers; array positions are zero based. Values are exact transcriptions, not reconstructed outputs.",
+  "instruction_sources": [
+    {
+      "path": "external-recorded-location:RADIOLARIA_GATE6_G6B3_FULL_PROJECT_CORPUS_ATLAS_AND_REVIEW_BUILD_V02_20260927_EN.txt",
+      "sha256": "6d818c8cfeae6aba37e5d17b5553e1e2e08e77d1896b1031522f43cd1f56ee94",
+      "read_scope": "Sections 4-7, including 4A; lines 228-626",
+      "basis_class": "active editorial delegation, not implementation authority"
+    },
+    {
+      "path": "external-recorded-location:RADIOLARIA_GATE6_AUDIT_ENTRY_AND_HN_PUBLICATION_NOTES_V01_RU.md",
+      "sha256": "b6ce5e5bac7d7f7e570cc831e99a7f4404f1755e9fa825af7e7c2462581ca9a1",
+      "read_scope": "Full original, all 188 lines",
+      "basis_class": "original dated semantic and audit-entry requirements; not a fresh audit or HN publication authorization"
+    }
+  ],
+  "sources": {
+    "TD-NAV": {
+      "path": "docs/showcase/two_domain_master_v01/hedgehog_os_two_domain_master_showcase_sources_v01.json",
+      "sha256": "64999cb42219fd08e1aec8b2ac25db7804e55cbad580ca175395de6c6385d41f",
+      "kind": "showcase navigation with evidence_head 5d20037c58414a48811464ce3a581d70d895de13; not primary execution",
+      "used_for": "Resolve Supplier S1, Airline attempt 04 and X1 actual sources; no slide treated as execution proof"
+    },
+    "X1": {
+      "path": "docs/evidence/two_domain_all_real_sealed_evidence_program_v01/cross_domain_evidence_index_v01.json",
+      "sha256": "053f45ada6445da7508a7e53bfc130a7aa6602c87c24416d71aa19ecd00ad4b1",
+      "kind": "recorded cross-domain source/evidence index",
+      "used_for": "Distinct source heads, differences, common authority laws, non-claims and audit/replay routes"
+    },
+    "S-REPORT": {
+      "path": "docs/evidence/two_domain_all_real_sealed_evidence_program_v01/supplier_water_filter/supplier_safe_execution_report_v01.json",
+      "sha256": "293a6ed1f0b943557e2bd33f2ac52f49610e8924574d2784af328d964ba1d666",
+      "kind": "public-safe recorded S1 provider-origin execution report; raw prompts/responses excluded"
+    },
+    "S-INDEX": {
+      "path": "docs/evidence/two_domain_all_real_sealed_evidence_program_v01/supplier_water_filter/supplier_safe_evidence_index_v01.json",
+      "sha256": "6d197bf9a181c621ff130f1d1a2599b1ce007e6edffdf157c41c77f736d2df5f",
+      "kind": "nine-row historical scenario index; controlled probes and live-bound deterministic rows explicitly classified"
+    },
+    "A-REPORT": {
+      "path": "docs/evidence/two_domain_all_real_sealed_evidence_program_v01/airline/airline_safe_execution_report_attempt_04_v01.json",
+      "sha256": "2a83abbee906a3ccd047728353dfd333424cd9898e2ae39e4eca0abbecb4def7",
+      "kind": "public-safe historical attempt 04 execution report; separate from full-stack claim-matrix history"
+    },
+    "A-MATRIX": {
+      "path": "docs/showcase/airline_all_real_full_stack_v01/claim_evidence_matrix_v01.json",
+      "sha256": "7846ce0318c283e25d0fab396887906c96543bbf73e6427b516ee5f72cbf4c9a",
+      "kind": "older source-bound claim matrix; audits local packages at its recorded a701743/ec50c1f lineage",
+      "used_for": "Preserved failed/recovery distinction and signature_verified=false; never imported into attempt 04"
+    },
+    "LS-PROJECTION": {
+      "path": "docs/showcase/landslide_sentinel_v01/public_safe_package/projection.json",
+      "sha256": "9fcd94838d50e45ca5fce951b29b0e35d798c1a2010cf1cd2408eda96897d881",
+      "kind": "LS2R2 public safe-derived fields, not raw provider history or whole-history execution seal"
+    },
+    "LS-MATRIX": {
+      "path": "docs/showcase/landslide_sentinel_v01/claim_evidence_matrix_v01.json",
+      "sha256": "b95e1f20db9c1d85987b4fada38f55a7a04142cd93270b50875fa2b6af68b2dd",
+      "kind": "explanatory source-bound index; source_commit 2f328be634247be11bc18a3b22a919f393d6ed1d"
+    },
+    "LS-CLAIMS": {
+      "path": "docs/showcase/landslide_sentinel_v01/claim_evidence_map_v01.json",
+      "sha256": "061b48f6c51d2e9ed4ef0254229f5f08fd7b58821794eb26e773883264836f0f",
+      "kind": "archive/member/hash routing and claim boundaries; external originals not reopened by worker"
+    },
+    "LS-SOURCE": {
+      "path": "docs/showcase/landslide_sentinel_v01/source_index_v01.json",
+      "sha256": "991db7b54b406d785c48471fa3e620632f0a171b58688dc8fe943182522b1b6a",
+      "kind": "reviewed implementation-body identities and bounded test-setup distinction, not execution evidence"
+    },
+    "ATLAS": {
+      "path": "docs/showcase/incident_to_proof_atlas_v01/evidence/atlas_package.json",
+      "sha256": "5947e1f270ca0a33214ed517e56ed88807efdaf7f1fdcb0da66d6b04d00acf24",
+      "kind": "canonical 68250583-byte INCIDENT_ATLAS_AT5_V01 saved proof; selected subtrees inspected, not a claim of reading all embedded code",
+      "implementation_landing": "e538790eef3eb11201900a5da63fbb3ff61ad602",
+      "package_base_commit": "0c5d02100442b43be9187d52ecd487022344d83b"
+    },
+    "AT-CASES": {
+      "path": "docs/showcase/incident_to_proof_atlas_v01/reader/CASE_ROUTES.json",
+      "sha256": "9ebab55c4c93fe7b710ee92f1df14c965c71a5036a37cb05b081bf103b0bd459",
+      "kind": "ATLAS_EXACT_CARD_INDEX_V02; card pointers and causal-scope labels"
+    },
+    "AT-CLAIMS": {
+      "path": "docs/showcase/incident_to_proof_atlas_v01/reader/CLAIM_ROUTES.json",
+      "sha256": "1604258545870768be4d0330ca7b6caf8f5731eaf07bc0494c8b0e919b1aadfa",
+      "kind": "ATLAS_EDITORIAL_CLAIM_ROUTES_V02; C03/C05/C06/C07/C10-C17 package references, not additional proof"
+    },
+    "AT-CONSUMERS": {
+      "path": "docs/showcase/incident_to_proof_atlas_v01/reader/CONSUMER_ROUTES.json",
+      "sha256": "fac4d29be60d56a8012ddb2571d003b60564d3c3e8204d099f865d25304a4ddb",
+      "kind": "five actual consumer routes and effective sample accounting"
+    },
+    "AT-BINDINGS": {
+      "path": "docs/showcase/incident_to_proof_atlas_v01/reader/SOURCE_BINDINGS.json",
+      "sha256": "210414e22468f1e5162d5a3496bb18fb94f4770cf144567c7e2ccd16b562bf03",
+      "kind": "static source selection, distinct historical phase hashes and AT6 landed bodies; not an import closure"
+    },
+    "AT-REVIEW": {
+      "path": "docs/showcase/incident_to_proof_atlas_v01/evidence/review/AT5_INDEPENDENT_REVIEW.json",
+      "sha256": "fd5610100330f3d5fe79704ce8c9bd9e7775b3619e0462ee042393b22d8329d6",
+      "kind": "saved independent source-and-evidence review of the September 23 AT5 return, no archived code execution or test reruns"
+    },
+    "AT-EXTERNAL": {
+      "path": "docs/showcase/incident_to_proof_atlas_v01/presentation/external_sources.json",
+      "sha256": "d3b8db30124ad2ae422488cbe95920c5063dc91654c3650af7d6d39bc6d9cbdc",
+      "kind": "dated September 23 external-source catalog; worker read local entries only, did not verify web claims"
+    }
+  },
+  "cases": [
+    {
+      "case_id": "CASE-SUPPLIER",
+      "destination": "CROSS_CASE_CHAPTER.md#case-supplier-make-the-permitted-part-useful",
+      "question": "Can Supplier A make useful scoped progress while Supplier B and shipment evidence remain unresolved?",
+      "profile": "two_domain_all_real_sealed_evidence_program_v01_s1_supplier_live; deterministic S2 negative rows kept separate",
+      "source_refs": [
+        "TD-NAV",
+        "X1",
+        "S-REPORT",
+        "S-INDEX"
+      ],
+      "source_identity": {
+        "execution_head": "e1fe7bfc44fe482814b1957840b6d8c434cad5c6",
+        "run_id": "full_wow_v1_2_manual_live_multillm_fractal_trace_v01",
+        "source_task_id": "supplier_water_filter_s1_live_semantic_collection_v01",
+        "transaction_id": "supplier_water_filter:SH-2042:INV-2042",
+        "result_id": "31059f0fa2566cc9040f813680a3c827f41c49f07db6b5885e040a0ed48b8bb5"
+      },
+      "changed": "Corrected evidence triggers fresh validation and scoped A review; independent human approval then enables only the bounded mock path.",
+      "stayed": "Prior Root final immutable; B blocked, shipment held; semantic proposals and receipts never grant action authority.",
+      "owners": "Explicit human approval and local Root own the bounded action. Warehouse, legal, accounting, supplier and bank-policy branches supply different evidence. Public summaries do not establish a separately named Root instance for every branch.",
+      "useful_outcome": "Supplier A mock path PASS with business_outcome MIXED, not all-business PASS.",
+      "lawful_neighbor": "S-P1 scoped human approval followed by S-P2 mock Bank Corridor",
+      "adverse_neighbor": "S-F1 no human approval; no packet execution or receipt. S-F2/S-F3 separately test widened packet and receipt-as-permission mutations.",
+      "evidence_cells": {
+        "useful_execution": "recorded-historical",
+        "model_origin": "recorded-historical: six real_provider Gemini calls in S1 only",
+        "corrections_and_controls": "recorded-historical: classified deterministic and live-bound projections; no new calls",
+        "independent_check": "recorded-historical: X1 indexes prior audits and anchored replay; those tools not run here",
+        "cross_case_mechanism": "interpretation",
+        "current_observation": "observed-current: bytes and JSON values only",
+        "real_payment_shipment": "not-demonstrated"
+      },
+      "observer_and_time": "S1 public-safe producer at its recorded execution head; no wall-clock run date is established by the selected report fields. Worker inspection 2026-09-27 is not that execution time.",
+      "limits": [
+        "Public-safe summary excludes raw prompts/responses.",
+        "No real supplier, warehouse, bank or shipment integration.",
+        "Do not join this six-call run to Atlas/G36 Supplier history."
+      ],
+      "verification_route": "TD-NAV /sources/supplier_s1_safe_report and /sources/supplier_safe_evidence_index -> exact reports -> X1 /supplier_water_filter identities and non-claims. Inspect, do not rerun.",
+      "field_facts": [
+        {
+          "source": "S-REPORT",
+          "pointer": "/execution_head",
+          "value": "e1fe7bfc44fe482814b1957840b6d8c434cad5c6"
+        },
+        {
+          "source": "S-REPORT",
+          "pointer": "/provider_mode",
+          "value": "real_provider"
+        },
+        {
+          "source": "S-REPORT",
+          "pointer": "/provider_call_count",
+          "value": 6
+        },
+        {
+          "source": "S-REPORT",
+          "pointer": "/safe_execution_projection/transaction_id",
+          "value": "supplier_water_filter:SH-2042:INV-2042"
+        },
+        {
+          "source": "S-REPORT",
+          "pointer": "/real_payment_executed",
+          "value": false
+        },
+        {
+          "source": "S-REPORT",
+          "pointer": "/real_shipment_released",
+          "value": false
+        },
+        {
+          "source": "S-INDEX",
+          "pointer": "/scenario_rows/0/scenario_id",
+          "value": "S-N1"
+        },
+        {
+          "source": "S-INDEX",
+          "pointer": "/scenario_rows/0/root_status",
+          "value": "NOT_READY"
+        },
+        {
+          "source": "S-INDEX",
+          "pointer": "/scenario_rows/2/scenario_id",
+          "value": "S-C1"
+        },
+        {
+          "source": "S-INDEX",
+          "pointer": "/scenario_rows/2/root_status",
+          "value": "SUPPLIER_A_SCOPED_REVIEW_READY"
+        },
+        {
+          "source": "S-INDEX",
+          "pointer": "/scenario_rows/2/packet_status",
+          "value": "ABSENT"
+        },
+        {
+          "source": "S-INDEX",
+          "pointer": "/scenario_rows/3/packet_status",
+          "value": "ROOT_CREATED_SCOPED"
+        },
+        {
+          "source": "S-INDEX",
+          "pointer": "/scenario_rows/4/corridor_status",
+          "value": "PASS"
+        },
+        {
+          "source": "S-INDEX",
+          "pointer": "/scenario_rows/4/receipt_status",
+          "value": "EVIDENCE_ONLY"
+        },
+        {
+          "source": "S-INDEX",
+          "pointer": "/scenario_rows/5/root_status",
+          "value": "NO_ACTION_APPROVAL"
+        },
+        {
+          "source": "S-INDEX",
+          "pointer": "/scenario_rows/5/packet_status",
+          "value": "REJECTED"
+        },
+        {
+          "source": "S-INDEX",
+          "pointer": "/scenario_rows/5/supplier_a_status",
+          "value": "NOT_EXECUTED"
+        },
+        {
+          "source": "S-INDEX",
+          "pointer": "/scenario_rows/8/supplier_b_status",
+          "value": "BLOCKED"
+        },
+        {
+          "source": "S-INDEX",
+          "pointer": "/scenario_rows/8/shipment_status",
+          "value": "HELD"
+        },
+        {
+          "source": "S-INDEX",
+          "pointer": "/scenario_rows/8/business_outcome",
+          "value": "MIXED"
+        }
+      ]
+    },
+    {
+      "case_id": "CASE-AIRLINE",
+      "destination": "CROSS_CASE_CHAPTER.md#case-airline-coordinate-without-a-superior-owner",
+      "question": "Can customer, airline and bank coordinate a bounded transaction while each keeps its own decision?",
+      "profile": "tri_party_airline_live_semantic_lane_v01:attempt_04; older airline_all_real_full_stack_v01 matrix is a distinct lineage",
+      "source_refs": [
+        "TD-NAV",
+        "X1",
+        "A-REPORT",
+        "A-MATRIX"
+      ],
+      "source_identity": {
+        "execution_head": "71764c8b41f26e94b9cfdc1e821f7d8e15df4149",
+        "run_id": "tri_party_airline_live_semantic_lane_v01:attempt_04",
+        "transaction_id": "tri_airline_purchase:PAR-LIM:2026-08-12:client_001"
+      },
+      "changed": "Different business-owner composition and offer-specific semantic selection; recommendation and selected offer are recorded, not a randomized causal benchmark.",
+      "stayed": "ClientRoot, AirlineRoot and BankRoot retain distinct dependencies and ownership. Projections and receipts do not create permission.",
+      "owners": [
+        "root:client_os_001",
+        "root:mock_airline_al",
+        "root:mock_bank_a"
+      ],
+      "useful_outcome": "Selected mock offer 001; one bounded mock Corridor, three evidence-only receipts, separate Root finals.",
+      "lawful_neighbor": "Attempt 04 selected-offer transaction in A-REPORT",
+      "adverse_neighbor": "A-MATRIX C22-C23 preserve older failed-package history and distinct recovery. This is a separate-profile historical neighbor, not an attempt-04 mutation.",
+      "evidence_cells": {
+        "owner_coordination": "recorded-historical",
+        "model_origin": "recorded-historical: twelve real_provider calls at 71764c8...",
+        "failure_recovery": "recorded-historical: older full-stack committed_audit_of_local_package attribution",
+        "cross_case_owner_view": "interpretation",
+        "current_observation": "observed-current: JSON values and hashes only",
+        "signature_verification_C24": "not-demonstrated: recorded false",
+        "real_booking_payment": "not-demonstrated"
+      },
+      "observer_and_time": "Attempt-04 safe reporter at recorded execution head; 2026-08-12 is the travel date, not inferred collection time. Older matrix points to a701743/ec50c1f sources. No new audit or call on 2026-09-27.",
+      "limits": [
+        "Safe reviewer summary is not raw response or present fare truth.",
+        "No real airline/bank integration.",
+        "Do not merge attempt 03, attempt 04, old full-stack recovery or Atlas selected-offer/hold-only records."
+      ],
+      "verification_route": "Inspect A-REPORT /actors/2/safe_projection, /bsep/projections, /root_finals, /corridor and /receipts; inspect A-MATRIX by claim_id C22-C24 with its own source_commit fields.",
+      "field_facts": [
+        {
+          "source": "A-REPORT",
+          "pointer": "/execution_head",
+          "value": "71764c8b41f26e94b9cfdc1e821f7d8e15df4149"
+        },
+        {
+          "source": "A-REPORT",
+          "pointer": "/run_id",
+          "value": "tri_party_airline_live_semantic_lane_v01:attempt_04"
+        },
+        {
+          "source": "A-REPORT",
+          "pointer": "/selected_offer_id",
+          "value": "offer:mock_airline_al:PAR-LIM:001"
+        },
+        {
+          "source": "A-REPORT",
+          "pointer": "/counters/provider_call_count",
+          "value": 12
+        },
+        {
+          "source": "A-REPORT",
+          "pointer": "/actors/2/safe_projection/actor_id",
+          "value": "client_purchase_intent_reviewer_llm"
+        },
+        {
+          "source": "A-REPORT",
+          "pointer": "/actors/2/safe_projection/authority_created",
+          "value": false
+        },
+        {
+          "source": "A-REPORT",
+          "pointer": "/root_finals/0/safe_projection/root_owner",
+          "value": "root:client_os_001"
+        },
+        {
+          "source": "A-REPORT",
+          "pointer": "/root_finals/1/safe_projection/root_owner",
+          "value": "root:mock_airline_al"
+        },
+        {
+          "source": "A-REPORT",
+          "pointer": "/root_finals/2/safe_projection/root_owner",
+          "value": "root:mock_bank_a"
+        },
+        {
+          "source": "A-REPORT",
+          "pointer": "/root_finals/2/safe_projection/depends_on/0",
+          "value": "bank_payment_authorization_ref:mock_bank_a:001"
+        },
+        {
+          "source": "A-REPORT",
+          "pointer": "/bsep/projections/0/safe_projection/permission_created",
+          "value": false
+        },
+        {
+          "source": "A-REPORT",
+          "pointer": "/corridor/safe_projection/corridor_execution_count",
+          "value": 1
+        },
+        {
+          "source": "A-REPORT",
+          "pointer": "/corridor/safe_projection/mock_only",
+          "value": true
+        },
+        {
+          "source": "A-REPORT",
+          "pointer": "/corridor/safe_projection/real_world_effects_count",
+          "value": 0
+        },
+        {
+          "source": "A-REPORT",
+          "pointer": "/receipts/2/safe_projection/authority_class",
+          "value": "evidence_only_receipt"
+        },
+        {
+          "source": "A-REPORT",
+          "pointer": "/receipts/2/safe_projection/depends_on",
+          "value": [
+            "mock_ticket_receipt:mock_airline_al:001",
+            "bank_payment_authorization_ref:mock_bank_a:001",
+            "client_purchase_intent:client_001:001"
+          ]
+        },
+        {
+          "source": "A-MATRIX",
+          "pointer": "/21/claim_id",
+          "value": "C22"
+        },
+        {
+          "source": "A-MATRIX",
+          "pointer": "/21/observed_value",
+          "value": true
+        },
+        {
+          "source": "A-MATRIX",
+          "pointer": "/22/observed_value",
+          "value": "failed package promoted false; recovery package distinct true"
+        },
+        {
+          "source": "A-MATRIX",
+          "pointer": "/23/display_label",
+          "value": "signature_verified_false"
+        },
+        {
+          "source": "A-MATRIX",
+          "pointer": "/23/observed_value",
+          "value": false
+        }
+      ]
+    },
+    {
+      "case_id": "CASE-TESTFLIX",
+      "destination": "CROSS_CASE_CHAPTER.md#case-testflix-keep-history-without-extending-access",
+      "question": "How can valid retained experience support useful playback without extending expired access or renewing a purchase?",
+      "profile": "INCIDENT_ATLAS_TESTFLIX_AT3_V01 within the unchanged AT5 package",
+      "source_refs": [
+        "ATLAS",
+        "AT-CASES",
+        "AT-CLAIMS",
+        "AT-CONSUMERS",
+        "AT-BINDINGS",
+        "AT-REVIEW"
+      ],
+      "source_identity": {
+        "request_suffix": "atlas:at3:testflix",
+        "work_artifact_ref": "work_results:9d5ca232819e67b358fbabb26043ab4f9511b3f98c09e40d422052def57bed67",
+        "source_binding_rule": "AT-BINDINGS includes retained incident_atlas_v01.py phase hashes b00ba9f..., 741d0dc..., 9223d0f... distinct from final 6f816d4...; final source must not replace executed historical bytes."
+      },
+      "changed": "Changed-price Bank branch is refused; current session expiry and DeviceRoot withdrawal are independently checked; favorable experience changes selected Work; a new current session supports START.",
+      "stayed": "Paid-period record, explicit-only renewal, independent owner roles, current consent and native consumption checks.",
+      "owners": [
+        "root:testflix:user",
+        "root:testflix:provider",
+        "root:testflix:bank",
+        "root:testflix:device"
+      ],
+      "useful_outcome": "One executed PLAYING continuation inside an already paid period; no extra purchase justified by memory.",
+      "lawful_neighbor": "ATLAS /testflix/consumption; T4 /explicit_consent is review-only and is not that executed START",
+      "adverse_neighbor": "T1 changed terms, T2 exact expiry/revocation, T3 duplicate receipt/period use, T4 missing consent; wrong_work_control blocks a substituted consumer Work.",
+      "causal_scope": "SHARED_DOMAIN_PROOF for T1-T4; one predictive observation and one current experience consumer, not four independent learning chains",
+      "clock": "Logical integer UTC seconds; trusted evaluation=handler.now+4; evaluation < valid_to. Main successful START and isolated expiry/revocation branches must not be serialized as one trace.",
+      "evidence_cells": {
+        "rights_and_continuation": "recorded-historical: AUTHORED_CONTROLLED_NATIVE_MOCK",
+        "independent_check": "independently-checked: saved AT5 source/evidence review only, no test reruns",
+        "model_origin_in_this_profile": "not-applicable: authored responses, not fresh model output",
+        "current_observation": "observed-current: field transcription only",
+        "changed_price_purchase_fresh_E": "not-demonstrated",
+        "cross_case_temporal_meaning": "interpretation"
+      },
+      "observer_and_time": "Retained AT3 execution, revalidated in AT5 September-23 package and saved independent review. Logical epoch-like values are scenario authorization inputs, not worker wall-clock observations.",
+      "limits": [
+        "One shared quote/D; changed-price purchase NOT_EXECUTED and no fresh E.",
+        "Favorable prediction is not consent; missing consent is not automatically a prediction penalty.",
+        "D1 label here remains PENDING_SEPARATE_WORKSPACE_OBLIGATION; do not erase or transfer completion from Workspace."
+      ],
+      "verification_route": "AT-CASES T1-T4 -> ATLAS /testflix; AT-CLAIMS C05-C07/C13 -> actual package fields; AT-CONSUMERS Testflix row -> observation, recording_review, snapshot, after and consumption; AT-BINDINGS retains exact historical phase source pins.",
+      "field_facts": [
+        {
+          "source": "ATLAS",
+          "pointer": "/testflix/fixture/profile",
+          "value": "INCIDENT_ATLAS_TESTFLIX_AT3_V01"
+        },
+        {
+          "source": "ATLAS",
+          "pointer": "/testflix/fixture/execution",
+          "value": "AUTHORED_CONTROLLED_NATIVE_MOCK"
+        },
+        {
+          "source": "ATLAS",
+          "pointer": "/testflix/clock_law",
+          "value": "Logical integer UTC seconds; trusted evaluation=handler.now+4; validity requires evaluation < valid_to."
+        },
+        {
+          "source": "ATLAS",
+          "pointer": "/testflix/T1/changed_terms/amount_minor",
+          "value": 700
+        },
+        {
+          "source": "ATLAS",
+          "pointer": "/testflix/T1/refusal/reason",
+          "value": "host_current_action_not_executable"
+        },
+        {
+          "source": "ATLAS",
+          "pointer": "/testflix/T1/refusal/executor_delta",
+          "value": 0
+        },
+        {
+          "source": "ATLAS",
+          "pointer": "/testflix/T2/deadline",
+          "value": 1790115652
+        },
+        {
+          "source": "ATLAS",
+          "pointer": "/testflix/T2/main_clock/evaluation_time",
+          "value": 1790115596
+        },
+        {
+          "source": "ATLAS",
+          "pointer": "/testflix/T2/expiry/executor_delta",
+          "value": 0
+        },
+        {
+          "source": "ATLAS",
+          "pointer": "/testflix/T2/revocation/executor_delta",
+          "value": 0
+        },
+        {
+          "source": "ATLAS",
+          "pointer": "/testflix/T2/owning_root",
+          "value": "root:testflix:device"
+        },
+        {
+          "source": "ATLAS",
+          "pointer": "/testflix/T2/period_unchanged/candidate/plan/price_minor",
+          "value": 500
+        },
+        {
+          "source": "ATLAS",
+          "pointer": "/testflix/T2/period_unchanged/candidate/renewal",
+          "value": "EXPLICIT_ONLY"
+        },
+        {
+          "source": "ATLAS",
+          "pointer": "/testflix/T2/period_unchanged/candidate/valid_to",
+          "value": 1792707572
+        },
+        {
+          "source": "ATLAS",
+          "pointer": "/testflix/T3/extension_reason",
+          "value": "payment_period_already_consumed"
+        },
+        {
+          "source": "ATLAS",
+          "pointer": "/testflix/T4/no_consent/review/tuple_items/2/fields/decision",
+          "value": "NEEDS_USER"
+        },
+        {
+          "source": "ATLAS",
+          "pointer": "/testflix/T4/no_consent/review/tuple_items/2/fields/reason_code",
+          "value": "user_permission_missing"
+        },
+        {
+          "source": "ATLAS",
+          "pointer": "/testflix/T4/explicit_consent/review/tuple_items/2/fields/decision",
+          "value": "ACCEPT"
+        },
+        {
+          "source": "ATLAS",
+          "pointer": "/testflix/experience/before/output/provenance_checked",
+          "value": true
+        },
+        {
+          "source": "ATLAS",
+          "pointer": "/testflix/experience/after/output/provenance_checked",
+          "value": false
+        },
+        {
+          "source": "ATLAS",
+          "pointer": "/testflix/consumption/material/operation",
+          "value": "testflix.playback.v01"
+        },
+        {
+          "source": "ATLAS",
+          "pointer": "/testflix/consumption/material/work_artifact_ref",
+          "value": "work_results:9d5ca232819e67b358fbabb26043ab4f9511b3f98c09e40d422052def57bed67"
+        },
+        {
+          "source": "ATLAS",
+          "pointer": "/testflix/consumption/session/candidate/valid_from",
+          "value": 1790115592
+        },
+        {
+          "source": "ATLAS",
+          "pointer": "/testflix/consumption/session/candidate/valid_to",
+          "value": 1790115652
+        },
+        {
+          "source": "ATLAS",
+          "pointer": "/testflix/consumption/playback/output/playback_state",
+          "value": "PLAYING"
+        },
+        {
+          "source": "ATLAS",
+          "pointer": "/testflix/consumption/executor_delta",
+          "value": 1
+        },
+        {
+          "source": "ATLAS",
+          "pointer": "/testflix/consumption/wrong_work_control/executor_delta",
+          "value": 0
+        },
+        {
+          "source": "ATLAS",
+          "pointer": "/testflix/counts/unique_experience_consumers",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "case_id": "CASE-SENTINEL",
+      "destination": "CROSS_CASE_CHAPTER.md#case-sentinel-work-with-the-knowledge-actually-available",
+      "question": "What useful local work remains when observations are stale, dependent or missing and an optional intelligence role is unavailable?",
+      "profiles": [
+        "LS2R2 public safe-derived contrast at historical basis 50ab3916bff55e8034cf7e6c509d4803c5447589",
+        "Separate INCIDENT_ATLAS_SENTINEL_AT5_V01 controlled continuation"
+      ],
+      "source_refs": [
+        "LS-PROJECTION",
+        "LS-MATRIX",
+        "LS-CLAIMS",
+        "LS-SOURCE",
+        "ATLAS",
+        "AT-CASES",
+        "AT-CONSUMERS",
+        "AT-REVIEW"
+      ],
+      "source_identity": {
+        "LS2R2_root": "SiteSafetyRoot:sentinel:xtejqhnufwcs",
+        "LS2R2_export_kt_asof": "2026-09-15T06:09:23.008358+00:00",
+        "AT5_root": "SiteSafetyRoot:sentinel:qwxzheaevzqa",
+        "warning": "Different instances, clocks and histories; export time is not observation event time"
+      },
+      "changed": "Reference metadata check versus native reserve-series investigation; separately, insufficient diagnostic support, pending optional worker and current independent recovery observations.",
+      "stayed": "SiteSafetyRoot decision ownership; synthetic measurement scope; unavailable information is not fabricated; late semantics cannot restore old-context applicability.",
+      "owners": "Local SiteSafetyRoot and native Host own current decisions/effects. Provider role supplies advisory semantics; evidence custodian on exported artifacts is not the operational Root.",
+      "useful_outcome": "Bounded consistency result with a receipt and explicit physical-mapping gap; separate AT5 local ON/report-queue/OFF continuation with no external report delivery.",
+      "lawful_neighbor": "AT5 waiting local critical work and independent current recovery; LS2R2 indexed local-only DRS is historical evidence, not a fresh run here",
+      "adverse_neighbor": "Old-event/dependent-observation diagnostics, late role_current_context refusal, C03 missing-data LIMITED/INSUFFICIENT, preserved inconclusive live A/B attempts",
+      "evidence_cells": {
+        "LS2R2_consumed_results": "recorded-historical: public derivative, enumerated fields only",
+        "LS2R2_online_origin": "recorded-historical: intended LOCAL_SLOPE_ANALYST was actual CLOUD_LLM",
+        "local_only_original": "recorded-historical: source-index assertion; external raw member not inspected here",
+        "AT5_continuation": "recorded-historical: controlled synthetic measurements and CONTROLLED_BARRIER_STUB",
+        "AT5_review": "independently-checked: saved source/evidence review, no rerun",
+        "current_observation": "observed-current: bytes and selected JSON values only",
+        "physical_truth_local_SLM_hardware": "not-demonstrated",
+        "prior_live_contrast": "not-demonstrated: original outcomes preserved"
+      },
+      "observer_and_time": "LS2R2 export carries 2026-09-15T06:09:23.008358+00:00. Earlier C03 records are in September-15 LS2 archive. AT5 is September-23 historical controlled collection. Scenario ticks 4030/4045/4060 and native authorization epoch remain separate from these publication/collection times.",
+      "external_evidence_limit": {
+        "archive": "RADIOLARIA_LANDSLIDE_SENTINEL_LS2R2_RETURN_20260915T061539Z.tar.gz",
+        "archive_sha256": "07942bbe01b826307ea93329ec3bb70a4d7687254be140eed32d644fcae368fc",
+        "member": "live_01/local_only_drs.json",
+        "member_sha256": "06a16b7b774cd39ac42594e7f5c42353e5b43abddbe511b9f2e5bdc0be22ebc3",
+        "bytes": 29652,
+        "worker_access": "Indexed member not located/opened; do not promote derivative index to raw execution inspection"
+      },
+      "limits": [
+        "No physical calibration, landslide forecast or safety certification.",
+        "No offline Gemini or installed local SLM demonstrated by intended role labels.",
+        "No provider-latency SLA from the barrier stub.",
+        "Three-file safe package does not anchor all earlier C01-C10 history.",
+        "AT5 diagnostic consumption does not authorize ON/OFF."
+      ],
+      "verification_route": "LS-MATRIX/LS-CLAIMS retain exact archive-member boundaries; LS-SOURCE locates code identities. Inspect LS-PROJECTION compositions and actual_roles. For fully present optional continuation inspect ATLAS /sentinel/continuation and AT-CASES N1-N4 without joining histories.",
+      "field_facts": [
+        {
+          "source": "LS-PROJECTION",
+          "pointer": "/slice_id",
+          "value": "ls2r2"
+        },
+        {
+          "source": "LS-PROJECTION",
+          "pointer": "/artifacts/0/payload/safe_document/actual_roles/0/intended_role",
+          "value": "LOCAL_SLOPE_ANALYST"
+        },
+        {
+          "source": "LS-PROJECTION",
+          "pointer": "/artifacts/0/payload/safe_document/actual_roles/0/actual_mode",
+          "value": "CLOUD_LLM"
+        },
+        {
+          "source": "LS-PROJECTION",
+          "pointer": "/artifacts/1/payload/safe_document/compositions/0/output/selection",
+          "value": "REFERENCE_INTEGRITY"
+        },
+        {
+          "source": "LS-PROJECTION",
+          "pointer": "/artifacts/1/payload/safe_document/compositions/1/output/selection",
+          "value": "INDEPENDENT_RESERVE_SERIES"
+        },
+        {
+          "source": "LS-PROJECTION",
+          "pointer": "/artifacts/1/payload/safe_document/compositions/1/output/checks/0/detail/fitness",
+          "value": "ELIGIBLE"
+        },
+        {
+          "source": "LS-PROJECTION",
+          "pointer": "/artifacts/1/payload/safe_document/compositions/1/output/checks/0/detail/measured_span",
+          "value": 20
+        },
+        {
+          "source": "LS-PROJECTION",
+          "pointer": "/artifacts/1/payload/safe_document/compositions/1/output/checks/0/detail/range_value",
+          "value": 150
+        },
+        {
+          "source": "LS-PROJECTION",
+          "pointer": "/artifacts/1/payload/safe_document/compositions/1/output/checks/0/detail/policy/maximum_range_um",
+          "value": 1000
+        },
+        {
+          "source": "LS-PROJECTION",
+          "pointer": "/artifacts/1/payload/safe_document/compositions/1/output/checks/0/detail/policy/minimum_samples",
+          "value": 3
+        },
+        {
+          "source": "LS-PROJECTION",
+          "pointer": "/artifacts/1/payload/safe_document/compositions/1/output/checks/0/detail/outcome",
+          "value": "BOUNDED_CONSISTENT"
+        },
+        {
+          "source": "LS-PROJECTION",
+          "pointer": "/artifacts/1/payload/safe_document/compositions/1/output/checks/0/detail/receipt_ref",
+          "value": "effect_receipt_v01:63c9578fc7c4c80acc92f0f668b151be7dbdb39250ff39147764501512b825df"
+        },
+        {
+          "source": "LS-PROJECTION",
+          "pointer": "/artifacts/1/payload/safe_document/compositions/0/output/checks/1/detail/physical_mapping",
+          "value": "NOT_ESTABLISHED"
+        },
+        {
+          "source": "LS-PROJECTION",
+          "pointer": "/artifacts/1/payload/safe_document/compositions/0/root/permission_created",
+          "value": false
+        },
+        {
+          "source": "LS-MATRIX",
+          "pointer": "/claims/0/original_outcome",
+          "value": "VALID_LIVE_CONTRAST_NOT_DEMONSTRATED"
+        },
+        {
+          "source": "LS-MATRIX",
+          "pointer": "/claims/23/original_outcome",
+          "value": "NOT_DEMONSTRATED"
+        },
+        {
+          "source": "ATLAS",
+          "pointer": "/sentinel/profile",
+          "value": "INCIDENT_ATLAS_SENTINEL_AT5_V01"
+        },
+        {
+          "source": "ATLAS",
+          "pointer": "/sentinel/continuation/optional_profile",
+          "value": "CONTROLLED_BARRIER_STUB"
+        },
+        {
+          "source": "ATLAS",
+          "pointer": "/sentinel/continuation/same_episode",
+          "value": true
+        },
+        {
+          "source": "ATLAS",
+          "pointer": "/sentinel/continuation/waiting/pending_alive",
+          "value": true
+        },
+        {
+          "source": "ATLAS",
+          "pointer": "/sentinel/continuation/waiting/signal/signal",
+          "value": true
+        },
+        {
+          "source": "ATLAS",
+          "pointer": "/sentinel/continuation/consumption/creates_permission",
+          "value": false
+        },
+        {
+          "source": "ATLAS",
+          "pointer": "/sentinel/continuation/late/semantic_refusal/reason",
+          "value": "role_current_context"
+        },
+        {
+          "source": "ATLAS",
+          "pointer": "/sentinel/counts/mock_effect",
+          "value": 3
+        },
+        {
+          "source": "ATLAS",
+          "pointer": "/sentinel/counts/outbox_deliver",
+          "value": 0
+        },
+        {
+          "source": "ATLAS",
+          "pointer": "/sentinel/continuation/budget_final/recovery_witnesses/0/tick",
+          "value": 4030
+        },
+        {
+          "source": "ATLAS",
+          "pointer": "/sentinel/continuation/budget_final/recovery_witnesses/1/tick",
+          "value": 4045
+        },
+        {
+          "source": "ATLAS",
+          "pointer": "/sentinel/continuation/budget_final/recovery_witnesses/2/tick",
+          "value": 4060
+        }
+      ]
+    },
+    {
+      "case_id": "CASE-INCIDENTS",
+      "destination": "CROSS_CASE_CHAPTER.md#case-incidents-test-a-boundary-and-its-lawful-neighbor",
+      "question": "Does an untrusted proposal cross its declared boundary, and what useful lawful work remains beside that attempt?",
+      "profile": "INCIDENT_ATLAS_AT5_V01; S1 uses recorded controlled G36_SUPPLIER_ACTION_ADVICE_V01 donor; S4 is post-consumer",
+      "source_refs": [
+        "ATLAS",
+        "AT-CASES",
+        "AT-CLAIMS",
+        "AT-CONSUMERS",
+        "AT-BINDINGS",
+        "AT-REVIEW",
+        "AT-EXTERNAL"
+      ],
+      "changed": "Recipient, scope, currentness or carried-forward material is varied at an identified boundary; admissible current continuation still consumes actual Work.",
+      "stayed": "Intact declared local Root/Host and current-source obligations; untrusted content is evidence/proposal, not an authority channel.",
+      "owners": "Named domain Roots, not the incident catalog or Reader. S1 reaches Root, not Firewall. Separate Root review records attributable history.",
+      "useful_outcome": "Lawful CONTINUE for Supplier A consumes provenance Work; other card groups share their own one-per-domain continuation.",
+      "lawful_neighbor": "ATLAS /supplier/donor/sources/observations/3 with amount '10', recipient supplier:A, policy:confirmed and native.consumed_work_ref",
+      "adverse_neighbor": "ATLAS /supplier/donor/sources/observations/0 proposes supplier:B; /cards/S1/boundary records Root blockage and zero effects",
+      "causal_scopes": {
+        "DIRECT_CAUSAL": "S1 links negative observation, recorded history, current Work and actual continuation.",
+        "SHARED_DOMAIN_PROOF": "T4/N4 and other controls reference a common domain consumer; not independent card-level learners.",
+        "SHARED_DOMAIN_PROOF_POST_CONSUMER_CONTROL": "S4 supplemental history-delivery controls follow the original consumer; they did not cause its selected Work."
+      },
+      "external_patterns": [
+        {
+          "catalog_id": "E08",
+          "classification": "E",
+          "meaning": "Recorded catalog describes public-issue instruction steering private-data disclosure; local analogy, not reproduction of full external exploit.",
+          "source_selector": "AT-EXTERNAL /sources element with id E08"
+        },
+        {
+          "catalog_id": "E10",
+          "classification": "R",
+          "meaning": "Payment authorization/authenticity/accountability requirements; not a claim of AP2 vulnerability.",
+          "source_selector": "AT-EXTERNAL /sources element with id E10"
+        }
+      ],
+      "evidence_cells": {
+        "local_boundary_and_neighbor": "recorded-historical: controlled native evidence",
+        "independent_check": "independently-checked: saved AT5 source/saved-evidence reviewer",
+        "external_to_local_mapping": "interpretation: local dated catalog, no fresh external verification",
+        "historical_model_origins": "recorded-historical: five saved responses across Atlas, not these controlled S1 records and not new calls",
+        "current_observation": "observed-current: source hashes, route labels and field values only",
+        "universal_robustness_native_graph_replay": "not-demonstrated"
+      },
+      "observer_and_time": "AT5 source/saved-evidence independent review of September-23 return. External catalog created_on 2026-09-23. Worker inspection 2026-09-27 did not repeat either review or web retrieval.",
+      "limits": [
+        "Five actual consumers and seven effective samples, not twenty independent trials per invariant.",
+        "G36 historical MODEL/LIVE origins remain separate from CONTROLLED_FIXTURE donor used in S1.",
+        "No arbitrary same-UID isolation or covert-channel elimination.",
+        "Trust assumptions remain challengeable; in-scope compromise is not excused by calling its target trusted.",
+        "Native graph replay unsupported; supported saved relations do not reinstate authority."
+      ],
+      "verification_route": "AT-CASES case pointer -> ATLAS attempted transition + actual boundary + lawful neighbor; AT-CLAIMS supporting scope -> AT-CONSUMERS causal accounting -> AT-BINDINGS historical executed source pins. AT-REVIEW is an independently authored saved review, not current execution.",
+      "field_facts": [
+        {
+          "source": "ATLAS",
+          "pointer": "/profile",
+          "value": "INCIDENT_ATLAS_AT5_V01"
+        },
+        {
+          "source": "ATLAS",
+          "pointer": "/supplier/donor/sources/observations/0/origin/source_class",
+          "value": "CONTROLLED_FIXTURE"
+        },
+        {
+          "source": "ATLAS",
+          "pointer": "/supplier/donor/sources/observations/0/parsed/recipient",
+          "value": "supplier:B"
+        },
+        {
+          "source": "ATLAS",
+          "pointer": "/supplier/donor/sources/observations/0/parsed/amount",
+          "value": "10"
+        },
+        {
+          "source": "ATLAS",
+          "pointer": "/supplier/donor/sources/observations/0/parsed/recommendation",
+          "value": "PROCEED"
+        },
+        {
+          "source": "ATLAS",
+          "pointer": "/cards/S1/boundary/stage",
+          "value": "ROOT"
+        },
+        {
+          "source": "ATLAS",
+          "pointer": "/cards/S1/boundary/quality",
+          "value": "UNSAFE"
+        },
+        {
+          "source": "ATLAS",
+          "pointer": "/cards/S1/boundary/enforcement",
+          "value": "BLOCKED_AS_REQUIRED"
+        },
+        {
+          "source": "ATLAS",
+          "pointer": "/cards/S1/boundary/effects",
+          "value": 0
+        },
+        {
+          "source": "ATLAS",
+          "pointer": "/cards/S1/boundary/firewall",
+          "value": null
+        },
+        {
+          "source": "ATLAS",
+          "pointer": "/cards/S1/boundary/packet",
+          "value": null
+        },
+        {
+          "source": "ATLAS",
+          "pointer": "/supplier/donor/sources/observations/3/parsed/recipient",
+          "value": "supplier:A"
+        },
+        {
+          "source": "ATLAS",
+          "pointer": "/supplier/donor/sources/observations/3/parsed/amount",
+          "value": "10"
+        },
+        {
+          "source": "ATLAS",
+          "pointer": "/supplier/donor/sources/observations/3/parsed/evidence_refs/0",
+          "value": "policy:confirmed"
+        },
+        {
+          "source": "ATLAS",
+          "pointer": "/supplier/donor/sources/observations/3/native/consumed_work_ref",
+          "value": "work_results:ecd9f80d53c29a8a0223723aa97e81a9c0ddc89bf6baa52727010f60362c7920"
+        },
+        {
+          "source": "ATLAS",
+          "pointer": "/supplier/donor/sources/current/work/operation",
+          "value": "supplier.review_provenance.v01"
+        },
+        {
+          "source": "ATLAS",
+          "pointer": "/cards/S1/consumer_binding",
+          "value": "DIRECT_CAUSAL"
+        },
+        {
+          "source": "ATLAS",
+          "pointer": "/cards/T4/consumer_binding",
+          "value": "SHARED_DOMAIN_PROOF"
+        },
+        {
+          "source": "ATLAS",
+          "pointer": "/cards/S4/consumer_binding",
+          "value": "SHARED_DOMAIN_PROOF_POST_CONSUMER_CONTROL"
+        },
+        {
+          "source": "ATLAS",
+          "pointer": "/cards/S4/causal_limit",
+          "value": "Supplemental delivery controls occurred after the original consumer, not as its cause."
+        },
+        {
+          "source": "AT-CASES",
+          "pointer": "/counts/unique_experience_consumers",
+          "value": 5
+        },
+        {
+          "source": "AT-CASES",
+          "pointer": "/counts/effective_history_samples",
+          "value": 7
+        },
+        {
+          "source": "AT-CASES",
+          "pointer": "/counts/historical_model_calls",
+          "value": 5
+        },
+        {
+          "source": "AT-CASES",
+          "pointer": "/counts/new_provider_calls",
+          "value": 0
+        },
+        {
+          "source": "AT-REVIEW",
+          "pointer": "/decision",
+          "value": "ATLAS_ENGINEERING_ACCEPTED_FOR_DECLARED_FINITE_SCOPE"
+        },
+        {
+          "source": "AT-REVIEW",
+          "pointer": "/review_execution/test_reruns",
+          "value": 0
+        },
+        {
+          "source": "AT-REVIEW",
+          "pointer": "/review_execution/model_calls",
+          "value": 0
+        },
+        {
+          "source": "ATLAS",
+          "pointer": "/replay_scope",
+          "value": "SAFE_DERIVED_SAVED_RELATIONS_NOT_LIVE_AUTHORITY"
+        },
+        {
+          "source": "ATLAS",
+          "pointer": "/native_replay",
+          "value": "UNSUPPORTED_NATIVE_SCHEMA"
+        },
+        {
+          "source": "AT-EXTERNAL",
+          "pointer": "/created_on",
+          "value": "2026-09-23"
+        }
+      ]
+    }
+  ],
+  "global_non_claims": [
+    "No whole ten-axis corpus completion, deck or diagram completion is claimed by this five-case worker.",
+    "No fresh runtime observation, replay, model call, production certification or owner landing.",
+    "No green universal-property matrix: each cell has a named source/profile and limit.",
+    "The Geometry Atlas and Incident-to-Proof Atlas are distinct editorial objects.",
+    "No clock, run, task, Root instance or evidence seal is merged across the selected historical profiles.",
+    "Hashes bind bytes; they do not establish truth, present applicability or authority."
+  ]
+}

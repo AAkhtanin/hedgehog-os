@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" role="img">
+<title>ATLAS_B</title>
+<desc>Editable labelled diagram. Full text alternative in atlas/README.md.</desc>
+<metadata>{&quot;id&quot;: &quot;ATLAS_B&quot;, &quot;class&quot;: &quot;RECORDED_EXECUTION&quot;, &quot;claims&quot;: [&quot;CL02&quot;, &quot;CL03&quot;], &quot;sources&quot;: [&quot;main_pub_shift_venue_work&quot;, &quot;main_pub_shift_offer_body&quot;, &quot;main_req_shift_requester_work&quot;, &quot;negative_shift_status&quot;], &quot;assertion&quot;: &quot;The received body becomes local evidence, not transferred booking permission.&quot;, &quot;nodes&quot;: [&quot;VENUE&quot;, &quot;E&quot;, &quot;B&quot;, &quot;POINTER&quot;, &quot;STATUS&quot;, &quot;C&quot;, &quot;REQUESTER&quot;], &quot;relations&quot;: [[&quot;VENUE&quot;, &quot;E&quot;, &quot;EXECUTION&quot;], [&quot;E&quot;, &quot;B&quot;, &quot;DERIVATION&quot;], [&quot;POINTER&quot;, &quot;B&quot;, &quot;DOCUMENT_REFERENCE&quot;], [&quot;B&quot;, &quot;C&quot;, &quot;DATA&quot;], [&quot;STATUS&quot;, &quot;C&quot;, &quot;DATA&quot;], [&quot;C&quot;, &quot;REQUESTER&quot;, &quot;DATA&quot;]], &quot;meaning&quot;: &quot;Producer E precedes review and B. Received B and authenticated STATUS produce C. Requester Work consumes C before local result review. Separate BOOK is outside this exchange. Revoked STATUS stops the positive consumption lane.&quot;, &quot;omitted_scope&quot;: &quot;Release/nonce/high-water checks are described in text; not all sixteen historical cases or full signature replay are depicted.&quot;, &quot;rendering&quot;: {&quot;layout&quot;: &quot;E, B and C columns; negative status strip below; separate BOOK boundary at bottom.&quot;, &quot;graphical_arrows&quot;: [[&quot;E&quot;, &quot;B&quot;, &quot;DERIVATION&quot;], [&quot;B&quot;, &quot;C&quot;, &quot;DATA&quot;]], &quot;text_flows&quot;: [&quot;VenueRoot native Work produces E.&quot;, &quot;Address locates B; release binds delivery.&quot;, &quot;C belongs to ActivePlanetRoot Work and includes current STATUS; local result review follows.&quot;, &quot;REVOKED stops this positive consumption path. BOOK is a separate consent/action boundary.&quot;], &quot;legend&quot;: &quot;DERIVATION builds a different object; DATA transfers material for checked consumption, not permission. Other checks are text, not unlabelled graph edges.&quot;}}</metadata>
+<rect width="1280" height="720" fill="white"/>
+<text x="56" y="47" font-family="Arial, sans-serif" font-size="14" fill="#6E6E73" font-weight="400">RADIOLARIA OS  /  EDITORIAL PILOT</text>
+<text x="56" y="99" font-family="Arial, sans-serif" font-size="40" fill="#1D1D1F" font-weight="700">A result crosses; permission does not</text>
+<line x1="56" y1="650" x2="1224" y2="650" stroke="#D2D2D7" stroke-width="2"/>
+<text x="56" y="681" font-family="Arial, sans-serif" font-size="13" fill="#6E6E73" font-weight="400">ATLAS_B / RECORDED_EXECUTION / CL02-CL03 / G54D1 main + revoked_source</text>
+<text x="1130" y="681" font-family="Arial, sans-serif" font-size="14" fill="#6E6E73" font-weight="400">03 / 05</text>
+<text x="56" y="213" font-family="Arial, sans-serif" font-size="30" fill="#1D1D1F" font-weight="700">E: computed offer</text>
+<text x="56" y="255" font-family="Arial, sans-serif" font-size="21" fill="#6E6E73" font-weight="400">VenueRoot native Work</text>
+<line x1="56" y1="278" x2="392" y2="278" stroke="#D2D2D7" stroke-width="2"/>
+<text x="470" y="213" font-family="Arial, sans-serif" font-size="30" fill="#1D1D1F" font-weight="700">B: source body</text>
+<text x="470" y="255" font-family="Arial, sans-serif" font-size="21" fill="#6E6E73" font-weight="400">Offer + Work/review refs</text>
+<line x1="470" y1="278" x2="806" y2="278" stroke="#D2D2D7" stroke-width="2"/>
+<text x="884" y="213" font-family="Arial, sans-serif" font-size="30" fill="#1D1D1F" font-weight="700">C: local Work input</text>
+<text x="884" y="255" font-family="Arial, sans-serif" font-size="21" fill="#6E6E73" font-weight="400">ActivePlanetRoot consumes</text>
+<line x1="884" y1="278" x2="1220" y2="278" stroke="#D2D2D7" stroke-width="2"/>
+<line x1="402" y1="212" x2="451" y2="212" stroke="#0071E3" stroke-width="2"/>
+<line x1="442" y1="207" x2="451" y2="212" stroke="#0071E3" stroke-width="2"/>
+<line x1="442" y1="217" x2="451" y2="212" stroke="#0071E3" stroke-width="2"/>
+<text x="386.772" y="184" font-family="Arial, sans-serif" font-size="13" fill="#6E6E73" font-weight="400">DERIVATION</text>
+<line x1="816" y1="212" x2="865" y2="212" stroke="#0071E3" stroke-width="2"/>
+<line x1="856" y1="207" x2="865" y2="212" stroke="#0071E3" stroke-width="2"/>
+<line x1="856" y1="217" x2="865" y2="212" stroke="#0071E3" stroke-width="2"/>
+<text x="823.1645" y="184" font-family="Arial, sans-serif" font-size="13" fill="#6E6E73" font-weight="400">DATA</text>
+<text x="56" y="326" font-family="Arial, sans-serif" font-size="21" fill="#1D1D1F" font-weight="400">Three natural-grass slots</text>
+<text x="56" y="365" font-family="Arial, sans-serif" font-size="25" fill="#0071E3" font-weight="400">6300 / 7000 minor EUR</text>
+<text x="56" y="401" font-family="Arial, sans-serif" font-size="20" fill="#1D1D1F" font-weight="400">EUR 63 / EUR 70</text>
+<text x="470" y="326" font-family="Arial, sans-serif" font-size="21" fill="#1D1D1F" font-weight="400">Address locates material</text>
+<text x="470" y="365" font-family="Arial, sans-serif" font-size="21" fill="#1D1D1F" font-weight="400">Release binds delivery</text>
+<text x="470" y="401" font-family="Arial, sans-serif" font-size="21" fill="#1D1D1F" font-weight="400">No booking permission</text>
+<text x="884" y="326" font-family="Arial, sans-serif" font-size="21" fill="#1D1D1F" font-weight="400">Body + current ACTIVE status</text>
+<text x="884" y="365" font-family="Arial, sans-serif" font-size="21" fill="#1D1D1F" font-weight="400">Local result review</text>
+<text x="884" y="401" font-family="Arial, sans-serif" font-size="23" fill="#0071E3" font-weight="400">SHIFT: zero effects</text>
+<line x1="56" y1="452" x2="1224" y2="452" stroke="#D2D2D7" stroke-width="2"/>
+<text x="56" y="494" font-family="Arial, sans-serif" font-size="22" fill="#8D2D32" font-weight="400">REVOKED -&gt; status_not_active -&gt; Root BLOCKED_FAIL_CLOSED</text>
+<text x="56" y="532" font-family="Arial, sans-serif" font-size="19" fill="#6E6E73" font-weight="400">Native reason: hard_identity_violation. No successful consumer in that branch.</text>
+<text x="56" y="587" font-family="Arial, sans-serif" font-size="22" fill="#1D1D1F" font-weight="400">BOOK is separate: explicit consent -&gt; VenueRoot -&gt; one mock effect + receipt.</text>
+</svg>

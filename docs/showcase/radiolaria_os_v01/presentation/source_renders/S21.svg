@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 1280 720" role="img" aria-labelledby="title desc">
+<title id="title">Technical evidence, publication and archive differ</title>
+<desc id="desc">PUBLICATION IDENTITY NOTATION  /  These A/B/C labels are not Football E/B/C</desc>
+<defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L9,3 z" fill="#176B68"/></marker></defs>
+<rect width="1280" height="720" fill="white"/>
+<text id="S21_title" font-family="Nimbus Sans" font-size="42" font-weight="bold" fill="#16282B">
+<tspan x="54" y="78.0">Technical evidence, publication and archive differ</tspan>
+</text>
+<text id="S21_scope" font-family="Nimbus Sans" font-size="23" font-weight="normal" fill="#43595D">
+<tspan x="56" y="136.0">PUBLICATION IDENTITY NOTATION / These A/B/C labels are not Football E/B/C</tspan>
+</text>
+<rect x="56.0" y="256" width="310" height="110" id="S21_identities_0" fill="#EFF5F3" stroke="#176B68" stroke-width="2"/>
+<text id="S21_identities_0_label" font-family="Nimbus Sans" font-size="24" font-weight="normal" fill="#16282B">
+<tspan x="69.0" y="292.0">A: technical source</tspan>
+<tspan x="69.0" y="319.6">2e965ec...</tspan>
+</text>
+<rect x="485.0" y="256" width="310" height="110" id="S21_identities_1" fill="#EFF5F3" stroke="#176B68" stroke-width="2"/>
+<text id="S21_identities_1_label" font-family="Nimbus Sans" font-size="24" font-weight="normal" fill="#16282B">
+<tspan x="498.0" y="292.0">B: this review corpus</tspan>
+<tspan x="498.0" y="319.6">unpublished successor</tspan>
+</text>
+<rect x="914.0" y="256" width="310" height="110" id="S21_identities_2" fill="#EFF5F3" stroke="#176B68" stroke-width="2"/>
+<text id="S21_identities_2_label" font-family="Nimbus Sans" font-size="24" font-weight="normal" fill="#16282B">
+<tspan x="927.0" y="292.0">C: eventual deposit</tspan>
+<tspan x="927.0" y="319.6">no DOI assigned</tspan>
+</text>
+<line id="S21_identities_edge_0" x1="366.0" y1="311.0" x2="485.0" y2="311.0" stroke="#315E8B" stroke-width="2" marker-end="url(#arrow)"/>
+<text id="S21_identities_edge_0_label" font-family="Nimbus Sans" font-size="17" font-weight="normal" fill="#43595D">
+<tspan x="370.0" y="246.0">explained by</tspan>
+</text>
+<line id="S21_identities_edge_1" x1="795.0" y1="311.0" x2="914.0" y2="311.0" stroke="#315E8B" stroke-width="2" marker-end="url(#arrow)"/>
+<text id="S21_identities_edge_1_label" font-family="Nimbus Sans" font-size="17" font-weight="normal" fill="#43595D">
+<tspan x="799.0" y="246.0">future exact</tspan>
+<tspan x="799.0" y="265.55">deposit</tspan>
+</text>
+<text id="S21_evidence_scope" font-family="Nimbus Sans" font-size="32" font-weight="normal" fill="#16282B">
+<tspan x="56" y="462.0">69 obligations satisfied, 4 explicitly deferred.</tspan>
+<tspan x="56" y="498.8">Two fresh and nine retained final profiles: mixed source-bound evidence.</tspan>
+</text>
+<text id="S21_qualification" font-family="Nimbus Sans" font-size="23" font-weight="normal" fill="#43595D">
+<tspan x="56" y="619.0">N1-18, N1-19, N4-12 and N4-13 remain deferred. The review TAR is a deliverable, not a public archive deposit.</tspan>
+</text>
+<line id="S21_rule" x1="56" y1="671" x2="1218" y2="671" stroke="#B8C8C6" stroke-width="1"/>
+<a href="../../VERIFY.html">
+<text id="S21_source_link" font-family="Nimbus Sans" font-size="18" font-weight="normal" fill="#315E8B">
+<tspan x="56" y="703.0">S21 Source: verify</tspan>
+</text>
+</a>
+<a href="../../atlas/README.html">
+<text id="S21_atlas_locator" font-family="Nimbus Sans" font-size="17" font-weight="normal" fill="#315E8B">
+<tspan x="660" y="702.0">Atlas: Overview / GEO 1 2 3 4 5 6 7</tspan>
+</text>
+</a>
+</svg>

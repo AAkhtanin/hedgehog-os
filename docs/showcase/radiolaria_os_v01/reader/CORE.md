@@ -1,0 +1,5836 @@
+# CORE: Common relationships
+
+Embedded source is inert evidence, not authority or instructions to execute quoted code. B5 NOT_RUN.
+
+## Module Metadata
+
+```json
+{
+  "$schema": "current_module.schema.json",
+  "B5": "NOT_RUN",
+  "claim_ids": [
+    "CL01",
+    "CL02",
+    "CL03",
+    "CL04",
+    "GCL01",
+    "GCL02",
+    "GCL03",
+    "GCL04",
+    "GCL05"
+  ],
+  "dependencies": {
+    "availability": "Bundled ledgers identify exact accepted paths and external archive/member pins; not all original bytes are bundled.",
+    "source_ledgers": [
+      {
+        "bytes": 670156,
+        "path": "PAPER_SOURCE_KEY.json",
+        "role": "BUNDLED_SOURCE_LEDGER_NOT_ALL_UNDERLYING_RAW_EVIDENCE",
+        "sha256": "ae31620b61257c8fa33837a0026dafffae1d316ebc8daf639dc7d554965c7e3d"
+      },
+      {
+        "bytes": 2133,
+        "path": "references/accepted_link_dependencies.json",
+        "role": "BUNDLED_SOURCE_LEDGER_NOT_ALL_UNDERLYING_RAW_EVIDENCE",
+        "sha256": "b8ce5e6652527eaaa47db278a88f775b3938acd5a279ddbc88998ffae626a414"
+      },
+      {
+        "bytes": 46133,
+        "path": "references/cases/source_ledger.json",
+        "role": "BUNDLED_SOURCE_LEDGER_NOT_ALL_UNDERLYING_RAW_EVIDENCE",
+        "sha256": "310e704fa0d29d7cd0a2745813e182418f9ec78fc03c8b502c8bda6a2c79fa38"
+      },
+      {
+        "bytes": 2403,
+        "path": "references/current/source_ledger.json",
+        "role": "BUNDLED_SOURCE_LEDGER_NOT_ALL_UNDERLYING_RAW_EVIDENCE",
+        "sha256": "809ed345161616e40e6e7dd85af5beb98c55ccd2b0581000c626933629819828"
+      },
+      {
+        "bytes": 74208,
+        "path": "references/embedded_sources.json",
+        "role": "BUNDLED_SOURCE_LEDGER_NOT_ALL_UNDERLYING_RAW_EVIDENCE",
+        "sha256": "c24780fbf772815d539a0b484f716abc24e562d0cd08f33bd30ea69a7a65ee29"
+      },
+      {
+        "bytes": 39937,
+        "path": "references/episode_sources.json",
+        "role": "BUNDLED_SOURCE_LEDGER_NOT_ALL_UNDERLYING_RAW_EVIDENCE",
+        "sha256": "07289fb65b06e23aac2318f42e518a0132ee1e13692200ab093ef7c5f7ff849c"
+      },
+      {
+        "bytes": 21203,
+        "path": "references/ews/source_ledger.json",
+        "role": "BUNDLED_SOURCE_LEDGER_NOT_ALL_UNDERLYING_RAW_EVIDENCE",
+        "sha256": "f5741eecd90470e7a999e75faa34f9d4d62116f67a282034634e637cf520e5a9"
+      },
+      {
+        "bytes": 33815,
+        "path": "references/experience/source_ledger.html",
+        "role": "BUNDLED_SOURCE_LEDGER_NOT_ALL_UNDERLYING_RAW_EVIDENCE",
+        "sha256": "6958ed955efbf7d1a7496acf62b29d890a0e7e841511319025894eb9c17bf025"
+      },
+      {
+        "bytes": 26401,
+        "path": "references/experience/source_ledger.md",
+        "role": "BUNDLED_SOURCE_LEDGER_NOT_ALL_UNDERLYING_RAW_EVIDENCE",
+        "sha256": "9bfcf11a69a480adf2256769c45151c8f50ab68d20f66d554e2ca18cc52d5c30"
+      },
+      {
+        "bytes": 22722,
+        "path": "references/wedding/CHAIN_LEDGER.json",
+        "role": "BUNDLED_SOURCE_LEDGER_NOT_ALL_UNDERLYING_RAW_EVIDENCE",
+        "sha256": "841ff40cb8f28a9cbecfc14e0ebedfd7b763f20e2df082fe4518057790138824"
+      },
+      {
+        "bytes": 237464,
+        "path": "references/wedding/SOURCE_LEDGER.json",
+        "role": "BUNDLED_SOURCE_LEDGER_NOT_ALL_UNDERLYING_RAW_EVIDENCE",
+        "sha256": "4c7862c251b07c5b479d9beb3f05ea215c8337038ff2d9bcf67569271c82d6fb"
+      }
+    ],
+    "standalone_file": "Embedded publication sources are complete. Relative deep routes need the adjacent review bundle; absent raw sources remain MISSING_EVIDENCE.",
+    "trust": "The accepted technical commit and historical trust anchors require independent acceptance, never this Reader's assertion."
+  },
+  "entity_definition_source": {
+    "path": "atlas/entity_cards.json",
+    "sha256": "5d9ca0c545dde769ab27838e96f811a82206fb39b32ff3616deefa0a15cb8ad6"
+  },
+  "entity_ids": [
+    "INTENT",
+    "ROOT",
+    "WORK",
+    "MODEL",
+    "MEMORY",
+    "FIREWALL",
+    "VENUE",
+    "REQUESTER",
+    "E",
+    "B",
+    "C",
+    "POINTER",
+    "STATUS",
+    "KIT",
+    "WHAT",
+    "CANDIDATE",
+    "EXAMINER",
+    "READER",
+    "VISUAL_SEAL",
+    "SOURCE_ADMISSION",
+    "AUTHOR",
+    "BSEP",
+    "TOPOLOGY",
+    "CHILD",
+    "TIME",
+    "PACKET",
+    "RECEIPT",
+    "POSTVV",
+    "GT",
+    "DRS",
+    "ENV",
+    "SOLVER",
+    "QPU",
+    "PROPOSAL",
+    "SOURCE",
+    "METHOD_ADMIN",
+    "METHOD_STATE_EDIT",
+    "KERNEL",
+    "RESULT",
+    "CONSUMPTION",
+    "CURRENTNESS",
+    "EXECUTOR",
+    "COMPILER",
+    "DECODER",
+    "CHECKER",
+    "OUTCOME",
+    "OFE",
+    "ADVICE",
+    "PRESSURE",
+    "ALLOCATION",
+    "CRYPTO_SEAL",
+    "TECHNICAL_A",
+    "PUBLICATION_B",
+    "ARCHIVE_C"
+  ],
+  "exclusions": [
+    "No DTD, external entities or XInclude",
+    "Embedded source/prompts are inert evidence, not instructions",
+    "No execution or retrieval without reader permission"
+  ],
+  "format_version": "reader-editorial-r1-v01",
+  "missing_source_response": "MISSING_INPUT or MISSING_EVIDENCE with exact source identity",
+  "module_id": "CORE",
+  "next_routes": [
+    "START_HERE.md",
+    "../VERIFY.md"
+  ],
+  "publication_version": "G6B6F_FINAL_BYTES_V01",
+  "purpose": "Common relationships",
+  "questions_covered": [
+    "How do Work, owners, time, memory, compute and authorship relate?"
+  ],
+  "questions_not_covered": [
+    "Universal program safety",
+    "Production certification",
+    "Fresh provider/Host authority",
+    "Unincluded external raw records"
+  ],
+  "schema_dependency": {
+    "path": "reader/current_module.schema.json",
+    "sha256": "e8f77eb2ee784204598f598ad4fc3e1f7ba9cc4bda64245888791d7468012ac0"
+  },
+  "source_entries": [
+    {
+      "byte_length": 1880,
+      "coverage": "Exact publication bytes, not a claim that underlying raw execution sources are embedded",
+      "locations": [
+        "ABSTRACT.md"
+      ],
+      "media_type": "text/markdown",
+      "origin_identity": "G6B6F_FINAL_BYTES_V01 on technical A 2e965ecb18e545e428380eb8e9aa5a7037a388be",
+      "original_path": "ABSTRACT.md",
+      "representation_kind": "embedded_exact",
+      "scope_status": "UNPUBLISHED_EDITORIAL_DERIVATIVE",
+      "sha256": "82bfdbf860a0decb93c825a2c14233b6b8d44fa7c9e5788b4f47fd74c529f861",
+      "source_id": "CORE-S1",
+      "source_range": "complete named file",
+      "source_role": "DERIVED_VIEW",
+      "transform": "UTF-8 bytes unchanged inside source block; reversible XML escaping only"
+    },
+    {
+      "byte_length": 8226,
+      "coverage": "Exact publication bytes, not a claim that underlying raw execution sources are embedded",
+      "locations": [
+        "chapters/02_geometry.md"
+      ],
+      "media_type": "text/markdown",
+      "origin_identity": "G6B6F_FINAL_BYTES_V01 on technical A 2e965ecb18e545e428380eb8e9aa5a7037a388be",
+      "original_path": "chapters/02_geometry.md",
+      "representation_kind": "embedded_exact",
+      "scope_status": "UNPUBLISHED_EDITORIAL_DERIVATIVE",
+      "sha256": "605546c0c925a2e0227ce4bcee1c6df21ae96c17abadeb567a08700e7de78777",
+      "source_id": "CORE-S2",
+      "source_range": "complete named file",
+      "source_role": "DERIVED_VIEW",
+      "transform": "UTF-8 bytes unchanged inside source block; reversible XML escaping only"
+    },
+    {
+      "byte_length": 5821,
+      "coverage": "Exact publication bytes, not a claim that underlying raw execution sources are embedded",
+      "locations": [
+        "chapters/03_time_memory.md"
+      ],
+      "media_type": "text/markdown",
+      "origin_identity": "G6B6F_FINAL_BYTES_V01 on technical A 2e965ecb18e545e428380eb8e9aa5a7037a388be",
+      "original_path": "chapters/03_time_memory.md",
+      "representation_kind": "embedded_exact",
+      "scope_status": "UNPUBLISHED_EDITORIAL_DERIVATIVE",
+      "sha256": "1269173e193ed03b95b79c3de7d6808e8fa5e72665cc05da4798c86526c7c3be",
+      "source_id": "CORE-S3",
+      "source_range": "complete named file",
+      "source_role": "DERIVED_VIEW",
+      "transform": "UTF-8 bytes unchanged inside source block; reversible XML escaping only"
+    },
+    {
+      "byte_length": 3808,
+      "coverage": "Exact publication bytes, not a claim that underlying raw execution sources are embedded",
+      "locations": [
+        "chapters/11_integration.md"
+      ],
+      "media_type": "text/markdown",
+      "origin_identity": "G6B6F_FINAL_BYTES_V01 on technical A 2e965ecb18e545e428380eb8e9aa5a7037a388be",
+      "original_path": "chapters/11_integration.md",
+      "representation_kind": "embedded_exact",
+      "scope_status": "UNPUBLISHED_EDITORIAL_DERIVATIVE",
+      "sha256": "f2a2b28640e3a294f9f46e034601a2958e25d45b2018a734636989f821657a78",
+      "source_id": "CORE-S4",
+      "source_range": "complete named file",
+      "source_role": "DERIVED_VIEW",
+      "transform": "UTF-8 bytes unchanged inside source block; reversible XML escaping only"
+    },
+    {
+      "byte_length": 4189,
+      "coverage": "Exact publication bytes, not a claim that underlying raw execution sources are embedded",
+      "locations": [
+        "VERIFY.md"
+      ],
+      "media_type": "text/markdown",
+      "origin_identity": "G6B6F_FINAL_BYTES_V01 on technical A 2e965ecb18e545e428380eb8e9aa5a7037a388be",
+      "original_path": "VERIFY.md",
+      "representation_kind": "embedded_exact",
+      "scope_status": "UNPUBLISHED_EDITORIAL_DERIVATIVE",
+      "sha256": "440773f9186c1cce0449102c3c32f68f1f0e8bc182720720450ba942875ae5b8",
+      "source_id": "CORE-S5",
+      "source_range": "complete named file",
+      "source_role": "DERIVED_VIEW",
+      "transform": "UTF-8 bytes unchanged inside source block; reversible XML escaping only"
+    },
+    {
+      "byte_length": 4029,
+      "coverage": "Exact publication bytes, not a claim that underlying raw execution sources are embedded",
+      "locations": [
+        "chapters/04_compute.md"
+      ],
+      "media_type": "text/markdown",
+      "origin_identity": "G6B6F_FINAL_BYTES_V01 on technical A 2e965ecb18e545e428380eb8e9aa5a7037a388be",
+      "original_path": "chapters/04_compute.md",
+      "representation_kind": "embedded_exact",
+      "scope_status": "UNPUBLISHED_EDITORIAL_DERIVATIVE",
+      "sha256": "2f529d440a476f85aee4e65f1b015d8039b06d953f47676890e23062c5d043b4",
+      "source_id": "CORE-S6",
+      "source_range": "complete named file",
+      "source_role": "DERIVED_VIEW",
+      "transform": "UTF-8 bytes unchanged inside source block; reversible XML escaping only"
+    },
+    {
+      "byte_length": 11280,
+      "coverage": "Exact publication bytes, not a claim that underlying raw execution sources are embedded",
+      "locations": [
+        "chapters/05_experience.md"
+      ],
+      "media_type": "text/markdown",
+      "origin_identity": "G6B6F_FINAL_BYTES_V01 on technical A 2e965ecb18e545e428380eb8e9aa5a7037a388be",
+      "original_path": "chapters/05_experience.md",
+      "representation_kind": "embedded_exact",
+      "scope_status": "UNPUBLISHED_EDITORIAL_DERIVATIVE",
+      "sha256": "5c361836ff5d4d5afe6bfcb3b1c51185f918e465ed4c69e266a809b25d8c70a6",
+      "source_id": "CORE-S7",
+      "source_range": "complete named file",
+      "source_role": "DERIVED_VIEW",
+      "transform": "UTF-8 bytes unchanged inside source block; reversible XML escaping only"
+    },
+    {
+      "byte_length": 18497,
+      "coverage": "Exact publication bytes, not a claim that underlying raw execution sources are embedded",
+      "locations": [
+        "atlas/ENTITIES.md"
+      ],
+      "media_type": "text/markdown",
+      "origin_identity": "G6B6F_FINAL_BYTES_V01 on technical A 2e965ecb18e545e428380eb8e9aa5a7037a388be",
+      "original_path": "atlas/ENTITIES.md",
+      "representation_kind": "embedded_exact",
+      "scope_status": "UNPUBLISHED_EDITORIAL_DERIVATIVE",
+      "sha256": "18b09f89e3f424ac0f8accb2652984620b4af9a545b557088e57cb59477ef151",
+      "source_id": "CORE-S8",
+      "source_range": "complete named file",
+      "source_role": "DERIVED_VIEW",
+      "transform": "UTF-8 bytes unchanged inside source block; reversible XML escaping only"
+    },
+    {
+      "byte_length": 110275,
+      "coverage": "Exact publication bytes, not a claim that underlying raw execution sources are embedded",
+      "locations": [
+        "CASE_MATRIX.md"
+      ],
+      "media_type": "text/markdown",
+      "origin_identity": "G6B6F_FINAL_BYTES_V01 on technical A 2e965ecb18e545e428380eb8e9aa5a7037a388be",
+      "original_path": "CASE_MATRIX.md",
+      "representation_kind": "embedded_exact",
+      "scope_status": "UNPUBLISHED_EDITORIAL_DERIVATIVE",
+      "sha256": "288205a94e1cd327e7ad72acbd9e1955e23524e95abc8cca5a6f03b797233746",
+      "source_id": "CORE-S9",
+      "source_range": "complete named file",
+      "source_role": "DERIVED_VIEW",
+      "transform": "UTF-8 bytes unchanged inside source block; reversible XML escaping only"
+    },
+    {
+      "byte_length": 30803,
+      "coverage": "Exact publication bytes, not a claim that underlying raw execution sources are embedded",
+      "locations": [
+        "CONTRIBUTIONS_GLOBAL.md"
+      ],
+      "media_type": "text/markdown",
+      "origin_identity": "G6B6F_FINAL_BYTES_V01 on technical A 2e965ecb18e545e428380eb8e9aa5a7037a388be",
+      "original_path": "CONTRIBUTIONS_GLOBAL.md",
+      "representation_kind": "embedded_exact",
+      "scope_status": "UNPUBLISHED_EDITORIAL_DERIVATIVE",
+      "sha256": "2275543d3adfb21a99ab51987abf0dbc9d843622527a14a4c8f7b23b3abcd61d",
+      "source_id": "CORE-S10",
+      "source_range": "complete named file",
+      "source_role": "DERIVED_VIEW",
+      "transform": "UTF-8 bytes unchanged inside source block; reversible XML escaping only"
+    },
+    {
+      "byte_length": 31595,
+      "coverage": "Exact publication bytes, not a claim that underlying raw execution sources are embedded",
+      "locations": [
+        "atlas/entity_cards.json"
+      ],
+      "media_type": "application/json",
+      "origin_identity": "G6B6F_FINAL_BYTES_V01 on technical A 2e965ecb18e545e428380eb8e9aa5a7037a388be",
+      "original_path": "atlas/entity_cards.json",
+      "representation_kind": "embedded_exact",
+      "scope_status": "UNPUBLISHED_EDITORIAL_DERIVATIVE",
+      "sha256": "5d9ca0c545dde769ab27838e96f811a82206fb39b32ff3616deefa0a15cb8ad6",
+      "source_id": "CORE-S11",
+      "source_range": "complete named file",
+      "source_role": "DERIVED_VIEW",
+      "transform": "UTF-8 bytes unchanged inside source block; reversible XML escaping only"
+    },
+    {
+      "byte_length": 29792,
+      "coverage": "Exact publication bytes, not a claim that underlying raw execution sources are embedded",
+      "locations": [
+        "atlas/views.json"
+      ],
+      "media_type": "application/json",
+      "origin_identity": "G6B6F_FINAL_BYTES_V01 on technical A 2e965ecb18e545e428380eb8e9aa5a7037a388be",
+      "original_path": "atlas/views.json",
+      "representation_kind": "embedded_exact",
+      "scope_status": "UNPUBLISHED_EDITORIAL_DERIVATIVE",
+      "sha256": "5fb8345ee38a105f4e8a570f77f37eceed554e43823c53a5052fb0f05c7ec0ca",
+      "source_id": "CORE-S12",
+      "source_range": "complete named file",
+      "source_role": "DERIVED_VIEW",
+      "transform": "UTF-8 bytes unchanged inside source block; reversible XML escaping only"
+    },
+    {
+      "byte_length": 3333,
+      "coverage": "Exact publication bytes, not a claim that underlying raw execution sources are embedded",
+      "locations": [
+        "MATH_NOTATION.md"
+      ],
+      "media_type": "text/markdown",
+      "origin_identity": "G6B6F_FINAL_BYTES_V01 on technical A 2e965ecb18e545e428380eb8e9aa5a7037a388be",
+      "original_path": "MATH_NOTATION.md",
+      "representation_kind": "embedded_exact",
+      "scope_status": "UNPUBLISHED_EDITORIAL_DERIVATIVE",
+      "sha256": "8d64ee37c992360757d433ebaa210543f77aecf26727860a3133bfbd790ddc58",
+      "source_id": "CORE-S13",
+      "source_range": "complete named file",
+      "source_role": "DERIVED_VIEW",
+      "transform": "UTF-8 bytes unchanged inside source block; reversible XML escaping only"
+    },
+    {
+      "byte_length": 62657,
+      "coverage": "Exact publication bytes, not a claim that underlying raw execution sources are embedded",
+      "locations": [
+        "PAPER_SOURCE_KEY.md"
+      ],
+      "media_type": "text/markdown",
+      "origin_identity": "G6B6F_FINAL_BYTES_V01 on technical A 2e965ecb18e545e428380eb8e9aa5a7037a388be",
+      "original_path": "PAPER_SOURCE_KEY.md",
+      "representation_kind": "embedded_exact",
+      "scope_status": "UNPUBLISHED_EDITORIAL_DERIVATIVE",
+      "sha256": "d67186fe31cc18c86e017e0ab1a28540624d710bc4db0e8154f92e362e31c4da",
+      "source_id": "CORE-S14",
+      "source_range": "complete named file",
+      "source_role": "DERIVED_VIEW",
+      "transform": "UTF-8 bytes unchanged inside source block; reversible XML escaping only"
+    }
+  ],
+  "status": "EDITORIAL_REVIEW_NOT_B5_TESTED",
+  "technical_basis": {
+    "approved_deferments": [
+      "N1-18",
+      "N1-19",
+      "N4-12",
+      "N4-13"
+    ],
+    "branch": "main",
+    "campaign": "TWO_FRESH_NINE_RETAINED",
+    "commit": "2e965ecb18e545e428380eb8e9aa5a7037a388be",
+    "parent": "b6d11f5fcb619a10e877bbaaf6770881be315f16",
+    "repository": "AAkhtanin/hedgehog-os",
+    "satisfied_obligations": 69,
+    "status": "G6A_TECHNICAL_READY; GATE6_NOT_CLOSED",
+    "technical_manifest_sha256": "9b5f6b856522c97dc1722f0edb4461d0e9cec2c0ac483d9cecf85ae1ab39efd4",
+    "total_obligations": 73,
+    "tree": "59a43cc0da470886804aab6c9af87fe17dfbd685"
+  },
+  "token_inventory": {
+    "counts": {
+      "publication_file_blocks": 14,
+      "raw_execution_source_count": "NOT_INFERRED_FROM_PUBLICATION_BLOCKS"
+    },
+    "embedded_source_bytes": 326185,
+    "embedded_source_estimated_tokens": 81546.25,
+    "estimated_or_measured": "ESTIMATED_TOKENS_MEASURED_BYTES",
+    "estimator": "UTF-8 bytes / 4",
+    "method_version": "byte-quarter-v01",
+    "packet_counts": "current_inventory.json (external to packet to avoid self-hash/length cycles)",
+    "response_reserve": "Not allocated; actual model/question/answer budget remains B5 work",
+    "system_and_history_assumptions": "Unknown until separately authorized B5; no universal context limit"
+  },
+  "topic": "Common relationships"
+}
+```
+
+## Source Block ABSTRACT.md
+
+````text
+# Radiolaria OS
+
+## Computing, Assembled Around Intent
+
+Practical AI applications must coordinate useful work while requirements, resources and permissions change. Radiolaria OS provides an execution kernel for this activity. Semantic participants propose task meaning; runtime materializes bounded Work; programs, services and numerical tools contribute typed results. Local owners retain decisions about acceptance and consequential actions. An integration supplies domain knowledge, capabilities and validation rather than granting a model unrestricted control.
+
+The reference cases expose complementary relationships. Football connects a permitted schedule change to another owner's computed offer and a separately authorized mock booking. Wedding follows model-returned fields into actual computation, and historical quantum measurements through original-condition checks, consumption and separate saves. Ephemeral Workspace adapts media work after audio loss while retaining photo results, then completes its resource cleanup. Finite experience profiles change subsequent inspection or allocation without making advice a permission. External authorship demonstrates a separately examined domain implementation whose author did not acquire admission authority.
+
+The contribution is a common organization of execution, continuation and extension, not a substitute for domain expertise, numerical methods or deployment safeguards. Source-linked records make each case and its limits inspectable. The evidence combines explicitly distinguished fresh and historical profiles, including controlled execution, captured provider responses and mock effects; it establishes neither universal security nor quantum advantage. The resulting application kernel gives integrators a concrete basis for applications in which intelligence contributes to work without owning its consequences.
+````
+
+## Source Block chapters/02_geometry.md
+
+````text
+# One Activity, Seven Views
+
+An activity is not adequately described by a single sequence of boxes. Work may be nested, two owners may review different aspects independently, and retained material may outlive the process that produced it. The Geometry Atlas therefore asks seven questions about the same stable entities. It is not a new runtime architecture and it is separate from the Incident-to-Proof Atlas, which classifies finite boundary controls.
+
+## Composition Is Material, Not a Drawing
+
+An intention enters a local Root intake boundary. Routing and semantic participants propose bounded structure; runtime materializes its own execution topology. The semantic membrane, BSEP, controls the meanings and side-specific projections exchanged. A topology is an execution structure, not an authorization. Work invokes actual capabilities with typed inputs and produces results and evidence. Downstream consumption must identify the field and result actually used; a report that merely names an upstream program is not enough.
+
+Nested Work allows a parent to consume results from child cells. Retained execution can combine an unchanged historical child result with a recomputed selected child result in the prescribed parent-slot order. This supports local change without rewriting unaffected history. It does not establish a universal recursive planner. The experience chapter distinguishes the concrete retained-work and missing-capability mechanisms from the stronger, unexecuted picture of arbitrary child-local memory search.
+
+## Owners Are Not Stages in a Hierarchy
+
+Root denotes a role/type: the sole local final and commit authority. VenueRoot and ActivePlanetRoot are separate instances with different sources and decisions. In the Airline profile, client, airline and bank remain independent. An airline offer, a bank authorization reference and a client's intent can inform a transaction without making one owner the superior business Root of the others.
+
+Route acceptance, result acceptance and action commitment also differ. A model or orchestrator proposes; Post V&V checks; GT advises; Root decides. A consequential effect requires a current scoped ActionCommitPacket and the exclusive Effect Firewall/bounded Corridor. EvidenceReceipt records what happened. Neither the receipt nor a previous ACCEPT creates a reusable permission to repeat it. Source admission is a further, design-time boundary: reviewed code can be installed under a separately authorized repository operation, but that gives it no current runtime action permission. [R-ARCH](../PAPER_SOURCE_KEY.md#r-arch)
+
+## The Atlas Questions
+
+The [common overview](../atlas/OVERVIEW.md) links activity, retained context and local decisions. Its locator opens the seven views below. MODEL is a participant, PROPOSAL its returned object, and BSEP the side-specific semantic membrane. TIME is separate from MEMORY; SOLVER is separate from the original-condition CHECKER. VISUAL_SEAL and CRYPTO_SEAL name different objects. These are editorial aliases, not new runtime types.
+
+GEO-1 follows intention into proposal, nested Work, actual materialization and a changed configuration. GEO-2 distinguishes ownership, review, execution and source admission. GEO-3 follows birth, waiting, change, refusal, continuation, consumption and ending through separate lifecycles. GEO-4 follows meaning, address, owner-held material, provenance and local or external memory. GEO-5 places semantic models, code, solvers, devices and remote computation in their actual environments. GEO-6 shows how outcomes affect advisory choice and Work expenditure. GEO-7 separates external creation of an extension from its independent examination and later use.
+
+Every diagram labels relationships: DATA is not PERMISSION; PROPOSAL is not EXECUTION; DOCUMENT_REFERENCE is not DERIVATION. ROOT remains the type, while VENUE and REQUESTER keep their concrete identities across views. Historical pilot A maps to part of GEO-1/GEO-2, B to a fragment of GEO-3/GEO-4, and C to the starting point of GEO-7. They do not substitute for the full Atlas.
+
+These views explain why different capabilities can participate in one task. The kernel supplies common relationships; profiles supply domain-specific meanings. A renderer and a quantum sampler need not become interchangeable, and their raw outputs need not have the same schema. What can be shared is an explicit path from a bounded input to a checked result, actual consumption and a new local decision. The diagrams are conceptual unless an inset explicitly identifies a recorded profile; visual similarity is not evidence that an execution occurred.
+
+## Delegating Work Does Not Delegate Final Authority
+
+A parent may invoke bounded child Work and consume its actual result. That is a useful execution relationship, not a transfer of final authority. The child remains constrained by its admitted contract, scope and budget. Creating another node does not enlarge those bounds or make the node a Root. One Root per child is neither required nor implied.
+
+The same distinction holds across owners. If owner A permits B to use a particular result, B cannot thereby grant C A's access or effect rights. C needs its own lawful basis at the relevant boundary. Legitimate bounded delegation remains possible; an owner's reviewed scoped operation is different from inheriting the owner's position. No top-level diagram box is a SuperRoot. [R-ARCH](../PAPER_SOURCE_KEY.md#r-arch)
+
+### Invariants, Carriers and Selected Witnesses
+
+These eight families summarize accepted law, not a new universal test result. The rule/carrier/check columns are normative or explanatory; the last column selects recorded positive and adverse witnesses, not a fresh run or proof of every possible application. The [exact accepted lock](../references/current/current_architecture_lock_v01.md), sections 3-7, is the common source; profile-specific keys resolve each witness.
+
+| Rule and accepted section | Carrier and point of check | Selected lawful / adverse witness |
+| --- | --- | --- |
+| Proposal is not authority, sections 3-4 | BSEP and ResultProposal; local validation and Root review | Wedding accepted revision versus rejected incoherent proposal; W-W3 and W-C3 |
+| Topology is execution structure, section 4 | RuntimeExecutionTopology; locally materialized inputs and exact consumption | Retained changed child consumed while unaffected history survives; X-TD-NAV (historical source route, not raw proof embedded here) |
+| Child work stays bounded, section 4 | Child contract, input, scope and budget; caller and runtime checks | Finite retained child result versus missing/mismatched dependency; X-TD-NAV (historical source route, not raw proof embedded here) |
+| Owners decide independently, section 5 | Owner-local source, decision and transaction | Venue offer consumed by requester; REVOKED source refused; F01-F04 |
+| Effect needs exact current permission, section 6 | Root packet, Host capture, Firewall, idempotency | Mock BOOK receipt versus refusal of stale/currently invalid material; F01-F04 |
+| Receipt does not authorize another action, section 6 | Receipt and ledger remain historical evidence | EWS approved sidecar write versus stale packet refusal; WS-P_temporal, WS-P_save_packet, WS-P_save_receipt |
+| Memory is not current permission, section 7 | TemporalQuery, eligibility and fresh local review | G6A N4-04 cold/warm reuse: domain executions 1/0; current reads and Root checks remain. [E08](../PAPER_SOURCE_KEY.md#e08). Policy and nested-memory witnesses are separately indexed as [E09](../PAPER_SOURCE_KEY.md#e09) and [E11](../PAPER_SOURCE_KEY.md#e11). |
+| Source admission is independent of runtime authority | Exact reviewed implementation identity and repository admission; no stored runtime grant | Authorized correction four followed by independent exam, while G54B1/G54D remain INCOMPLETE; R-AUTHOR, R-KIT |
+
+The source-admission row is a design-time boundary, documented by the lock's Repository Transition Review Boundary and the cited authoring sources. It is not derived from a business receipt. Specific evidence selectors and limits remain in the structured source key; a witness illustrates its named profile only.
+````
+
+## Source Block chapters/03_time_memory.md
+
+````text
+# History Remains; Current Use Must Qualify
+
+Useful continuation depends on two apparently conflicting properties: history must remain stable, and present eligibility must change. A payment receipt should not be rewritten when a subscription expires. A photograph preview can remain correct when an unrelated audio process fails. A signed source can remain historically authentic after its current status becomes REVOKED. Radiolaria keeps these questions separate rather than forcing one mutable "valid" flag to represent all of them.
+
+## Several Clocks and Several Lifetimes
+
+Time envelopes bind validity and observations to the relevant profile. Testflix's recorded Atlas control uses integer logical UTC seconds and strict evaluation before valid_to; an exact-deadline attempt refuses without executor work. Football also records fractional UTC observations of production, review, publication, receipt and consumption. Those observation timestamps are not its logical test clock or validity interval. Equal printed whole seconds do not prove ordering.
+
+The accepted historical object is not a current Host. A captured response or serialized evidence file cannot reconstruct authority after a process dies. Public supplied validation can inspect historical meaning under its declared mode; a new action still needs current source/capture and Root conditions. This matters in a long-running activity: waiting, suspension, observation refresh and continuation do not silently extend a prior packet. In EWS, the old packet fails after audio loss even though a fresh changed-source observation later supports legitimate continuation.
+
+## Address, Material and Permission
+
+A DRS address or descriptor points to material. It is not the material, and finding it is not permission to open or use it. The owner controls disclosure and descent. Local DRS can retain summaries and source-bound results; External DRS adds exchange across ownership boundaries. The receiving side must establish what was delivered, its source and applicable current status, then form its own consuming context and decision.
+
+Football provides explicit objects rather than a metaphor. E is the producer Work's offer. B contains that value plus review/provenance and temporal material. C contains B plus the independently constructed currentness projection used by requester Work. The checked relationships are B.offer=E and C.body=B. They do not make E, B and C the same object or give their serialized forms equal bytes. The consuming field and Work invocation complete the evidence chain.
+
+## Memory Within the Task
+
+Memory may be needed after the outer intake, inside a Work item or during continuation. The common composition implementation can observe a missing pure capability at a particular Work/input/current revision; local DRS discovery, current eligibility and Root-reviewed descent precede independent readmission and use. A stored program is therefore neither automatically installed nor automatically isolated. The bounded pure capability profile has explicit restrictions, not a promise about arbitrary Python.
+
+Retained child results offer a different form of memory. Their historical fields and causal origin remain bound while selected descendants are recomputed. The parent must consume the correct canonical result order; validating the final result is not permission to substitute a different intermediate prefix. The technical chapter's source ledger records which claims are implemented mechanisms and which are test/checkpoint evidence. Arbitrary recursive child-memory activity remains a generalization, not an observed trace in these pages.
+
+## Ending Does Not Erase the Meaning
+
+An environment can end while an approved sidecar, a receipt, or a summary remains inspectable. EWS separately requests saving, approves exact bytes and scope, writes a selection sidecar, then reaps owned processes and clears only its own unchanged cache files. A killed child receives no invented graceful-close receipt. Historical retrieval uses fresh review of the stored information; it does not recreate a closed workspace's authority.
+
+The practical benefit is continuity with renewed grounds for use. Retained work reduces avoidable recomputation only when the current bindings still fit. Negative experience can recommend different scrutiny, not permanently revoke unrelated work. A digest proves a byte relationship under the chosen algorithm; a signature supports origin within its trust scheme. Neither establishes truth, current applicability, or the owner's permission by itself.
+
+Source routes: [E09](../PAPER_SOURCE_KEY.md#e09); [E11](../PAPER_SOURCE_KEY.md#e11); [WS-P_memory](../PAPER_SOURCE_KEY.md#ws-p_memory).
+
+## Accepted Definition Route
+
+The accepted lock section 7 binds current retrieval to an explicit TemporalQuery and distinguishes immutable superseded history from current eligibility. Chapter 08's observed/received/validity fields are profile-local, not a universal wall clock. The exact general time definitions are indexed by R-CONTRACT in the structured source key; the bundled lock provides the common normative rule. A past result can remain informative while a current use requires fresh scope, policy and Root review. See [R-ARCH](../PAPER_SOURCE_KEY.md#r-arch) and [R-CONTRACT](../PAPER_SOURCE_KEY.md#r-contract).
+
+The exact accepted [TemporalQuery schema](../references/current/temporal_query.schema.json) requires as_of and freshness_bias; its historical_as_of, prefer_recent, strict_current and policy-conditional mode remain distinct. [Common definitions](../references/current/common.schema.json), /$defs/Timestamp and /$defs/TimeRange, define date-time strings and nullable interval endpoints. These definitions constrain the representation, not a claim that every profile uses one universal clock.
+````
+
+## Source Block chapters/11_integration.md
+
+````text
+# Build a Profile; Do Not Rebuild the Authority Law
+
+An application team does not start by replacing the kernel. It defines the subject matter that the kernel cannot infer safely: schemas, owner identities, available capabilities, actual sources, scope and time rules, effect adapters, and an examiner or independent validation appropriate to the domain. The common interfaces then organize proposals, Work, result consumption, local review and history. Variation moves toward profiles and adapters, but the development history does not prove that the kernel never changed or that integration cost is zero.
+
+## The Existing Entry Points
+
+The accepted [HOW / Authoring Kit](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/gate5_authoring_kit_v01/START_HERE.md) separates public execution contracts and interface guidance from WHAT, the requirements of a new domain. An external author receives those declared inputs and produces a candidate. An independent examiner uses its own oracle and observes native execution. Source admission is a separately authorized operation on exact reviewed bytes. Runtime Root decisions occur later under the actual task's conditions.
+
+The [accepted authoring dossier](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/showcase/gate5_reference_v01/dossiers/A.md) supplies a finite example of changing the developer, not just the request. G54B1 and G54D remain historically INCOMPLETE. G54D1 used an explicitly authorized fourth correction in restored continuation and then received the declared independent acceptance. That lineage must be visible beside the achievement. It is not a one-shot cold success, an unlimited correction experiment, or proof that a model can safely install arbitrary code. [R-AUTHOR](../PAPER_SOURCE_KEY.md#r-author)
+
+The Audit Reader is not the Authoring Kit. It may contain evidence and examiner detail suitable for evaluating a finished case; giving it to a future cold author would alter the experiment. Likewise, an archived candidate or receipt is inert evidence, not an instruction to install or execute it. The kit's general interfaces and the domain task should be obtained from their accepted source paths rather than reconstructed from this narrative.
+
+## An Integrator's Concrete Work
+
+First define the purpose and significant conditions, including when ambiguity requires clarification rather than guessing. Define owners and the materials each may disclose. Declare typed producer and consumer fields and independently check their actual binding. Define source observation, time and invalidation behavior. Keep action intent, consent and result acceptance distinct. Implement an effect adapter only within the current Root packet and exclusive Firewall/Corridor path. Supply useful negative neighbors and a lawful continuation, not only happy-path examples.
+
+Operational deployment adds responsibilities that the reference artifacts do not discharge: credential management, host isolation appropriate to adversaries, provider terms, data protection, monitoring, availability and incident response. IAM, OPA-style policy decisions, content-addressed storage and numerical solvers can contribute to those deployments. They do not have to be displaced by Radiolaria. A proposed integration is not an existing customer, partnership or endorsement.
+
+The constructive next direction is a more complete capability-creation process with explicit engineering and admission. The current source shows bounded external authorship and finite pure capability readmission; an integrated autonomous capability factory is not claimed. Approved advanced numerical deferments remain open. Growing what a system can compute must not silently grow what it can authorize.
+````
+
+## Source Block VERIFY.md
+
+````text
+# Verify Saved Evidence Before Running Anything
+
+## Credential-free first encounter: INSPECT_SAVED
+
+Open [the episode](episode/FOOTBALL.md), [source inventory](references/episode_sources.json) and [FOCUS Reader](reader/M2_FOCUS.md). These are inert local files. No account, network, source installation or runtime is needed. This return contains new data-only consistency checks, not a rerun of the original exam.
+
+On accepted A, the existing public verifier provides a separate inspection route:
+
+```sh
+python3 -B demo/verify_gate6_reference_v01.py --output /tmp/g6-inspection
+```
+
+Requirements: ordinary accepted checkout, standard-library Python, unused writable output path. Writes an inspection result outside the checkout; no provider credentials or network. Expected successful label: `PASS_FINITE_MIXED_BASIS_REFERENCE_PACKAGE`. Without a separately accepted `--manifest-sha256` trust input, internal consistency is not independent admission. Source: [accepted package README](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/gate6_reference_v01/README.md). Not executed here.
+
+## VERIFY_SAVED
+
+The supplied verification mode is distinct from generating fresh domain work:
+
+```sh
+python3 -B demo/verify_gate6_reference_v01.py --mode supplied --output /tmp/g6-supplied
+```
+
+Requires the declared installed dependencies and the accepted **detached bounded operator with a 600-second ceiling**, as stated in the package README. Do not launch it as an unbounded terminal foreground job. It writes a new result directory, starts 13 pure workers and two historical G5 children, and consumes saved data. The accepted installed proof took **126.26431604102254 seconds**; that is retained evidence, not a timing promise or fresh measurement here. Installed canonical result: 4762744 bytes, SHA-256 `55d17fd2c22f2860b4250ae7d795395b60407ae952b9d66d82b334c110758c01`.
+
+## RUN_DETERMINISTIC_REFERENCE
+
+To generate a fresh deterministic profile, use the documented composition entrypoint, with separately prepared current inputs, not a invented convenience command:
+
+```sh
+"$PYTHON" -B -m demo.run_gate6_reference_v01 execute \
+  --profile G51 --inputs "$INPUTS" --output "$FRESH_OUTPUT"
+```
+
+`INPUTS` is JSON keyed by profile; G51 needs an absolute `scenario_dir`. This is actual native work, not a free inspection. It requires dependencies and bounded local resources; writes receipts/artifacts outside checkout; no LLM is implicit. Football additionally requires its reviewed image, Docker endpoint and operator configuration. The public [execution document](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/gate6_reference_execution_v01.md) specifies those prerequisites. All commands are documentation only in this B3 review.
+
+## RUN_LIVE_OPTIONAL
+
+Live evidence requires separately authorized provider/network credentials, a reviewed model and explicit budget; it must not silently fall back to controlled output. The accepted [model budget note](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/gate6_reference_execution_v01.md) and [technical handoff](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/gate6_reference_v01/PUBLICATION_HANDOFF.md) preserve the bounded Gemini contrast and honest source origins. This review provides **no ready-to-run live generation command**: absent current credentials, manifest paths and owner budget would make such a command misleading. Preparation and saved replay are not live execution. No model or countTokens call is made here.
+
+## Trust and reproducibility
+
+Use the accepted A commit and detached technical manifest SHA-256 `9b5f6b856522c97dc1722f0edb4461d0e9cec2c0ac483d9cecf85ae1ab39efd4` as independently supplied provenance, not merely a digest asserted by the packet. The outer return manifest proves packaging consistency. The independent examiner remains a separate historical source; the new finite checks compare parent-held inputs, observed wire bytes, Work invocation values and source readback. They do not import the candidate or revalidate signatures today.
+````
+
+## Source Block chapters/04_compute.md
+
+````text
+# Different Participants, One Accountable Activity
+
+The computer around an intention is not a single LLM. Semantic models can interpret a request or propose obligations. Ordinary code can transform media, evaluate a contract or calculate an exact rational. A solver can search a finite feasible set. A device or service can supply an observation or perform a bounded operation. A remote QPU can return measured candidates. Their competencies differ; the execution account must show which participant did which work and how its result became useful.
+
+## Meaning Can Participate During Execution
+
+Wedding is a direct example. The orchestrator returns a task kind and needs; the requirement architect returns an objective and amendments. Those actual fields enter accepted local material and the compiler's input. KEEP_FAMILIAR and MIX_CIRCLES produce different seating arrangements under the same hard constraints. Later SR2 replaces two added placement conditions, and SR3 validates the existing result without another search. The model is not merely an external program author, and it does not select or authorize the hardware backend by implication.
+
+The source origin must survive this explanation. Selected A and SR1 native episodes consume genuine prior captures through reexecution. B, VERIFY, AMBIGUOUS, SR2 and SR3 retain their separate LIVE_ROLE_ORIGIN records. Pure native llm=0 counters do not mean that the historical semantic acquisition had no provider calls. Conversely, reading those captures for this publication makes no new live call.
+
+## Numerical Candidates Need Original-Condition Checks
+
+W4 uses a separately bound original problem and an explicitly chosen backend. The raw Rigetti sample, logical bit order, decoded seating, original-condition validation, selected result, native consumption and saved bytes have separate identities. A successful provider response includes invalid samples. Classical checks reject them; selection does not repair their seating. The selected valid sample matching a recorded optimum establishes a finite result, not quantum advantage or general device reliability.
+
+The exact formalization belongs with its profile. Wedding defines binary guest/table indicators and nonnegative integer hard penalties; the objective expresses familiarity or mixing. G3/G4 uses fixed-point advisory scores and budget apportionment, not seating penalties. Calibration uses an exact reduced rational in abstract input units. One shared diagram must not imply one numerical law for all these computations.
+
+## Environments Also Differ
+
+EWS materializes local services, a preview and controls for a finite task. Football's independent examination uses reviewed reference code and a declared container/runner boundary. Wedding's QPU is remote; the native consumer and save boundary remain local. These are distinct process, host and trust arrangements. A local mock effect is not a real purchase, and a local process check is not hardware remote attestation.
+
+An integrator chooses and implements the supported adapters. IAM or policy engines can protect a service; a solver can remain a solver. Radiolaria supplies relationships for proposal, observation, Work, review, current action and history. It does not demonstrate automatic provider discovery or make all external dependencies safe. Optional semantic participation can be unavailable while a local profile continues useful work, as the Sentinel control illustrates; that finite result does not establish a real-time safety bound for every deployment.
+
+The benefit is compositional rather than competitive: use the right computational participant for the admitted subproblem, then retain an inspectable account of its actual contribution. Better intelligence expands useful proposals only when the surrounding material, validation and decisions remain explicit.
+
+Source routes: [W-W2](../PAPER_SOURCE_KEY.md#w-w2); [W-Q2](../PAPER_SOURCE_KEY.md#w-q2); [W-Q3](../PAPER_SOURCE_KEY.md#w-q3); [R-CONTRACT](../PAPER_SOURCE_KEY.md#r-contract).
+````
+
+## Source Block chapters/05_experience.md
+
+````text
+# Experience, Choice and the Cost of Continuing Work
+
+Radiolaria's useful memory is not merely a transcript. Within accepted finite profiles, an earlier result can change which review is proposed, where inspection work is spent, or whether an unchanged informational calculation needs repeating. The practical objective is to preserve useful work as activity continues without preserving yesterday's permission. Experience helps organise the next computation; the current owner still decides what may happen.
+
+This chapter describes accepted source at `2e965ecb18e545e428380eb8e9aa5a7037a388be`, using separately identified recorded executions. It does not claim a new run. The G6A evidence index distinguishes original, reviewed historical, and current retained-obligation sources; they are not one composite execution. Source and check references below resolve through the companion [ledger](../references/experience/source_ledger.md). [E01](../PAPER_SOURCE_KEY.md#e01)
+
+## What an Outcome Can Teach
+
+An Outcome Feedback Envelope distinguishes the quality of advice, the task outcome and enforcement. A bad proposal blocked correctly is negative evidence about that advice and positive evidence about the boundary, not a successful business action. Missing prospective expectations are not retrospectively manufactured. In the retained G35 five-domain report, fourteen unique occurrences yield zero scorable observations; those sources do not justify numerical learning merely because they contain completed work or refusals. [E02](../PAPER_SOURCE_KEY.md#e02), [E04](../PAPER_SOURCE_KEY.md#e04)
+
+The G36R Supplier episode provides the more specific learning mechanism. Its ADV-3 record has `UNSAFE` advice, `BLOCKED_AS_REQUIRED` enforcement and `SAFE_NO_DEAL`, at `CURRENTNESS`, without a Firewall decision or effect receipt. Two earlier prepared-but-undispatched cases are `NO_UPDATE`. One eligible negative occurrence produces a sparse history, subsequently consumed through current local DRS/Root review. The selected review changes from `standard` to `provenance`; actual `supplier.review_provenance.v01` Work consumes the full bound material. A separate lawful continuation completes with one mock effect. The refusal therefore informs later scrutiny without becoming a permanent ban or a transferable authorisation. [E03](../PAPER_SOURCE_KEY.md#e03)
+
+That episode is historical captured reexecution of previously acquired provider-origin material. Its report's `LIVE_OBSERVATION` label must be read with the history lane `CAPTURED_REEXECUTION`; it is not a fresh provider call. Nor should it be joined to the separate controlled Airline experiment below as one task. [E03](../PAPER_SOURCE_KEY.md#e03)
+
+The numerical representation uses exact integers with scale `Q = 1,000,000,000`. A normalised value is its stored integer divided by Q; these are dimensionless advisory quantities, not calibrated probabilities of safety. Signed rational rounding, `RHE`, means nearest integer with ties to even. For an eligible source-bound event, the implemented rating update is:
+
+```text
+R_next = clamp(R + RHE(125000000 * (O - E) / Q), 0, Q)
+```
+
+Here `R` and prospective expectation `E` are integers in `[0,Q]`; observed result `O` is either `0` or `Q`. The expectation is fixed before the outcome, not substituted with the preceding rating. Comparable subject/profile/lane, non-future event time and the 64-effective-event limit are premises. Redelivery does not create another independent occurrence. Ineligible or unscorable events preserve the rating. `_evaluate_from_plain` implements the rule; source-bound validation and named rounding/deduplication checks are in E02.
+
+## Inset 1: Negative Experience Reallocates Inspection
+
+In the recorded G4 Airline comparison, a controlled prediction is incorrect even though enforcement is `ALLOWED_AS_REQUIRED`. The update takes `R=500000000`, `E=Q`, `O=0` to `375000000`. The separately computed signed prior starts at zero and follows:
+
+```text
+signal = 2*O - Q
+P_next = clamp(P + RHE(62500000 * (signal - P) / Q), -Q, Q)
+```
+
+Thus one admitted negative occurrence gives `P_next=-62500000`. This is `SPARSE`, not a mature reputation. `fold_avf_history_prior_v01` uses the GT fold's admitted occurrence set and comparable history keys. [E02](../PAPER_SOURCE_KEY.md#e02), [E05](../PAPER_SOURCE_KEY.md#e05)
+
+G4 uses that raw prior once in its five-feature pressure rule:
+
+```text
+z_i = RHE((4*r_i + 2*l_i - 2*u_i - c_i + p_i) / 8)
+w_i = RHE(10^12 * exp((z_i - max(z)) / 250000000))
+```
+
+The first four inputs are fixed-point integers in `[0,Q]`: configured relevance, lineage, uncertainty and estimated cost. The prior is in `[-Q,Q]`; weights are dimensionless integer apportionment weights. Hard-false branches are excluded first; unresolved required evidence prevents allocation, rather than being softened by the score. [E05](../PAPER_SOURCE_KEY.md#e05)
+
+Both offers have `r=l=800000000`, `u=500000000`, and lower/upper quotas of 2/6 dispatch units. Costs are `400000000` and `430000000`. Cold pressures are `425000000` and `421250000`; applying the negative prior only to offer 0 lowers its pressure to `417187500`. The nine-unit original budget has already spent one unit on the initial constraint and reserves one final-consumer unit, leaving seven. Lower-first capped apportionment gives:
+
+| Offer | Cold weight | Cold units | Warm weight | Warm units |
+| --- | ---: | ---: | ---: | ---: |
+| 0 | 1000000000000 | 4 | 983881318977 | 3 |
+| 1 | 985111939603 | 3 | 1000000000000 | 4 |
+
+After allocating both minima, three units remain. Exact rational shares, floors and the largest remainder assign the last unit; stable identifiers resolve ties. Recorded performed-work lists confirm the allocation was consumed, not merely printed. Both instances use nine dispatch units. This is changed expenditure, not fewer total calls or a speedup. Implementation: `evaluate_reference_pressure_v01` and `allocate_reference_work_budget_v01`; checks and exact fractions: E05.
+
+The separate strategy contrast changes the configured utility profile from price-first to comfort-first and selects offer 0 versus offer 1. Its bounded feasible/individual-rationality/Pareto calculation is advisory. Client, airline and bank retain distinct decisions; the recorded hold is preparation, not an executed booking. [E07](../PAPER_SOURCE_KEY.md#e07)
+
+## History Must Be Opened Again
+
+Stored numerical history is not silently injected into the next task. The G4 retained evidence records descriptor discovery, Root approval, payload read, public-open validation and numerical source validation. The current bridge binds history to the receiving transaction. A later decision time requires requalification; expiry rejects current consumption while leaving the original evidence intact. [E06](../PAPER_SOURCE_KEY.md#e06)
+
+Age also changes advice. After separate time admission, `evaluate_gt_decay_value_v01` computes `T=RHE(R*2^(-a/h))`, with integer age `a` and half-life `h` in seconds. Whole half-life multiples use exact rational division; the implementation returns zero at 64 half-lives. Only usable trust produces pressure `Q-T`; non-usable trust produces maximum pressure and recommends review. The implemented recommendation threshold is `T<600000000`. None of these calculations can suppress mandatory policy review or extend an expired advice window. E02 supplies the half-life premises, formula and checks.
+
+## Inset 2: Reuse Avoids Domain Work, Not Current Review
+
+G6A's retained N4-04 witness addresses a different question: can the same informational answer be returned without recalculating it? Its native calibration input is integer readings `[8,10,9]` and reference `10`. The source formula is:
+
+```text
+s = sum(readings) = 27; n = len(readings) = 3
+correction = (n*reference - s)/n = (30-27)/3 = 1/1
+```
+
+The output fields are `total=27`, `n=3`, `correction_num=1`, `correction_den=1`. Readings/reference are bounded integer domain values with no declared physical unit; correction is an exact reduced rational in the same abstract unit, and `n` is a count. `gate5_contracts_v01.calibration`, the native executor and `check_reuse` provide the implementation/check chain. [E08](../PAPER_SOURCE_KEY.md#e08)
+
+The cold observation counts one domain executor and one Host Work call. The warm observation counts zero of each, one stored read and two Root decision calls. Its answer must match the persisted summary, exact business inputs, owner, policy, schema and scope fingerprint. Changing a reading to `[8,10,8]` produces `warm_business_binding`; expiry and substituting the cold Root decision also fail. Those observed function counts cover the current process/thread only; child activity is explicitly `UNOBSERVED_NOT_ZERO`. Setup and cold writeback are not inside the same measured window. No wall-clock speedup follows. [E08](../PAPER_SOURCE_KEY.md#e08)
+
+N4-05 makes the policy condition concrete. In a closed two-record store, validated replacement lineage and Root-reviewed writeback derive the current tip independently of list order. The predecessor remains historically valid, but a new current-policy Root review refuses its use. Summary-only descent opens zero payload bytes; restricted artifact descent returns `drs_pointer_access_policy_denied`. This is an explicit local policy composition, not a global supersession service. [E09](../PAPER_SOURCE_KEY.md#e09)
+
+## Memory Inside Continuing Work
+
+Memory need not occur only at outer intake. Implemented common-composition interfaces bind typed outputs to downstream inputs and retain exact historical fields across revisions. A missing pure capability is observed at a specific Work item, bound to its actual input, current task and revision. The bounded continuation path searches local DRS, evaluates current eligibility, obtains Root-reviewed artifact descent, retrieves source and independently readmits it before installation and use. Finding remembered code does not install it automatically. [E11](../PAPER_SOURCE_KEY.md#e11)
+
+Nested execution has a separate concrete basis: recursive review accounts for child cells, and retained-work checks consume one preserved child result with a newly computed selected child result in canonical parent-slot order. These are not evidence that every child autonomously searches memory. The stronger general picture, recursively created child-local DRS activity under arbitrary nesting, remains an architectural generalisation not demonstrated by the targeted sources. E11 distinguishes implementation, test assertions and historical checkpoint evidence.
+
+The common outcome is useful continuity with renewed grounds for use. Scores remain advice; an independent Root decision and the exclusive effect path remain necessary for consequential action. The four approved programme deferments are N1-18, N1-19, N4-12 and N4-13. Full StrongGT/FullAVF, strategic regret/stability, robust/minimax/CVaR/sensitivity and LGT are not supplied by these bounded numerical profiles. External authorship does not cancel those deferments. [E10](../PAPER_SOURCE_KEY.md#e10), [E12](../PAPER_SOURCE_KEY.md#e12)
+
+
+## Inspect the Recorded Fields
+
+[Source ledger](../references/experience/source_ledger.md).
+
+Source routes: [E01](../PAPER_SOURCE_KEY.md#e01).
+````
+
+## Source Block atlas/ENTITIES.md
+
+````text
+# Shared Entities
+
+Editorial identities map concerns; they introduce no runtime ABI. Historical pilot SEAL is disambiguated below.
+
+## INTENT: Practical intention
+
+User or event; not an executable permission
+
+Request revision, declared preferences and consent are bound before Work. Ambiguity produces clarification.
+
+Original request and clarified revision remain history; later preferences do not rewrite them.
+
+Does not itself authorize a booking, payment, write or arbitrary capability.
+
+Wedding ambiguous request and SR2 amendments; chapter Practical Question and Change Two Placements.
+
+08_wedding
+
+## ROOT: Independent local Root
+
+Sole local final and commit authority
+
+Route, result or action-specific input; current transaction, source and policy.
+
+Decision is stored as evidence; new use needs a current decision.
+
+Type is not VenueRoot or ActivePlanetRoot, nor a SuperRoot.
+
+Football separate BOOK; Testflix no-consent and exact-expiry refusal.
+
+02_geometry
+
+## WORK: Bounded Work
+
+Typed computation yielding proposals/evidence
+
+Declared bindings, source context, task/revision and bounded budget.
+
+Results may be retained; unchanged identity does not prove current applicability.
+
+No finality, permission or arbitrary code isolation.
+
+Wedding compiler input and USED /material; wrong-result substitutions refuse.
+
+08_wedding
+
+## MODEL: Semantic model participant
+
+Untrusted provider/model participant. Its returned PROPOSAL and BSEP input are distinct objects.
+
+Exact request, role, snapshot, finite semantic fields and provenance.
+
+Capture preserves response as inert evidence; replay is not live authority.
+
+Does not mint Root decisions, trusted source refs or hardware consent.
+
+Wedding objective/amendment consumption; ambiguous request clarifies.
+
+08_wedding
+
+## MEMORY: Retained information
+
+Historical material that can inform a fresh qualified use. TIME is a separate concern.
+
+Lookup scope, source identity, expiry, disclosure and new task applicability are distinct inputs.
+
+Bytes may persist after a task ends; they are not a running Host or continuing permission.
+
+Does not execute a recalled component or refresh an expired decision.
+
+N4-04 cold/warm current read; N4-05 policy refusal, Inset 2.
+
+05_experience
+
+## FIREWALL: Effect Firewall
+
+Exclusive bounded effect owner after current Root packet
+
+Before-start packet, actual capture/currentness, owner and operation must all match.
+
+One dispatch produces effect evidence; subsequent reads of its receipt do not redispatch.
+
+Cannot issue Root permission, accept another owner's packet or extend packet life.
+
+Football separate BOOK, one mock effect; EWS old packet refusal.
+
+02_geometry
+
+## VENUE: VenueRoot
+
+Owns venue source and booking registry
+
+Venue registry, quote/slot version, expiry and explicit BOOK consent qualify action.
+
+Publication and receipt persist; source revocation changes current eligibility without erasing history.
+
+Does not decide requester policy or transfer its booking permission.
+
+Football FIELD_LEDGER; SHIFT/FETCH/BOOK and revoked neighbor.
+
+07_football
+
+## REQUESTER: ActivePlanetRoot
+
+Owns local consumption and decision
+
+Published body B, release/status, source binding and local request constraints.
+
+Consumed context/result remains evidence; later use reconstructs current applicability.
+
+Cannot issue VenueRoot booking authority or treat a fetch as a reservation.
+
+Football requester invocation binding and revoked-source refusal.
+
+07_football
+
+## E: Computed offer
+
+Native producer output offer_json
+
+EXACT or allowed SHIFT request, actual venue source and price constraints.
+
+Preserved value is part of published evidence; it is not the complete fetched object.
+
+Does not book or independently prove current source status.
+
+Football Three Distinct Objects; main_req_shift result/offer_json.
+
+07_football
+
+## B: Published body
+
+Offer plus Work/review references and temporal envelope
+
+Release binds full body.json bytes; manifest/hash are separate from semantic validity.
+
+Released bytes remain historical even when status is revoked.
+
+Does not carry reusable Root permission or make E equal C.
+
+Football FETCH /value/body and manifest/files/0; revoked neighbor.
+
+07_football
+
+## C: Consumer context
+
+B plus authenticated currentness projection
+
+Body identity, authentication/currentness and receiving task scope, not just a digest.
+
+Invocation records retain what was consumed; independent later invocation qualifies its own context.
+
+Does not restore a live owner from saved JSON or authorize Venue action.
+
+Football requester context/input binding and current revocation refusal.
+
+07_football
+
+## POINTER: Address and descriptor
+
+Locator, not payload or permission
+
+Address, schema/source reference and requested descent level; resolution may refuse.
+
+Locator may persist after material becomes unavailable or revoked.
+
+Does not prove content, grant access, or identify the inner E as the whole fetched object.
+
+Football main_req_shift_fetch_request pointer_ref; FETCH body manifest.
+
+07_football
+
+## STATUS: Current source status
+
+Bound signed observation with finite use window
+
+Owner/source version, release binding and evaluation time; ACTIVE and revoked differ.
+
+Recorded status is timestamped evidence, not a permanent guarantee.
+
+Cannot mint consent or override Root/Firewall refusal.
+
+Football revoked native BLOCKED_FAIL_CLOSED/hard_identity_violation.
+
+07_football
+
+## KIT: Authoring Kit HOW
+
+Public interfaces; no hidden expected answers
+
+Exact kit identity, source/interface version and trial correction policy.
+
+Frozen bundle persists as design-time source, not installed runtime authority.
+
+Cannot accept its own candidate or expand a trial's correction allowance.
+
+G54D1 restored continuation and authorized correction 4; source ledger A01-A03.
+
+11_integration
+
+## WHAT: Domain task WHAT
+
+Requirements distinct from general kit
+
+Football requirements, bounded scenarios and observable outcomes.
+
+Exam input and results remain tied to their frozen versions.
+
+Does not change kernel authority rules or let candidate output become oracle.
+
+G54D1 native football exam and supplied validation.
+
+11_integration
+
+## CANDIDATE: Authored program
+
+Untrusted until independently examined/admitted
+
+Source pins, kit version, task interface and allowed dependencies.
+
+Frozen candidate remains inspectable, including failures; installed bytes need separate admission.
+
+Cannot certify itself or replace an independent oracle with its own report.
+
+G54D1 actual native exam, live and two supplied consumers.
+
+11_integration
+
+## EXAMINER: Independent examiner
+
+Own oracle and observed native execution
+
+Exact exam inputs, candidate source and declared trusted-reference assumptions.
+
+Receipts preserve completed phases and failed histories; replays are distinguished from fresh execution.
+
+Does not create action permission or prove universal adversarial-code isolation.
+
+G54C4 reference boundary and G54D1 supplied controls; Method trust boundary.
+
+06_method
+
+## READER: Audit Reader
+
+Inert explanation/evidence, not an authoring kit
+
+Question, technical/publication identity, file hashes, mode and token estimate.
+
+Markdown/XML and inspection records persist; update changes their identities.
+
+Does not execute code, reinstantiate authority or establish B5 comprehension by loading a file.
+
+M0/CORE/focus contracts; B5 NOT_RUN.
+
+13_verification
+
+## VISUAL_SEAL: Visual Seal companion
+
+Conceptual human-facing image. No demonstrated receipt binding; not a crypto seal.
+
+Publication alias only; not a new runtime type or permission.
+
+Exact profile sources and limitations are listed in the view's source route.
+
+## SOURCE_ADMISSION: Reviewed source admission
+
+Separately authorized repository/source operation; not runtime Root permission.
+
+Exact base, allowlist, candidate content/modes and full staged/committed state.
+
+Actual commit is derived after operation; this unpublished corpus has none.
+
+Does not create Root permission, runtime acceptance or public certification.
+
+Technical A identity and publication identity; no future commit invented.
+
+13_verification
+
+## AUTHOR: External author
+
+Produces a candidate from HOW and WHAT; does not admit it.
+
+Exact model/mode, allowed context, interface and correction lineage are recorded.
+
+Candidate and corrections persist; author session ending does not admit code.
+
+Does not award source admission or current runtime permission.
+
+G54B1/G54D INCOMPLETE; G54D1 correction 4 accepted continuation.
+
+11_integration
+
+## BSEP: Semantic membrane
+
+Canonical semantic membrane; a validated BSEP has side-specific projections. Neither is authority.
+
+Declared task meaning and disclosure boundary.
+
+Projection evidence can be retained without acquiring authority.
+
+Not a permission or an outcome-feedback replacement.
+
+Airline side projections authority_created=false.
+
+10_cross_case
+
+## TOPOLOGY: Runtime topology
+
+Runtime-owned executable structure for bounded cells.
+
+Typed dependencies and current input/output bindings.
+
+Retained graph explains old work, not a live executor.
+
+A drawn or model-proposed graph is not an executed graph.
+
+Wedding ordered review/compile/solve/validate/consume.
+
+08_wedding
+
+## CHILD: Child Work
+
+Nested typed computation; returns result proposals to parent.
+
+Parent/current prefix, typed input and retained origin.
+
+Historical result fields persist while selected child recomputes.
+
+Does not prove autonomous memory search at all nesting depths.
+
+Retained parent consumption and bounded missing-capability descent sources.
+
+05_experience
+
+## TIME: Time envelope
+
+Profile-bound observation and validity; no automatic renewal.
+
+Observed time, logical time, validity and expiry must not be collapsed.
+
+Old envelopes remain evidence, not extended intervals.
+
+Freshly reading an old object does not refresh source authority.
+
+Testflix evaluation < valid_to; Football fractional UTC ordering.
+
+03_time_memory
+
+## PACKET: ActionCommitPacket
+
+Current scoped Root-created action permission carrier.
+
+Owner, action, material, current capture and finite validity window.
+
+Historical packet can remain available after expiry or consumption.
+
+Prior ACCEPT is not renewal; foreign Root cannot issue local permission.
+
+EWS old packet fails; separate SAVE packet succeeds.
+
+09_workspace
+
+## RECEIPT: EvidenceReceipt
+
+Evidence of a bounded completed effect, not repeat permission.
+
+Packet, source/time, operation and effect result bound to actual execution.
+
+Stored and repeatedly read; new activity must qualify it under current rules.
+
+Does not authorize a second payment, write or booking.
+
+Football one receipt repeated; Testflix period already consumed refuses.
+
+10_cross_case
+
+## POSTVV: Post V&V
+
+Declared post-execution obligations. A domain original-condition CHECKER is not renamed Post V&V by analogy.
+
+Expected typed outputs, obligations, source/time and actual consumption evidence.
+
+Validation reports retain context; another input needs its own checks.
+
+Cannot issue final Root ACCEPT, repair invalid QPU samples silently or authorize save.
+
+Canonical runtime post-execution V&V obligations. Wedding qpu_validate is a separate profile-specific original-condition CHECKER, not this entity.
+
+02_geometry
+
+## GT: Terminal GT advisory
+
+Terminal advisory output. Not the observed OUTCOME, OFE record or current ADVICE.
+
+Terminal advisory input to independent local Root review, not an outcome occurrence.
+
+A saved advisory remains evidence of its original context, not current permission.
+
+Does not decide for Root.
+
+Architectural role only here; G36/G4 numerical examples belong to OUTCOME, OFE and ADVICE.
+
+02_geometry
+
+## DRS: Local / External DRS
+
+Discoverable stored material subject to current descent and use.
+
+Address, schema, scope, source history and receiving owner policy.
+
+Summary-only and artifact descent differ; original remains historical.
+
+Discovery, digest or remembered code is not installation or permission.
+
+N4-04 warm summary; N4-05 policy denial; Football revoked source.
+
+05_experience
+
+## ENV: Task environment
+
+Owned finite resources participating in current Work.
+
+Current resource availability, command scope and ownership metadata.
+
+Ends by reaping owned resources; approved output/history may remain.
+
+Cleanup does not erase viewed pixels or all host data.
+
+EWS audio loss/silent continuation; ownership conflict is incomplete cleanup.
+
+09_workspace
+
+## SOLVER: Classical search participant
+
+Computes candidates; a separately identified CHECKER evaluates original conditions.
+
+Wedding original hard/soft constraints, objective and revision-specific problem.
+
+Candidate and score remain evidence of that problem; changed constraints require re-evaluation.
+
+Does not choose consent or become Root, nor make a remote backend interchangeable.
+
+Wedding 36-indicator formulation, penalties and SR2 old-plan refusal.
+
+08_wedding
+
+## QPU: External numerical participant
+
+Returns measurements, not final decisions.
+
+Revision-1 input, ten-qubit local encoding, device/task identity and 1000-shot budget.
+
+Raw samples and timestamps persist; task completion is not correctness. No new call in B3.
+
+Does not authorize hardware spend/save, prove advantage or repair invalid samples.
+
+Wedding KEEP shot 63/basis 517, 33 valid/967 invalid and consumed material.
+
+08_wedding
+
+## PROPOSAL: Returned semantic proposal
+
+Finite untrusted semantic fields emitted by MODEL and checked locally.
+
+Publication alias only; not a new runtime type or permission.
+
+Exact profile sources and limitations are listed in the view's source route.
+
+## SOURCE: Source provenance
+
+Origin and source material qualifying the data used by Work; not authority.
+
+Publication alias only; not a new runtime type or permission.
+
+Exact profile sources and limitations are listed in the view's source route.
+
+## METHOD_ADMIN: Pre-granted administrator premise
+
+Method-only threat-model premise, not the external author role.
+
+Publication alias only; not a new runtime type or permission.
+
+Exact profile sources and limitations are listed in the view's source route.
+
+## METHOD_STATE_EDIT: Direct privileged state edit
+
+Method-only comparison, not the untrusted authored candidate.
+
+Publication alias only; not a new runtime type or permission.
+
+Exact profile sources and limitations are listed in the view's source route.
+
+## KERNEL: Execution kernel implementation
+
+Common reviewed implementation, distinct from the authoring kit and a live Root instance.
+
+Publication alias only; not a new runtime type or permission.
+
+Exact profile sources and limitations are listed in the view's source route.
+
+## RESULT: Typed result
+
+Returned value/proposal with provenance and bindings; no permission.
+
+Publication alias only; not a new runtime type or permission.
+
+Exact profile sources and limitations are listed in the view's source route.
+
+## CONSUMPTION: Actual result consumption
+
+Downstream Work binds and uses the identified upstream field.
+
+Publication alias only; not a new runtime type or permission.
+
+Exact profile sources and limitations are listed in the view's source route.
+
+## CURRENTNESS: Local currentness check
+
+Consumes authenticated status/time/source facts; does not inherit their authority.
+
+Publication alias only; not a new runtime type or permission.
+
+Exact profile sources and limitations are listed in the view's source route.
+
+## EXECUTOR: Bounded executor
+
+Performs an authorized operation; may share reviewed implementation with Firewall.
+
+Publication alias only; not a new runtime type or permission.
+
+Exact profile sources and limitations are listed in the view's source route.
+
+## COMPILER: Local compiler
+
+Maps accepted semantic material into the declared numerical representation.
+
+Publication alias only; not a new runtime type or permission.
+
+Exact profile sources and limitations are listed in the view's source route.
+
+## DECODER: Measurement decoder
+
+Interprets actual column/order metadata without repairing candidates.
+
+Publication alias only; not a new runtime type or permission.
+
+Exact profile sources and limitations are listed in the view's source route.
+
+## CHECKER: Original-condition checker
+
+Evaluates the actual candidate against the declared original problem.
+
+Publication alias only; not a new runtime type or permission.
+
+Exact profile sources and limitations are listed in the view's source route.
+
+## OUTCOME: Observed outcome
+
+Source-bound occurrence that may be eligible for an OFE/history fold.
+
+Publication alias only; not a new runtime type or permission.
+
+Exact profile sources and limitations are listed in the view's source route.
+
+## OFE: Outcome feedback evidence
+
+Finite source-bound feedback record. Distinct from GT output and permission.
+
+Publication alias only; not a new runtime type or permission.
+
+Exact profile sources and limitations are listed in the view's source route.
+
+## ADVICE: Current advisory values
+
+Eligible historical information offered to current review/allocation.
+
+Publication alias only; not a new runtime type or permission.
+
+Exact profile sources and limitations are listed in the view's source route.
+
+## PRESSURE: Finite pressure
+
+Profile-defined fixed-point comparison used in apportionment.
+
+Publication alias only; not a new runtime type or permission.
+
+Exact profile sources and limitations are listed in the view's source route.
+
+## ALLOCATION: Bounded allocation
+
+Integer allocation within explicit spent/reserved/current budget.
+
+Publication alias only; not a new runtime type or permission.
+
+Exact profile sources and limitations are listed in the view's source route.
+
+## CRYPTO_SEAL: Cryptographic evidence seal
+
+Bound evidence identity and verification material, distinct from Visual Seal.
+
+Publication alias only; not a new runtime type or permission.
+
+Exact profile sources and limitations are listed in the view's source route.
+
+## TECHNICAL_A: Technical version A
+
+Accepted implementation identity, not Football A/B/C.
+
+Publication alias only; not a new runtime type or permission.
+
+Exact profile sources and limitations are listed in the view's source route.
+
+## PUBLICATION_B: Publication version B
+
+This uncommitted editorial successor.
+
+Publication alias only; not a new runtime type or permission.
+
+Exact profile sources and limitations are listed in the view's source route.
+
+## ARCHIVE_C: Archive identity C
+
+Eventual separately bound archival version; no deposit claimed.
+
+Publication alias only; not a new runtime type or permission.
+
+Exact profile sources and limitations are listed in the view's source route.
+````
+
+## Source Block CASE_MATRIX.md
+
+````text
+# Case / Architectural Relation Matrix
+
+Ten cases illuminate different relations in one design. They are not one recorded grand transaction and do not need to demonstrate every relation. No aggregate score is calculated.
+
+Technical source basis: `2e965ecb18e545e428380eb8e9aa5a7037a388be`. All execution evidence below is retained history; 2026-09-28 checks inspect bytes and values only. A `not-demonstrated` cell means the named slice does not establish the relation, not that the mechanism is absent.
+
+The five panels cover ten relations. Each statement links to its claim, profile, precise source selector, method, status and limit. Complete selected JSON values and pins are in [the machine matrix](corpus/case_property_matrix.json). Accepted-source links name immutable A paths, not proposed publication URLs; they may require repository access. Existing relative reference links resolve in the integrated publication, not in this worker-only folder.
+
+## Panel 1: Consumed semantics and Composition
+
+Consumed semantics: GEO-1, GEO-5; Composition: GEO-1.
+
+| Case | Consumed semantics | Composition |
+| --- | --- | --- |
+| Supplier | [The safe report preserves validated provider proposals and BSEP-before-architect ordering; it does not expose a typed returned-field-to-Work join.](#case-supplier-consumed-semantics) | [The recorded semantic route names warehouse, two supplier, legal, accounting, two bank and merge branches.](#case-supplier-composition) |
+| Airline | [The client semantic reviewer and the selected offer are recorded in attempt 04.](#case-airline-consumed-semantics) | [Side-specific BSEP projections and owner-specific finals coordinate one selected-offer transaction.](#case-airline-composition) |
+| Testflix | [A bound selected review Work artifact reaches playback consumption and PLAYING; wrong-Work control has zero executor delta.](#case-testflix-consumed-semantics) | [The same AT3 consumption record links review material, bounded session and playback.](#case-testflix-composition) |
+| EWS | [Controlled returned needs and SILENT_CONTINUE policy are recorded alongside actual media consumption after audio loss.](#case-ews-consumed-semantics) | [The saved topology has one top-level D, one E and one nested retained D; continuation names recomputed and retained results separately.](#case-ews-composition) |
+| Sentinel | [LS2R2 records selected reference-integrity and independent-reserve investigations with resulting checks.](#case-sentinel-consumed-semantics) | [In AT5, bounded local signalling continues while an optional worker remains pending in the same episode.](#case-sentinel-composition) |
+| G3/G4 | [In the G4 controlled profile, finite preference choice changes selected offer while actual Work allocations are recorded.](#case-g3g4-consumed-semantics) | [Native offer Work is apportioned within a fixed total: seven allocation units after one spent and one mandatory unit.](#case-g3g4-composition) |
+| Wedding | [SR2 returned amendments for guests 07/08 are bound to scoped acknowledgement, compiled material and actual downstream Work.](#case-wedding-consumed-semantics) | [SR2 materializes review, compile, solve, validate and consume; actual material outputs feed the next Work.](#case-wedding-composition) |
+| Football | [The shifted venue offer becomes requester offer_json and a 6300-minor-EUR result under the unchanged 7000 budget.](#case-football-consumed-semantics) | [Producer E is included as B.offer; C.body equals B; C is the requester Work input.](#case-football-composition) |
+| Independent G5 authoring | [The accepted authored domain records native and live semantic consumption classes separately.](#case-g5author-consumed-semantics) | [Not demonstrated](#case-g5author-composition) |
+| Incident Atlas | [The controlled Supplier donor preserves proposed recipient B/PROCEED and the lawful A observation with actual consumed Work.](#case-incidents-consumed-semantics) | [Incident cards link to domain consumers with distinct direct, shared-domain and post-consumer relations.](#case-incidents-composition) |
+
+## Panel 2: Time/currentness and Memory/reuse
+
+Time/currentness: GEO-3; Memory/reuse: GEO-3, GEO-4.
+
+| Case | Time/currentness | Memory/reuse |
+| --- | --- | --- |
+| Supplier | [Not demonstrated](#case-supplier-time-currentness) | [Not demonstrated](#case-supplier-memory-reuse) |
+| Airline | [Not demonstrated](#case-airline-time-currentness) | [Not demonstrated](#case-airline-memory-reuse) |
+| Testflix | [The session deadline and paid-period validity are distinct; expired/revoked access refuses executor use without extending the paid period.](#case-testflix-time-currentness) | [A consumed payment period cannot be extended by replaying its history.](#case-testflix-memory-reuse) |
+| EWS | [An old packet is refused; fresh observations remain within original workspace expiry and do not renew old authority.](#case-ews-time-currentness) | [Photo edits, preview hash and producer count remain unchanged during affected media recomputation.](#case-ews-memory-reuse) |
+| Sentinel | [AT5 refuses late semantics for role_current_context and records recovery ticks separately.](#case-sentinel-time-currentness) | [Not demonstrated](#case-sentinel-memory-reuse) |
+| G3/G4 | [Warm history is reopened through current review; separately N4-05 refuses replaced current use while preserving historical validity.](#case-g3g4-time-currentness) | [N4-04 retains the same informational answer with cold/warm domain and Host Work counts 1/0; warm read and review remain.](#case-g3g4-memory-reuse) |
+| Wedding | [SR2 binds its revision to the prior result and current owner request, with a distinct revision Root decision.](#case-wedding-time-currentness) | [SR1 and SR2 retain distinct assignments; the next SR3 request is verification-only with a prior-result link.](#case-wedding-memory-reuse) |
+| Football | [The requester consumption context records ACTIVE current source data; the separate revoked case records a local refusal.](#case-football-time-currentness) | [Repeat and verification read recorded local history rather than treating history as fresh booking consent.](#case-football-memory-reuse) |
+| Independent G5 authoring | [Not demonstrated](#case-g5author-time-currentness) | [Not demonstrated](#case-g5author-memory-reuse) |
+| Incident Atlas | [The Testflix AT3 card family records session expiry/refusal against explicit logical-clock law.](#case-incidents-time-currentness) | [Saved Atlas relations remain inspectable without restoring live authority; native historical schema replay is explicitly unsupported.](#case-incidents-memory-reuse) |
+
+## Panel 3: Provenance and Local/independent authority
+
+Provenance: GEO-4; Local/independent authority: GEO-2.
+
+| Case | Provenance | Local/independent authority |
+| --- | --- | --- |
+| Supplier | [S1 records its execution head, source task, transaction and safe projection identity.](#case-supplier-provenance) | [Scoped local approval for A is separate from A/B labels; the missing-approval row rejects the packet.](#case-supplier-local-independent-authority) |
+| Airline | [The source head and attempt ID bind the selected offer and its report.](#case-airline-provenance) | [Client, airline and bank have separate owner-specific final records with their own dependencies.](#case-airline-local-independent-authority) |
+| Testflix | [The consumed material names the playback operation and exact review Work artifact.](#case-testflix-provenance) | [Device owns session currentness; explicit consent changes the separately recorded T4 review from NEEDS_USER to ACCEPT.](#case-testflix-local-independent-authority) |
+| EWS | [The selected role output retains its exact archive/member binding; the later derivative does not replace that raw source.](#case-ews-provenance) | [The current local route accepts bounded visual/audio needs; saving remains separately confirmed.](#case-ews-local-independent-authority) |
+| Sentinel | [LS2R2 distinguishes an intended local analyst role from actual CLOUD_LLM mode.](#case-sentinel-provenance) | [The LS2R2 composition Root result creates no permission; the separate AT5 consumed result likewise creates no permission.](#case-sentinel-local-independent-authority) |
+| G3/G4 | [G4 source-bound OFE and Root-recorded history precede current descent; the opened prior is -62500000.](#case-g3g4-provenance) | [G4 cold/contrast selection retains owner-specific client, airline and bank review decisions.](#case-g3g4-local-independent-authority) |
+| Wedding | [W4 KEEP binds raw measurement hash, selected shot 63/basis 517 and actual native output.](#case-wedding-provenance) | [Organizer review accepts SR2 revision without creating permission; W4 save has a separate Root result.](#case-wedding-local-independent-authority) |
+| Football | [The published body binds producer Work, source review, revision and lineage; the consumer preserves that body.](#case-football-provenance) | [Venue source review and requester result review are distinct local Root records; BOOK uses a separate action Root.](#case-football-local-independent-authority) |
+| Independent G5 authoring | [Protocol amendment fixes correction 4/submission 5, preserving the original G54D INCOMPLETE result and unchanged technical predicates.](#case-g5author-provenance) | [Technical acceptance and owner engineering admission are different recorded operations.](#case-g5author-local-independent-authority) |
+| Incident Atlas | [S1 is direct causal, T4 shared-domain, and S4 post-consumer; their evidence classes cannot be merged.](#case-incidents-provenance) | [S1 unsafe proposal stops at Root with no packet or Firewall operation.](#case-incidents-local-independent-authority) |
+
+## Panel 4: Effects/history and Compute/environment
+
+Effects/history: GEO-2, GEO-3; Compute/environment: GEO-5.
+
+| Case | Effects/history | Compute/environment |
+| --- | --- | --- |
+| Supplier | [A bounded Corridor receipt coexists with B blocked and shipment held; receipt-as-permission attack is rejected.](#case-supplier-effects-history) | [Six provider calls supplied the safe semantic evidence; the business effect lane remained non-real.](#case-supplier-compute-environment) |
+| Airline | [One mock Corridor execution produces evidence-only receipts with zero real-world effects.](#case-airline-effects-history) | [Attempt 04 records twelve provider calls and a mock-only Corridor.](#case-airline-compute-environment) |
+| Testflix | [The lawful consumption starts playback once; stale T1 action is refused before executor use.](#case-testflix-effects-history) | [AT3 is an authored controlled native mock playback profile.](#case-testflix-compute-environment) |
+| EWS | [A separate save writes one 250-byte sidecar; cleanup follows its initial resource-owner obligation and audio is ALREADY_EXITED, not gracefully acknowledged.](#case-ews-effects-history) | [The photo/media workspace records audio-process loss, continued media frames and reaped owned processes.](#case-ews-compute-environment) |
+| Sentinel | [AT5 records three mock effects and no outbox delivery.](#case-sentinel-effects-history) | [The independent-reserve check reports bounded consistency against declared sample/range policy, while physical mapping remains unestablished.](#case-sentinel-compute-environment) |
+| G3/G4 | [The G4 comparison reports zero real business effects; warm descent creates no authority or permission.](#case-g3g4-effects-history) | [G4 cold/warm/contrast each record nine native dispatches and zero model calls.](#case-g3g4-compute-environment) |
+| Wedding | [W4 consumption is followed by separately recorded save status and content claim.](#case-wedding-effects-history) | [W4 KEEP measurement row 63 is decoded in measuredQubits order, checked against original conditions and consumed; 33 of 1000 samples are valid.](#case-wedding-compute-environment) |
+| Football | [A separate BOOK action Root and receipt record the bounded mock booking.](#case-football-effects-history) | [Trusted parent records the native publisher/requester execution boundary.](#case-football-compute-environment) |
+| Independent G5 authoring | [The D1 record distinguishes eight mock executor starts from zero real-world effects and supplied checks with no restored authority.](#case-g5author-effects-history) | [Independent supplied checks are recorded as two processes with byte-identical output.](#case-g5author-compute-environment) |
+| Incident Atlas | [S1 has zero effects at the blocked boundary; the recorded lawful A neighbor reaches consumed Work.](#case-incidents-effects-history) | [The saved review reports zero model calls and test reruns; the Atlas source catalog preserves historical versus new call counts.](#case-incidents-compute-environment) |
+
+## Panel 5: Experience/allocation and Author/admission
+
+Experience/allocation: GEO-6; Author/admission: GEO-7.
+
+| Case | Experience/allocation | Author/admission |
+| --- | --- | --- |
+| Supplier | [Not demonstrated](#case-supplier-experience-allocation) | [Not demonstrated](#case-supplier-author-admission) |
+| Airline | [Not demonstrated](#case-airline-experience-allocation) | [Not demonstrated](#case-airline-author-admission) |
+| Testflix | [One experience consumer changes the selected review output while preserving a bound playback-material chain.](#case-testflix-experience-allocation) | [Not demonstrated](#case-testflix-author-admission) |
+| EWS | [Not demonstrated](#case-ews-experience-allocation) | [Not demonstrated](#case-ews-author-admission) |
+| Sentinel | [Not demonstrated](#case-sentinel-experience-allocation) | [Not demonstrated](#case-sentinel-author-admission) |
+| G3/G4 | [Eligible history changes G4 offer allocation from 4/3 to 3/4 while total dispatch budget stays nine.](#case-g3g4-experience-allocation) | [Not demonstrated](#case-g3g4-author-admission) |
+| Wedding | [Not demonstrated](#case-wedding-experience-allocation) | [Not demonstrated](#case-wedding-author-admission) |
+| Football | [Not demonstrated](#case-football-experience-allocation) | [The Football implementation comes from G54D1 correction 4 and later separate G55L source admission.](#case-football-author-admission) |
+| Independent G5 authoring | [Not demonstrated](#case-g5author-experience-allocation) | [An external author completed the explicitly amended trial; separate G55L engineering admission preserved prior paths and modes.](#case-g5author-author-admission) |
+| Incident Atlas | [The Atlas accounts for five unique experience consumers and seven effective history samples, not twenty independent learning trials.](#case-incidents-experience-allocation) | [Not demonstrated](#case-incidents-author-admission) |
+
+## Cell Evidence
+
+`recorded-historical` covers exactly the stated saved relation, including explicitly labelled safe reports and derivatives. It is not an across-the-board PASS. An evidence record is not a norm; a hash binds bytes, not truth or authority.
+
+### Supplier
+
+Which permitted purchase work can progress while another supplier remains blocked?
+
+<a id="case-supplier-consumed-semantics"></a>
+
+#### Consumed semantics
+
+The safe report preserves validated provider proposals and BSEP-before-architect ordering; it does not expose a typed returned-field-to-Work join.
+
+Status: `recorded-historical`. Profile: Supplier S1 provider-origin safe report.
+
+- [S-REPORT](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/evidence/two_domain_all_real_sealed_evidence_program_v01/supplier_water_filter/supplier_safe_execution_report_v01.json), Supplier S1 provider-origin safe report. Selectors: `/actor_safe_summaries/0`; `/actor_validation_statuses`; `/safe_execution_projection/bsep_validated_before_architect`.
+
+Method: Read recorded proposal text and validation/order fields.
+
+Limit: Raw responses and an actual typed consumption slice are absent from this safe report.
+
+<a id="case-supplier-composition"></a>
+
+#### Composition
+
+The recorded semantic route names warehouse, two supplier, legal, accounting, two bank and merge branches.
+
+Status: `recorded-historical`. Profile: Supplier S1 provider-origin safe report.
+
+- [S-REPORT](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/evidence/two_domain_all_real_sealed_evidence_program_v01/supplier_water_filter/supplier_safe_execution_report_v01.json), Supplier S1 provider-origin safe report. Selectors: `/actor_safe_summaries/0 -> parse JSON string -> /selected_branch_ids`.
+
+Method: Read the exact selected JSON values; compare only the stated relationship.
+
+Limit: This is a recorded route proposal, not a complete native child/topology trace.
+
+<a id="case-supplier-time-currentness"></a>
+
+#### Time/currentness
+
+A precise current-time-to-use relation is not demonstrated by the selected S1 safe report and S2 scenario index.
+
+Status: `not-demonstrated`. Profile: Supplier S1 provider-origin safe report; Supplier S1/S2 separately classified scenario rows.
+
+Inspected scope (not direct proof): [S-REPORT](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/evidence/two_domain_all_real_sealed_evidence_program_v01/supplier_water_filter/supplier_safe_execution_report_v01.json), [S-INDEX](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/evidence/two_domain_all_real_sealed_evidence_program_v01/supplier_water_filter/supplier_safe_evidence_index_v01.json).
+
+Method: Bounded source-coverage review only; absence of a witness is not absence of an architectural mechanism.
+
+Limit: Do not infer freshness from PASS, report publication date or receipt existence.
+
+<a id="case-supplier-memory-reuse"></a>
+
+#### Memory/reuse
+
+An actual retained-result retrieval and reuse chain is not demonstrated in this S1/S2 slice.
+
+Status: `not-demonstrated`. Profile: Supplier S1 provider-origin safe report; Supplier S1/S2 separately classified scenario rows.
+
+Inspected scope (not direct proof): [S-REPORT](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/evidence/two_domain_all_real_sealed_evidence_program_v01/supplier_water_filter/supplier_safe_execution_report_v01.json), [S-INDEX](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/evidence/two_domain_all_real_sealed_evidence_program_v01/supplier_water_filter/supplier_safe_evidence_index_v01.json).
+
+Method: Bounded source-coverage review only; absence of a witness is not absence of an architectural mechanism.
+
+Limit: drs_status alone does not establish a memory-to-consumer relation; G36 is a different profile.
+
+<a id="case-supplier-provenance"></a>
+
+#### Provenance
+
+S1 records its execution head, source task, transaction and safe projection identity.
+
+Status: `recorded-historical`. Profile: Supplier S1 provider-origin safe report.
+
+- [S-REPORT](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/evidence/two_domain_all_real_sealed_evidence_program_v01/supplier_water_filter/supplier_safe_execution_report_v01.json), Supplier S1 provider-origin safe report. Selectors: `/execution_head`; `/safe_execution_projection/source_task_id`; `/safe_execution_projection/transaction_id`; `/safe_execution_projection/safe_execution_id`.
+
+Method: Read the exact selected JSON values; compare only the stated relationship.
+
+Limit: Safe-report provenance does not disclose raw provider bodies or prove physical truth.
+
+<a id="case-supplier-local-independent-authority"></a>
+
+#### Local/independent authority
+
+Scoped local approval for A is separate from A/B labels; the missing-approval row rejects the packet.
+
+Status: `recorded-historical`. Profile: Supplier S1/S2 separately classified scenario rows.
+
+- [S-INDEX](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/evidence/two_domain_all_real_sealed_evidence_program_v01/supplier_water_filter/supplier_safe_evidence_index_v01.json), Supplier S1/S2 separately classified scenario rows. Selectors: `/scenario_rows/3`; `/scenario_rows/5`.
+
+Method: Read the exact selected JSON values; compare only the stated relationship.
+
+Limit: The selected evidence does not identify two independently deciding supplier business Roots. A/B are not an independence witness.
+
+<a id="case-supplier-effects-history"></a>
+
+#### Effects/history
+
+A bounded Corridor receipt coexists with B blocked and shipment held; receipt-as-permission attack is rejected.
+
+Status: `recorded-historical`. Profile: Supplier S1/S2 separately classified scenario rows; Supplier S1 provider-origin safe report.
+
+- [S-INDEX](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/evidence/two_domain_all_real_sealed_evidence_program_v01/supplier_water_filter/supplier_safe_evidence_index_v01.json), Supplier S1/S2 separately classified scenario rows. Selectors: `/scenario_rows/4`; `/scenario_rows/7`; `/scenario_rows/8`.
+- [S-REPORT](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/evidence/two_domain_all_real_sealed_evidence_program_v01/supplier_water_filter/supplier_safe_execution_report_v01.json), Supplier S1 provider-origin safe report. Selectors: `/real_payment_executed`; `/real_shipment_released`.
+
+Method: Read the exact selected JSON values; compare only the stated relationship.
+
+Limit: Controlled/mock effects only; no real payment or shipment release.
+
+<a id="case-supplier-compute-environment"></a>
+
+#### Compute/environment
+
+Six provider calls supplied the safe semantic evidence; the business effect lane remained non-real.
+
+Status: `recorded-historical`. Profile: Supplier S1 provider-origin safe report.
+
+- [S-REPORT](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/evidence/two_domain_all_real_sealed_evidence_program_v01/supplier_water_filter/supplier_safe_execution_report_v01.json), Supplier S1 provider-origin safe report. Selectors: `/provider_mode`; `/provider_call_count`; `/real_world_effects_count`.
+
+Method: Read the exact selected JSON values; compare only the stated relationship.
+
+Limit: Provider-origin semantics are not proof of a numerical solver, hardware discovery or process isolation.
+
+<a id="case-supplier-experience-allocation"></a>
+
+#### Experience/allocation
+
+No numerical history-to-allocation change is shown in this S1/S2 slice.
+
+Status: `not-demonstrated`. Profile: Supplier S1 provider-origin safe report; Supplier S1/S2 separately classified scenario rows.
+
+Inspected scope (not direct proof): [S-REPORT](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/evidence/two_domain_all_real_sealed_evidence_program_v01/supplier_water_filter/supplier_safe_execution_report_v01.json), [S-INDEX](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/evidence/two_domain_all_real_sealed_evidence_program_v01/supplier_water_filter/supplier_safe_evidence_index_v01.json).
+
+Method: Bounded source-coverage review only; absence of a witness is not absence of an architectural mechanism.
+
+Limit: G36/G4 experience mechanisms are separate sources, not consequences of supplier names.
+
+<a id="case-supplier-author-admission"></a>
+
+#### Author/admission
+
+No independent author-to-source-admission chain is demonstrated by the selected supplier reports.
+
+Status: `not-demonstrated`. Profile: Supplier S1 provider-origin safe report; Supplier S1/S2 separately classified scenario rows.
+
+Inspected scope (not direct proof): [S-REPORT](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/evidence/two_domain_all_real_sealed_evidence_program_v01/supplier_water_filter/supplier_safe_execution_report_v01.json), [S-INDEX](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/evidence/two_domain_all_real_sealed_evidence_program_v01/supplier_water_filter/supplier_safe_evidence_index_v01.json).
+
+Method: Bounded source-coverage review only; absence of a witness is not absence of an architectural mechanism.
+
+Limit: A pinned implementation is not evidence of external authoring.
+
+### Airline
+
+How can three owners coordinate without a superior business owner?
+
+<a id="case-airline-consumed-semantics"></a>
+
+#### Consumed semantics
+
+The client semantic reviewer and the selected offer are recorded in attempt 04.
+
+Status: `recorded-historical`. Profile: Airline attempt_04.
+
+- [A-REPORT](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/evidence/two_domain_all_real_sealed_evidence_program_v01/airline/airline_safe_execution_report_attempt_04_v01.json), Airline attempt_04. Selectors: `/actors/2/safe_projection`; `/selected_offer_id`.
+
+Method: Read the exact selected JSON values; compare only the stated relationship.
+
+Limit: This safe report supports the recorded selection, not an independent causal benchmark or a full typed input join.
+
+<a id="case-airline-composition"></a>
+
+#### Composition
+
+Side-specific BSEP projections and owner-specific finals coordinate one selected-offer transaction.
+
+Status: `recorded-historical`. Profile: Airline attempt_04.
+
+- [A-REPORT](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/evidence/two_domain_all_real_sealed_evidence_program_v01/airline/airline_safe_execution_report_attempt_04_v01.json), Airline attempt_04. Selectors: `/bsep/projections`; `/root_finals/2/safe_projection/depends_on`.
+
+Method: Read the exact selected JSON values; compare only the stated relationship.
+
+Limit: Owner projections do not imply nested native Work or a superior Root.
+
+<a id="case-airline-time-currentness"></a>
+
+#### Time/currentness
+
+A checked current-use interval is not demonstrated by the selected attempt-04 fields.
+
+Status: `not-demonstrated`. Profile: Airline attempt_04.
+
+Inspected scope (not direct proof): [A-REPORT](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/evidence/two_domain_all_real_sealed_evidence_program_v01/airline/airline_safe_execution_report_attempt_04_v01.json).
+
+Method: Bounded source-coverage review only; absence of a witness is not absence of an architectural mechanism.
+
+Limit: The travel date is not a collection timestamp; do not import older full-stack history.
+
+<a id="case-airline-memory-reuse"></a>
+
+#### Memory/reuse
+
+A later memory retrieval/reuse chain is not demonstrated for attempt 04.
+
+Status: `not-demonstrated`. Profile: Airline attempt_04.
+
+Inspected scope (not direct proof): [A-REPORT](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/evidence/two_domain_all_real_sealed_evidence_program_v01/airline/airline_safe_execution_report_attempt_04_v01.json).
+
+Method: Bounded source-coverage review only; absence of a witness is not absence of an architectural mechanism.
+
+Limit: Recorded receipts and dependencies alone do not show reuse.
+
+<a id="case-airline-provenance"></a>
+
+#### Provenance
+
+The source head and attempt ID bind the selected offer and its report.
+
+Status: `recorded-historical`. Profile: Airline attempt_04.
+
+- [A-REPORT](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/evidence/two_domain_all_real_sealed_evidence_program_v01/airline/airline_safe_execution_report_attempt_04_v01.json), Airline attempt_04. Selectors: `/execution_head`; `/run_id`; `/selected_offer_id`.
+
+Method: Read the exact selected JSON values; compare only the stated relationship.
+
+Limit: Attempt 04 is not attempt 03, the older full-stack recovery matrix, or G4 history.
+
+<a id="case-airline-local-independent-authority"></a>
+
+#### Local/independent authority
+
+Client, airline and bank have separate owner-specific final records with their own dependencies.
+
+Status: `recorded-historical`. Profile: Airline attempt_04.
+
+- [A-REPORT](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/evidence/two_domain_all_real_sealed_evidence_program_v01/airline/airline_safe_execution_report_attempt_04_v01.json), Airline attempt_04. Selectors: `/root_finals/0/safe_projection`; `/root_finals/1/safe_projection`; `/root_finals/2/safe_projection`.
+
+Method: Read the exact selected JSON values; compare only the stated relationship.
+
+Limit: Three logical business Roots; no SuperRoot and no inference of process isolation.
+
+<a id="case-airline-effects-history"></a>
+
+#### Effects/history
+
+One mock Corridor execution produces evidence-only receipts with zero real-world effects.
+
+Status: `recorded-historical`. Profile: Airline attempt_04.
+
+- [A-REPORT](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/evidence/two_domain_all_real_sealed_evidence_program_v01/airline/airline_safe_execution_report_attempt_04_v01.json), Airline attempt_04. Selectors: `/corridor/safe_projection`; `/receipts/2/safe_projection`.
+
+Method: Read the exact selected JSON values; compare only the stated relationship.
+
+Limit: A receipt records the mock transaction; it is not permission for a later booking/payment.
+
+<a id="case-airline-compute-environment"></a>
+
+#### Compute/environment
+
+Attempt 04 records twelve provider calls and a mock-only Corridor.
+
+Status: `recorded-historical`. Profile: Airline attempt_04.
+
+- [A-REPORT](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/evidence/two_domain_all_real_sealed_evidence_program_v01/airline/airline_safe_execution_report_attempt_04_v01.json), Airline attempt_04. Selectors: `/counters/provider_call_count`; `/corridor/safe_projection/mock_only`.
+
+Method: Read the exact selected JSON values; compare only the stated relationship.
+
+Limit: No real airline/bank integration or heterogeneous numerical computation is demonstrated.
+
+<a id="case-airline-experience-allocation"></a>
+
+#### Experience/allocation
+
+Attempt 04 does not demonstrate a before/after history-driven allocation.
+
+Status: `not-demonstrated`. Profile: Airline attempt_04.
+
+Inspected scope (not direct proof): [A-REPORT](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/evidence/two_domain_all_real_sealed_evidence_program_v01/airline/airline_safe_execution_report_attempt_04_v01.json).
+
+Method: Bounded source-coverage review only; absence of a witness is not absence of an architectural mechanism.
+
+Limit: G4 Airline allocation is a separately identified profile in CASE-G3G4.
+
+<a id="case-airline-author-admission"></a>
+
+#### Author/admission
+
+The attempt-04 report does not demonstrate independent external authorship and later source admission.
+
+Status: `not-demonstrated`. Profile: Airline attempt_04.
+
+Inspected scope (not direct proof): [A-REPORT](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/evidence/two_domain_all_real_sealed_evidence_program_v01/airline/airline_safe_execution_report_attempt_04_v01.json).
+
+Method: Bounded source-coverage review only; absence of a witness is not absence of an architectural mechanism.
+
+Limit: Runtime participation is not design-time authorship.
+
+### Testflix
+
+Can useful playback continue without extending expired rights?
+
+<a id="case-testflix-consumed-semantics"></a>
+
+#### Consumed semantics
+
+A bound selected review Work artifact reaches playback consumption and PLAYING; wrong-Work control has zero executor delta.
+
+Status: `recorded-historical`. Profile: INCIDENT_ATLAS_AT5_V01; separate per-domain histories.
+
+- [ATLAS](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/showcase/incident_to_proof_atlas_v01/evidence/atlas_package.json), INCIDENT_ATLAS_AT5_V01; separate per-domain histories. Selectors: `/testflix/consumption/material`; `/testflix/consumption/playback/output/playback_state`; `/testflix/consumption/executor_delta`; `/testflix/consumption/wrong_work_control/executor_delta`.
+
+Method: Read the exact selected JSON values; compare only the stated relationship.
+
+Limit: AT3 authored controlled native mock; this is Work-material consumption, not a new live model call.
+
+<a id="case-testflix-composition"></a>
+
+#### Composition
+
+The same AT3 consumption record links review material, bounded session and playback.
+
+Status: `recorded-historical`. Profile: INCIDENT_ATLAS_AT5_V01; separate per-domain histories.
+
+- [ATLAS](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/showcase/incident_to_proof_atlas_v01/evidence/atlas_package.json), INCIDENT_ATLAS_AT5_V01; separate per-domain histories. Selectors: `/testflix/consumption/material/work_artifact_ref`; `/testflix/consumption/session/candidate/valid_from`; `/testflix/consumption/session/candidate/valid_to`; `/testflix/consumption/playback/output/playback_state`.
+
+Method: Read the exact selected JSON values; compare only the stated relationship.
+
+Limit: A concrete sequence of activities, not a claim that every relation is a nested Work edge.
+
+<a id="case-testflix-time-currentness"></a>
+
+#### Time/currentness
+
+The session deadline and paid-period validity are distinct; expired/revoked access refuses executor use without extending the paid period.
+
+Status: `recorded-historical`. Profile: INCIDENT_ATLAS_AT5_V01; separate per-domain histories.
+
+- [ATLAS](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/showcase/incident_to_proof_atlas_v01/evidence/atlas_package.json), INCIDENT_ATLAS_AT5_V01; separate per-domain histories. Selectors: `/testflix/clock_law`; `/testflix/T2/deadline`; `/testflix/T2/period_unchanged/candidate/valid_to`; `/testflix/T2/period_unchanged/candidate/renewal`; `/testflix/T2/expiry/executor_delta`; `/testflix/T2/revocation/executor_delta`.
+
+Method: Read the exact selected JSON values; compare only the stated relationship.
+
+Limit: Logical UTC seconds and strict evaluation < valid_to; executor delta 0 is not all-activity 0.
+
+<a id="case-testflix-memory-reuse"></a>
+
+#### Memory/reuse
+
+A consumed payment period cannot be extended by replaying its history.
+
+Status: `recorded-historical`. Profile: INCIDENT_ATLAS_AT5_V01; separate per-domain histories.
+
+- [ATLAS](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/showcase/incident_to_proof_atlas_v01/evidence/atlas_package.json), INCIDENT_ATLAS_AT5_V01; separate per-domain histories. Selectors: `/testflix/T3/extension_reason`.
+
+Method: Read the exact selected JSON values; compare only the stated relationship.
+
+Limit: This witnesses an action-history fence, not general informational caching.
+
+<a id="case-testflix-provenance"></a>
+
+#### Provenance
+
+The consumed material names the playback operation and exact review Work artifact.
+
+Status: `recorded-historical`. Profile: INCIDENT_ATLAS_AT5_V01; separate per-domain histories.
+
+- [ATLAS](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/showcase/incident_to_proof_atlas_v01/evidence/atlas_package.json), INCIDENT_ATLAS_AT5_V01; separate per-domain histories. Selectors: `/testflix/fixture/profile`; `/testflix/fixture/execution`; `/testflix/consumption/material`.
+
+Method: Read the exact selected JSON values; compare only the stated relationship.
+
+Limit: Provenance is within the AT3 saved controlled profile, not physical streaming attestation.
+
+<a id="case-testflix-local-independent-authority"></a>
+
+#### Local/independent authority
+
+Device owns session currentness; explicit consent changes the separately recorded T4 review from NEEDS_USER to ACCEPT.
+
+Status: `recorded-historical`. Profile: INCIDENT_ATLAS_AT5_V01; separate per-domain histories.
+
+- [ATLAS](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/showcase/incident_to_proof_atlas_v01/evidence/atlas_package.json), INCIDENT_ATLAS_AT5_V01; separate per-domain histories. Selectors: `/testflix/T2/owning_root`; `/testflix/T4/no_consent/review/tuple_items/2/fields/decision`; `/testflix/T4/no_consent/review/tuple_items/2/fields/reason_code`; `/testflix/T4/explicit_consent/review/tuple_items/2/fields/decision`.
+
+Method: Read the exact selected JSON values; compare only the stated relationship.
+
+Limit: These selectors establish local decisions, not a complete four-owner decision-chain comparison.
+
+<a id="case-testflix-effects-history"></a>
+
+#### Effects/history
+
+The lawful consumption starts playback once; stale T1 action is refused before executor use.
+
+Status: `recorded-historical`. Profile: INCIDENT_ATLAS_AT5_V01; separate per-domain histories.
+
+- [ATLAS](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/showcase/incident_to_proof_atlas_v01/evidence/atlas_package.json), INCIDENT_ATLAS_AT5_V01; separate per-domain histories. Selectors: `/testflix/consumption/executor_delta`; `/testflix/T1/refusal/reason`; `/testflix/T1/refusal/executor_delta`.
+
+Method: Read the exact selected JSON values; compare only the stated relationship.
+
+Limit: T1 does not include fresh E or a changed-price purchase; effects are controlled native mocks.
+
+<a id="case-testflix-compute-environment"></a>
+
+#### Compute/environment
+
+AT3 is an authored controlled native mock playback profile.
+
+Status: `recorded-historical`. Profile: INCIDENT_ATLAS_AT5_V01; separate per-domain histories.
+
+- [ATLAS](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/showcase/incident_to_proof_atlas_v01/evidence/atlas_package.json), INCIDENT_ATLAS_AT5_V01; separate per-domain histories. Selectors: `/testflix/fixture/execution`; `/testflix/consumption/playback/output/playback_state`.
+
+Method: Read the exact selected JSON values; compare only the stated relationship.
+
+Limit: No real streaming service or accelerator boundary is demonstrated.
+
+<a id="case-testflix-experience-allocation"></a>
+
+#### Experience/allocation
+
+One experience consumer changes the selected review output while preserving a bound playback-material chain.
+
+Status: `recorded-historical`. Profile: INCIDENT_ATLAS_AT5_V01; separate per-domain histories.
+
+- [ATLAS](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/showcase/incident_to_proof_atlas_v01/evidence/atlas_package.json), INCIDENT_ATLAS_AT5_V01; separate per-domain histories. Selectors: `/testflix/experience/before/output/provenance_checked`; `/testflix/experience/after/output/provenance_checked`; `/testflix/counts/unique_experience_consumers`; `/testflix/consumption/material/work_artifact_ref`.
+
+Method: Read the exact selected JSON values; compare only the stated relationship.
+
+Limit: The two boolean values are not a speedup or universal quality score; T4 is shared-domain evidence, not another consumer sample.
+
+<a id="case-testflix-author-admission"></a>
+
+#### Author/admission
+
+No external-author/source-admission experiment is demonstrated by the AT3 slice.
+
+Status: `not-demonstrated`. Profile: INCIDENT_ATLAS_AT5_V01; separate per-domain histories.
+
+Inspected scope (not direct proof): [ATLAS](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/showcase/incident_to_proof_atlas_v01/evidence/atlas_package.json).
+
+Method: Bounded source-coverage review only; absence of a witness is not absence of an architectural mechanism.
+
+Limit: Authored controlled fixture does not mean independently admitted external author trial.
+
+### EWS
+
+Can the environment lose audio and still finish the photo task?
+
+<a id="case-ews-consumed-semantics"></a>
+
+#### Consumed semantics
+
+Controlled returned needs and SILENT_CONTINUE policy are recorded alongside actual media consumption after audio loss.
+
+Status: `recorded-historical`. Profile: EWS principal CONTROLLED_DETERMINISTIC and separately labelled historical role records; PRINCIPAL_EWS3R2_NAMED_ARCHIVE_MEMBER.
+
+- [E-semantic](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/showcase/ephemeral_workspace_v01/presentation_evidence/semantic_boundary_io_projection_v01.json), EWS principal CONTROLLED_DETERMINISTIC and separately labelled historical role records. Selectors: `/principal_controlled_role_records/0/structured_output`; `/principal_controlled_role_records/1/structured_output`; `/principal_controlled_role_records/1/provider_call_performed_for_this_role`.
+- [E-fields](references/ews/selected_field_projections.json), PRINCIPAL_EWS3R2_NAMED_ARCHIVE_MEMBER. Selectors: `/records/20/fields/0/value`; `/records/20/fields/1/value`; `/records/20/fields/4/value`. Original member: `browser_run_01/native_common_return/media_consumption.json`; original selectors: `/audio_available`, `/audio_policy`, `/recomputed_result_ref`. Exact selected derivative, not reopened raw.
+
+Method: Read the exact selected JSON values; compare only the stated relationship.
+
+Limit: Principal EWS3R2 controlled/no-provider lane; do not relabel historical LIVE captures as this execution.
+
+<a id="case-ews-composition"></a>
+
+#### Composition
+
+The saved topology has one top-level D, one E and one nested retained D; continuation names recomputed and retained results separately.
+
+Status: `recorded-historical`. Profile: Principal EWS3R2 via EWS4R safe derivative; PRINCIPAL_EWS3R2_NAMED_ARCHIVE_MEMBER.
+
+- [E-topology](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/showcase/ephemeral_workspace_v01/public_safe_package/runtime_execution_topology_safe_v01.json), Principal EWS3R2 via EWS4R safe derivative. Selectors: `/payload/safe_document/summary/top_level_D`; `/payload/safe_document/summary/top_level_E`; `/payload/safe_document/summary/nested_retained_D`.
+- [E-fields](references/ews/selected_field_projections.json), PRINCIPAL_EWS3R2_NAMED_ARCHIVE_MEMBER. Selectors: `/records/20/fields/5/value`; `/records/20/fields/6/value`; `/records/20/fields/4/value`. Original member: `browser_run_01/native_common_return/media_consumption.json`; original selectors: `/preserved_D_result_ref`, `/retained_consumption_ref`, `/recomputed_result_ref`. Exact selected derivative, not reopened raw.
+
+Method: Read the exact selected JSON values; compare only the stated relationship.
+
+Limit: Safe-derived topology, not supported native historical-graph replay.
+
+<a id="case-ews-time-currentness"></a>
+
+#### Time/currentness
+
+An old packet is refused; fresh observations remain within original workspace expiry and do not renew old authority.
+
+Status: `recorded-historical`. Profile: PRINCIPAL_EWS3R2_NAMED_ARCHIVE_MEMBER.
+
+- [E-fields](references/ews/selected_field_projections.json), PRINCIPAL_EWS3R2_NAMED_ARCHIVE_MEMBER. Selectors: `/records/23/fields/0/value`; `/records/23/fields/1/value`; `/records/23/fields/11/value`; `/records/23/fields/12/value`. Original member: `browser_run_01/temporal/after_E_before_fresh_commands.json`; original selectors: `/stale_packet_refusal`, `/current_host_root_bound_packet_unchanged`, `/new_observation_valid_at_acquisition`, `/new_observation_end_within_original_workspace_expiry`. Exact selected derivative, not reopened raw.
+
+Method: Read the exact selected JSON values; compare only the stated relationship.
+
+Limit: R1 reads selected archive-derived values only; the historical EWS3 clock is separate.
+
+<a id="case-ews-memory-reuse"></a>
+
+#### Memory/reuse
+
+Photo edits, preview hash and producer count remain unchanged during affected media recomputation.
+
+Status: `recorded-historical`. Profile: PRINCIPAL_EWS3R2_NAMED_ARCHIVE_MEMBER; Principal EWS3R2 via EWS4R safe derivative.
+
+- [E-fields](references/ews/selected_field_projections.json), PRINCIPAL_EWS3R2_NAMED_ARCHIVE_MEMBER. Selectors: `/records/23/fields/5/value`; `/records/23/fields/6/value`; `/records/23/fields/7/value`; `/records/23/fields/8/value`; `/records/23/fields/9/value`; `/records/23/fields/10/value`. Original member: `browser_run_01/temporal/after_E_before_fresh_commands.json`; original selectors: `/loss_photo_work/edits/asset:1`, `/current_photo_work/edits/asset:1`, `/loss_photo_work/preview/sha256`, `/current_photo_work/preview/sha256`, `/loss_photo_work/producer_count`, `/current_photo_work/producer_count`. Exact selected derivative, not reopened raw.
+- [E-events](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/showcase/ephemeral_workspace_v01/public_safe_package/session_event_summary_v01.json), Principal EWS3R2 via EWS4R safe derivative. Selectors: `/payload/safe_document/summary/frames_before`; `/payload/safe_document/summary/frames_after`.
+
+Method: Compare the paired retained photo values for equality and the media frame counts 4 and 16.
+
+Limit: Principal branch preservation is not zero task activity; historical DRS memory is a different lane.
+
+<a id="case-ews-provenance"></a>
+
+#### Provenance
+
+The selected role output retains its exact archive/member binding; the later derivative does not replace that raw source.
+
+Status: `recorded-historical`. Profile: EWS principal CONTROLLED_DETERMINISTIC and separately labelled historical role records.
+
+- [E-semantic](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/showcase/ephemeral_workspace_v01/presentation_evidence/semantic_boundary_io_projection_v01.json), EWS principal CONTROLLED_DETERMINISTIC and separately labelled historical role records. Selectors: `/principal_controlled_role_records/1/source_binding`.
+
+Method: Read the exact selected JSON values; compare only the stated relationship.
+
+Limit: A source binding and byte pin do not restore old authority or make private raw bytes locally embedded.
+
+<a id="case-ews-local-independent-authority"></a>
+
+#### Local/independent authority
+
+The current local route accepts bounded visual/audio needs; saving remains separately confirmed.
+
+Status: `recorded-historical`. Profile: EWS principal CONTROLLED_DETERMINISTIC and separately labelled historical role records; Principal EWS3R2 via EWS4R safe derivative.
+
+- [E-semantic](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/showcase/ephemeral_workspace_v01/presentation_evidence/semantic_boundary_io_projection_v01.json), EWS principal CONTROLLED_DETERMINISTIC and separately labelled historical role records. Selectors: `/principal_controlled_role_records/1/bounded_input/route_acceptance`; `/principal_controlled_role_records/1/bounded_input/bsep/separate_save`.
+- [E-save_packet](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/showcase/ephemeral_workspace_v01/public_safe_package/sidecar_write_packet_safe_v01.json), Principal EWS3R2 via EWS4R safe derivative. Selectors: `/payload/safe_document/summary/approval_sha256`.
+
+Method: Read the exact selected JSON values; compare only the stated relationship.
+
+Limit: One local business owner; no independent second owner is demonstrated.
+
+<a id="case-ews-effects-history"></a>
+
+#### Effects/history
+
+A separate save writes one 250-byte sidecar; cleanup follows its initial resource-owner obligation and audio is ALREADY_EXITED, not gracefully acknowledged.
+
+Status: `recorded-historical`. Profile: Principal EWS3R2 via EWS4R safe derivative; PRINCIPAL_EWS3R2_NAMED_ARCHIVE_MEMBER.
+
+- [E-save_receipt](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/showcase/ephemeral_workspace_v01/public_safe_package/sidecar_write_receipt_safe_v01.json), Principal EWS3R2 via EWS4R safe derivative. Selectors: `/payload/safe_document/summary/sidecar_writes`; `/payload/safe_document/summary/sidecar_bytes`.
+- [E-fields](references/ews/selected_field_projections.json), PRINCIPAL_EWS3R2_NAMED_ARCHIVE_MEMBER. Selectors: `/records/21/fields/9/value`; `/records/21/fields/17/value`; `/records/21/fields/15/value`; `/records/21/fields/26/value`. Original member: `browser_run_01/complete.json`; original selectors: `/cleanup/authority`, `/cleanup/processes/0/close_outcome`, `/cleanup/processes/0/returncode`, `/cleanup/processes/0/receipt`. Exact selected derivative, not reopened raw.
+
+Method: Read the exact selected JSON values; compare only the stated relationship.
+
+Limit: Chronology is not a receipt-to-cleanup grant. Local synthetic effects only.
+
+<a id="case-ews-compute-environment"></a>
+
+#### Compute/environment
+
+The photo/media workspace records audio-process loss, continued media frames and reaped owned processes.
+
+Status: `recorded-historical`. Profile: PRINCIPAL_EWS3R2_NAMED_ARCHIVE_MEMBER; Principal EWS3R2 via EWS4R safe derivative.
+
+- [E-fields](references/ews/selected_field_projections.json), PRINCIPAL_EWS3R2_NAMED_ARCHIVE_MEMBER. Selectors: `/records/20/fields/0/value`; `/records/20/fields/1/value`. Original member: `browser_run_01/native_common_return/media_consumption.json`; original selectors: `/audio_available`, `/audio_policy`. Exact selected derivative, not reopened raw.
+- [E-events](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/showcase/ephemeral_workspace_v01/public_safe_package/session_event_summary_v01.json), Principal EWS3R2 via EWS4R safe derivative. Selectors: `/payload/safe_document/summary/frames_before`; `/payload/safe_document/summary/frames_after`; `/payload/safe_document/summary/pcm_after`.
+- [E-teardown](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/showcase/ephemeral_workspace_v01/public_safe_package/teardown_summary_v01.json), Principal EWS3R2 via EWS4R safe derivative. Selectors: `/payload/safe_document/summary/owned_processes_reaped`.
+
+Method: Read the exact selected JSON values; compare only the stated relationship.
+
+Limit: Finite local task services, not universal OS management or preemptive sandboxing.
+
+<a id="case-ews-experience-allocation"></a>
+
+#### Experience/allocation
+
+Outcome-driven numerical pressure or budget apportionment is not demonstrated by the selected principal EWS3R2 slice.
+
+Status: `not-demonstrated`. Profile: Principal EWS3R2 via EWS4R safe derivative; Principal EWS3R2 via EWS4R safe derivative.
+
+Inspected scope (not direct proof): [E-events](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/showcase/ephemeral_workspace_v01/public_safe_package/session_event_summary_v01.json), [E-topology](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/showcase/ephemeral_workspace_v01/public_safe_package/runtime_execution_topology_safe_v01.json).
+
+Method: Bounded source-coverage review only; absence of a witness is not absence of an architectural mechanism.
+
+Limit: Selective recomputation and historical DRS reuse are not automatically G3/G4 learned allocation.
+
+<a id="case-ews-author-admission"></a>
+
+#### Author/admission
+
+This workspace execution is not an independent external-author admission trial.
+
+Status: `not-demonstrated`. Profile: EWS principal CONTROLLED_DETERMINISTIC and separately labelled historical role records; Principal EWS3R2 via EWS4R safe derivative.
+
+Inspected scope (not direct proof): [E-semantic](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/showcase/ephemeral_workspace_v01/presentation_evidence/semantic_boundary_io_projection_v01.json), [E-topology](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/showcase/ephemeral_workspace_v01/public_safe_package/runtime_execution_topology_safe_v01.json).
+
+Method: Bounded source-coverage review only; absence of a witness is not absence of an architectural mechanism.
+
+Limit: A later source publication is not runtime permission or an authoring experiment.
+
+### Sentinel
+
+What local work remains useful with incomplete or delayed knowledge?
+
+<a id="case-sentinel-consumed-semantics"></a>
+
+#### Consumed semantics
+
+LS2R2 records selected reference-integrity and independent-reserve investigations with resulting checks.
+
+Status: `recorded-historical`. Profile: Sentinel LS2R2 safe derivative.
+
+- [LS-PROJECTION](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/showcase/landslide_sentinel_v01/public_safe_package/projection.json), Sentinel LS2R2 safe derivative. Selectors: `/artifacts/1/payload/safe_document/compositions/0/output/selection`; `/artifacts/1/payload/safe_document/compositions/1/output/selection`; `/artifacts/1/payload/safe_document/compositions/1/output/checks/0/detail/outcome`.
+
+Method: Read the exact selected JSON values; compare only the stated relationship.
+
+Limit: Safe-derived selected compositions, not a demonstrated valid live causal contrast or certified physical warning.
+
+<a id="case-sentinel-composition"></a>
+
+#### Composition
+
+In AT5, bounded local signalling continues while an optional worker remains pending in the same episode.
+
+Status: `recorded-historical`. Profile: INCIDENT_ATLAS_AT5_V01; separate per-domain histories.
+
+- [ATLAS](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/showcase/incident_to_proof_atlas_v01/evidence/atlas_package.json), INCIDENT_ATLAS_AT5_V01; separate per-domain histories. Selectors: `/sentinel/continuation/optional_profile`; `/sentinel/continuation/same_episode`; `/sentinel/continuation/waiting/pending_alive`; `/sentinel/continuation/waiting/signal/signal`.
+
+Method: Read the exact selected JSON values; compare only the stated relationship.
+
+Limit: CONTROLLED_BARRIER_STUB; not the LS2R2 trace and not an asynchronous production scheduler.
+
+<a id="case-sentinel-time-currentness"></a>
+
+#### Time/currentness
+
+AT5 refuses late semantics for role_current_context and records recovery ticks separately.
+
+Status: `recorded-historical`. Profile: INCIDENT_ATLAS_AT5_V01; separate per-domain histories.
+
+- [ATLAS](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/showcase/incident_to_proof_atlas_v01/evidence/atlas_package.json), INCIDENT_ATLAS_AT5_V01; separate per-domain histories. Selectors: `/sentinel/continuation/late/semantic_refusal/reason`; `/sentinel/continuation/budget_final/recovery_witnesses/0/tick`; `/sentinel/continuation/budget_final/recovery_witnesses/1/tick`; `/sentinel/continuation/budget_final/recovery_witnesses/2/tick`.
+
+Method: Read the exact selected JSON values; compare only the stated relationship.
+
+Limit: Logical ticks 4030/4045/4060 are not LS2R2 export timestamps or universal UTC order.
+
+<a id="case-sentinel-memory-reuse"></a>
+
+#### Memory/reuse
+
+A specific retained-result retrieval/reuse chain is not established by the selected LS2R2/AT5 fields.
+
+Status: `not-demonstrated`. Profile: Sentinel LS2R2 safe derivative; INCIDENT_ATLAS_AT5_V01; separate per-domain histories.
+
+Inspected scope (not direct proof): [LS-PROJECTION](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/showcase/landslide_sentinel_v01/public_safe_package/projection.json), [ATLAS](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/showcase/incident_to_proof_atlas_v01/evidence/atlas_package.json).
+
+Method: Bounded source-coverage review only; absence of a witness is not absence of an architectural mechanism.
+
+Limit: Do not infer memory reuse merely from a prior receipt or optional-worker continuation.
+
+<a id="case-sentinel-provenance"></a>
+
+#### Provenance
+
+LS2R2 distinguishes an intended local analyst role from actual CLOUD_LLM mode.
+
+Status: `recorded-historical`. Profile: Sentinel LS2R2 safe derivative.
+
+- [LS-PROJECTION](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/showcase/landslide_sentinel_v01/public_safe_package/projection.json), Sentinel LS2R2 safe derivative. Selectors: `/slice_id`; `/artifacts/0/payload/safe_document/actual_roles/0/intended_role`; `/artifacts/0/payload/safe_document/actual_roles/0/actual_mode`.
+
+Method: Read the exact selected JSON values; compare only the stated relationship.
+
+Limit: LOCAL in a role label is not a physical placement claim.
+
+<a id="case-sentinel-local-independent-authority"></a>
+
+#### Local/independent authority
+
+The LS2R2 composition Root result creates no permission; the separate AT5 consumed result likewise creates no permission.
+
+Status: `recorded-historical`. Profile: Sentinel LS2R2 safe derivative; INCIDENT_ATLAS_AT5_V01; separate per-domain histories.
+
+- [LS-PROJECTION](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/showcase/landslide_sentinel_v01/public_safe_package/projection.json), Sentinel LS2R2 safe derivative. Selectors: `/artifacts/1/payload/safe_document/compositions/0/root/permission_created`.
+- [ATLAS](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/showcase/incident_to_proof_atlas_v01/evidence/atlas_package.json), INCIDENT_ATLAS_AT5_V01; separate per-domain histories. Selectors: `/sentinel/continuation/consumption/creates_permission`.
+
+Method: Read the exact selected JSON values; compare only the stated relationship.
+
+Limit: Two profiles, not two independently coordinating business owners.
+
+<a id="case-sentinel-effects-history"></a>
+
+#### Effects/history
+
+AT5 records three mock effects and no outbox delivery.
+
+Status: `recorded-historical`. Profile: INCIDENT_ATLAS_AT5_V01; separate per-domain histories.
+
+- [ATLAS](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/showcase/incident_to_proof_atlas_v01/evidence/atlas_package.json), INCIDENT_ATLAS_AT5_V01; separate per-domain histories. Selectors: `/sentinel/counts/mock_effect`; `/sentinel/counts/outbox_deliver`.
+
+Method: Read the exact selected JSON values; compare only the stated relationship.
+
+Limit: No physical warning delivery or certification follows.
+
+<a id="case-sentinel-compute-environment"></a>
+
+#### Compute/environment
+
+The independent-reserve check reports bounded consistency against declared sample/range policy, while physical mapping remains unestablished.
+
+Status: `recorded-historical`. Profile: Sentinel LS2R2 safe derivative.
+
+- [LS-PROJECTION](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/showcase/landslide_sentinel_v01/public_safe_package/projection.json), Sentinel LS2R2 safe derivative. Selectors: `/artifacts/1/payload/safe_document/compositions/1/output/checks/0/detail/measured_span`; `/artifacts/1/payload/safe_document/compositions/1/output/checks/0/detail/range_value`; `/artifacts/1/payload/safe_document/compositions/1/output/checks/0/detail/policy`; `/artifacts/1/payload/safe_document/compositions/0/output/checks/1/detail/physical_mapping`.
+
+Method: Read the exact selected JSON values; compare only the stated relationship.
+
+Limit: Synthetic reference consistency is not geotechnical accuracy or validated sensor placement.
+
+<a id="case-sentinel-experience-allocation"></a>
+
+#### Experience/allocation
+
+A numerical outcome-history-to-allocation contrast is not demonstrated by these selected Sentinel fields.
+
+Status: `not-demonstrated`. Profile: Sentinel LS2R2 safe derivative; INCIDENT_ATLAS_AT5_V01; separate per-domain histories.
+
+Inspected scope (not direct proof): [LS-PROJECTION](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/showcase/landslide_sentinel_v01/public_safe_package/projection.json), [ATLAS](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/showcase/incident_to_proof_atlas_v01/evidence/atlas_package.json).
+
+Method: Bounded source-coverage review only; absence of a witness is not absence of an architectural mechanism.
+
+Limit: Optional recovery ticks are not G4 allocation units.
+
+<a id="case-sentinel-author-admission"></a>
+
+#### Author/admission
+
+The Sentinel slice does not document an independent external-author admission trial.
+
+Status: `not-demonstrated`. Profile: Sentinel LS2R2 safe derivative; INCIDENT_ATLAS_AT5_V01; separate per-domain histories.
+
+Inspected scope (not direct proof): [LS-PROJECTION](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/showcase/landslide_sentinel_v01/public_safe_package/projection.json), [ATLAS](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/showcase/incident_to_proof_atlas_v01/evidence/atlas_package.json).
+
+Method: Bounded source-coverage review only; absence of a witness is not absence of an architectural mechanism.
+
+Limit: Implementation provenance is not by itself authoring transfer.
+
+### G3/G4
+
+How does eligible experience change current scrutiny and expenditure?
+
+<a id="case-g3g4-consumed-semantics"></a>
+
+#### Consumed semantics
+
+In the G4 controlled profile, finite preference choice changes selected offer while actual Work allocations are recorded.
+
+Status: `recorded-historical`. Profile: G4 recorded controlled campaign.
+
+- [G-summary](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/gate6_reference_v01/evidence/blobs/a0d0753edb2e6d235fdc18a14eb184a9d8d7f9c8d77eecaced3c679fb5443db9), G4 recorded controlled campaign. Selectors: `/comparisons/cp_strategy`; `/comparisons/cp_budget/cold_performed`; `/comparisons/cp_budget/warm_performed`.
+
+Method: Read the exact selected JSON values; compare only the stated relationship.
+
+Limit: Controlled source inputs, not newly generated free-text/model semantics.
+
+<a id="case-g3g4-composition"></a>
+
+#### Composition
+
+Native offer Work is apportioned within a fixed total: seven allocation units after one spent and one mandatory unit.
+
+Status: `recorded-historical`. Profile: G4 cold allocation; G4 recorded controlled campaign.
+
+- [G-cold](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/gate6_reference_v01/evidence/blobs/ae6fde136d0c0f8180d71ed082c2b197c744ffb12217b80f83772d95ef7d253f), G4 cold allocation. Selectors: `/budget/total`; `/budget/spent`; `/allocation/mandatory_units`; `/allocation/available`.
+- [G-summary](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/gate6_reference_v01/evidence/blobs/a0d0753edb2e6d235fdc18a14eb184a9d8d7f9c8d77eecaced3c679fb5443db9), G4 recorded controlled campaign. Selectors: `/comparisons/cp_budget/cold_performed`; `/comparisons/cp_budget/warm_performed`.
+
+Method: Read the exact selected JSON values; compare only the stated relationship.
+
+Limit: ONE_NATIVE_WORK_DISPATCH_UNIT; not tokens, money, time or arbitrary recursive composition.
+
+<a id="case-g3g4-time-currentness"></a>
+
+#### Time/currentness
+
+Warm history is reopened through current review; separately N4-05 refuses replaced current use while preserving historical validity.
+
+Status: `recorded-historical`. Profile: G4 current history descent; N4-05 local controlled current policy.
+
+- [G-descent](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/gate6_reference_v01/evidence/blobs/d7603a6812fc2f14a917b8891e2aceaebfd60a718fd9eab816b702fbefcd825a), G4 current history descent. Selectors: `/0/read_audit`; `/0/review/result/decision`; `/0/descent/creates_permission`.
+- [P-checked](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/gate6_reference_v01/evidence/retained_obligations/policy/checked.json), N4-05 local controlled current policy. Selectors: `/replaced_current_use`; `/predecessor_historically_valid`.
+
+Method: Read the exact selected JSON values; compare only the stated relationship.
+
+Limit: G4 and N4-05 are distinct clocks and profiles, not one timeline or global latest-record service.
+
+<a id="case-g3g4-memory-reuse"></a>
+
+#### Memory/reuse
+
+N4-04 retains the same informational answer with cold/warm domain and Host Work counts 1/0; warm read and review remain.
+
+Status: `recorded-historical`. Profile: N4-04 cold/warm reuse, CURRENT_PROCESS_CURRENT_THREAD_ONLY; N4-04 retained-current-source informational reuse witness; N4-04 saved warm observation, current process/thread only.
+
+- [R-witness](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/gate6_reference_v01/evidence/retained_obligations/reuse/witness.json), N4-04 cold/warm reuse, CURRENT_PROCESS_CURRENT_THREAD_ONLY. Selectors: `/business_cold`; `/business_warm`; `/cold/value/outputs`; `/warm/value/answer/answer`.
+- [R-checked](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/gate6_reference_v01/evidence/retained_obligations/reuse/checked.json), N4-04 retained-current-source informational reuse witness. Selectors: `/domain_executions`; `/host_work`; `/warm_roots`; `/action_effects`.
+- [R-warm](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/gate6_reference_v01/evidence/retained_obligations/reuse/warm.observation.json), N4-04 saved warm observation, current process/thread only. Selectors: `/counts`; `/scope`; `/children`.
+
+Method: Read the exact selected JSON values; compare only the stated relationship.
+
+Limit: Current process/thread observation only; children unobserved, not zero. No wall-time speedup or free execution claim.
+
+<a id="case-g3g4-provenance"></a>
+
+#### Provenance
+
+G4 source-bound OFE and Root-recorded history precede current descent; the opened prior is -62500000.
+
+Status: `recorded-historical`. Profile: G4 controlled outcome/OFE; not G36 Supplier; G4 Root-recorded controlled history; G4 current history descent.
+
+- [G-observed](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/gate6_reference_v01/evidence/blobs/cfc0bf8da5e79b2778b3383d6d20e1dff09f02ad213cfc779128089b2488466d), G4 controlled outcome/OFE; not G36 Supplier. Selectors: `/feedback`.
+- [G-history](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/gate6_reference_v01/evidence/blobs/9dbc3c2e1abf432c6fecc2545b09e10f71a003f2c8482fafcf19da7e0989ad08), G4 Root-recorded controlled history. Selectors: `/snapshot/prior`.
+- [G-descent](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/gate6_reference_v01/evidence/blobs/d7603a6812fc2f14a917b8891e2aceaebfd60a718fd9eab816b702fbefcd825a), G4 current history descent. Selectors: `/0/bridge/payload/prior/prior_fp`.
+
+Method: Read the exact selected JSON values; compare only the stated relationship.
+
+Limit: One controlled occurrence, not a global reputation or independent samples from repeated reads.
+
+<a id="case-g3g4-local-independent-authority"></a>
+
+#### Local/independent authority
+
+G4 cold/contrast selection retains owner-specific client, airline and bank review decisions.
+
+Status: `recorded-historical`. Profile: G4 recorded controlled campaign.
+
+- [G-summary](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/gate6_reference_v01/evidence/blobs/a0d0753edb2e6d235fdc18a14eb184a9d8d7f9c8d77eecaced3c679fb5443db9), G4 recorded controlled campaign. Selectors: `/comparisons/cp_strategy/actual_root_decisions`.
+
+Method: Read the exact selected JSON values; compare only the stated relationship.
+
+Limit: These are independent local reviews, not booking/payment. N4-04 warm_roots=2 counts calls, not distinct owners.
+
+<a id="case-g3g4-effects-history"></a>
+
+#### Effects/history
+
+The G4 comparison reports zero real business effects; warm descent creates no authority or permission.
+
+Status: `recorded-historical`. Profile: G4 recorded controlled campaign; G4 current history descent.
+
+- [G-summary](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/gate6_reference_v01/evidence/blobs/a0d0753edb2e6d235fdc18a14eb184a9d8d7f9c8d77eecaced3c679fb5443db9), G4 recorded controlled campaign. Selectors: `/real_business_effects`.
+- [G-descent](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/gate6_reference_v01/evidence/blobs/d7603a6812fc2f14a917b8891e2aceaebfd60a718fd9eab816b702fbefcd825a), G4 current history descent. Selectors: `/0/descent/creates_authority`; `/0/descent/creates_permission`.
+
+Method: Read the exact selected JSON values; compare only the stated relationship.
+
+Limit: History informs present review; it does not carry a future grant.
+
+<a id="case-g3g4-compute-environment"></a>
+
+#### Compute/environment
+
+G4 cold/warm/contrast each record nine native dispatches and zero model calls.
+
+Status: `recorded-historical`. Profile: G4 recorded controlled campaign.
+
+- [G-summary](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/gate6_reference_v01/evidence/blobs/a0d0753edb2e6d235fdc18a14eb184a9d8d7f9c8d77eecaced3c679fb5443db9), G4 recorded controlled campaign. Selectors: `/instances`.
+
+Method: Read the exact selected JSON values; compare only the stated relationship.
+
+Limit: Dispatch accounting is not measured CPU cost, GPU use or throughput.
+
+<a id="case-g3g4-experience-allocation"></a>
+
+#### Experience/allocation
+
+Eligible history changes G4 offer allocation from 4/3 to 3/4 while total dispatch budget stays nine.
+
+Status: `recorded-historical`. Profile: G4 recorded controlled campaign; G4 cold allocation; G4 warm allocation.
+
+- [G-summary](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/gate6_reference_v01/evidence/blobs/a0d0753edb2e6d235fdc18a14eb184a9d8d7f9c8d77eecaced3c679fb5443db9), G4 recorded controlled campaign. Selectors: `/comparisons/cp_budget`.
+- [G-cold](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/gate6_reference_v01/evidence/blobs/ae6fde136d0c0f8180d71ed082c2b197c744ffb12217b80f83772d95ef7d253f), G4 cold allocation. Selectors: `/allocation/rows`.
+- [G-warm](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/gate6_reference_v01/evidence/blobs/7271bfcc4e6d0097895fcab16d94efb96f67494a1599db58c72c6445c62ea2b4), G4 warm allocation. Selectors: `/allocation/rows`.
+
+Method: Join branch identities and cold/warm allocations to the actual performed Work IDs; do not use row order as offer order.
+
+Limit: Seven allocation units only; one spent plus one mandatory account for total nine. Not N4-04 and not a measured speedup.
+
+<a id="case-g3g4-author-admission"></a>
+
+#### Author/admission
+
+This experience/allocation comparison does not demonstrate external authoring followed by separate source admission.
+
+Status: `not-demonstrated`. Profile: G4 recorded controlled campaign.
+
+Inspected scope (not direct proof): [G-summary](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/gate6_reference_v01/evidence/blobs/a0d0753edb2e6d235fdc18a14eb184a9d8d7f9c8d77eecaced3c679fb5443db9).
+
+Method: Bounded source-coverage review only; absence of a witness is not absence of an architectural mechanism.
+
+Limit: The finite G4 profile is not an integrated authoring Factory.
+
+### Wedding
+
+How do meaning and measured candidates change actual seating Work?
+
+<a id="case-wedding-consumed-semantics"></a>
+
+#### Consumed semantics
+
+SR2 returned amendments for guests 07/08 are bound to scoped acknowledgement, compiled material and actual downstream Work.
+
+Status: `recorded-historical`. Profile: W3 SR2 LIVE_ROLE_ORIGIN with scripted owner acknowledgement.
+
+- [W-SR2](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/showcase/wedding_seating_v01/evidence/portable/w3/story/SR2.json), W3 SR2 LIVE_ROLE_ORIGIN with scripted owner acknowledgement. Selectors: `/material/semantics/1`; `/material/revision_acknowledgement`; `/results/1/consumed_fields`; `/output/assignment`.
+
+Method: Read the exact selected JSON values; compare only the stated relationship.
+
+Limit: SR2 LIVE_ROLE_ORIGIN is separate from SR1 captured reexecution and W4 original revision 1. Owner acknowledgement is scripted controlled input.
+
+<a id="case-wedding-composition"></a>
+
+#### Composition
+
+SR2 materializes review, compile, solve, validate and consume; actual material outputs feed the next Work.
+
+Status: `recorded-historical`. Profile: W3 SR2 LIVE_ROLE_ORIGIN with scripted owner acknowledgement.
+
+- [W-SR2](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/showcase/wedding_seating_v01/evidence/portable/w3/story/SR2.json), W3 SR2 LIVE_ROLE_ORIGIN with scripted owner acknowledgement. Selectors: `/program/ordered_work_ids`; `/results/1/consumed_fields`; `/results/4/consumed_fields`.
+
+Method: Read the exact selected JSON values; compare only the stated relationship.
+
+Limit: Finite five-item program, not arbitrary automatic synthesis.
+
+<a id="case-wedding-time-currentness"></a>
+
+#### Time/currentness
+
+SR2 binds its revision to the prior result and current owner request, with a distinct revision Root decision.
+
+Status: `recorded-historical`. Profile: W3 SR2 LIVE_ROLE_ORIGIN with scripted owner acknowledgement.
+
+- [W-SR2](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/showcase/wedding_seating_v01/evidence/portable/w3/story/SR2.json), W3 SR2 LIVE_ROLE_ORIGIN with scripted owner acknowledgement. Selectors: `/material/parent_ref`; `/owner/request_ref`; `/material/problem/problem_revision`; `/material/revision_root/decision`; `/material/revision_root/permission_created`.
+
+Method: Read the exact selected JSON values; compare only the stated relationship.
+
+Limit: Request/revision linkage is not same-task identity, TTL renewal, or a new Root refusal inferred from old_under_new domain checks.
+
+<a id="case-wedding-memory-reuse"></a>
+
+#### Memory/reuse
+
+SR1 and SR2 retain distinct assignments; the next SR3 request is verification-only with a prior-result link.
+
+Status: `recorded-historical`. Profile: W3 SR1 CAPTURED_PROVIDER_RESPONSE_REEXECUTION; W3 SR2 LIVE_ROLE_ORIGIN with scripted owner acknowledgement; W3 SR3 VALIDATE_EXISTING.
+
+- [W-SR1](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/showcase/wedding_seating_v01/evidence/portable/w3/story/SR1.json), W3 SR1 CAPTURED_PROVIDER_RESPONSE_REEXECUTION. Selectors: `/output/assignment`.
+- [W-SR2](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/showcase/wedding_seating_v01/evidence/portable/w3/story/SR2.json), W3 SR2 LIVE_ROLE_ORIGIN with scripted owner acknowledgement. Selectors: `/output/assignment`.
+- [W-SR3](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/showcase/wedding_seating_v01/evidence/portable/w3/story/SR3.json), W3 SR3 VALIDATE_EXISTING. Selectors: `/material/task_kind`; `/material/parent_ref`; `/program/ordered_work_ids`.
+
+Method: Read the exact selected JSON values; compare only the stated relationship.
+
+Limit: 07/08 move by request; 09/10 move as a computed consequence. This is retained-result use, not a demonstrated local DRS search.
+
+<a id="case-wedding-provenance"></a>
+
+#### Provenance
+
+W4 KEEP binds raw measurement hash, selected shot 63/basis 517 and actual native output.
+
+Status: `recorded-historical`. Profile: W4 KEEP original revision 1; sample decoding and original-condition validation; W4 KEEP original revision 1; native consuming Work.
+
+- [W-samples](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/showcase/wedding_seating_v01/evidence/portable/w4/provider/KEEP_FAMILIAR_V01_sample_validation.json), W4 KEEP original revision 1; sample decoding and original-condition validation. Selectors: `/raw_sha256`; `/selected/shot_index`; `/selected/basis_index`.
+- [W-native](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/showcase/wedding_seating_v01/evidence/portable/w4/native/KEEP_FAMILIAR_V01/consume.json), W4 KEEP original revision 1; native consuming Work. Selectors: `/output/raw_sha256`; `/output/shot_index`; `/output/basis_index`.
+
+Method: Read the exact selected JSON values; compare only the stated relationship.
+
+Limit: Selection and decoding preserve the recorded shot; this is not provider attestation or repair of an invalid shot.
+
+<a id="case-wedding-local-independent-authority"></a>
+
+#### Local/independent authority
+
+Organizer review accepts SR2 revision without creating permission; W4 save has a separate Root result.
+
+Status: `recorded-historical`. Profile: W3 SR2 LIVE_ROLE_ORIGIN with scripted owner acknowledgement; W4 KEEP separate local approved save.
+
+- [W-SR2](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/showcase/wedding_seating_v01/evidence/portable/w3/story/SR2.json), W3 SR2 LIVE_ROLE_ORIGIN with scripted owner acknowledgement. Selectors: `/material/revision_root/target_root_id`; `/material/revision_root/decision`; `/material/revision_root/permission_created`.
+- [W-save](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/showcase/wedding_seating_v01/evidence/portable/w4/outputs/KEEP_FAMILIAR_V01/save_receipts.json), W4 KEEP separate local approved save. Selectors: `/0/root_result`.
+
+Method: Read the exact selected JSON values; compare only the stated relationship.
+
+Limit: One local organizer, not two independent business Roots.
+
+<a id="case-wedding-effects-history"></a>
+
+#### Effects/history
+
+W4 consumption is followed by separately recorded save status and content claim.
+
+Status: `recorded-historical`. Profile: W4 KEEP original revision 1; native consuming Work; W4 KEEP separate local approved save.
+
+- [W-native](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/showcase/wedding_seating_v01/evidence/portable/w4/native/KEEP_FAMILIAR_V01/consume.json), W4 KEEP original revision 1; native consuming Work. Selectors: `/root_result/permission_created`.
+- [W-save](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/showcase/wedding_seating_v01/evidence/portable/w4/outputs/KEEP_FAMILIAR_V01/save_receipts.json), W4 KEEP separate local approved save. Selectors: `/0/status`; `/0/claim`.
+
+Method: Read the exact selected JSON values; compare only the stated relationship.
+
+Limit: A numerical output is not permission; no real venue booking or QPU rerun in this edit.
+
+<a id="case-wedding-compute-environment"></a>
+
+#### Compute/environment
+
+W4 KEEP measurement row 63 is decoded in measuredQubits order, checked against original conditions and consumed; 33 of 1000 samples are valid.
+
+Status: `recorded-historical`. Profile: W4 KEEP original revision 1; historical remote QPU raw measurements; W4 KEEP original revision 1; sample decoding and original-condition validation; W4 KEEP original revision 1; native consuming Work.
+
+- [W-raw](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/showcase/wedding_seating_v01/evidence/portable/w4/provider/KEEP_FAMILIAR_V01_results.json), W4 KEEP original revision 1; historical remote QPU raw measurements. Selectors: `/measuredQubits`; `/measurements/63`.
+- [W-samples](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/showcase/wedding_seating_v01/evidence/portable/w4/provider/KEEP_FAMILIAR_V01_sample_validation.json), W4 KEEP original revision 1; sample decoding and original-condition validation. Selectors: `/requested_shots`; `/valid_samples`; `/selected/validation/coverage`; `/local_repair`.
+- [W-native](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/showcase/wedding_seating_v01/evidence/portable/w4/native/KEEP_FAMILIAR_V01/consume.json), W4 KEEP original revision 1; native consuming Work. Selectors: `/results/1/consumed_fields`.
+
+Method: Read the exact selected JSON values; compare only the stated relationship.
+
+Limit: Remote ten-qubit up-to-four-local representation differs from W3 36-indicator QUBO. Feasibility frequency is not hardware-noise rate or quantum advantage.
+
+<a id="case-wedding-experience-allocation"></a>
+
+#### Experience/allocation
+
+No outcome-history-driven G3/G4 allocation contrast is demonstrated by W3/W4.
+
+Status: `not-demonstrated`. Profile: W3 SR2 LIVE_ROLE_ORIGIN with scripted owner acknowledgement; W4 KEEP original revision 1; sample decoding and original-condition validation.
+
+Inspected scope (not direct proof): [W-SR2](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/showcase/wedding_seating_v01/evidence/portable/w3/story/SR2.json), [W-samples](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/showcase/wedding_seating_v01/evidence/portable/w4/provider/KEEP_FAMILIAR_V01_sample_validation.json).
+
+Method: Bounded source-coverage review only; absence of a witness is not absence of an architectural mechanism.
+
+Limit: Changed objective, revision or backend does not by itself mean learned resource allocation.
+
+<a id="case-wedding-author-admission"></a>
+
+#### Author/admission
+
+W3/W4 document semantic/computational participation, not an independent external-author admission trial.
+
+Status: `not-demonstrated`. Profile: W3 SR2 LIVE_ROLE_ORIGIN with scripted owner acknowledgement; W4 KEEP original revision 1; native consuming Work.
+
+Inspected scope (not direct proof): [W-SR2](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/showcase/wedding_seating_v01/evidence/portable/w3/story/SR2.json), [W-native](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/showcase/wedding_seating_v01/evidence/portable/w4/native/KEEP_FAMILIAR_V01/consume.json).
+
+Method: Bounded source-coverage review only; absence of a witness is not absence of an architectural mechanism.
+
+Limit: A model returning task meaning is not a model authoring and admitting implementation.
+
+### Football
+
+Does a permitted date shift become an actually consumed external result?
+
+<a id="case-football-consumed-semantics"></a>
+
+#### Consumed semantics
+
+The shifted venue offer becomes requester offer_json and a 6300-minor-EUR result under the unchanged 7000 budget.
+
+Status: `recorded-historical`. Profile: G54D1 parent-held p7_candidate_f779b790 native evidence; negative case separately labelled.
+
+- [main_req_shift_requester_work](references/episode/main_req_shift_requester_work.json), G54D1 parent-held p7_candidate_f779b790 native evidence; negative case separately labelled. Selectors: `/inputs/offer_json -> parse JSON string -> /body/offer/total_minor`; `/inputs/request_json -> parse JSON string -> /budget_minor`; `/outputs/result_json -> parse JSON string -> /total_minor`.
+
+Method: Read the exact selected JSON values; compare only the stated relationship.
+
+Limit: Only Jan 8 permits +30 minutes; synthetic inventory. This native trace is not relabelled a new provider run.
+
+<a id="case-football-composition"></a>
+
+#### Composition
+
+Producer E is included as B.offer; C.body equals B; C is the requester Work input.
+
+Status: `recorded-historical`. Profile: G54D1 parent-held p7_candidate_f779b790 native evidence; negative case separately labelled.
+
+- [main_pub_shift_venue_work](references/episode/main_pub_shift_venue_work.json), G54D1 parent-held p7_candidate_f779b790 native evidence; negative case separately labelled. Selectors: `/outputs/offer_json -> parse JSON string`.
+- [main_pub_shift_offer_body](references/episode/main_pub_shift_offer_body.json), G54D1 parent-held p7_candidate_f779b790 native evidence; negative case separately labelled. Selectors: `/offer`.
+- [main_req_shift_consumption_context](references/episode/main_req_shift_consumption_context.json), G54D1 parent-held p7_candidate_f779b790 native evidence; negative case separately labelled. Selectors: `/body`.
+- [main_req_shift_requester_work](references/episode/main_req_shift_requester_work.json), G54D1 parent-held p7_candidate_f779b790 native evidence; negative case separately labelled. Selectors: `/inputs/offer_json -> parse JSON string`.
+
+Method: Compare E == B.offer, B == C.body and C == parsed requester offer_json.
+
+Limit: Value-inclusion/equality joins, not identity of all enclosing objects or one shared owner.
+
+<a id="case-football-time-currentness"></a>
+
+#### Time/currentness
+
+The requester consumption context records ACTIVE current source data; the separate revoked case records a local refusal.
+
+Status: `recorded-historical`. Profile: G54D1 parent-held p7_candidate_f779b790 native evidence; negative case separately labelled.
+
+- [main_req_shift_consumption_context](references/episode/main_req_shift_consumption_context.json), G54D1 parent-held p7_candidate_f779b790 native evidence; negative case separately labelled. Selectors: `/source_projection`.
+- [negative_shift_status](references/episode/negative_shift_status.json), G54D1 parent-held p7_candidate_f779b790 native evidence; negative case separately labelled. Selectors: `/value/entry/state`; `/value/checked_at`; `/value/valid_until`.
+- [negative_shift_refusal_review](references/episode/negative_shift_refusal_review.json), G54D1 parent-held p7_candidate_f779b790 native evidence; negative case separately labelled. Selectors: `/result/decision`; `/result/reason_code`.
+
+Method: Read the exact selected JSON values; compare only the stated relationship.
+
+Limit: Authenticated STATUS supplies evidence for local currentness; it does not command Root or grant BOOK.
+
+<a id="case-football-memory-reuse"></a>
+
+#### Memory/reuse
+
+Repeat and verification read recorded local history rather than treating history as fresh booking consent.
+
+Status: `recorded-historical`. Profile: G54D1 parent-held p7_candidate_f779b790 native evidence; negative case separately labelled.
+
+- [main_req_repeat_history](references/episode/main_req_repeat_history.json), G54D1 parent-held p7_candidate_f779b790 native evidence; negative case separately labelled. Selectors: `/classification`; `/local`.
+- [main_req_verify_history](references/episode/main_req_verify_history.json), G54D1 parent-held p7_candidate_f779b790 native evidence; negative case separately labelled. Selectors: `/classification`.
+
+Method: Read the exact selected JSON values; compare only the stated relationship.
+
+Limit: This is recorded booking-history use, not proof of general informational reuse or wall-time savings.
+
+<a id="case-football-provenance"></a>
+
+#### Provenance
+
+The published body binds producer Work, source review, revision and lineage; the consumer preserves that body.
+
+Status: `recorded-historical`. Profile: G54D1 parent-held p7_candidate_f779b790 native evidence; negative case separately labelled.
+
+- [main_pub_shift_offer_body](references/episode/main_pub_shift_offer_body.json), G54D1 parent-held p7_candidate_f779b790 native evidence; negative case separately labelled. Selectors: `/source_work_ref`; `/source_review_ref`; `/source_revision`; `/source_lineage_refs`.
+- [main_req_shift_consumption_context](references/episode/main_req_shift_consumption_context.json), G54D1 parent-held p7_candidate_f779b790 native evidence; negative case separately labelled. Selectors: `/body/source_work_ref`.
+
+Method: Read the exact selected JSON values; compare only the stated relationship.
+
+Limit: Reviewed reference observer/source inputs are trusted; no remote execution attestation or new signature replay.
+
+<a id="case-football-local-independent-authority"></a>
+
+#### Local/independent authority
+
+Venue source review and requester result review are distinct local Root records; BOOK uses a separate action Root.
+
+Status: `recorded-historical`. Profile: G54D1 parent-held p7_candidate_f779b790 native evidence; negative case separately labelled.
+
+- [main_pub_shift_source_review](references/episode/main_pub_shift_source_review.json), G54D1 parent-held p7_candidate_f779b790 native evidence; negative case separately labelled. Selectors: `/result/target_root_id`; `/result/decision`.
+- [main_req_shift_requester_review](references/episode/main_req_shift_requester_review.json), G54D1 parent-held p7_candidate_f779b790 native evidence; negative case separately labelled. Selectors: `/result/target_root_id`; `/result/decision`.
+- [main_pub_book_action_root](references/episode/main_pub_book_action_root.json), G54D1 parent-held p7_candidate_f779b790 native evidence; negative case separately labelled. Selectors: `/root_decision_result/target_root_id`; `/root_decision_result/decision`.
+
+Method: Read the exact selected JSON values; compare only the stated relationship.
+
+Limit: Offer disclosure and requester acceptance do not transfer venue booking permission.
+
+<a id="case-football-effects-history"></a>
+
+#### Effects/history
+
+A separate BOOK action Root and receipt record the bounded mock booking.
+
+Status: `recorded-historical`. Profile: G54D1 parent-held p7_candidate_f779b790 native evidence; negative case separately labelled.
+
+- [main_pub_book_action_root](references/episode/main_pub_book_action_root.json), G54D1 parent-held p7_candidate_f779b790 native evidence; negative case separately labelled. Selectors: `/root_decision_result/permission_created`; `/root_decision_result/effect_requested`.
+- [main_pub_book_receipt](references/episode/main_pub_book_receipt.json), G54D1 parent-held p7_candidate_f779b790 native evidence; negative case separately labelled. Selectors: `/payload/action_kind`; `/payload/receipt_evidence_only`; `/payload/future_permission_created`; `/payload/real_world_effects_count`; `/payload/execution_evidence/result/outcome`.
+
+Method: Read the exact selected JSON values; compare only the stated relationship.
+
+Limit: Controlled BOOK consent and mock effect; no physical venue reservation or payment.
+
+<a id="case-football-compute-environment"></a>
+
+#### Compute/environment
+
+Trusted parent records the native publisher/requester execution boundary.
+
+Status: `recorded-historical`. Profile: G54D1 parent-held p7_candidate_f779b790 native evidence; negative case separately labelled.
+
+- [main_trusted_parent_receipt](references/episode/main_trusted_parent_receipt.json), G54D1 parent-held p7_candidate_f779b790 native evidence; negative case separately labelled. Selectors: `/waits`; `/author_or_exam_acceptance`.
+
+Method: Read the exact selected JSON values; compare only the stated relationship.
+
+Limit: Reviewed-reference processes do not establish arbitrary hostile-code isolation or cryptographic remote attestation.
+
+<a id="case-football-experience-allocation"></a>
+
+#### Experience/allocation
+
+The selected Football episode does not demonstrate numerical history-to-allocation change.
+
+Status: `not-demonstrated`. Profile: G54D1 parent-held p7_candidate_f779b790 native evidence; negative case separately labelled; G54D1 parent-held p7_candidate_f779b790 native evidence; negative case separately labelled.
+
+Inspected scope (not direct proof): [main_req_repeat_history](references/episode/main_req_repeat_history.json), [main_req_shift_requester_work](references/episode/main_req_shift_requester_work.json).
+
+Method: Bounded source-coverage review only; absence of a witness is not absence of an architectural mechanism.
+
+Limit: Repeat/verify avoiding another booking is not the G4 allocation experiment.
+
+<a id="case-football-author-admission"></a>
+
+#### Author/admission
+
+The Football implementation comes from G54D1 correction 4 and later separate G55L source admission.
+
+Status: `recorded-historical`. Profile: G54D1 accepted restored continuation; G55L separate owner engineering admission.
+
+- [AU-final](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/showcase/gate5_reference_v01/source/g54d1/FINAL_RESULT.json), G54D1 accepted restored continuation. Selectors: `/result`; `/author_mode`; `/correction_index`.
+- [AU-land](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/showcase/gate5_reference_v01/source/g55l/FINAL_RESULT.json), G55L separate owner engineering admission. Selectors: `/engineering_admission`; `/commit`.
+
+Method: Read the exact selected JSON values; compare only the stated relationship.
+
+Limit: This is implementation lineage, not a runtime grant. G54B1 and G54D INCOMPLETE remain historical.
+
+### Independent G5 authoring
+
+Can another developer create a component without admitting itself?
+
+<a id="case-g5author-consumed-semantics"></a>
+
+#### Consumed semantics
+
+The accepted authored domain records native and live semantic consumption classes separately.
+
+Status: `recorded-historical`. Profile: G54D1 accepted restored continuation.
+
+- [AU-final](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/showcase/gate5_reference_v01/source/g54d1/FINAL_RESULT.json), G54D1 accepted restored continuation. Selectors: `/native`; `/live`.
+
+Method: Read the exact selected JSON values; compare only the stated relationship.
+
+Limit: This is an accepted summary record, not an additional new execution. Model VERIFY did not see the later receipt.
+
+<a id="case-g5author-composition"></a>
+
+#### Composition
+
+The authoring result alone does not add a new runtime-composition trace beyond the linked Football case.
+
+Status: `not-demonstrated`. Profile: G54D1 accepted restored continuation.
+
+Inspected scope (not direct proof): [AU-final](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/showcase/gate5_reference_v01/source/g54d1/FINAL_RESULT.json).
+
+Method: Bounded source-coverage review only; absence of a witness is not absence of an architectural mechanism.
+
+Limit: Do not count implementation creation as another execution of the Football pipeline.
+
+<a id="case-g5author-time-currentness"></a>
+
+#### Time/currentness
+
+Design-time acceptance does not demonstrate present runtime currentness or grant a future action.
+
+Status: `not-demonstrated`. Profile: G54D1 accepted restored continuation; G55L separate owner engineering admission.
+
+Inspected scope (not direct proof): [AU-final](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/showcase/gate5_reference_v01/source/g54d1/FINAL_RESULT.json), [AU-land](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/showcase/gate5_reference_v01/source/g55l/FINAL_RESULT.json).
+
+Method: Bounded source-coverage review only; absence of a witness is not absence of an architectural mechanism.
+
+Limit: Implementation identity may cross from design-time to runtime; permission does not.
+
+<a id="case-g5author-memory-reuse"></a>
+
+#### Memory/reuse
+
+Restored author continuation is not demonstrated runtime DRS memory/reuse.
+
+Status: `not-demonstrated`. Profile: G54D1 accepted restored continuation.
+
+Inspected scope (not direct proof): [AU-final](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/showcase/gate5_reference_v01/source/g54d1/FINAL_RESULT.json).
+
+Method: Bounded source-coverage review only; absence of a witness is not absence of an architectural mechanism.
+
+Limit: Restored continuation is not identical opaque model state and is not a cold trial.
+
+<a id="case-g5author-provenance"></a>
+
+#### Provenance
+
+Protocol amendment fixes correction 4/submission 5, preserving the original G54D INCOMPLETE result and unchanged technical predicates.
+
+Status: `recorded-historical`. Profile: G54D1 separately authorized correction 4; G54D initial plus three corrections INCOMPLETE.
+
+- [AU-amend](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/showcase/gate5_reference_v01/source/g54d1/PROTOCOL_AMENDMENT.json), G54D1 separately authorized correction 4. Selectors: `/correction_index`; `/submission_number`; `/original_result`; `/technical_predicates`.
+- [AU-old](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/showcase/gate5_reference_v01/source/g54d/FINAL_RESULT.json), G54D initial plus three corrections INCOMPLETE. Selectors: `/result`.
+
+Method: Read the exact selected JSON values; compare only the stated relationship.
+
+Limit: Do not rewrite earlier failures or call the corrected continuation one-shot.
+
+<a id="case-g5author-local-independent-authority"></a>
+
+#### Local/independent authority
+
+Technical acceptance and owner engineering admission are different recorded operations.
+
+Status: `recorded-historical`. Profile: G54D1 accepted restored continuation; G55L separate owner engineering admission.
+
+- [AU-final](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/showcase/gate5_reference_v01/source/g54d1/FINAL_RESULT.json), G54D1 accepted restored continuation. Selectors: `/result`; `/owner_landing`; `/commit`.
+- [AU-land](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/showcase/gate5_reference_v01/source/g55l/FINAL_RESULT.json), G55L separate owner engineering admission. Selectors: `/engineering_admission`; `/commit`.
+
+Method: Read the exact selected JSON values; compare only the stated relationship.
+
+Limit: Design-time author/reviewer/admitting owner are not three runtime business Roots.
+
+<a id="case-g5author-effects-history"></a>
+
+#### Effects/history
+
+The D1 record distinguishes eight mock executor starts from zero real-world effects and supplied checks with no restored authority.
+
+Status: `recorded-historical`. Profile: G54D1 accepted restored continuation.
+
+- [AU-final](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/showcase/gate5_reference_v01/source/g54d1/FINAL_RESULT.json), G54D1 accepted restored continuation. Selectors: `/runtime_total_mock_executor_starts`; `/real_world_effects`; `/supplied/observed_calls`.
+
+Method: Read the exact selected JSON values; compare only the stated relationship.
+
+Limit: Historical controlled/native and supplied classes; no new work, effect or code admission performed here.
+
+<a id="case-g5author-compute-environment"></a>
+
+#### Compute/environment
+
+Independent supplied checks are recorded as two processes with byte-identical output.
+
+Status: `recorded-historical`. Profile: G54D1 accepted restored continuation.
+
+- [AU-final](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/showcase/gate5_reference_v01/source/g54d1/FINAL_RESULT.json), G54D1 accepted restored continuation. Selectors: `/supplied/status`; `/supplied/comparison`.
+
+Method: Read the exact selected JSON values; compare only the stated relationship.
+
+Limit: Separate checker processes are not evidence of sandboxing hostile Python; this worker does not rerun them.
+
+<a id="case-g5author-experience-allocation"></a>
+
+#### Experience/allocation
+
+Author corrections do not demonstrate runtime numerical experience-based resource allocation.
+
+Status: `not-demonstrated`. Profile: G54D1 accepted restored continuation.
+
+Inspected scope (not direct proof): [AU-final](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/showcase/gate5_reference_v01/source/g54d1/FINAL_RESULT.json).
+
+Method: Bounded source-coverage review only; absence of a witness is not absence of an architectural mechanism.
+
+Limit: Broker operations, submissions, native dispatches and model calls are different units.
+
+<a id="case-g5author-author-admission"></a>
+
+#### Author/admission
+
+An external author completed the explicitly amended trial; separate G55L engineering admission preserved prior paths and modes.
+
+Status: `recorded-historical`. Profile: G54D1 accepted restored continuation; G54D1 separately authorized correction 4; G55L separate owner engineering admission.
+
+- [AU-final](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/showcase/gate5_reference_v01/source/g54d1/FINAL_RESULT.json), G54D1 accepted restored continuation. Selectors: `/author_model`; `/author_mode`; `/no_supervisor_candidate_edits`; `/result`.
+- [AU-amend](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/showcase/gate5_reference_v01/source/g54d1/PROTOCOL_AMENDMENT.json), G54D1 separately authorized correction 4. Selectors: `/correction_index`; `/author_only_candidate_edits`.
+- [AU-land](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/showcase/gate5_reference_v01/source/g55l/FINAL_RESULT.json), G55L separate owner engineering admission. Selectors: `/engineering_admission`; `/prior_paths_preserved`; `/all_prior_posix_modes_preserved`; `/commit`.
+
+Method: Read the exact selected JSON values; compare only the stated relationship.
+
+Limit: G54B1/G54D INCOMPLETE; correction 4 in restored continuation. No automatic installation, unrestricted synthesis or new acceptance.
+
+### Incident Atlas
+
+Does a finite boundary reject its adverse input and allow useful continuation?
+
+<a id="case-incidents-consumed-semantics"></a>
+
+#### Consumed semantics
+
+The controlled Supplier donor preserves proposed recipient B/PROCEED and the lawful A observation with actual consumed Work.
+
+Status: `recorded-historical`. Profile: INCIDENT_ATLAS_AT5_V01; separate per-domain histories.
+
+- [ATLAS](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/showcase/incident_to_proof_atlas_v01/evidence/atlas_package.json), INCIDENT_ATLAS_AT5_V01; separate per-domain histories. Selectors: `/supplier/donor/sources/observations/0/origin/source_class`; `/supplier/donor/sources/observations/0/parsed`; `/supplier/donor/sources/observations/3/native/consumed_work_ref`.
+
+Method: Read the exact selected JSON values; compare only the stated relationship.
+
+Limit: Recorded CONTROLLED_FIXTURE donor, not a new malicious live-provider campaign.
+
+<a id="case-incidents-composition"></a>
+
+#### Composition
+
+Incident cards link to domain consumers with distinct direct, shared-domain and post-consumer relations.
+
+Status: `recorded-historical`. Profile: INCIDENT_ATLAS_AT5_V01; separate per-domain histories.
+
+- [ATLAS](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/showcase/incident_to_proof_atlas_v01/evidence/atlas_package.json), INCIDENT_ATLAS_AT5_V01; separate per-domain histories. Selectors: `/cards/S1/consumer_binding`; `/cards/T4/consumer_binding`; `/cards/S4/consumer_binding`; `/cards/S4/causal_limit`.
+
+Method: Read the exact selected JSON values; compare only the stated relationship.
+
+Limit: This is an evidence-to-consumer relation map, not one composite execution or twenty independent consumers.
+
+<a id="case-incidents-time-currentness"></a>
+
+#### Time/currentness
+
+The Testflix AT3 card family records session expiry/refusal against explicit logical-clock law.
+
+Status: `recorded-historical`. Profile: INCIDENT_ATLAS_AT5_V01; separate per-domain histories.
+
+- [ATLAS](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/showcase/incident_to_proof_atlas_v01/evidence/atlas_package.json), INCIDENT_ATLAS_AT5_V01; separate per-domain histories. Selectors: `/testflix/clock_law`; `/testflix/T2/deadline`; `/testflix/T2/expiry/executor_delta`.
+
+Method: Read the exact selected JSON values; compare only the stated relationship.
+
+Limit: A concrete case witness, not every card demonstrating time or a common Atlas-wide clock.
+
+<a id="case-incidents-memory-reuse"></a>
+
+#### Memory/reuse
+
+Saved Atlas relations remain inspectable without restoring live authority; native historical schema replay is explicitly unsupported.
+
+Status: `recorded-historical`. Profile: INCIDENT_ATLAS_AT5_V01; separate per-domain histories.
+
+- [ATLAS](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/showcase/incident_to_proof_atlas_v01/evidence/atlas_package.json), INCIDENT_ATLAS_AT5_V01; separate per-domain histories. Selectors: `/replay_scope`; `/native_replay`.
+
+Method: Read the exact selected JSON values; compare only the stated relationship.
+
+Limit: Safe-derived relation replay is not current runtime permission or actual memory reuse; this cell covers retained evidence history only.
+
+<a id="case-incidents-provenance"></a>
+
+#### Provenance
+
+S1 is direct causal, T4 shared-domain, and S4 post-consumer; their evidence classes cannot be merged.
+
+Status: `recorded-historical`. Profile: INCIDENT_ATLAS_AT5_V01; separate per-domain histories.
+
+- [ATLAS](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/showcase/incident_to_proof_atlas_v01/evidence/atlas_package.json), INCIDENT_ATLAS_AT5_V01; separate per-domain histories. Selectors: `/cards/S1/consumer_binding`; `/cards/T4/consumer_binding`; `/cards/S4/consumer_binding`; `/cards/S4/causal_limit`.
+
+Method: Read the exact selected JSON values; compare only the stated relationship.
+
+Limit: Several cards reuse one domain proof; card count is not independent experiment count.
+
+<a id="case-incidents-local-independent-authority"></a>
+
+#### Local/independent authority
+
+S1 unsafe proposal stops at Root with no packet or Firewall operation.
+
+Status: `recorded-historical`. Profile: INCIDENT_ATLAS_AT5_V01; separate per-domain histories.
+
+- [ATLAS](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/showcase/incident_to_proof_atlas_v01/evidence/atlas_package.json), INCIDENT_ATLAS_AT5_V01; separate per-domain histories. Selectors: `/cards/S1/boundary/stage`; `/cards/S1/boundary/quality`; `/cards/S1/boundary/enforcement`; `/cards/S1/boundary/packet`; `/cards/S1/boundary/firewall`.
+
+Method: Read the exact selected JSON values; compare only the stated relationship.
+
+Limit: A local decision boundary; Supplier A/B labels do not establish two deciding Roots.
+
+<a id="case-incidents-effects-history"></a>
+
+#### Effects/history
+
+S1 has zero effects at the blocked boundary; the recorded lawful A neighbor reaches consumed Work.
+
+Status: `recorded-historical`. Profile: INCIDENT_ATLAS_AT5_V01; separate per-domain histories.
+
+- [ATLAS](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/showcase/incident_to_proof_atlas_v01/evidence/atlas_package.json), INCIDENT_ATLAS_AT5_V01; separate per-domain histories. Selectors: `/cards/S1/boundary/effects`; `/supplier/donor/sources/observations/3/parsed/recipient`; `/supplier/donor/sources/observations/3/native/consumed_work_ref`.
+
+Method: Read the exact selected JSON values; compare only the stated relationship.
+
+Limit: The lawful neighbor is not an authorization inferred from the refused proposal.
+
+<a id="case-incidents-compute-environment"></a>
+
+#### Compute/environment
+
+The saved review reports zero model calls and test reruns; the Atlas source catalog preserves historical versus new call counts.
+
+Status: `recorded-historical`. Profile: AT5 saved independent review; ATLAS_EXACT_CARD_INDEX_V02.
+
+- [AT-REVIEW](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/showcase/incident_to_proof_atlas_v01/evidence/review/AT5_INDEPENDENT_REVIEW.json), AT5 saved independent review. Selectors: `/review_execution/test_reruns`; `/review_execution/model_calls`.
+- [AT-CASES](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/showcase/incident_to_proof_atlas_v01/reader/CASE_ROUTES.json), ATLAS_EXACT_CARD_INDEX_V02. Selectors: `/counts/historical_model_calls`; `/counts/new_provider_calls`.
+
+Method: Read the exact selected JSON values; compare only the stated relationship.
+
+Limit: These are saved profile/review counters, not measurements of this editor or all machine activity.
+
+<a id="case-incidents-experience-allocation"></a>
+
+#### Experience/allocation
+
+The Atlas accounts for five unique experience consumers and seven effective history samples, not twenty independent learning trials.
+
+Status: `recorded-historical`. Profile: ATLAS_EXACT_CARD_INDEX_V02; INCIDENT_ATLAS_AT5_V01; separate per-domain histories.
+
+- [AT-CASES](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/showcase/incident_to_proof_atlas_v01/reader/CASE_ROUTES.json), ATLAS_EXACT_CARD_INDEX_V02. Selectors: `/counts/unique_experience_consumers`; `/counts/effective_history_samples`.
+- [ATLAS](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/showcase/incident_to_proof_atlas_v01/evidence/atlas_package.json), INCIDENT_ATLAS_AT5_V01; separate per-domain histories. Selectors: `/supplier/donor/sources/current/work/operation`.
+
+Method: Read the exact selected JSON values; compare only the stated relationship.
+
+Limit: Source-bound review selection; no universal allocation improvement or safety percentage.
+
+<a id="case-incidents-author-admission"></a>
+
+#### Author/admission
+
+Incident cards and their saved review do not themselves demonstrate an independent external-author admission trial.
+
+Status: `not-demonstrated`. Profile: INCIDENT_ATLAS_AT5_V01; separate per-domain histories; AT5 saved independent review.
+
+Inspected scope (not direct proof): [ATLAS](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/showcase/incident_to_proof_atlas_v01/evidence/atlas_package.json), [AT-REVIEW](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/showcase/incident_to_proof_atlas_v01/evidence/review/AT5_INDEPENDENT_REVIEW.json).
+
+Method: Bounded source-coverage review only; absence of a witness is not absence of an architectural mechanism.
+
+Limit: A finite engineering review is not automatic source admission or future runtime authority.
+
+## Reading Across Cases
+
+Football and Airline identify owner-specific decisions. Supplier A/B names alone do not. Wedding exposes actual semantic and numerical consumption; EWS exposes continued work and retained photo state. G4 reallocates seven units inside nine total dispatches, while N4-04 independently avoids one repeated domain computation but retains reads/reviews. G5 separates construction, examination and source admission. Incident Atlas preserves direct/shared/post-consumer classes. None of these comparisons establishes universal deployment, zero activity, new authority or a single common execution clock.
+````
+
+## Source Block CONTRIBUTIONS_GLOBAL.md
+
+````text
+# Global Contributions
+
+The five contributions are architectural arguments supported by specific retained executions and data-only comparisons. Direct support is listed per subclaim. Normative/implementation sources explain the mechanism; related CL claims and chapters are separate navigation, not substitute evidence. Legacy CL01-CL04 are unchanged and retain their original scopes.
+
+Technical basis: `2e965ecb18e545e428380eb8e9aa5a7037a388be`. No new domain execution, provider/QPU call, signature replay, independent historical experiment or B5 was performed for this editorial revision. Full selected values and hashes are in [the integrated claim registry](corpus/editorial.json), JSON Pointer `/global_claims`; direct evidence is under each subclaim's `primary_direct_support`.
+
+## GCL01: Organize useful capabilities around a continuing intention
+
+Finite supported tasks connect interpretation, computed material and useful results across local boundaries.
+
+Mechanism: Typed Work and source-bound results compose activity while runtime materialization and local review retain their separate roles.
+
+Evidence class: `ARCHITECTURAL_INFERENCE_WITH_SCOPED_RECORDED_WITNESSES`.
+
+### GCL01.a
+
+Football venue computation becomes actual requester Work input.
+
+Primary direct support (recorded-historical):
+
+- [main_pub_shift_venue_work](references/episode/main_pub_shift_venue_work.json), G54D1 parent-held p7_candidate_f779b790 native evidence; negative case separately labelled. Selectors: `/outputs/offer_json -> parse JSON string`.
+- [main_pub_shift_offer_body](references/episode/main_pub_shift_offer_body.json), G54D1 parent-held p7_candidate_f779b790 native evidence; negative case separately labelled. Selectors: `/offer`.
+- [main_req_shift_consumption_context](references/episode/main_req_shift_consumption_context.json), G54D1 parent-held p7_candidate_f779b790 native evidence; negative case separately labelled. Selectors: `/body`.
+- [main_req_shift_requester_work](references/episode/main_req_shift_requester_work.json), G54D1 parent-held p7_candidate_f779b790 native evidence; negative case separately labelled. Selectors: `/inputs/offer_json -> parse JSON string`; `/outputs/result_json -> parse JSON string -> /total_minor`.
+
+Method: Compare E == B.offer, B == C.body and C == parsed requester offer_json; read total_minor=6300.
+
+Limit: Value equality is not an independent execution attestation. Original source and observer are trusted; synthetic native profile.
+
+### GCL01.b
+
+Wedding SR2 turns scoped returned amendments into a five-stage Work program and a changed seating result.
+
+Primary direct support (recorded-historical):
+
+- [W-capture](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/showcase/wedding_seating_v01/evidence/portable/w3/story/SR2_captures.json), W3 SR2 role captures. Selectors: `/1/raw_response -> parse JSON string -> /amendments`.
+- [W-SR2](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/showcase/wedding_seating_v01/evidence/portable/w3/story/SR2.json), W3 SR2 LIVE_ROLE_ORIGIN with scripted owner acknowledgement. Selectors: `/material/revision_acknowledgement/amendments`; `/program/ordered_work_ids`; `/results/1/consumed_fields`; `/results/4/consumed_fields`; `/output/assignment`.
+
+Method: Compare returned amendments to acknowledgement; follow actual USED material bindings through review, compile, solve, validate, consume.
+
+Limit: SR2 is LIVE_ROLE_ORIGIN with scripted controlled owner acknowledgement. It is not a QPU run or an unconstrained planner.
+
+### GCL01.c
+
+EWS binds controlled semantic needs to finite workspace work and continued visual computation after audio loss.
+
+Primary direct support (recorded-historical):
+
+- [E-semantic](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/showcase/ephemeral_workspace_v01/presentation_evidence/semantic_boundary_io_projection_v01.json), EWS principal CONTROLLED_DETERMINISTIC and separately labelled historical role records. Selectors: `/principal_controlled_role_records/0/structured_output`; `/principal_controlled_role_records/1/structured_output`.
+- [E-fields](references/ews/selected_field_projections.json), PRINCIPAL_EWS3R2_NAMED_ARCHIVE_MEMBER. Selectors: `/records/20/fields/0/value`; `/records/20/fields/1/value`; `/records/20/fields/4/value`; `/records/20/fields/6/value`. Original member: `browser_run_01/native_common_return/media_consumption.json`; original selectors: `/audio_available`, `/audio_policy`, `/recomputed_result_ref`, `/retained_consumption_ref`. Exact selected derivative, not reopened raw.
+- [E-events](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/showcase/ephemeral_workspace_v01/public_safe_package/session_event_summary_v01.json), Principal EWS3R2 via EWS4R safe derivative. Selectors: `/payload/safe_document/summary/frames_before`; `/payload/safe_document/summary/frames_after`.
+
+Method: Read controlled outputs, the actual media-consumption record and 4-to-16 frame values.
+
+Limit: Principal EWS3R2 controlled/no-provider execution, represented by exact selected derivatives. Historical LIVE/memory is not this lane.
+
+### Mechanism and Navigation
+
+- [hedgehog/kernel/work_composition_v01.py](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/hedgehog/kernel/work_composition_v01.py#L26-L32), lines 26-32. Typed producer-to-consumer binding has an explicit source Work, output and expected type. This is mechanism, not direct execution evidence.
+- [specs/current_architecture_lock_v01.md](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/specs/current_architecture_lock_v01.md#L282-L303), lines 282-303. Runtime owns topology; proposals, Post V&V, GT and memory do not become Root. This is mechanism, not direct execution evidence.
+- [docs/gate5_authoring_kit_v01/SHARED_EVIDENCE_CONTRACT.md](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/gate5_authoring_kit_v01/SHARED_EVIDENCE_CONTRACT.md#L3-L23), lines 3-23. E, B and C are separate causal objects; domain mapping and source review do not transfer authority. This is mechanism, not direct execution evidence.
+
+Related legacy claims: CL01: Common architecture; no widened execution guarantee. CL02: The same Football producer-to-consumer example; direct support is repeated explicitly below.
+
+Explanatory chapters: [01_intent.md](chapters/01_intent.md), [02_geometry.md](chapters/02_geometry.md), [07_football.md](chapters/07_football.md). These are explanations, not direct support.
+
+Overall limit: Engineered finite profiles, not arbitrary autonomous synthesis; the cases did not execute as one transaction.
+
+## GCL02: Change the affected part without rewriting useful history
+
+Supported work can continue when conditions or resources change, retaining results that remain useful.
+
+Mechanism: Current use is checked separately from preserved evidence; recomputation follows the affected relation instead of awarding old authority.
+
+Evidence class: `ARCHITECTURAL_INFERENCE_WITH_SCOPED_RECORDED_WITNESSES`.
+
+### GCL02.a
+
+EWS affected media advances from 4 to 16 frames while photo edits, preview bytes and photo producer count remain unchanged.
+
+Primary direct support (recorded-historical):
+
+- [E-events](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/showcase/ephemeral_workspace_v01/public_safe_package/session_event_summary_v01.json), Principal EWS3R2 via EWS4R safe derivative. Selectors: `/payload/safe_document/summary/frames_before`; `/payload/safe_document/summary/frames_after`; `/payload/safe_document/summary/pcm_before`; `/payload/safe_document/summary/pcm_after`.
+- [E-fields](references/ews/selected_field_projections.json), PRINCIPAL_EWS3R2_NAMED_ARCHIVE_MEMBER. Selectors: `/records/23/fields/5/value`; `/records/23/fields/6/value`; `/records/23/fields/7/value`; `/records/23/fields/8/value`; `/records/23/fields/9/value`; `/records/23/fields/10/value`. Original member: `browser_run_01/temporal/after_E_before_fresh_commands.json`; original selectors: `/loss_photo_work/edits/asset:1`, `/current_photo_work/edits/asset:1`, `/loss_photo_work/preview/sha256`, `/current_photo_work/preview/sha256`, `/loss_photo_work/producer_count`, `/current_photo_work/producer_count`. Exact selected derivative, not reopened raw.
+
+Method: Pairwise equality on the three photo fields; separate frame and PCM counts.
+
+Limit: Retained photo does not mean no activity: media is recomputed. Raw archive members were not reopened by this R1 worker.
+
+### GCL02.b
+
+EWS refuses the old action packet while fresh observations stay within the original lifetime; saving and cleanup have distinct records.
+
+Primary direct support (recorded-historical):
+
+- [E-fields](references/ews/selected_field_projections.json), PRINCIPAL_EWS3R2_NAMED_ARCHIVE_MEMBER. Selectors: `/records/23/fields/0/value`; `/records/23/fields/1/value`; `/records/23/fields/11/value`; `/records/23/fields/12/value`. Original member: `browser_run_01/temporal/after_E_before_fresh_commands.json`; original selectors: `/stale_packet_refusal`, `/current_host_root_bound_packet_unchanged`, `/new_observation_valid_at_acquisition`, `/new_observation_end_within_original_workspace_expiry`. Exact selected derivative, not reopened raw.
+- [E-save_receipt](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/showcase/ephemeral_workspace_v01/public_safe_package/sidecar_write_receipt_safe_v01.json), Principal EWS3R2 via EWS4R safe derivative. Selectors: `/payload/safe_document/summary/sidecar_writes`.
+- [E-fields](references/ews/selected_field_projections.json), PRINCIPAL_EWS3R2_NAMED_ARCHIVE_MEMBER. Selectors: `/records/21/fields/9/value`; `/records/21/fields/17/value`; `/records/21/fields/26/value`. Original member: `browser_run_01/complete.json`; original selectors: `/cleanup/authority`, `/cleanup/processes/0/close_outcome`, `/cleanup/processes/0/receipt`. Exact selected derivative, not reopened raw.
+
+Method: Read currentness outcomes, one sidecar write and the cleanup obligation/ALREADY_EXITED/null-receipt fields separately.
+
+Limit: No receipt-derived permission or invented cleanup approval; audio was not gracefully acknowledged.
+
+### GCL02.c
+
+Wedding preserves the old assignment as historically valid while its changed constraints require a different SR2 assignment.
+
+Primary direct support (recorded-historical):
+
+- [W-SR1](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/showcase/wedding_seating_v01/evidence/portable/w3/story/SR1.json), W3 SR1 CAPTURED_PROVIDER_RESPONSE_REEXECUTION. Selectors: `/output/assignment`.
+- [W-SR2](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/showcase/wedding_seating_v01/evidence/portable/w3/story/SR2.json), W3 SR2 LIVE_ROLE_ORIGIN with scripted owner acknowledgement. Selectors: `/output/assignment`; `/material/revision_acknowledgement/scope_guests`.
+- [W-old](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/showcase/wedding_seating_v01/evidence/supplementary/w3/story/old_under_new.json), W3 saved old-under-new comparison. Selectors: `/historical/status`; `/current/status`; `/current/hard_violations`; `/original_sr1_unchanged`; `/current_root_refusal`.
+
+Method: Compare SR1/SR2 arrays and historical VALID versus current INVALID with two violations; retain original_sr1_unchanged=true.
+
+Limit: current_root_refusal=current_owner_context is a domain precondition failure, not a newly executed Root rejection. 09/10 movement is computed, not another user instruction.
+
+### Mechanism and Navigation
+
+- [specs/current_architecture_lock_v01.md](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/specs/current_architecture_lock_v01.md#L326-L343), lines 326-343. Current retrieval and fresh local decisions are distinct from immutable historical evidence. This is mechanism, not direct execution evidence.
+- [specs/current_architecture_lock_v01.md](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/specs/current_architecture_lock_v01.md#L312-L325), lines 312-325. Current scoped Root-created packet and exclusive Firewall govern effects. This is mechanism, not direct execution evidence.
+- [hedgehog/kernel/work_composition_v01.py](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/hedgehog/kernel/work_composition_v01.py#L26-L32), lines 26-32. Typed producer-to-consumer binding has an explicit source Work, output and expected type. This is mechanism, not direct execution evidence.
+
+Related legacy claims: CL03: Football history/currentness is a related mechanism only, not direct EWS or Wedding support.
+
+Explanatory chapters: [03_time_memory.md](chapters/03_time_memory.md), [09_workspace.md](chapters/09_workspace.md), [08_wedding.md](chapters/08_wedding.md). These are explanations, not direct support.
+
+Overall limit: Separate historical runs and bounded derivatives, not a universal incremental-computation or reuse theorem.
+
+## GCL03: Use heterogeneous intelligence and computation as accountable participants
+
+Semantic interpretation, numerical search and measured candidates can contribute without taking the roles of checker or local owner.
+
+Mechanism: Returned fields are admitted as bounded material; decoded candidates face original-condition validation, actual Work consumption and a separate save decision.
+
+Evidence class: `ARCHITECTURAL_INFERENCE_WITH_SCOPED_RECORDED_WITNESSES`.
+
+### GCL03.a
+
+The SR2 returned objective/amendments are the values admitted to the compiling Work.
+
+Primary direct support (recorded-historical):
+
+- [W-capture](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/showcase/wedding_seating_v01/evidence/portable/w3/story/SR2_captures.json), W3 SR2 role captures. Selectors: `/1/raw_response -> parse JSON string -> /objective_profile`; `/1/raw_response -> parse JSON string -> /amendments`.
+- [W-SR2](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/showcase/wedding_seating_v01/evidence/portable/w3/story/SR2.json), W3 SR2 LIVE_ROLE_ORIGIN with scripted owner acknowledgement. Selectors: `/material/profile`; `/material/revision_acknowledgement/amendments`; `/results/1/invocation/inputs/0/value -> parse JSON string -> /profile`; `/results/1/invocation/inputs/0/value -> parse JSON string -> /problem/hard_conditions`; `/results/1/consumed_fields`.
+
+Method: Parse the recorded response and compiling invocation input as JSON data; compare objective/amendment values and actual consumed material binding.
+
+Limit: Model role output proposes meaning; scripted owner acknowledgement and revision Root review remain separate.
+
+### GCL03.b
+
+W4 KEEP consumes the original valid selected measurement, row 63/basis 517, after decoding and original-condition checking.
+
+Primary direct support (recorded-historical):
+
+- [W-raw](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/showcase/wedding_seating_v01/evidence/portable/w4/provider/KEEP_FAMILIAR_V01_results.json), W4 KEEP original revision 1; historical remote QPU raw measurements. Selectors: `/measuredQubits`; `/measurements/63`.
+- [W-samples](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/showcase/wedding_seating_v01/evidence/portable/w4/provider/KEEP_FAMILIAR_V01_sample_validation.json), W4 KEEP original revision 1; sample decoding and original-condition validation. Selectors: `/raw_sha256`; `/selected`; `/valid_samples`; `/requested_shots`; `/local_repair`.
+- [W-native](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/showcase/wedding_seating_v01/evidence/portable/w4/native/KEEP_FAMILIAR_V01/consume.json), W4 KEEP original revision 1; native consuming Work. Selectors: `/output`; `/results/1/consumed_fields`.
+
+Method: Use recorded measuredQubits ordering; join raw hash, selected shot/basis/assignment and consuming output; read original-condition coverage and 33/1000 feasible samples.
+
+Limit: Zero-based row 63. No repaired bad shot, hardware-noise inference or quantum speedup. Ten measured qubits do not mean ten-variable QUBO.
+
+### GCL03.c
+
+The W4 numerical result is saved only through its separate local save record.
+
+Primary direct support (recorded-historical):
+
+- [W-native](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/showcase/wedding_seating_v01/evidence/portable/w4/native/KEEP_FAMILIAR_V01/consume.json), W4 KEEP original revision 1; native consuming Work. Selectors: `/root_result/permission_created`; `/output/assignment`.
+- [W-save](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/showcase/wedding_seating_v01/evidence/portable/w4/outputs/KEEP_FAMILIAR_V01/save_receipts.json), W4 KEEP separate local approved save. Selectors: `/0/claim`; `/0/root_result`; `/0/status`.
+
+Method: Read the separate save claim, Root result and status rather than treating the measurement or consumption as a save grant.
+
+Limit: Historical local save; no new save, remote execution or current authorization is performed here.
+
+### Mechanism and Navigation
+
+- [hedgehog/kernel/work_composition_v01.py](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/hedgehog/kernel/work_composition_v01.py#L26-L32), lines 26-32. Typed producer-to-consumer binding has an explicit source Work, output and expected type. This is mechanism, not direct execution evidence.
+- [specs/current_architecture_lock_v01.md](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/specs/current_architecture_lock_v01.md#L282-L303), lines 282-303. Runtime owns topology; proposals, Post V&V, GT and memory do not become Root. This is mechanism, not direct execution evidence.
+- [specs/current_architecture_lock_v01.md](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/specs/current_architecture_lock_v01.md#L312-L325), lines 312-325. Current scoped Root-created packet and exclusive Firewall govern effects. This is mechanism, not direct execution evidence.
+
+Related legacy claims: CL01: Related division of computational and authority roles; not direct evidence for QPU performance.
+
+Explanatory chapters: [04_compute.md](chapters/04_compute.md), [08_wedding.md](chapters/08_wedding.md). These are explanations, not direct support.
+
+Overall limit: No new calls or quantum advantage. W3 amendments and W4 original revision 1 are different profiles; engineers supply the supported adapters.
+
+## GCL04: Let experience influence where work is spent
+
+Eligible experience can change finite scrutiny/allocation; separately, current informational reuse can avoid a repeated domain computation.
+
+Mechanism: Source-bound outcomes feed advisory history, current descent and finite apportionment; each current decision remains local.
+
+Evidence class: `ARCHITECTURAL_INFERENCE_WITH_SCOPED_RECORDED_WITNESSES`.
+
+### GCL04.a
+
+G36R captured Supplier history changes the current review selection from standard to provenance and reaches a recorded consumed Work.
+
+Primary direct support (recorded-historical):
+
+- [G36](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/showcase/gate3_closure_v01/evidence/g36r/runtime/captured_final/report.json), G36R captured reexecution of live-origin observations. Selectors: `/lane`; `/history/prior/lane`; `/history/fold/effective_sample_count`; `/history/prior/prior_fp`; `/current/before_selected`; `/current/after_selected`; `/current/operation`; `/current/consumed_work`.
+
+Method: Read live-origin versus captured-consumption labels, one effective sample, prior -62500000 and the actual current consumed Work ID.
+
+Limit: Sparse captured reexecution, not fresh live acquisition, global reputation or transferable permission.
+
+### GCL04.b
+
+G4 controlled outcome/history and current descent change seven allocation units from 4/3 to 3/4 within total dispatch budget nine.
+
+Primary direct support (recorded-historical):
+
+- [G-observed](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/gate6_reference_v01/evidence/blobs/cfc0bf8da5e79b2778b3383d6d20e1dff09f02ad213cfc779128089b2488466d), G4 controlled outcome/OFE; not G36 Supplier. Selectors: `/feedback`.
+- [G-history](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/gate6_reference_v01/evidence/blobs/9dbc3c2e1abf432c6fecc2545b09e10f71a003f2c8482fafcf19da7e0989ad08), G4 Root-recorded controlled history. Selectors: `/snapshot/prior/prior_fp`.
+- [G-descent](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/gate6_reference_v01/evidence/blobs/d7603a6812fc2f14a917b8891e2aceaebfd60a718fd9eab816b702fbefcd825a), G4 current history descent. Selectors: `/0/bridge/payload/prior/prior_fp`; `/0/review/result/permission_created`.
+- [G-cold](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/gate6_reference_v01/evidence/blobs/ae6fde136d0c0f8180d71ed082c2b197c744ffb12217b80f83772d95ef7d253f), G4 cold allocation. Selectors: `/budget/total`; `/budget/spent`; `/allocation/mandatory_units`; `/allocation/available`; `/allocation/rows`; `/allocation/unit`.
+- [G-warm](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/gate6_reference_v01/evidence/blobs/7271bfcc4e6d0097895fcab16d94efb96f67494a1599db58c72c6445c62ea2b4), G4 warm allocation. Selectors: `/allocation/rows`.
+- [G-summary](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/gate6_reference_v01/evidence/blobs/a0d0753edb2e6d235fdc18a14eb184a9d8d7f9c8d77eecaced3c679fb5443db9), G4 recorded controlled campaign. Selectors: `/comparisons/cp_budget`; `/instances`.
+
+Method: Join branch IDs to allocations and actual performed Work IDs; check total=spent 1+mandatory 1+allocated 7 and cold/warm dispatch count nine.
+
+Limit: Configured relevance/cost values are not measured CPU or probabilities. One raw prior application; not fewer total calls or StrongGT.
+
+### GCL04.c
+
+N4-04 warm informational reuse preserves the business input and answer with zero repeated domain execution, while one read and two Root calls remain.
+
+Primary direct support (recorded-historical):
+
+- [R-witness](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/gate6_reference_v01/evidence/retained_obligations/reuse/witness.json), N4-04 cold/warm reuse, CURRENT_PROCESS_CURRENT_THREAD_ONLY. Selectors: `/business_cold`; `/business_warm`; `/cold/value/outputs`; `/warm/value/answer/answer`; `/changed_refusal/value/reason`; `/expired`; `/wrong_root`.
+- [R-checked](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/gate6_reference_v01/evidence/retained_obligations/reuse/checked.json), N4-04 retained-current-source informational reuse witness. Selectors: `/domain_executions`; `/host_work`; `/warm_roots`; `/action_effects`.
+- [R-warm](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/gate6_reference_v01/evidence/retained_obligations/reuse/warm.observation.json), N4-04 saved warm observation, current process/thread only. Selectors: `/counts`; `/scope`; `/children`.
+
+Method: Compare cold/warm business and answer values; inspect counts [1,0], read=1, warm_roots=2 and changed/expired/wrong-Root refusals.
+
+Limit: CURRENT_PROCESS_CURRENT_THREAD_ONLY; children UNOBSERVED_NOT_ZERO. Two calls do not imply two owners. Reads/reviews and other overhead remain.
+
+### Mechanism and Navigation
+
+- [hedgehog/outcome_calibration_v01.py](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/hedgehog/outcome_calibration_v01.py#L1406-L1437), lines 1406-1437. Source-bound fixed-point prior update is advisory, not permission. This is mechanism, not direct execution evidence.
+- [hedgehog/gate4_pressure_budget_v01.py](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/hedgehog/gate4_pressure_budget_v01.py#L103-L145), lines 103-145. Finite integer apportionment follows mandatory reservations, quotas and pressure inputs. This is mechanism, not direct execution evidence.
+- [specs/current_architecture_lock_v01.md](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/specs/current_architecture_lock_v01.md#L326-L343), lines 326-343. Current retrieval and fresh local decisions are distinct from immutable historical evidence. This is mechanism, not direct execution evidence.
+
+Related legacy claims: CL03: Related history-versus-current-use distinction in Football; not G4 allocation or N4-04 evidence.
+
+Explanatory chapters: [05_experience.md](chapters/05_experience.md). These are explanations, not direct support.
+
+Overall limit: Advice is not authority. G36, G4 and N4-04 are distinct profiles and histories, not a universal pipeline or a measured speedup.
+
+## GCL05: Grow implementations without automating trust
+
+A developer outside the kernel can provide a useful domain implementation under an independent examination and admission process.
+
+Mechanism: HOW/WHAT guide construction; candidate review/exam and later owner source admission are distinct from current runtime Root decisions.
+
+Evidence class: `ARCHITECTURAL_INFERENCE_WITH_SCOPED_RECORDED_WITNESSES`.
+
+### GCL05.a
+
+The trial reached acceptance only under the explicit fourth-correction amendment, retaining the earlier incomplete outcomes.
+
+Primary direct support (recorded-historical):
+
+- [AU-B1](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/showcase/g54b1_authoring_case_v01/evidence/trial_ledger.json), G54B1 preserved incomplete author trial. Selectors: `/entries/2/trial_id`; `/entries/2/result`.
+- [AU-old](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/showcase/gate5_reference_v01/source/g54d/FINAL_RESULT.json), G54D initial plus three corrections INCOMPLETE. Selectors: `/result`.
+- [AU-amend](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/showcase/gate5_reference_v01/source/g54d1/PROTOCOL_AMENDMENT.json), G54D1 separately authorized correction 4. Selectors: `/original_result`; `/correction_index`; `/submission_number`; `/technical_predicates`.
+- [AU-final](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/showcase/gate5_reference_v01/source/g54d1/FINAL_RESULT.json), G54D1 accepted restored continuation. Selectors: `/author_mode`; `/not_a_new_cold_trial`; `/no_supervisor_candidate_edits`; `/result`.
+
+Method: Read each dated lineage separately; correlate correction 4, fifth total submission, restored mode and unchanged technical predicates.
+
+Limit: G54B1 later contract-review findings are not retroactive native acceptance; restored mode is not identical opaque model state.
+
+### GCL05.b
+
+Independent source review and native/supplied examination did not themselves perform owner admission.
+
+Primary direct support (recorded-historical):
+
+- [AU-review](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/showcase/gate5_reference_v01/source/g54d1/AUTHOR_TRIAL/attempt_04/source_review.json), G54D1 independent pre-execution source review. Selectors: `/status`; `/reviewer`; `/candidate_imported_on_host`; `/notes/approval_scope`.
+- [AU-final](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/showcase/gate5_reference_v01/source/g54d1/FINAL_RESULT.json), G54D1 accepted restored continuation. Selectors: `/native/status`; `/native/cases`; `/supplied/status`; `/supplied/comparison`; `/owner_landing`; `/commit`.
+
+Method: Separate pre-execution approval, saved native acceptance, two supplied processes and owner_landing=false.
+
+Limit: Reports are retained evidence, not rerun by this editor. Finite reviewed-reference trust, not arbitrary-code safety.
+
+### GCL05.c
+
+G55L later admitted the exact engineering successor through the owner process while preserving prior paths and modes.
+
+Primary direct support (recorded-historical):
+
+- [AU-land](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/showcase/gate5_reference_v01/source/g55l/FINAL_RESULT.json), G55L separate owner engineering admission. Selectors: `/engineering_admission`; `/commit`; `/parent`; `/tree`; `/paths_added`; `/prior_paths_preserved`; `/all_prior_posix_modes_preserved`; `/author_calls`; `/native_trials`.
+
+Method: Read actual Git-derived engineering identity and separate admission/preservation record; compare to the prior no-landing result.
+
+Limit: Historical engineering landing is not B3R1 publication permission or current runtime effect authority; old G56-pending fields keep their historical meaning.
+
+### Mechanism and Navigation
+
+- [docs/gate5_authoring_kit_v01/SHARED_EVIDENCE_CONTRACT.md](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/gate5_authoring_kit_v01/SHARED_EVIDENCE_CONTRACT.md#L24-L42), lines 24-42. Independent source inputs and expected C are reconstructed outside candidate answers. This is mechanism, not direct execution evidence.
+- [docs/repository_transition_admission_v01.md](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/repository_transition_admission_v01.md#L7-L24), lines 7-24. Repository source admission is a separate transition; it is not runtime permission. This is mechanism, not direct execution evidence.
+- [specs/current_architecture_lock_v01.md](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/specs/current_architecture_lock_v01.md#L282-L303), lines 282-303. Runtime owns topology; proposals, Post V&V, GT and memory do not become Root. This is mechanism, not direct execution evidence.
+
+Related legacy claims: CL04: Same bounded external-author lineage; direct amended-trial and landing records are explicit below.
+
+Explanatory chapters: [11_integration.md](chapters/11_integration.md). These are explanations, not direct support.
+
+Overall limit: G54B1/G54D INCOMPLETE remain. Correction 4 was separately authorized in restored continuation; no one-shot success, unrestricted synthesis or hostile-code isolation is claimed.
+````
+
+## Source Block atlas/entity_cards.json
+
+````text
+{
+  "entities": [
+    {
+      "id": "INTENT",
+      "label": "Practical intention",
+      "meaning": "User or event; not an executable permission"
+    },
+    {
+      "id": "ROOT",
+      "label": "Independent local Root",
+      "meaning": "Sole local final and commit authority"
+    },
+    {
+      "id": "WORK",
+      "label": "Bounded Work",
+      "meaning": "Typed computation yielding proposals/evidence"
+    },
+    {
+      "id": "MODEL",
+      "label": "Semantic model participant",
+      "meaning": "Untrusted provider/model participant. Its returned PROPOSAL and BSEP input are distinct objects."
+    },
+    {
+      "id": "MEMORY",
+      "label": "Retained information",
+      "meaning": "Historical material that can inform a fresh qualified use. TIME is a separate concern."
+    },
+    {
+      "id": "FIREWALL",
+      "label": "Effect Firewall",
+      "meaning": "Exclusive bounded effect owner after current Root packet"
+    },
+    {
+      "id": "VENUE",
+      "label": "VenueRoot",
+      "meaning": "Owns venue source and booking registry"
+    },
+    {
+      "id": "REQUESTER",
+      "label": "ActivePlanetRoot",
+      "meaning": "Owns local consumption and decision"
+    },
+    {
+      "id": "E",
+      "label": "Computed offer",
+      "meaning": "Native producer output offer_json"
+    },
+    {
+      "id": "B",
+      "label": "Published body",
+      "meaning": "Offer plus Work/review references and temporal envelope"
+    },
+    {
+      "id": "C",
+      "label": "Consumer context",
+      "meaning": "B plus authenticated currentness projection"
+    },
+    {
+      "id": "POINTER",
+      "label": "Address and descriptor",
+      "meaning": "Locator, not payload or permission"
+    },
+    {
+      "id": "STATUS",
+      "label": "Current source status",
+      "meaning": "Bound signed observation with finite use window"
+    },
+    {
+      "id": "KIT",
+      "label": "Authoring Kit HOW",
+      "meaning": "Public interfaces; no hidden expected answers"
+    },
+    {
+      "id": "WHAT",
+      "label": "Domain task WHAT",
+      "meaning": "Requirements distinct from general kit"
+    },
+    {
+      "id": "CANDIDATE",
+      "label": "Authored program",
+      "meaning": "Untrusted until independently examined/admitted"
+    },
+    {
+      "id": "EXAMINER",
+      "label": "Independent examiner",
+      "meaning": "Own oracle and observed native execution"
+    },
+    {
+      "id": "READER",
+      "label": "Audit Reader",
+      "meaning": "Inert explanation/evidence, not an authoring kit"
+    },
+    {
+      "id": "VISUAL_SEAL",
+      "label": "Visual Seal companion",
+      "meaning": "Conceptual human-facing image. No demonstrated receipt binding; not a crypto seal."
+    },
+    {
+      "id": "SOURCE_ADMISSION",
+      "label": "Reviewed source admission",
+      "meaning": "Separately authorized repository/source operation; not runtime Root permission."
+    },
+    {
+      "id": "AUTHOR",
+      "label": "External author",
+      "meaning": "Produces a candidate from HOW and WHAT; does not admit it."
+    },
+    {
+      "id": "BSEP",
+      "label": "Semantic membrane",
+      "meaning": "Canonical semantic membrane; a validated BSEP has side-specific projections. Neither is authority."
+    },
+    {
+      "id": "TOPOLOGY",
+      "label": "Runtime topology",
+      "meaning": "Runtime-owned executable structure for bounded cells."
+    },
+    {
+      "id": "CHILD",
+      "label": "Child Work",
+      "meaning": "Nested typed computation; returns result proposals to parent."
+    },
+    {
+      "id": "TIME",
+      "label": "Time envelope",
+      "meaning": "Profile-bound observation and validity; no automatic renewal."
+    },
+    {
+      "id": "PACKET",
+      "label": "ActionCommitPacket",
+      "meaning": "Current scoped Root-created action permission carrier."
+    },
+    {
+      "id": "RECEIPT",
+      "label": "EvidenceReceipt",
+      "meaning": "Evidence of a bounded completed effect, not repeat permission."
+    },
+    {
+      "id": "POSTVV",
+      "label": "Post V&V",
+      "meaning": "Declared post-execution obligations. A domain original-condition CHECKER is not renamed Post V&V by analogy."
+    },
+    {
+      "id": "GT",
+      "label": "Terminal GT advisory",
+      "meaning": "Terminal advisory output. Not the observed OUTCOME, OFE record or current ADVICE."
+    },
+    {
+      "id": "DRS",
+      "label": "Local / External DRS",
+      "meaning": "Discoverable stored material subject to current descent and use."
+    },
+    {
+      "id": "ENV",
+      "label": "Task environment",
+      "meaning": "Owned finite resources participating in current Work."
+    },
+    {
+      "id": "SOLVER",
+      "label": "Classical search participant",
+      "meaning": "Computes candidates; a separately identified CHECKER evaluates original conditions."
+    },
+    {
+      "id": "QPU",
+      "label": "External numerical participant",
+      "meaning": "Returns measurements, not final decisions."
+    },
+    {
+      "id": "PROPOSAL",
+      "label": "Returned semantic proposal",
+      "meaning": "Finite untrusted semantic fields emitted by MODEL and checked locally."
+    },
+    {
+      "id": "SOURCE",
+      "label": "Source provenance",
+      "meaning": "Origin and source material qualifying the data used by Work; not authority."
+    },
+    {
+      "id": "METHOD_ADMIN",
+      "label": "Pre-granted administrator premise",
+      "meaning": "Method-only threat-model premise, not the external author role."
+    },
+    {
+      "id": "METHOD_STATE_EDIT",
+      "label": "Direct privileged state edit",
+      "meaning": "Method-only comparison, not the untrusted authored candidate."
+    },
+    {
+      "id": "KERNEL",
+      "label": "Execution kernel implementation",
+      "meaning": "Common reviewed implementation, distinct from the authoring kit and a live Root instance."
+    },
+    {
+      "id": "RESULT",
+      "label": "Typed result",
+      "meaning": "Returned value/proposal with provenance and bindings; no permission."
+    },
+    {
+      "id": "CONSUMPTION",
+      "label": "Actual result consumption",
+      "meaning": "Downstream Work binds and uses the identified upstream field."
+    },
+    {
+      "id": "CURRENTNESS",
+      "label": "Local currentness check",
+      "meaning": "Consumes authenticated status/time/source facts; does not inherit their authority."
+    },
+    {
+      "id": "EXECUTOR",
+      "label": "Bounded executor",
+      "meaning": "Performs an authorized operation; may share reviewed implementation with Firewall."
+    },
+    {
+      "id": "COMPILER",
+      "label": "Local compiler",
+      "meaning": "Maps accepted semantic material into the declared numerical representation."
+    },
+    {
+      "id": "DECODER",
+      "label": "Measurement decoder",
+      "meaning": "Interprets actual column/order metadata without repairing candidates."
+    },
+    {
+      "id": "CHECKER",
+      "label": "Original-condition checker",
+      "meaning": "Evaluates the actual candidate against the declared original problem."
+    },
+    {
+      "id": "OUTCOME",
+      "label": "Observed outcome",
+      "meaning": "Source-bound occurrence that may be eligible for an OFE/history fold."
+    },
+    {
+      "id": "OFE",
+      "label": "Outcome feedback evidence",
+      "meaning": "Finite source-bound feedback record. Distinct from GT output and permission."
+    },
+    {
+      "id": "ADVICE",
+      "label": "Current advisory values",
+      "meaning": "Eligible historical information offered to current review/allocation."
+    },
+    {
+      "id": "PRESSURE",
+      "label": "Finite pressure",
+      "meaning": "Profile-defined fixed-point comparison used in apportionment."
+    },
+    {
+      "id": "ALLOCATION",
+      "label": "Bounded allocation",
+      "meaning": "Integer allocation within explicit spent/reserved/current budget."
+    },
+    {
+      "id": "CRYPTO_SEAL",
+      "label": "Cryptographic evidence seal",
+      "meaning": "Bound evidence identity and verification material, distinct from Visual Seal."
+    },
+    {
+      "id": "TECHNICAL_A",
+      "label": "Technical version A",
+      "meaning": "Accepted implementation identity, not Football A/B/C."
+    },
+    {
+      "id": "PUBLICATION_B",
+      "label": "Publication version B",
+      "meaning": "This uncommitted editorial successor."
+    },
+    {
+      "id": "ARCHIVE_C",
+      "label": "Archive identity C",
+      "meaning": "Eventual separately bound archival version; no deposit claimed."
+    }
+  ],
+  "detailed_cards": {
+    "ROOT": [
+      "Type / current local authority",
+      "Local owner constructs decisions; Work, policies and observations supply inputs.",
+      "Route, result or action-specific input; current transaction, source and policy.",
+      "Decision is stored as evidence; new use needs a current decision.",
+      "Type is not VenueRoot or ActivePlanetRoot, nor a SuperRoot.",
+      "Football separate BOOK; Testflix no-consent and exact-expiry refusal.",
+      "02_geometry"
+    ],
+    "WORK": [
+      "Typed executable computation",
+      "Runtime invokes capability; parent/downstream Work consumes actual fields.",
+      "Declared bindings, source context, task/revision and bounded budget.",
+      "Results may be retained; unchanged identity does not prove current applicability.",
+      "No finality, permission or arbitrary code isolation.",
+      "Wedding compiler input and USED /material; wrong-result substitutions refuse.",
+      "08_wedding"
+    ],
+    "CHILD": [
+      "Nested Work / result proposal",
+      "Runtime owns child topology; canonical parent slot consumes result.",
+      "Parent/current prefix, typed input and retained origin.",
+      "Historical result fields persist while selected child recomputes.",
+      "Does not prove autonomous memory search at all nesting depths.",
+      "Retained parent consumption and bounded missing-capability descent sources.",
+      "05_experience"
+    ],
+    "RECEIPT": [
+      "Versioned evidence of completed effect",
+      "Exclusive Firewall/Corridor emits; ledger, replay and later review inspect.",
+      "Packet, source/time, operation and effect result bound to actual execution.",
+      "Stored and repeatedly read; new activity must qualify it under current rules.",
+      "Does not authorize a second payment, write or booking.",
+      "Football one receipt repeated; Testflix period already consumed refuses.",
+      "10_cross_case"
+    ],
+    "PACKET": [
+      "Root-created scoped action carrier",
+      "Current Root creates; Host/Firewall checks before execution.",
+      "Owner, action, material, current capture and finite validity window.",
+      "Historical packet can remain available after expiry or consumption.",
+      "Prior ACCEPT is not renewal; foreign Root cannot issue local permission.",
+      "EWS old packet fails; separate SAVE packet succeeds.",
+      "09_workspace"
+    ],
+    "DRS": [
+      "Local or external owner-held memory",
+      "Producer/history writer stores; discovering task requests current descent.",
+      "Address, schema, scope, source history and receiving owner policy.",
+      "Summary-only and artifact descent differ; original remains historical.",
+      "Discovery, digest or remembered code is not installation or permission.",
+      "N4-04 warm summary; N4-05 policy denial; Football revoked source.",
+      "05_experience"
+    ],
+    "TIME": [
+      "Profile-specific time envelope",
+      "Trusted observation/capture binds; current consumer evaluates.",
+      "Observed time, logical time, validity and expiry must not be collapsed.",
+      "Old envelopes remain evidence, not extended intervals.",
+      "Freshly reading an old object does not refresh source authority.",
+      "Testflix evaluation < valid_to; Football fractional UTC ordering.",
+      "03_time_memory"
+    ],
+    "GT": [
+      "Terminal GT advisory",
+      "Terminal advisory output. Not the observed OUTCOME, OFE record or current ADVICE.",
+      "Terminal advisory input to independent local Root review, not an outcome occurrence.",
+      "A saved advisory remains evidence of its original context, not current permission.",
+      "Does not decide for Root.",
+      "Architectural role only here; G36/G4 numerical examples belong to OUTCOME, OFE and ADVICE.",
+      "02_geometry"
+    ],
+    "MODEL": [
+      "Semantic model participant",
+      "Untrusted provider/model participant. Its returned PROPOSAL and BSEP input are distinct objects.",
+      "Exact request, role, snapshot, finite semantic fields and provenance.",
+      "Capture preserves response as inert evidence; replay is not live authority.",
+      "Does not mint Root decisions, trusted source refs or hardware consent.",
+      "Wedding objective/amendment consumption; ambiguous request clarifies.",
+      "08_wedding"
+    ],
+    "ENV": [
+      "Task-owned resources",
+      "Runtime/session creates bounded services; task Work uses them.",
+      "Current resource availability, command scope and ownership metadata.",
+      "Ends by reaping owned resources; approved output/history may remain.",
+      "Cleanup does not erase viewed pixels or all host data.",
+      "EWS audio loss/silent continuation; ownership conflict is incomplete cleanup.",
+      "09_workspace"
+    ],
+    "BSEP": [
+      "Canonical semantic membrane",
+      "BSEP creation and validation precede side-specific projections for semantic/runtime participants.",
+      "Declared task meaning and disclosure boundary.",
+      "Projection evidence can be retained without acquiring authority.",
+      "Not a permission or an outcome-feedback replacement.",
+      "Airline side projections authority_created=false.",
+      "10_cross_case"
+    ],
+    "TOPOLOGY": [
+      "Runtime-owned execution structure",
+      "Runtime materializes from accepted bounded proposal; cells execute.",
+      "Typed dependencies and current input/output bindings.",
+      "Retained graph explains old work, not a live executor.",
+      "A drawn or model-proposed graph is not an executed graph.",
+      "Wedding ordered review/compile/solve/validate/consume.",
+      "08_wedding"
+    ],
+    "INTENT": [
+      "User/event purpose, not executable authority",
+      "User or event supplies a request; local intake and semantic roles interpret it.",
+      "Request revision, declared preferences and consent are bound before Work. Ambiguity produces clarification.",
+      "Original request and clarified revision remain history; later preferences do not rewrite them.",
+      "Does not itself authorize a booking, payment, write or arbitrary capability.",
+      "Wedding ambiguous request and SR2 amendments; chapter Practical Question and Change Two Placements.",
+      "08_wedding"
+    ],
+    "MEMORY": [
+      "Conceptual umbrella for retained information",
+      "Prior producer stores results/summaries; a new task obtains permitted current descent.",
+      "Lookup scope, source identity, expiry, disclosure and new task applicability are distinct inputs.",
+      "Bytes may persist after a task ends; they are not a running Host or continuing permission.",
+      "Does not execute a recalled component or refresh an expired decision.",
+      "N4-04 cold/warm current read; N4-05 policy refusal, Inset 2.",
+      "05_experience"
+    ],
+    "FIREWALL": [
+      "Exclusive bounded effect owner",
+      "Current Host/action path invokes the Firewall with Root packet; receipt consumers inspect its result.",
+      "Before-start packet, actual capture/currentness, owner and operation must all match.",
+      "One dispatch produces effect evidence; subsequent reads of its receipt do not redispatch.",
+      "Cannot issue Root permission, accept another owner's packet or extend packet life.",
+      "Football separate BOOK, one mock effect; EWS old packet refusal.",
+      "02_geometry"
+    ],
+    "VENUE": [
+      "Concrete Football owner: VenueRoot",
+      "Venue source/runtime creates offer and publication; requester reads released evidence. Venue Root alone reviews booking.",
+      "Venue registry, quote/slot version, expiry and explicit BOOK consent qualify action.",
+      "Publication and receipt persist; source revocation changes current eligibility without erasing history.",
+      "Does not decide requester policy or transfer its booking permission.",
+      "Football FIELD_LEDGER; SHIFT/FETCH/BOOK and revoked neighbor.",
+      "07_football"
+    ],
+    "REQUESTER": [
+      "Concrete Football owner: ActivePlanetRoot",
+      "Requester builds current context C, consumes offer_json and independently reviews its own result.",
+      "Published body B, release/status, source binding and local request constraints.",
+      "Consumed context/result remains evidence; later use reconstructs current applicability.",
+      "Cannot issue VenueRoot booking authority or treat a fetch as a reservation.",
+      "Football requester invocation binding and revoked-source refusal.",
+      "07_football"
+    ],
+    "E": [
+      "Football native producer result value",
+      "Producer Work computes offer_json; owner publication includes it as B.offer.",
+      "EXACT or allowed SHIFT request, actual venue source and price constraints.",
+      "Preserved value is part of published evidence; it is not the complete fetched object.",
+      "Does not book or independently prove current source status.",
+      "Football Three Distinct Objects; main_req_shift result/offer_json.",
+      "07_football"
+    ],
+    "B": [
+      "Football owner-held published body",
+      "Owner packages offer and evidence; FETCH returns it and receiver inserts it as C.body.",
+      "Release binds full body.json bytes; manifest/hash are separate from semantic validity.",
+      "Released bytes remain historical even when status is revoked.",
+      "Does not carry reusable Root permission or make E equal C.",
+      "Football FETCH /value/body and manifest/files/0; revoked neighbor.",
+      "07_football"
+    ],
+    "C": [
+      "Football receiver current context",
+      "Receiver constructs from B and current release/status; requester Work consumes its bound offer.",
+      "Body identity, authentication/currentness and receiving task scope, not just a digest.",
+      "Invocation records retain what was consumed; independent later invocation qualifies its own context.",
+      "Does not restore a live owner from saved JSON or authorize Venue action.",
+      "Football requester context/input binding and current revocation refusal.",
+      "07_football"
+    ],
+    "POINTER": [
+      "Descriptor/location, not payload",
+      "Publisher exposes a locator; discovery/FETCH consumer resolves owner-held B.",
+      "Address, schema/source reference and requested descent level; resolution may refuse.",
+      "Locator may persist after material becomes unavailable or revoked.",
+      "Does not prove content, grant access, or identify the inner E as the whole fetched object.",
+      "Football main_req_shift_fetch_request pointer_ref; FETCH body manifest.",
+      "07_football"
+    ],
+    "STATUS": [
+      "Current source qualification in Football",
+      "Source/status path returns current qualification; receiver checks before Work.",
+      "Owner/source version, release binding and evaluation time; ACTIVE and revoked differ.",
+      "Recorded status is timestamped evidence, not a permanent guarantee.",
+      "Cannot mint consent or override Root/Firewall refusal.",
+      "Football revoked native BLOCKED_FAIL_CLOSED/hard_identity_violation.",
+      "07_football"
+    ],
+    "KIT": [
+      "Reviewed HOW: authoring interface and finite rules",
+      "Maintainers freeze kit; external author reads it; examiner checks the independent WHAT.",
+      "Exact kit identity, source/interface version and trial correction policy.",
+      "Frozen bundle persists as design-time source, not installed runtime authority.",
+      "Cannot accept its own candidate or expand a trial's correction allowance.",
+      "G54D1 restored continuation and authorized correction 4; source ledger A01-A03.",
+      "11_integration"
+    ],
+    "WHAT": [
+      "Task/exam specification, separate from HOW",
+      "Task owner supplies target and constraints; author implements, independent oracle evaluates.",
+      "Football requirements, bounded scenarios and observable outcomes.",
+      "Exam input and results remain tied to their frozen versions.",
+      "Does not change kernel authority rules or let candidate output become oracle.",
+      "G54D1 native football exam and supplied validation.",
+      "11_integration"
+    ],
+    "AUTHOR": [
+      "Design-time external developer/model participant",
+      "Receives HOW and WHAT; emits an untrusted candidate for independent examination.",
+      "Exact model/mode, allowed context, interface and correction lineage are recorded.",
+      "Candidate and corrections persist; author session ending does not admit code.",
+      "Does not award source admission or current runtime permission.",
+      "G54B1/G54D INCOMPLETE; G54D1 correction 4 accepted continuation.",
+      "11_integration"
+    ],
+    "CANDIDATE": [
+      "Proposed component/source bytes",
+      "Author emits; trusted runner/examiner executes bounded checks and reports to reviewer.",
+      "Source pins, kit version, task interface and allowed dependencies.",
+      "Frozen candidate remains inspectable, including failures; installed bytes need separate admission.",
+      "Cannot certify itself or replace an independent oracle with its own report.",
+      "G54D1 actual native exam, live and two supplied consumers.",
+      "11_integration"
+    ],
+    "EXAMINER": [
+      "Independent expected-result and observation boundary",
+      "Reviewed examiner derives oracle expectations; runner observes native behavior; reviewer consumes source-bound receipts.",
+      "Exact exam inputs, candidate source and declared trusted-reference assumptions.",
+      "Receipts preserve completed phases and failed histories; replays are distinguished from fresh execution.",
+      "Does not create action permission or prove universal adversarial-code isolation.",
+      "G54C4 reference boundary and G54D1 supplied controls; Method trust boundary.",
+      "06_method"
+    ],
+    "SOURCE_ADMISSION": [
+      "Design-time reviewed source operation",
+      "Owner authorizes exact proposal; unchanged R1/Git checks derive accepted byte state.",
+      "Exact base, allowlist, candidate content/modes and full staged/committed state.",
+      "Actual commit is derived after operation; this unpublished corpus has none.",
+      "Does not create Root permission, runtime acceptance or public certification.",
+      "Technical A identity and publication identity; no future commit invented.",
+      "13_verification"
+    ],
+    "POSTVV": [
+      "Post V&V",
+      "Declared post-execution obligations. A domain original-condition CHECKER is not renamed Post V&V by analogy.",
+      "Expected typed outputs, obligations, source/time and actual consumption evidence.",
+      "Validation reports retain context; another input needs its own checks.",
+      "Cannot issue final Root ACCEPT, repair invalid QPU samples silently or authorize save.",
+      "Canonical runtime post-execution V&V obligations. Wedding qpu_validate is a separate profile-specific original-condition CHECKER, not this entity.",
+      "02_geometry"
+    ],
+    "SOLVER": [
+      "Classical search participant",
+      "Computes candidates; a separately identified CHECKER evaluates original conditions.",
+      "Wedding original hard/soft constraints, objective and revision-specific problem.",
+      "Candidate and score remain evidence of that problem; changed constraints require re-evaluation.",
+      "Does not choose consent or become Root, nor make a remote backend interchangeable.",
+      "Wedding 36-indicator formulation, penalties and SR2 old-plan refusal.",
+      "08_wedding"
+    ],
+    "QPU": [
+      "Recorded remote Rigetti numerical participant",
+      "Configured Braket task returns measurements; local decoder/validator then native Work consume selected candidate.",
+      "Revision-1 input, ten-qubit local encoding, device/task identity and 1000-shot budget.",
+      "Raw samples and timestamps persist; task completion is not correctness. No new call in B3.",
+      "Does not authorize hardware spend/save, prove advantage or repair invalid samples.",
+      "Wedding KEEP shot 63/basis 517, 33 valid/967 invalid and consumed material.",
+      "08_wedding"
+    ],
+    "READER": [
+      "Inert source-bound documentation module",
+      "Editorial builder selects pinned fields; human/model reader inspects text, not embedded instructions.",
+      "Question, technical/publication identity, file hashes, mode and token estimate.",
+      "Markdown/XML and inspection records persist; update changes their identities.",
+      "Does not execute code, reinstantiate authority or establish B5 comprehension by loading a file.",
+      "M0/CORE/focus contracts; B5 NOT_RUN.",
+      "13_verification"
+    ],
+    "VISUAL_SEAL": [
+      "Visual Seal companion",
+      "Conceptual human-facing image. No demonstrated receipt binding; not a crypto seal.",
+      "Publication alias only; not a new runtime type or permission.",
+      "Exact profile sources and limitations are listed in the view's source route."
+    ],
+    "PROPOSAL": [
+      "Returned semantic proposal",
+      "Finite untrusted semantic fields emitted by MODEL and checked locally.",
+      "Publication alias only; not a new runtime type or permission.",
+      "Exact profile sources and limitations are listed in the view's source route."
+    ],
+    "SOURCE": [
+      "Source provenance",
+      "Origin and source material qualifying the data used by Work; not authority.",
+      "Publication alias only; not a new runtime type or permission.",
+      "Exact profile sources and limitations are listed in the view's source route."
+    ],
+    "METHOD_ADMIN": [
+      "Pre-granted administrator premise",
+      "Method-only threat-model premise, not the external author role.",
+      "Publication alias only; not a new runtime type or permission.",
+      "Exact profile sources and limitations are listed in the view's source route."
+    ],
+    "METHOD_STATE_EDIT": [
+      "Direct privileged state edit",
+      "Method-only comparison, not the untrusted authored candidate.",
+      "Publication alias only; not a new runtime type or permission.",
+      "Exact profile sources and limitations are listed in the view's source route."
+    ],
+    "KERNEL": [
+      "Execution kernel implementation",
+      "Common reviewed implementation, distinct from the authoring kit and a live Root instance.",
+      "Publication alias only; not a new runtime type or permission.",
+      "Exact profile sources and limitations are listed in the view's source route."
+    ],
+    "RESULT": [
+      "Typed result",
+      "Returned value/proposal with provenance and bindings; no permission.",
+      "Publication alias only; not a new runtime type or permission.",
+      "Exact profile sources and limitations are listed in the view's source route."
+    ],
+    "CONSUMPTION": [
+      "Actual result consumption",
+      "Downstream Work binds and uses the identified upstream field.",
+      "Publication alias only; not a new runtime type or permission.",
+      "Exact profile sources and limitations are listed in the view's source route."
+    ],
+    "CURRENTNESS": [
+      "Local currentness check",
+      "Consumes authenticated status/time/source facts; does not inherit their authority.",
+      "Publication alias only; not a new runtime type or permission.",
+      "Exact profile sources and limitations are listed in the view's source route."
+    ],
+    "EXECUTOR": [
+      "Bounded executor",
+      "Performs an authorized operation; may share reviewed implementation with Firewall.",
+      "Publication alias only; not a new runtime type or permission.",
+      "Exact profile sources and limitations are listed in the view's source route."
+    ],
+    "COMPILER": [
+      "Local compiler",
+      "Maps accepted semantic material into the declared numerical representation.",
+      "Publication alias only; not a new runtime type or permission.",
+      "Exact profile sources and limitations are listed in the view's source route."
+    ],
+    "DECODER": [
+      "Measurement decoder",
+      "Interprets actual column/order metadata without repairing candidates.",
+      "Publication alias only; not a new runtime type or permission.",
+      "Exact profile sources and limitations are listed in the view's source route."
+    ],
+    "CHECKER": [
+      "Original-condition checker",
+      "Evaluates the actual candidate against the declared original problem.",
+      "Publication alias only; not a new runtime type or permission.",
+      "Exact profile sources and limitations are listed in the view's source route."
+    ],
+    "OUTCOME": [
+      "Observed outcome",
+      "Source-bound occurrence that may be eligible for an OFE/history fold.",
+      "Publication alias only; not a new runtime type or permission.",
+      "Exact profile sources and limitations are listed in the view's source route."
+    ],
+    "OFE": [
+      "Outcome feedback evidence",
+      "Finite source-bound feedback record. Distinct from GT output and permission.",
+      "Publication alias only; not a new runtime type or permission.",
+      "Exact profile sources and limitations are listed in the view's source route."
+    ],
+    "ADVICE": [
+      "Current advisory values",
+      "Eligible historical information offered to current review/allocation.",
+      "Publication alias only; not a new runtime type or permission.",
+      "Exact profile sources and limitations are listed in the view's source route."
+    ],
+    "PRESSURE": [
+      "Finite pressure",
+      "Profile-defined fixed-point comparison used in apportionment.",
+      "Publication alias only; not a new runtime type or permission.",
+      "Exact profile sources and limitations are listed in the view's source route."
+    ],
+    "ALLOCATION": [
+      "Bounded allocation",
+      "Integer allocation within explicit spent/reserved/current budget.",
+      "Publication alias only; not a new runtime type or permission.",
+      "Exact profile sources and limitations are listed in the view's source route."
+    ],
+    "CRYPTO_SEAL": [
+      "Cryptographic evidence seal",
+      "Bound evidence identity and verification material, distinct from Visual Seal.",
+      "Publication alias only; not a new runtime type or permission.",
+      "Exact profile sources and limitations are listed in the view's source route."
+    ],
+    "TECHNICAL_A": [
+      "Technical version A",
+      "Accepted implementation identity, not Football A/B/C.",
+      "Publication alias only; not a new runtime type or permission.",
+      "Exact profile sources and limitations are listed in the view's source route."
+    ],
+    "PUBLICATION_B": [
+      "Publication version B",
+      "This uncommitted editorial successor.",
+      "Publication alias only; not a new runtime type or permission.",
+      "Exact profile sources and limitations are listed in the view's source route."
+    ],
+    "ARCHIVE_C": [
+      "Archive identity C",
+      "Eventual separately bound archival version; no deposit claimed.",
+      "Publication alias only; not a new runtime type or permission.",
+      "Exact profile sources and limitations are listed in the view's source route."
+    ]
+  },
+  "role": "Editorial correspondence, not runtime registry",
+  "editorial_aliases": {
+    "SEAL": "Deprecated ambiguous editorial ID; current views use VISUAL_SEAL or CRYPTO_SEAL. Historical pilot bytes unchanged."
+  }
+}
+````
+
+## Source Block atlas/views.json
+
+````text
+[
+  {
+    "id": "OVERVIEW",
+    "title": "Radiolaria OS: one activity, several concerns",
+    "entities": [
+      "CHILD",
+      "INTENT",
+      "MEMORY",
+      "RESULT",
+      "ROOT",
+      "SOURCE",
+      "SOURCE_ADMISSION",
+      "TIME",
+      "WORK"
+    ],
+    "relations": [
+      {
+        "id": "OVERVIEW_intake",
+        "source": "INTENT",
+        "target": "WORK",
+        "relation": "DATA",
+        "item": "typed input",
+        "source_object": "OVERVIEW_intent",
+        "target_object": "OVERVIEW_work"
+      },
+      {
+        "id": "OVERVIEW_return",
+        "source": "WORK",
+        "target": "RESULT",
+        "relation": "DATA",
+        "item": "actual fields",
+        "source_object": "OVERVIEW_work",
+        "target_object": "OVERVIEW_result"
+      },
+      {
+        "id": "OVERVIEW_child_invocation",
+        "source": "WORK",
+        "target": "CHILD",
+        "relation": "DATA",
+        "item": "bounded invocation",
+        "source_object": "OVERVIEW_work",
+        "target_object": "OVERVIEW_child"
+      },
+      {
+        "id": "OVERVIEW_review",
+        "source": "RESULT",
+        "target": "ROOT",
+        "relation": "DATA",
+        "item": "evidence",
+        "source_object": "OVERVIEW_result",
+        "target_object": "OVERVIEW_root"
+      },
+      {
+        "id": "OVERVIEW_context_edge0",
+        "source": "TIME",
+        "target": "WORK",
+        "relation": "CONCEPTUAL_CONTEXT",
+        "item": "Time qualifies Work; no permission",
+        "source_object": "OVERVIEW_context0",
+        "target_object": "OVERVIEW_work"
+      },
+      {
+        "id": "OVERVIEW_context_edge1",
+        "source": "MEMORY",
+        "target": "WORK",
+        "relation": "CONCEPTUAL_CONTEXT",
+        "item": "Memory qualifies Work; no permission",
+        "source_object": "OVERVIEW_context1",
+        "target_object": "OVERVIEW_work"
+      },
+      {
+        "id": "OVERVIEW_context_edge2",
+        "source": "SOURCE",
+        "target": "WORK",
+        "relation": "CONCEPTUAL_CONTEXT",
+        "item": "Source qualifies Work; no permission",
+        "source_object": "OVERVIEW_context2",
+        "target_object": "OVERVIEW_work"
+      },
+      {
+        "id": "OVERVIEW_context_edge3",
+        "source": "SOURCE_ADMISSION",
+        "target": "WORK",
+        "relation": "CONCEPTUAL_CONTEXT",
+        "item": "Source admission qualifies Work; no permission",
+        "source_object": "OVERVIEW_context3",
+        "target_object": "OVERVIEW_work"
+      }
+    ],
+    "text_equivalent": "One activity; several independent concerns\n\nCONCEPTUAL MAP / Relations are not a recorded composite execution or a global owner\n\nLOCAL ACTIVITY\n\nIntent\n\nParent Work\n\nConsumed\nresult\n\nBounded child Work\n\ntyped input\n\nactual fields\n\nbounded invocation\n\nLocal Root\nreview\n\nevidence\n\nOther owners retain\nindependent decisions.\n\nTime\n\nMemory\n\nSource\n\nSource admission\n\nTime, memory and source qualify use. Source admission binds implementation. Current effects need their own\npacket.\n\nOVERVIEW Source: architecture\n\nAtlas: Overview / GEO 1 2 3 4 5 6 7",
+    "source_refs": [
+      {
+        "label": "architecture",
+        "target": "https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/specs/current_architecture_lock_v01.md"
+      },
+      {
+        "label": "chapter",
+        "target": "../chapters/02_geometry.html"
+      }
+    ],
+    "svg": "OVERVIEW.svg",
+    "text": "OVERVIEW.md",
+    "class": "CONCEPTUAL OVERVIEW  /  Same entities across seven views, not one recorded composite execution",
+    "question": "How do activity, context, owners and development relate?",
+    "subject_boundary": "CONCEPTUAL OVERVIEW  /  Same entities across seven views, not one recorded composite execution",
+    "locator": [
+      "OVERVIEW",
+      "GEO-1",
+      "GEO-2",
+      "GEO-3",
+      "GEO-4",
+      "GEO-5",
+      "GEO-6",
+      "GEO-7"
+    ],
+    "legend": {
+      "DATA": "transferred evidence/value",
+      "PROPOSAL": "untrusted proposed material",
+      "PERMISSION": "current scoped packet only",
+      "CONTROL": "bounded operation organization",
+      "DERIVATION": "declared transformation",
+      "DOCUMENT_REFERENCE": "identity or document relation, no authority",
+      "CHRONOLOGY": "order, not a grant",
+      "CONCEPTUAL_CONTEXT": "explanatory context, not one executed trace"
+    }
+  },
+  {
+    "id": "GEO-1",
+    "title": "Intent becomes bounded, consuming Work",
+    "entities": [
+      "BSEP",
+      "CHILD",
+      "CONSUMPTION",
+      "MODEL",
+      "PROPOSAL",
+      "RESULT",
+      "TOPOLOGY",
+      "WORK"
+    ],
+    "relations": [
+      {
+        "id": "GEO-1_proposal_edge_0",
+        "source": "BSEP",
+        "target": "MODEL",
+        "relation": "DATA",
+        "item": "disclosed input",
+        "source_object": "GEO-1_proposal_0",
+        "target_object": "GEO-1_proposal_1"
+      },
+      {
+        "id": "GEO-1_proposal_edge_1",
+        "source": "MODEL",
+        "target": "PROPOSAL",
+        "relation": "PROPOSAL",
+        "item": "returned fields",
+        "source_object": "GEO-1_proposal_1",
+        "target_object": "GEO-1_proposal_2"
+      },
+      {
+        "id": "GEO-1_proposal_edge_2",
+        "source": "PROPOSAL",
+        "target": "TOPOLOGY",
+        "relation": "DERIVATION",
+        "item": "checked structure",
+        "source_object": "GEO-1_proposal_2",
+        "target_object": "GEO-1_proposal_3"
+      },
+      {
+        "id": "GEO-1_work_edge_0",
+        "source": "WORK",
+        "target": "CHILD",
+        "relation": "EXECUTION",
+        "item": "bounded invocation",
+        "source_object": "GEO-1_work_0",
+        "target_object": "GEO-1_work_1"
+      },
+      {
+        "id": "GEO-1_work_edge_1",
+        "source": "CHILD",
+        "target": "RESULT",
+        "relation": "DATA",
+        "item": "returned material",
+        "source_object": "GEO-1_work_1",
+        "target_object": "GEO-1_work_2"
+      },
+      {
+        "id": "GEO-1_work_edge_2",
+        "source": "RESULT",
+        "target": "CONSUMPTION",
+        "relation": "DATA",
+        "item": "exact field binding",
+        "source_object": "GEO-1_work_2",
+        "target_object": "GEO-1_work_3"
+      }
+    ],
+    "text_equivalent": "Intent becomes bounded, consuming Work\n\nCONCEPTUAL / Local intake and route acceptance precede semantic composition\n\nBSEP side\nprojection\n\nSemantic model\nparticipant\n\nReturned\nsemantic\nproposal\n\nLocally validated\nruntime topology\n\ndisclosed\ninput\n\nreturned\nfields\n\nchecked\nstructure\n\nParent Work\nactual input\n\nBounded child\nWork\n\nTyped child\nresult\n\nParent slot\nconsumes result\n\nbounded\ninvocation\n\nreturned\nmaterial\n\nexact field\nbinding\n\nRoot route/result reviews remain distinct. No arbitrary planner or universal child-memory search is demonstrated.\n\nGEO-1 Source: architecture\n\nAtlas: Overview / GEO 1 2 3 4 5 6 7",
+    "source_refs": [
+      {
+        "label": "architecture",
+        "target": "https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/specs/current_architecture_lock_v01.md"
+      },
+      {
+        "label": "chapter",
+        "target": "../chapters/02_geometry.html"
+      }
+    ],
+    "svg": "GEO-1.svg",
+    "text": "GEO-1.md",
+    "class": "CONCEPTUAL  /  Local intake and route acceptance precede semantic composition",
+    "question": "How does an intention become real, possibly nested Work?",
+    "subject_boundary": "CONCEPTUAL  /  Local intake and route acceptance precede semantic composition",
+    "locator": [
+      "OVERVIEW",
+      "GEO-1",
+      "GEO-2",
+      "GEO-3",
+      "GEO-4",
+      "GEO-5",
+      "GEO-6",
+      "GEO-7"
+    ],
+    "legend": {
+      "DATA": "transferred evidence/value",
+      "PROPOSAL": "untrusted proposed material",
+      "PERMISSION": "current scoped packet only",
+      "CONTROL": "bounded operation organization",
+      "DERIVATION": "declared transformation",
+      "DOCUMENT_REFERENCE": "identity or document relation, no authority",
+      "CHRONOLOGY": "order, not a grant",
+      "CONCEPTUAL_CONTEXT": "explanatory context, not one executed trace"
+    }
+  },
+  {
+    "id": "GEO-2",
+    "title": "Independent owners retain their own decisions",
+    "entities": [
+      "B",
+      "EXECUTOR",
+      "FIREWALL",
+      "PACKET",
+      "RECEIPT",
+      "REQUESTER",
+      "VENUE"
+    ],
+    "relations": [
+      {
+        "id": "GEO-2_owners_edge_0",
+        "source": "VENUE",
+        "target": "B",
+        "relation": "DATA",
+        "item": "published body",
+        "source_object": "GEO-2_owners_0",
+        "target_object": "GEO-2_owners_1"
+      },
+      {
+        "id": "GEO-2_owners_edge_1",
+        "source": "B",
+        "target": "REQUESTER",
+        "relation": "DATA",
+        "item": "current checked input",
+        "source_object": "GEO-2_owners_1",
+        "target_object": "GEO-2_owners_2"
+      },
+      {
+        "id": "GEO-2_booking_edge_0",
+        "source": "PACKET",
+        "target": "FIREWALL",
+        "relation": "PERMISSION",
+        "item": "scoped permission",
+        "source_object": "GEO-2_booking_0",
+        "target_object": "GEO-2_booking_1"
+      },
+      {
+        "id": "GEO-2_booking_edge_1",
+        "source": "FIREWALL",
+        "target": "EXECUTOR",
+        "relation": "EXECUTION",
+        "item": "checked operation",
+        "source_object": "GEO-2_booking_1",
+        "target_object": "GEO-2_booking_2"
+      },
+      {
+        "id": "GEO-2_booking_edge_2",
+        "source": "EXECUTOR",
+        "target": "RECEIPT",
+        "relation": "DATA",
+        "item": "effect evidence",
+        "source_object": "GEO-2_booking_2",
+        "target_object": "GEO-2_booking_3"
+      }
+    ],
+    "text_equivalent": "Independent owners retain their own decisions\n\nCONCEPTUAL PATTERN + FOOTBALL INSET / VenueRoot and ActivePlanetRoot are separate instances\n\nVenueRoot\noffer review\n\nReleased offer\nevidence\n\nActivePlanetRoot\nlocal review\n\npublished body\n\ncurrent checked\ninput\n\nVenueRoot\ncurrent\nBOOK packet\n\nHost / Firewall\nenforcement\n\nBounded mock\nbooking executor\n\nBooking result\nand receipt\n\nscoped\npermission\n\nchecked\noperation\n\neffect\nevidence\n\nAirline is a separate case with ClientRoot, AirlineRoot and BankRoot. No common business SuperRoot or new\naction service.\n\nGEO-2 Source: football\n\nAtlas: Overview / GEO 1 2 3 4 5 6 7",
+    "source_refs": [
+      {
+        "label": "football",
+        "target": "../references/episode_sources.json"
+      },
+      {
+        "label": "chapter",
+        "target": "../chapters/07_football.html"
+      }
+    ],
+    "svg": "GEO-2.svg",
+    "text": "GEO-2.md",
+    "class": "CONCEPTUAL PATTERN + FOOTBALL INSET  /  VenueRoot and ActivePlanetRoot are separate instances",
+    "question": "Who proposes, decides, executes and admits source?",
+    "subject_boundary": "CONCEPTUAL PATTERN + FOOTBALL INSET  /  VenueRoot and ActivePlanetRoot are separate instances",
+    "locator": [
+      "OVERVIEW",
+      "GEO-1",
+      "GEO-2",
+      "GEO-3",
+      "GEO-4",
+      "GEO-5",
+      "GEO-6",
+      "GEO-7"
+    ],
+    "legend": {
+      "DATA": "transferred evidence/value",
+      "PROPOSAL": "untrusted proposed material",
+      "PERMISSION": "current scoped packet only",
+      "CONTROL": "bounded operation organization",
+      "DERIVATION": "declared transformation",
+      "DOCUMENT_REFERENCE": "identity or document relation, no authority",
+      "CHRONOLOGY": "order, not a grant",
+      "CONCEPTUAL_CONTEXT": "explanatory context, not one executed trace"
+    }
+  },
+  {
+    "id": "GEO-3",
+    "title": "Useful work can outlive a changed resource",
+    "entities": [
+      "CURRENTNESS",
+      "ENV",
+      "EXECUTOR",
+      "RECEIPT",
+      "ROOT",
+      "WORK"
+    ],
+    "relations": [
+      {
+        "id": "GEO-3_media_edge_0",
+        "source": "ENV",
+        "target": "CURRENTNESS",
+        "relation": "DATA",
+        "item": "changed-source data",
+        "source_object": "GEO-3_media_0",
+        "target_object": "GEO-3_media_1"
+      },
+      {
+        "id": "GEO-3_media_edge_1",
+        "source": "CURRENTNESS",
+        "target": "WORK",
+        "relation": "DATA",
+        "item": "new current basis",
+        "source_object": "GEO-3_media_1",
+        "target_object": "GEO-3_media_2"
+      },
+      {
+        "id": "GEO-3_save_edge_0",
+        "source": "ROOT",
+        "target": "EXECUTOR",
+        "relation": "PERMISSION",
+        "item": "bound bytes",
+        "source_object": "GEO-3_save_0",
+        "target_object": "GEO-3_save_1"
+      },
+      {
+        "id": "GEO-3_save_edge_1",
+        "source": "EXECUTOR",
+        "target": "RECEIPT",
+        "relation": "DATA",
+        "item": "completed result",
+        "source_object": "GEO-3_save_1",
+        "target_object": "GEO-3_save_2"
+      }
+    ],
+    "text_equivalent": "Useful work can outlive a changed resource\n\nRECORDED EWS3R2 PRINCIPAL LANE / Separate clocks below, no receipt-controlled cleanup\n\nAudio loss\nreturn code -9\n\nOld packet refused\nfresh observation\n\nAffected media\n4 to 16 frames\n\nchanged-source\ndata\n\nnew current basis\n\nRETAINED PHOTO Same state and preview SHA. Producer count remains 3.\n\nSeparate save\ndecision / packet\n\nActual write\n250-byte sidecar\n\nWrite receipt\nevidence\n\nbound bytes\n\ncompleted result\n\nRESOURCE END: owner-lifecycle cleanup. Audio ALREADY_EXITED, no graceful receipt.\nHISTORICAL EWS3: separate summary, later SUMMARY_ONLY descent and fresh Root review.\n\nSave precedes recorded closure chronologically. The receipt does not command cleanup or authorize another\nwrite.\n\nGEO-3 Source: ews\n\nAtlas: Overview / GEO 1 2 3 4 5 6 7",
+    "source_refs": [
+      {
+        "label": "ews",
+        "target": "../references/ews/source_ledger.json"
+      },
+      {
+        "label": "chapter",
+        "target": "../chapters/09_workspace.html"
+      }
+    ],
+    "svg": "GEO-3.svg",
+    "text": "GEO-3.md",
+    "class": "RECORDED EWS3R2 PRINCIPAL LANE  /  Separate clocks below, no receipt-controlled cleanup",
+    "question": "What persists when a condition or environment changes?",
+    "subject_boundary": "RECORDED EWS3R2 PRINCIPAL LANE  /  Separate clocks below, no receipt-controlled cleanup",
+    "locator": [
+      "OVERVIEW",
+      "GEO-1",
+      "GEO-2",
+      "GEO-3",
+      "GEO-4",
+      "GEO-5",
+      "GEO-6",
+      "GEO-7"
+    ],
+    "legend": {
+      "DATA": "transferred evidence/value",
+      "PROPOSAL": "untrusted proposed material",
+      "PERMISSION": "current scoped packet only",
+      "CONTROL": "bounded operation organization",
+      "DERIVATION": "declared transformation",
+      "DOCUMENT_REFERENCE": "identity or document relation, no authority",
+      "CHRONOLOGY": "order, not a grant",
+      "CONCEPTUAL_CONTEXT": "explanatory context, not one executed trace"
+    }
+  },
+  {
+    "id": "GEO-4",
+    "title": "A source body becomes checked local input",
+    "entities": [
+      "B",
+      "C",
+      "CURRENTNESS",
+      "E",
+      "STATUS",
+      "WORK"
+    ],
+    "relations": [
+      {
+        "id": "GEO-4_flow0",
+        "source": "E",
+        "target": "B",
+        "relation": "DATA",
+        "item": "value",
+        "source_object": "GEO-4_body0",
+        "target_object": "GEO-4_body1"
+      },
+      {
+        "id": "GEO-4_flow1",
+        "source": "B",
+        "target": "CURRENTNESS",
+        "relation": "DATA",
+        "item": "source",
+        "source_object": "GEO-4_body1",
+        "target_object": "GEO-4_body2"
+      },
+      {
+        "id": "GEO-4_flow2",
+        "source": "CURRENTNESS",
+        "target": "C",
+        "relation": "DATA",
+        "item": "qualified",
+        "source_object": "GEO-4_body2",
+        "target_object": "GEO-4_body3"
+      },
+      {
+        "id": "GEO-4_refused",
+        "source": "CURRENTNESS",
+        "target": "CURRENTNESS",
+        "relation": "DATA",
+        "item": "refused branch",
+        "source_object": "GEO-4_body2",
+        "target_object": "GEO-4_refusal"
+      },
+      {
+        "id": "GEO-4_positive",
+        "source": "C",
+        "target": "WORK",
+        "relation": "DATA",
+        "item": "only valid C",
+        "source_object": "GEO-4_body3",
+        "target_object": "GEO-4_consumer"
+      }
+    ],
+    "text_equivalent": "Qualified context reaches Work; refusal stops\n\nRECORDED FOOTBALL RELATIONS / E is a value inside B; B is material inside C\n\nProducer E\noffer_json\n\nReleased B\nB.offer = E\n\nLocal checks\nbody / status\n\nQualified C\nC.body = B\n\nvalue\n\nsource\n\nqualified\n\nAuthenticated STATUS\nand source address\n\nDATA, not control\n\nREVOKED / invalid\nSTOP: no consumption\n\nrefused branch\n\nRequester Work\nconsumes offer field\n\nonly valid C\n\nNo arrow leads from refusal to Work. Booking still requires a separate current Root packet and action.\n\nGEO-4 Source: football\n\nAtlas: Overview / GEO 1 2 3 4 5 6 7",
+    "source_refs": [
+      {
+        "label": "football",
+        "target": "../references/episode_sources.json"
+      },
+      {
+        "label": "chapter",
+        "target": "../chapters/07_football.html"
+      }
+    ],
+    "svg": "GEO-4.svg",
+    "text": "GEO-4.md",
+    "class": "RECORDED FOOTBALL RELATIONS  /  Address, body, current status and consumer have distinct roles",
+    "question": "Which material was actually consumed and under which current conditions?",
+    "subject_boundary": "RECORDED FOOTBALL RELATIONS  /  Address, body, current status and consumer have distinct roles",
+    "locator": [
+      "OVERVIEW",
+      "GEO-1",
+      "GEO-2",
+      "GEO-3",
+      "GEO-4",
+      "GEO-5",
+      "GEO-6",
+      "GEO-7"
+    ],
+    "legend": {
+      "DATA": "transferred evidence/value",
+      "PROPOSAL": "untrusted proposed material",
+      "PERMISSION": "current scoped packet only",
+      "CONTROL": "bounded operation organization",
+      "DERIVATION": "declared transformation",
+      "DOCUMENT_REFERENCE": "identity or document relation, no authority",
+      "CHRONOLOGY": "order, not a grant",
+      "CONCEPTUAL_CONTEXT": "explanatory context, not one executed trace"
+    }
+  },
+  {
+    "id": "GEO-5",
+    "title": "Different computations share checked consumption",
+    "entities": [
+      "CHECKER",
+      "COMPILER",
+      "CONSUMPTION",
+      "DECODER",
+      "ENV",
+      "PROPOSAL",
+      "QPU",
+      "ROOT",
+      "WORK"
+    ],
+    "relations": [
+      {
+        "id": "GEO-5_compute_edge_0",
+        "source": "PROPOSAL",
+        "target": "COMPILER",
+        "relation": "DATA",
+        "item": "locally bound input",
+        "source_object": "GEO-5_compute_0",
+        "target_object": "GEO-5_compute_1"
+      },
+      {
+        "id": "GEO-5_compute_edge_1",
+        "source": "COMPILER",
+        "target": "QPU",
+        "relation": "EXECUTION",
+        "item": "explicit backend call",
+        "source_object": "GEO-5_compute_1",
+        "target_object": "GEO-5_compute_2"
+      },
+      {
+        "id": "GEO-5_consume_edge_0",
+        "source": "DECODER",
+        "target": "CHECKER",
+        "relation": "DATA",
+        "item": "candidate seating",
+        "source_object": "GEO-5_consume_0",
+        "target_object": "GEO-5_consume_1"
+      },
+      {
+        "id": "GEO-5_consume_edge_1",
+        "source": "CHECKER",
+        "target": "CONSUMPTION",
+        "relation": "DATA",
+        "item": "checked material",
+        "source_object": "GEO-5_consume_1",
+        "target_object": "GEO-5_consume_2"
+      },
+      {
+        "id": "GEO-5_consume_edge_2",
+        "source": "CONSUMPTION",
+        "target": "ROOT",
+        "relation": "DATA",
+        "item": "result + save request",
+        "source_object": "GEO-5_consume_2",
+        "target_object": "GEO-5_consume_3"
+      },
+      {
+        "id": "GEO-5_remote_return",
+        "source": "QPU",
+        "target": "DECODER",
+        "relation": "DATA",
+        "item": "raw return",
+        "source_object": "GEO-5_compute_2",
+        "target_object": "GEO-5_consume_0"
+      },
+      {
+        "id": "GEO-5_ews_data",
+        "source": "ENV",
+        "target": "WORK",
+        "relation": "DATA",
+        "item": "observations / pixels",
+        "source_object": "GEO-5_ews_resources",
+        "target_object": "GEO-5_ews_preview"
+      }
+    ],
+    "text_equivalent": "Different computations share checked consumption\n\nRECORDED W4 REVISION 1 / Captured W3 meaning is input, not permission for a QPU request\n\nCaptured semantics\nKEEP / MIX\n\nLocal compiler\n10-qubit encoding\n\nREMOTE Rigetti\nraw measurements\n\nlocally bound input\n\nexplicit backend\ncall\n\nLOCAL decode\nmeasuredQubits\norder\n\nOriginal-condition\nchecker\n\nNative Work\nqpu_consume\n\nSeparate local\nsave review\n\ncandidate\nseating\n\nchecked\nmaterial\n\nresult +\nsave\nrequest\n\nraw return\n\nW3 classical search uses SOLVER; SR2 is a separate record.\n\nSeparate EWS: local services\n\nPreview Work and result\n\nobservations / pixels\n\n36-indicator QUBO differs from ten-qubit up-to-four-local encoding. The EWS inset is a separate local\nenvironment.\n\nGEO-5 Source: wedding\n\nAtlas: Overview / GEO 1 2 3 4 5 6 7",
+    "source_refs": [
+      {
+        "label": "wedding",
+        "target": "../references/wedding/SOURCE_LEDGER.json"
+      },
+      {
+        "label": "chapter",
+        "target": "../chapters/08_wedding.html"
+      }
+    ],
+    "svg": "GEO-5.svg",
+    "text": "GEO-5.md",
+    "class": "RECORDED W4 REVISION 1  /  Captured W3 meaning is input, not permission for a QPU request",
+    "question": "Which different participants contribute inside which boundary?",
+    "subject_boundary": "RECORDED W4 REVISION 1  /  Captured W3 meaning is input, not permission for a QPU request",
+    "locator": [
+      "OVERVIEW",
+      "GEO-1",
+      "GEO-2",
+      "GEO-3",
+      "GEO-4",
+      "GEO-5",
+      "GEO-6",
+      "GEO-7"
+    ],
+    "legend": {
+      "DATA": "transferred evidence/value",
+      "PROPOSAL": "untrusted proposed material",
+      "PERMISSION": "current scoped packet only",
+      "CONTROL": "bounded operation organization",
+      "DERIVATION": "declared transformation",
+      "DOCUMENT_REFERENCE": "identity or document relation, no authority",
+      "CHRONOLOGY": "order, not a grant",
+      "CONCEPTUAL_CONTEXT": "explanatory context, not one executed trace"
+    }
+  },
+  {
+    "id": "GEO-6",
+    "title": "Recorded experience changes finite expenditure",
+    "entities": [
+      "ADVICE",
+      "ALLOCATION",
+      "DRS",
+      "OFE",
+      "OUTCOME",
+      "PRESSURE",
+      "WORK"
+    ],
+    "relations": [
+      {
+        "id": "GEO-6_history_edge_0",
+        "source": "OUTCOME",
+        "target": "OFE",
+        "relation": "DERIVATION",
+        "item": "qualified event",
+        "source_object": "GEO-6_history_0",
+        "target_object": "GEO-6_history_1"
+      },
+      {
+        "id": "GEO-6_history_edge_1",
+        "source": "OFE",
+        "target": "DRS",
+        "relation": "DATA",
+        "item": "stored evidence",
+        "source_object": "GEO-6_history_1",
+        "target_object": "GEO-6_history_2"
+      },
+      {
+        "id": "GEO-6_history_edge_2",
+        "source": "DRS",
+        "target": "ADVICE",
+        "relation": "DATA",
+        "item": "eligible material",
+        "source_object": "GEO-6_history_2",
+        "target_object": "GEO-6_history_3"
+      },
+      {
+        "id": "GEO-6_spend_edge_0",
+        "source": "PRESSURE",
+        "target": "ALLOCATION",
+        "relation": "DERIVATION",
+        "item": "integer allocation",
+        "source_object": "GEO-6_spend_0",
+        "target_object": "GEO-6_spend_1"
+      },
+      {
+        "id": "GEO-6_spend_edge_1",
+        "source": "ALLOCATION",
+        "target": "WORK",
+        "relation": "EXECUTION",
+        "item": "bounded dispatch",
+        "source_object": "GEO-6_spend_1",
+        "target_object": "GEO-6_spend_2"
+      },
+      {
+        "id": "GEO-6_current_advice",
+        "source": "ADVICE",
+        "target": "PRESSURE",
+        "relation": "DATA",
+        "item": "current comparison input",
+        "source_object": "GEO-6_history_3",
+        "target_object": "GEO-6_spend_0"
+      }
+    ],
+    "text_equivalent": "Recorded experience changes finite expenditure\n\nG3 / G4 RECORDED MECHANISMS / Eligibility and Root descent precede current advisory use\n\nSource-bound\noutcome event\n\nOFE record; then\nfold / retained\nhistory\n\nDRS read; then\ncurrent Root\ndescent\n\nAdvisory values\ncurrent\ncomparison\n\nqualified\nevent\n\nstored\nevidence\n\neligible\nmaterial\n\nFinite pressure\nand apportionment\n\n7 allocation units\n4 / 3 becomes 3 / 4\n\nActual Work\ndispatch budget 9\n\ninteger allocation\n\nbounded dispatch\n\ncurrent comparison input\n\nBudget 9 = 1 spent + 1 reserved + 7 allocated. N4-04 is a separate 1-to-0 domain-call witness with current reads\nand reviews.\n\nGEO-6 Source: experience\n\nAtlas: Overview / GEO 1 2 3 4 5 6 7",
+    "source_refs": [
+      {
+        "label": "experience",
+        "target": "../references/experience/source_ledger.md"
+      },
+      {
+        "label": "chapter",
+        "target": "../chapters/05_experience.html"
+      }
+    ],
+    "svg": "GEO-6.svg",
+    "text": "GEO-6.md",
+    "class": "G3 / G4 RECORDED MECHANISMS  /  Eligibility and Root descent precede current advisory use",
+    "question": "How can prior outcomes change current inspection without deciding for Root?",
+    "subject_boundary": "G3 / G4 RECORDED MECHANISMS  /  Eligibility and Root descent precede current advisory use",
+    "locator": [
+      "OVERVIEW",
+      "GEO-1",
+      "GEO-2",
+      "GEO-3",
+      "GEO-4",
+      "GEO-5",
+      "GEO-6",
+      "GEO-7"
+    ],
+    "legend": {
+      "DATA": "transferred evidence/value",
+      "PROPOSAL": "untrusted proposed material",
+      "PERMISSION": "current scoped packet only",
+      "CONTROL": "bounded operation organization",
+      "DERIVATION": "declared transformation",
+      "DOCUMENT_REFERENCE": "identity or document relation, no authority",
+      "CHRONOLOGY": "order, not a grant",
+      "CONCEPTUAL_CONTEXT": "explanatory context, not one executed trace"
+    }
+  },
+  {
+    "id": "GEO-7",
+    "title": "Creating a component and using it are separate acts",
+    "entities": [
+      "AUTHOR",
+      "CANDIDATE",
+      "EXAMINER",
+      "KIT",
+      "SOURCE_ADMISSION",
+      "WHAT",
+      "WORK"
+    ],
+    "relations": [
+      {
+        "id": "GEO-7_how_input",
+        "source": "KIT",
+        "target": "AUTHOR",
+        "relation": "DATA",
+        "item": "reference",
+        "source_object": "GEO-7_kit",
+        "target_object": "GEO-7_author"
+      },
+      {
+        "id": "GEO-7_what_input",
+        "source": "WHAT",
+        "target": "AUTHOR",
+        "relation": "DATA",
+        "item": "task",
+        "source_object": "GEO-7_what",
+        "target_object": "GEO-7_author"
+      },
+      {
+        "id": "GEO-7_creates",
+        "source": "AUTHOR",
+        "target": "CANDIDATE",
+        "relation": "DATA",
+        "item": "creates",
+        "source_object": "GEO-7_author",
+        "target_object": "GEO-7_candidate"
+      },
+      {
+        "id": "GEO-7_examines",
+        "source": "CANDIDATE",
+        "target": "EXAMINER",
+        "relation": "DATA",
+        "item": "checks actual material",
+        "source_object": "GEO-7_candidate",
+        "target_object": "GEO-7_exam"
+      },
+      {
+        "id": "GEO-7_review",
+        "source": "EXAMINER",
+        "target": "SOURCE_ADMISSION",
+        "relation": "DATA",
+        "item": "review",
+        "source_object": "GEO-7_exam",
+        "target_object": "GEO-7_admission"
+      },
+      {
+        "id": "GEO-7_identity",
+        "source": "SOURCE_ADMISSION",
+        "target": "WORK",
+        "relation": "DATA",
+        "item": "identity",
+        "source_object": "GEO-7_admission",
+        "target_object": "GEO-7_work"
+      }
+    ],
+    "text_equivalent": "Creating a component does not grant its authority\n\nCONCEPTUAL / HOW and WHAT are separate; candidate material is not its author\n\nHOW: interfaces\n\nWHAT: task\n\nExternal author\n\nCandidate bytes\n\nreference\n\ntask\n\ncreates\n\nIndependent exam\n\nOwner source admission\n\nNew bounded Work\n\nchecks actual material\n\nreview\n\nidentity\n\nNew current inputs and Root decisions remain required. No stored runtime grant.\n\nG54B1/G54D remain INCOMPLETE. G54D1 includes explicitly authorized correction 4; the audit packet is not the\nkit.\n\nGEO-7 Source: author\n\nAtlas: Overview / GEO 1 2 3 4 5 6 7",
+    "source_refs": [
+      {
+        "label": "author",
+        "target": "https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/gate5_authoring_kit_v01/START_HERE.md"
+      },
+      {
+        "label": "chapter",
+        "target": "../chapters/11_integration.html"
+      }
+    ],
+    "svg": "GEO-7.svg",
+    "text": "GEO-7.md",
+    "class": "CONCEPTUAL DESIGN / RUNTIME BANDS  /  G54D1 retained lineage includes authorized correction 4",
+    "question": "How can another developer add a component without admitting it?",
+    "subject_boundary": "CONCEPTUAL DESIGN / RUNTIME BANDS  /  G54D1 retained lineage includes authorized correction 4",
+    "locator": [
+      "OVERVIEW",
+      "GEO-1",
+      "GEO-2",
+      "GEO-3",
+      "GEO-4",
+      "GEO-5",
+      "GEO-6",
+      "GEO-7"
+    ],
+    "legend": {
+      "DATA": "transferred evidence/value",
+      "PROPOSAL": "untrusted proposed material",
+      "PERMISSION": "current scoped packet only",
+      "CONTROL": "bounded operation organization",
+      "DERIVATION": "declared transformation",
+      "DOCUMENT_REFERENCE": "identity or document relation, no authority",
+      "CHRONOLOGY": "order, not a grant",
+      "CONCEPTUAL_CONTEXT": "explanatory context, not one executed trace"
+    }
+  }
+]
+````
+
+## Source Block MATH_NOTATION.md
+
+````text
+# Mathematical Notation and Exact Forms
+
+The following notation explains the recorded finite mechanisms. It introduces no new theorem, execution result or probability of safety. Exact implementation forms remain next to the numerical examples in chapters 05 and 08.
+
+<a id="eq-rating"></a>
+## M1. Fixed-Point Rating
+
+R′ = clamp(R + RHE(α(O − E)/Q), 0, Q)
+
+Q = 10⁹ and α = 125,000,000. R and E are integers in [0,Q]; O is 0 or Q. RHE rounds a signed rational to the nearest integer with ties to even. E is a prospective expectation, not the preceding rating. Only a current eligible comparable occurrence enters the bounded fold. Source: [E02](PAPER_SOURCE_KEY.md#e02).
+
+<a id="eq-prior"></a>
+## M2. Signed Advisory Prior
+
+P′ = clamp(P + RHE(β((2O − Q) − P)/Q), −Q, Q)
+
+β = 62,500,000. P is a dimensionless fixed-point integer in [−Q,Q]. One admitted negative occurrence starting from zero gives −62,500,000, labelled SPARSE. Source: [E05](PAPER_SOURCE_KEY.md#e05).
+
+<a id="eq-pressure"></a>
+## M3. Pressure and Weight
+
+zᵢ = RHE((4rᵢ + 2lᵢ − 2uᵢ − cᵢ + pᵢ)/8)
+
+wᵢ = RHE(10¹² exp((zᵢ − max(z))/250,000,000))
+
+The first four features are in [0,Q], the signed prior in [−Q,Q]. The weight is an integer apportionment weight. Hard exclusion and unresolved required evidence precede allocation. Seven allocatable units change 4/3 to 3/4 inside a dispatch budget of nine, including one spent and one reserved unit. This changes expenditure, not total budget or measured speed. Source: [E05](PAPER_SOURCE_KEY.md#e05).
+
+<a id="eq-decay"></a>
+## M4. Decay After Time Admission
+
+T = RHE(R × 2^(−a/h))
+
+Age a and half-life h are integer seconds under the profile's time rules. Exact half-life multiples use rational division; the implementation returns zero at 64 half-lives. Usable trust gives pressure Q−T; otherwise maximum pressure recommends review. The recommendation threshold T<600,000,000 never suppresses mandatory policy. Source: [E02](PAPER_SOURCE_KEY.md#e02).
+
+<a id="eq-wedding"></a>
+## M5. Wedding Hard and Soft Costs
+
+KEEP(x) = Σ_(g,h∈F) Σ_t (x[g,t] − x[h,t])²
+
+MIX(x) = Σ_(g,h∈F) Σ_t x[g,t]x[h,t]
+
+Q(x) = P H(x) + selected soft cost(x)
+
+The 36 binary indicators assign twelve guests to three tables. H is a nonnegative integer hard penalty; H=0 means the original conditions hold. KEEP counts each separated familiar pair twice, MIX each co-seated pair once. P=25 and P=13 exceed their respective feasible soft bounds. The later ten-qubit pair representation contains up-to-four-local terms and is not a ten-variable QUBO. Source: [W-C3](PAPER_SOURCE_KEY.md#w-c3), [W-C5](PAPER_SOURCE_KEY.md#w-c5).
+
+<a id="eq-measurement"></a>
+## M6. Measurement Column Order
+
+index = Σ_j z[j] 2^q[j]
+
+q is measuredQubits and z is the same row's measurement vector. KEEP measurements[63] is zero-based and gives 1+4+512=517. Pair codes 0,1,2 are valid table indices; 3 is unseated and is not repaired. The original-condition checker and native consumer remain separate from save permission. Source: [W-Q2](PAPER_SOURCE_KEY.md#w-q2).
+
+The same symbols can have different profile-local meanings: rating scale Q and Wedding objective Q(x) are not one runtime field. Integer counts, seconds, dimensionless fixed-point values and physical resource descriptions are never interchanged.
+````
+
+## Source Block PAPER_SOURCE_KEY.md
+
+````text
+# Paper Source Key
+
+## Reading the Keys
+
+This appendix resolves the citations used across all fourteen chapters. A chapter is explanation, not proof of another chapter. Norms and implementation identify a mechanism; records document their own execution or checks; derived projections preserve selected values rather than original byte identity. None is a current grant.
+
+Accepted technical snapshot A: `2e965ecb18e545e428380eb8e9aa5a7037a388be`; tree `59a43cc0da470886804aab6c9af87fe17dfbd685`. [Pinned repository source root](https://github.com/AAkhtanin/hedgehog-os/tree/2e965ecb18e545e428380eb8e9aa5a7037a388be). Repository paths below are relative to that snapshot unless a separate historical commit or external archive is explicitly named. An external member is not made part of A by being cited. This is an inherited source address, not a fresh public-access check or a URL for the new publication.
+
+The [structured key](PAPER_SOURCE_KEY.json) retains every selected JSON pointer, nested JSON-string decoding step, code line range, original source hash and available historical mapping. Hashes identify bytes, not correctness. The printed locators remain meaningful without opening a local link; source retrieval may still require the repository or named archive.
+
+## Namespaces
+
+`W-W1` through `W-W6`, `W-Q1` through `W-Q4`, and `W-C1` through `W-C6`: Wedding; formerly local W, Q and C keys.
+`E01` through `E12`: experience; formerly S01-S12 in the experience ledger. These are not the publication-method register's S01-S25. For example, E02 is G3 numerical source, while method S02 is SEI's Views and Beyond.
+`WS-...`: EWS source IDs or selected-field projection IDs; `X-...`: cross-case source IDs. Labels in original evidence are unchanged.
+`F01` through `F04`: Football source groups. `R-...`: shared references. `RW01` through `RW09`: the outside references actually cited in chapter 12.
+
+Path abbreviations, used only in this appendix:
+
+`W/` = `docs/showcase/wedding_seating_v01/evidence/`.
+`WS/` = `docs/showcase/ephemeral_workspace_v01/`.
+`G6/` = `docs/gate6_reference_v01/`.
+`EWSCODE/` = `hedgehog/domains/ephemeral_workspace/`.
+
+External source records retain their own archive/member identities and availability limits. Earlier workers' recorded checks are provenance, not new checks by this editor.
+
+<a id="r-arch"></a>
+
+## R-ARCH: Architecture and local authority
+
+**Role:** normative source. Current authority laws in their named scope
+
+`specs/current_architecture_lock_v01.md`: `whole document`.
+
+<a id="r-contract"></a>
+
+## R-CONTRACT: Technical contract index
+
+**Role:** source navigation. Linked contracts retain their own scope
+
+`G6/contract_index.json`: `whole document`.
+
+<a id="r-finite"></a>
+
+## R-FINITE: Finite completion and campaign scope
+
+**Role:** accepted status explanation. 69/73 obligations, four deferments and two-fresh/nine-retained scope
+
+`G6/FINITE_COMPLETION.md`: `whole document`.
+
+<a id="r-kit"></a>
+
+## R-KIT: Authoring HOW
+
+**Role:** normative authoring guidance. HOW entry; not examiner answers or action permission
+
+`docs/gate5_authoring_kit_v01/START_HERE.md`: `whole document`.
+
+<a id="r-author"></a>
+
+## R-AUTHOR: External authoring lineage
+
+**Role:** historical dossier explanation. G54B1/G54D incomplete; G54D1 restored continuation and authorized correction four
+
+`docs/showcase/gate5_reference_v01/dossiers/A.md`: `whole document`.
+
+<a id="r-visual"></a>
+
+## R-VISUAL: Visual Seal prototype boundary
+
+**Role:** explanation only. NONCANONICAL companion; concrete receipt-to-image binding is not established.
+
+`VISUAL_SEAL.md`: `whole document`.
+
+<a id="r-rights"></a>
+
+## R-RIGHTS: Existing notices and publication rights
+
+**Role:** notices and editorial status. No license change, inferred author spelling, asset clearance or future publication identity.
+
+`LICENSE`: `whole document`.
+`COMMERCIAL-LICENSING.md`: `whole document`.
+`RIGHTS.md`: `whole document`.
+
+<a id="w-w1"></a>
+
+## W-W1: Synthetic problem and intake
+
+**Role:** historical records / exact selected derivatives. A/B intake: /safe_intent, original problem and objective vocabulary.
+
+`W/portable/w3/story/A_intake.json`: `/safe_intent`, `/request_ref`, `/prior_result_ref`, `/prior_output`, `/current/problem_revision`; additional exact selectors and decoded-container steps in structured key.
+`W/portable/w3/story/B_intake.json`: `/safe_intent`, `/request_ref`, `/prior_result_ref`, `/prior_output`, `/current/problem_revision`; additional exact selectors and decoded-container steps in structured key.
+
+<a id="w-w2"></a>
+
+## W-W2: Role inputs and returned semantics
+
+**Role:** historical records / exact selected derivatives. Intake/capture/request/response/receipt fields; selected attempts in the structured key. Preserve attempt-015 failure and live-origin versus captured reexecution.
+
+`W/portable/w3/story/A_captures.json`: `/0/capture_ref`, `/0/request_ref`, `/0/role`, `/0/model_version`, `/0/origin`; additional exact selectors and decoded-container steps in structured key.
+`W/portable/w3/story/B_captures.json`: `/0/capture_ref`, `/0/request_ref`, `/0/role`, `/0/model_version`, `/0/origin`; additional exact selectors and decoded-container steps in structured key.
+`W/portable/w3/story/VERIFY_captures.json`: `/0/capture_ref`, `/0/request_ref`, `/0/role`, `/0/model_version`, `/0/origin`; additional exact selectors and decoded-container steps in structured key.
+`W/portable/w3/story/AMBIGUOUS_captures.json`: `/0/capture_ref`, `/0/request_ref`, `/0/role`, `/0/model_version`, `/0/origin`; additional exact selectors and decoded-container steps in structured key.
+`W/portable/w3/story/SR1_captures.json`: `/0/capture_ref`, `/0/request_ref`, `/0/role`, `/0/model_version`, `/0/origin`; additional exact selectors and decoded-container steps in structured key.
+`W/portable/w3/story/SR2_captures.json`: `/0/capture_ref`, `/0/request_ref`, `/0/role`, `/0/model_version`, `/0/origin`; additional exact selectors and decoded-container steps in structured key.
+`W/portable/w3/story/SR3_captures.json`: `/0/capture_ref`, `/0/request_ref`, `/0/role`, `/0/model_version`, `/0/origin`; additional exact selectors and decoded-container steps in structured key.
+`W/supplementary/w3/captures/attempt_004/capture.json`: `/capture_ref`, `/request_ref`, `/role`, `/origin`, `/response_sha256`; additional exact selectors and decoded-container steps in structured key.
+`W/supplementary/w3/captures/attempt_004/receipt.json`: complete selected value; exact locator in structured key.
+`W/supplementary/w3/captures/attempt_004/provider_response.json`: `/model_version`, `/candidates/0/content/parts/0/text`.
+`W/supplementary/w3/captures/attempt_005/capture.json`: `/capture_ref`, `/request_ref`, `/role`, `/origin`, `/response_sha256`; additional exact selectors and decoded-container steps in structured key.
+`W/supplementary/w3/captures/attempt_005/receipt.json`: complete selected value; exact locator in structured key.
+`W/supplementary/w3/captures/attempt_005/provider_response.json`: `/model_version`, `/candidates/0/content/parts/0/text`.
+`W/supplementary/w3/captures/attempt_006/capture.json`: `/capture_ref`, `/request_ref`, `/role`, `/origin`, `/response_sha256`; additional exact selectors and decoded-container steps in structured key.
+`W/supplementary/w3/captures/attempt_006/receipt.json`: complete selected value; exact locator in structured key.
+`W/supplementary/w3/captures/attempt_006/provider_response.json`: `/model_version`, `/candidates/0/content/parts/0/text`.
+`W/supplementary/w3/captures/attempt_007/capture.json`: `/capture_ref`, `/request_ref`, `/role`, `/origin`, `/response_sha256`; additional exact selectors and decoded-container steps in structured key.
+`W/supplementary/w3/captures/attempt_007/receipt.json`: complete selected value; exact locator in structured key.
+`W/supplementary/w3/captures/attempt_007/provider_response.json`: `/model_version`, `/candidates/0/content/parts/0/text`.
+`W/supplementary/w3/captures/attempt_010/capture.json`: `/capture_ref`, `/request_ref`, `/role`, `/origin`, `/response_sha256`; additional exact selectors and decoded-container steps in structured key.
+`W/supplementary/w3/captures/attempt_010/receipt.json`: complete selected value; exact locator in structured key.
+`W/supplementary/w3/captures/attempt_010/provider_response.json`: `/model_version`, `/candidates/0/content/parts/0/text`.
+`W/supplementary/w3/captures/attempt_011/capture.json`: `/capture_ref`, `/request_ref`, `/role`, `/origin`, `/response_sha256`; additional exact selectors and decoded-container steps in structured key.
+`W/supplementary/w3/captures/attempt_011/receipt.json`: complete selected value; exact locator in structured key.
+`W/supplementary/w3/captures/attempt_011/provider_response.json`: `/model_version`, `/candidates/0/content/parts/0/text`.
+`W/supplementary/w3/captures/attempt_012/capture.json`: `/capture_ref`, `/request_ref`, `/role`, `/origin`, `/response_sha256`; additional exact selectors and decoded-container steps in structured key.
+`W/supplementary/w3/captures/attempt_012/receipt.json`: complete selected value; exact locator in structured key.
+`W/supplementary/w3/captures/attempt_012/provider_response.json`: `/model_version`, `/candidates/0/content/parts/0/text`.
+`W/supplementary/w3/captures/attempt_013/capture.json`: `/capture_ref`, `/request_ref`, `/role`, `/origin`, `/response_sha256`; additional exact selectors and decoded-container steps in structured key.
+`W/supplementary/w3/captures/attempt_013/receipt.json`: complete selected value; exact locator in structured key.
+`W/supplementary/w3/captures/attempt_013/provider_response.json`: `/model_version`, `/candidates/0/content/parts/0/text`.
+`W/supplementary/w3/captures/attempt_014/capture.json`: `/capture_ref`, `/request_ref`, `/role`, `/origin`, `/response_sha256`; additional exact selectors and decoded-container steps in structured key.
+`W/supplementary/w3/captures/attempt_014/receipt.json`: complete selected value; exact locator in structured key.
+`W/supplementary/w3/captures/attempt_014/provider_response.json`: `/model_version`, `/candidates/0/content/parts/0/text`.
+`W/supplementary/w3/captures/attempt_015/capture.json`: `/capture_ref`, `/request_ref`, `/role`, `/origin`, `/response_sha256`; additional exact selectors and decoded-container steps in structured key.
+`W/supplementary/w3/captures/attempt_015/receipt.json`: complete selected value; exact locator in structured key.
+`W/supplementary/w3/captures/attempt_015/provider_response.json`: `/model_version`, `/candidates/0/content/parts/0/text`.
+`W/supplementary/w3/captures/attempt_016/capture.json`: `/capture_ref`, `/request_ref`, `/role`, `/origin`, `/response_sha256`; additional exact selectors and decoded-container steps in structured key.
+`W/supplementary/w3/captures/attempt_016/receipt.json`: complete selected value; exact locator in structured key.
+`W/supplementary/w3/captures/attempt_016/provider_response.json`: `/model_version`, `/candidates/0/content/parts/0/text`.
+`W/supplementary/w3/captures/attempt_017/capture.json`: `/capture_ref`, `/request_ref`, `/role`, `/origin`, `/response_sha256`; additional exact selectors and decoded-container steps in structured key.
+`W/supplementary/w3/captures/attempt_017/receipt.json`: complete selected value; exact locator in structured key.
+`W/supplementary/w3/captures/attempt_017/provider_response.json`: `/model_version`, `/candidates/0/content/parts/0/text`.
+`W/supplementary/w3/captures/attempt_018/capture.json`: `/capture_ref`, `/request_ref`, `/role`, `/origin`, `/response_sha256`; additional exact selectors and decoded-container steps in structured key.
+`W/supplementary/w3/captures/attempt_018/receipt.json`: complete selected value; exact locator in structured key.
+`W/supplementary/w3/captures/attempt_018/provider_response.json`: `/model_version`, `/candidates/0/content/parts/0/text`.
+`W/supplementary/w3/captures/attempt_019/capture.json`: `/capture_ref`, `/request_ref`, `/role`, `/origin`, `/response_sha256`; additional exact selectors and decoded-container steps in structured key.
+`W/supplementary/w3/captures/attempt_019/receipt.json`: complete selected value; exact locator in structured key.
+`W/supplementary/w3/captures/attempt_019/provider_response.json`: `/model_version`, `/candidates/0/content/parts/0/text`.
+
+<a id="w-w3"></a>
+
+## W-W3: W3 actual computation and origin
+
+**Role:** historical records / exact selected derivatives. Program, material, actual invocation inputs, consumption and output; A captured reexecution is not B live-origin.
+
+`W/portable/w3/story/A.json`: `/material/origin`, `/material/task_kind`, `/material/profile`, `/material/semantics`, `/material/revision_acknowledgement`; additional exact selectors and decoded-container steps in structured key.
+`W/portable/w3/story/B.json`: `/material/origin`, `/material/task_kind`, `/material/profile`, `/material/semantics`, `/material/revision_acknowledgement`; additional exact selectors and decoded-container steps in structured key.
+`W/portable/w3/story/VERIFY.json`: `/material/origin`, `/material/task_kind`, `/material/profile`, `/material/semantics`, `/material/revision_acknowledgement`; additional exact selectors and decoded-container steps in structured key.
+`W/portable/w3/story/AMBIGUOUS.json`: `/material/origin`, `/material/task_kind`, `/material/profile`, `/material/semantics`, `/material/revision_acknowledgement`; additional exact selectors and decoded-container steps in structured key.
+
+<a id="w-w4"></a>
+
+## W-W4: SR1/SR2 changes and SR3 verification
+
+**Role:** historical records / exact selected derivatives. Changed material, prior results and causal Work. SR2 moves 07/08 by request; 09/10 move as a computed consequence.
+
+`W/portable/w3/story/SR1_intake.json`: `/safe_intent`, `/request_ref`, `/prior_result_ref`, `/prior_output`, `/current/problem_revision`; additional exact selectors and decoded-container steps in structured key.
+`W/portable/w3/story/SR1_captures.json`: `/0/capture_ref`, `/0/request_ref`, `/0/role`, `/0/model_version`, `/0/origin`; additional exact selectors and decoded-container steps in structured key.
+`W/portable/w3/story/SR1.json`: `/material/origin`, `/material/task_kind`, `/material/profile`, `/material/semantics`, `/material/revision_acknowledgement`; additional exact selectors and decoded-container steps in structured key.
+`W/portable/w3/story/SR2_intake.json`: `/safe_intent`, `/request_ref`, `/prior_result_ref`, `/prior_output`, `/current/problem_revision`; additional exact selectors and decoded-container steps in structured key.
+`W/portable/w3/story/SR2_captures.json`: `/0/capture_ref`, `/0/request_ref`, `/0/role`, `/0/model_version`, `/0/origin`; additional exact selectors and decoded-container steps in structured key.
+`W/portable/w3/story/SR2.json`: `/material/origin`, `/material/task_kind`, `/material/profile`, `/material/semantics`, `/material/revision_acknowledgement`; additional exact selectors and decoded-container steps in structured key.
+`W/portable/w3/story/SR3_intake.json`: `/safe_intent`, `/request_ref`, `/prior_result_ref`, `/prior_output`, `/current/problem_revision`; additional exact selectors and decoded-container steps in structured key.
+`W/portable/w3/story/SR3_captures.json`: `/0/capture_ref`, `/0/request_ref`, `/0/role`, `/0/model_version`, `/0/origin`; additional exact selectors and decoded-container steps in structured key.
+`W/portable/w3/story/SR3.json`: `/material/origin`, `/material/task_kind`, `/material/profile`, `/material/semantics`, `/material/revision_acknowledgement`; additional exact selectors and decoded-container steps in structured key.
+
+<a id="w-w5"></a>
+
+## W-W5: Old plan under new conditions and ambiguity
+
+**Role:** historical records / exact selected derivatives. Old/new verdicts and clarification, not an invented Root rejection.
+
+`W/portable/w3/story/AMBIGUOUS.json`: `/material/origin`, `/material/task_kind`, `/material/profile`, `/material/semantics`, `/material/revision_acknowledgement`; additional exact selectors and decoded-container steps in structured key.
+`W/supplementary/w3/story/old_under_new.json`: `/historical`, `/current`, `/current_root_refusal`, `/original_sr1_unchanged`.
+
+<a id="w-w6"></a>
+
+## W-W6: Historical enumeration reference
+
+**Role:** historical records / exact selected derivatives. External W5 basis_w3/story/independent_meaning.json, pinned by portable/w4/basis_w3/proof_trust.json; exact selected value in W3_PROJECTIONS. Original external bytes not reopened.
+
+`external-recorded-location:independent_meaning.json`: complete selected value; exact locator in structured key.
+- External W5 member `basis_w3/story/independent_meaning.json`; retrieval pin `W/portable/w4/basis_w3/proof_trust.json`. The selected value is retained in `references/wedding/W3_PROJECTIONS.json`; original external bytes were not reopened.
+
+<a id="w-q1"></a>
+
+## W-Q1: W4 original problem and backend selection
+
+**Role:** historical records / exact selected derivatives. /material/backend_selection, original problem and numerical grid. Revision 1, not SR2.
+
+`W/portable/w4/native/KEEP_FAMILIAR_V01/consume.json`: `/classification`, `/owner/request_ref`, `/program/ordered_work_ids`, `/artifact/artifact_id`, `/output`; additional exact selectors and decoded-container steps in structured key.
+`W/portable/w4/numeric/KEEP_FAMILIAR_V01/numeric.json`: `/profile`, `/encoding/schema_version`, `/encoding/qubits`, `/encoding/variable_pairs`, `/encoding/fixed_pair`; additional exact selectors and decoded-container steps in structured key.
+`W/portable/w4/native/MIX_CIRCLES_V01/consume.json`: `/classification`, `/owner/request_ref`, `/program/ordered_work_ids`, `/artifact/artifact_id`, `/output`; additional exact selectors and decoded-container steps in structured key.
+`W/portable/w4/numeric/MIX_CIRCLES_V01/numeric.json`: `/profile`, `/encoding/schema_version`, `/encoding/qubits`, `/encoding/variable_pairs`, `/encoding/fixed_pair`; additional exact selectors and decoded-container steps in structured key.
+
+<a id="w-q2"></a>
+
+## W-Q2: Measured candidates and original-condition checks
+
+**Role:** historical records / exact selected derivatives. /taskMetadata, /measuredQubits; KEEP /measurements/63 and /measurements/2, MIX /measurements/31; validation /selected and statistics. 33/1000 is feasibility, not hardware noise.
+
+`W/portable/w4/provider/KEEP_FAMILIAR_V01_results.json`: `/taskMetadata`, `/measuredQubits`, `/measurements/63`, `/measurements/2`.
+`W/portable/w4/provider/KEEP_FAMILIAR_V01_sample_validation.json`: `/task_arn`, `/raw_sha256`, `/requested_shots`, `/successful_shots`, `/valid_samples`; additional exact selectors and decoded-container steps in structured key.
+`W/portable/w4/provider/MIX_CIRCLES_V01_results.json`: `/taskMetadata`, `/measuredQubits`, `/measurements/31`, `/measurements/2`.
+`W/portable/w4/provider/MIX_CIRCLES_V01_sample_validation.json`: `/task_arn`, `/raw_sha256`, `/requested_shots`, `/successful_shots`, `/valid_samples`; additional exact selectors and decoded-container steps in structured key.
+
+<a id="w-q3"></a>
+
+## W-Q3: Native consumption of selected sample
+
+**Role:** historical records / exact selected derivatives. qpu_validate/qpu_consume invocation, decoded /sample_validation/selected, material and final output. Recorded JSON-string decoding steps are required.
+
+`W/portable/w4/native/KEEP_FAMILIAR_V01/consume.json`: `/classification`, `/owner/request_ref`, `/program/ordered_work_ids`, `/artifact/artifact_id`, `/output`; additional exact selectors and decoded-container steps in structured key.
+`W/portable/w4/native/MIX_CIRCLES_V01/consume.json`: `/classification`, `/owner/request_ref`, `/program/ordered_work_ids`, `/artifact/artifact_id`, `/output`; additional exact selectors and decoded-container steps in structured key.
+
+<a id="w-q4"></a>
+
+## W-Q4: Separate save and readback
+
+**Role:** historical records / exact selected derivatives. Receipt, exact byte count/hash, native source and approved save bindings. HTML identity has its separate receipt.
+
+`W/portable/w4/outputs/KEEP_FAMILIAR_V01/save_receipts.json`: `/0/claim`, `/0/status`, `/0/root_result`, `/0/root_input/post_vv_bundle/items`, `/1/claim`; additional exact selectors and decoded-container steps in structured key.
+`W/portable/w4/outputs/KEEP_FAMILIAR_V01/seating.json`: complete selected value; exact locator in structured key.
+`W/portable/w4/outputs/MIX_CIRCLES_V01/save_receipts.json`: `/0/claim`, `/0/status`, `/0/root_result`, `/0/root_input/post_vv_bundle/items`, `/1/claim`; additional exact selectors and decoded-container steps in structured key.
+`W/portable/w4/outputs/MIX_CIRCLES_V01/seating.json`: complete selected value; exact locator in structured key.
+
+<a id="w-c1"></a>
+
+## W-C1: Semantic intake/capture adapter
+
+**Role:** static implementation. Exact source line ranges, accepted byte-identical counterpart and original code commit are recorded. Static code is not fresh execution.
+
+`W/portable/w4/candidate/hedgehog/domains/wedding_seating/semantic_adapter_v01.py`: lines 93-128, lines 129-235.
+
+<a id="w-c2"></a>
+
+## W-C2: Native runtime and capabilities
+
+**Role:** static implementation. Exact source line ranges, accepted byte-identical counterpart and original code commit are recorded. Static code is not fresh execution.
+
+`W/portable/w4/candidate/hedgehog/domains/wedding_seating/runtime_v01.py`: lines 43-56, lines 60-103.
+`W/portable/w4/candidate/hedgehog/domains/wedding_seating/native_capabilities_v01.py`: lines 20-53, lines 77-96.
+
+<a id="w-c3"></a>
+
+## W-C3: Original-condition mathematics
+
+**Role:** static implementation. Exact source line ranges, accepted byte-identical counterpart and original code commit are recorded. Static code is not fresh execution.
+
+`W/portable/w4/candidate/hedgehog/domains/wedding_seating/math_v01.py`: lines 35-107, lines 121-169, lines 181-194.
+
+<a id="w-c4"></a>
+
+## W-C4: QPU application bridge
+
+**Role:** static implementation. Exact source line ranges, accepted byte-identical counterpart and original code commit are recorded. Static code is not fresh execution.
+
+`W/portable/w4/candidate/hedgehog/domains/wedding_seating/qpu_application_v01.py`: lines 8-45.
+
+<a id="w-c5"></a>
+
+## W-C5: QPU encoding and contracts
+
+**Role:** static implementation. Exact source line ranges, accepted byte-identical counterpart and original code commit are recorded. Static code is not fresh execution.
+
+`W/portable/w4/candidate/hedgehog/domains/wedding_seating/encoding_v02.py`: lines 19-28, lines 98-121.
+`W/portable/w4/candidate/hedgehog/domains/wedding_seating/qpu_contracts_v01.py`: lines 16-94.
+
+<a id="w-c6"></a>
+
+## W-C6: Output/save boundary
+
+**Role:** static implementation. Exact source line ranges, accepted byte-identical counterpart and original code commit are recorded. Static code is not fresh execution.
+
+`W/portable/w4/candidate/hedgehog/domains/wedding_seating/qpu_output_v01.py`: lines 21-51.
+
+<a id="ws-appendix"></a>
+
+## WS-appendix: EWS appendix
+
+**Role:** explanatory_source
+
+`WS/technical_appendix_v01.md`: `whole document`.
+
+<a id="ws-claims"></a>
+
+## WS-claims: EWS claims
+
+**Role:** claim_navigation
+
+`WS/claim_evidence_matrix_v01.json`: `whole document`.
+
+<a id="ws-index"></a>
+
+## WS-index: EWS index
+
+**Role:** historical_source_index
+
+`WS/source_index_v01.json`: `whole document`.
+
+<a id="ws-p_controlled_0"></a>
+
+## WS-P_controlled_0: EWS controlled_0
+
+**Role:** later_presentation_derivative. PRINCIPAL_CONTROLLED_LATER_DERIVATIVE
+
+`WS/presentation_evidence/semantic_boundary_io_projection_v01.json`: `/principal_controlled_role_records/0/source_binding`, `/principal_controlled_role_records/0/mode`, `/principal_controlled_role_records/0/model`, `/principal_controlled_role_records/0/role`, `/principal_controlled_role_records/0/bounded_input`, `/principal_controlled_role_records/0/structured_output`, `/principal_controlled_role_records/0/provider_call_performed_for_this_role`.
+- Local selected-value route: `references/ews/selected_field_projections.json` at `/records/10`.
+
+<a id="ws-p_controlled_2"></a>
+
+## WS-P_controlled_2: EWS controlled_2
+
+**Role:** later_presentation_derivative. PRINCIPAL_CONTROLLED_LATER_DERIVATIVE
+
+`WS/presentation_evidence/semantic_boundary_io_projection_v01.json`: `/principal_controlled_role_records/2/source_binding`, `/principal_controlled_role_records/2/mode`, `/principal_controlled_role_records/2/model`, `/principal_controlled_role_records/2/role`, `/principal_controlled_role_records/2/bounded_input`, `/principal_controlled_role_records/2/structured_output`, `/principal_controlled_role_records/2/provider_call_performed_for_this_role`.
+- Local selected-value route: `references/ews/selected_field_projections.json` at `/records/12`.
+
+<a id="ws-p_topology"></a>
+
+## WS-P_topology: EWS topology
+
+**Role:** ews4r_safe_derivative. PRINCIPAL_EWS3R2_VIA_EWS4R_SAFE_DERIVATIVE
+
+`WS/public_safe_package/runtime_execution_topology_safe_v01.json`: `/payload/safe_document/summary/work_roles`, `/payload/safe_document/summary/top_level_D`, `/payload/safe_document/summary/top_level_E`, `/payload/safe_document/summary/nested_retained_D`, `/payload/safe_document/summary/original_graph_verification/baseline_artifacts`, `/payload/safe_document/summary/original_graph_verification/baseline_private_audit/native_canonical_reference_status`.
+- Local selected-value route: `references/ews/selected_field_projections.json` at `/records/9`.
+
+<a id="ws-render_code"></a>
+
+## WS-render_code: EWS render_code
+
+**Role:** static_implementation. render, lines 100-125
+
+`EWSCODE/media_v01.py`: `render, lines 100-125`.
+
+<a id="ws-session_code"></a>
+
+## WS-session_code: EWS session_code
+
+**Role:** static_implementation. execute_effect/save_candidate/approve/close, lines 241-366
+
+`EWSCODE/session_runtime_v01.py`: `execute_effect/save_candidate/approve/close, lines 241-366`.
+
+<a id="ws-p_sidecar"></a>
+
+## WS-P_sidecar: EWS sidecar
+
+**Role:** external_archive_member. PRINCIPAL_EWS3R2_EXACT_SELECTED_SAVED_CONTENT
+
+- Archive member `browser_run_01/native_final/verified_sidecar.json`; archive `RADIOLARIA_EPHEMERAL_WORKSPACE_EWS3R2_TEMPORAL_BROWSER_RETURN_20260914T112116Z.tar.gz`, SHA-256 `5d6c1e7aa4bf1abbe3b2ff629ec36d85d7c2fc9bcf10cc088e87328b463992b5`. Original member not reopened by this worker; selected-value derivative is local.
+- Local selected-value route: `references/ews/selected_field_projections.json` at `/records/22`.
+
+<a id="ws-p_complete"></a>
+
+## WS-P_complete: EWS complete
+
+**Role:** external_archive_member. PRINCIPAL_EWS3R2_NAMED_ARCHIVE_MEMBER
+
+- Archive member `browser_run_01/complete.json`; archive `RADIOLARIA_EPHEMERAL_WORKSPACE_EWS3R2_TEMPORAL_BROWSER_RETURN_20260914T112116Z.tar.gz`, SHA-256 `5d6c1e7aa4bf1abbe3b2ff629ec36d85d7c2fc9bcf10cc088e87328b463992b5`. Original member not reopened by this worker; selected-value derivative is local.
+- Local selected-value route: `references/ews/selected_field_projections.json` at `/records/21`.
+
+<a id="ws-r2_report"></a>
+
+## WS-r2_report: EWS r2_report
+
+**Role:** external_archive_member
+
+- Archive member `FINAL_REPORT.md`; archive `RADIOLARIA_EPHEMERAL_WORKSPACE_EWS3R2_TEMPORAL_BROWSER_RETURN_20260914T112116Z.tar.gz`, SHA-256 `5d6c1e7aa4bf1abbe3b2ff629ec36d85d7c2fc9bcf10cc088e87328b463992b5`. Original member not reopened by this worker; selected-value derivative is local.
+
+<a id="ws-p_temporal"></a>
+
+## WS-P_temporal: EWS temporal
+
+**Role:** external_archive_member. PRINCIPAL_EWS3R2_NAMED_ARCHIVE_MEMBER
+
+- Archive member `browser_run_01/temporal/after_E_before_fresh_commands.json`; archive `RADIOLARIA_EPHEMERAL_WORKSPACE_EWS3R2_TEMPORAL_BROWSER_RETURN_20260914T112116Z.tar.gz`, SHA-256 `5d6c1e7aa4bf1abbe3b2ff629ec36d85d7c2fc9bcf10cc088e87328b463992b5`. Original member not reopened by this worker; selected-value derivative is local.
+- Local selected-value route: `references/ews/selected_field_projections.json` at `/records/23`.
+
+<a id="ws-p_consumption"></a>
+
+## WS-P_consumption: EWS consumption
+
+**Role:** external_archive_member. PRINCIPAL_EWS3R2_NAMED_ARCHIVE_MEMBER
+
+- Archive member `browser_run_01/native_common_return/media_consumption.json`; archive `RADIOLARIA_EPHEMERAL_WORKSPACE_EWS3R2_TEMPORAL_BROWSER_RETURN_20260914T112116Z.tar.gz`, SHA-256 `5d6c1e7aa4bf1abbe3b2ff629ec36d85d7c2fc9bcf10cc088e87328b463992b5`. Original member not reopened by this worker; selected-value derivative is local.
+- Local selected-value route: `references/ews/selected_field_projections.json` at `/records/20`.
+
+<a id="ws-p_events"></a>
+
+## WS-P_events: EWS events
+
+**Role:** ews4r_safe_derivative. PRINCIPAL_EWS3R2_VIA_EWS4R_SAFE_DERIVATIVE
+
+`WS/public_safe_package/session_event_summary_v01.json`: `/payload/safe_document/summary`.
+- Local selected-value route: `references/ews/selected_field_projections.json` at `/records/2`.
+
+<a id="ws-continuation_code"></a>
+
+## WS-continuation_code: EWS continuation_code
+
+**Role:** static_implementation. consume_delta, lines 305-358
+
+`EWSCODE/media_continuation_v01.py`: `consume_delta, lines 305-358`.
+
+<a id="ws-p_save_packet"></a>
+
+## WS-P_save_packet: EWS save_packet
+
+**Role:** ews4r_safe_derivative. PRINCIPAL_EWS3R2_VIA_EWS4R_SAFE_DERIVATIVE
+
+`WS/public_safe_package/sidecar_write_packet_safe_v01.json`: `/payload/safe_document/summary`.
+- Local selected-value route: `references/ews/selected_field_projections.json` at `/records/3`.
+
+<a id="ws-p_save_receipt"></a>
+
+## WS-P_save_receipt: EWS save_receipt
+
+**Role:** ews4r_safe_derivative. PRINCIPAL_EWS3R2_VIA_EWS4R_SAFE_DERIVATIVE
+
+`WS/public_safe_package/sidecar_write_receipt_safe_v01.json`: `/payload/safe_document/summary`.
+- Local selected-value route: `references/ews/selected_field_projections.json` at `/records/4`.
+
+<a id="ws-p_teardown"></a>
+
+## WS-P_teardown: EWS teardown
+
+**Role:** ews4r_safe_derivative. PRINCIPAL_EWS3R2_VIA_EWS4R_SAFE_DERIVATIVE
+
+`WS/public_safe_package/teardown_summary_v01.json`: `/payload/safe_document/summary`.
+- Local selected-value route: `references/ews/selected_field_projections.json` at `/records/5`.
+
+<a id="ws-service_code"></a>
+
+## WS-service_code: EWS service_code
+
+**Role:** static_implementation. close, lines 195-220
+
+`EWSCODE/local_services_v01.py`: `close, lines 195-220`.
+
+<a id="ws-p_memory"></a>
+
+## WS-P_memory: EWS memory
+
+**Role:** later_presentation_derivative. HISTORICAL_EWS3_MEMORY_LATER_DERIVATIVE
+
+`WS/presentation_evidence/historical_semantic_memory_summary_v01.json`: `/anchor_covers_this_derivative`, `/records/3`, `/records/4`, `/records/5`, `/records/9`, `/records/10`, `/records/11`.
+- Local selected-value route: `references/ews/selected_field_projections.json` at `/records/24`.
+
+<a id="ws-p_saved_information"></a>
+
+## WS-P_saved_information: EWS saved_information
+
+**Role:** external_archive_member. HISTORICAL_EWS3_NAMED_ARCHIVE_MEMBER
+
+- Archive member `evidence/contrast_memory_04/informational_saved_work.json`; archive `RADIOLARIA_EPHEMERAL_WORKSPACE_EWS3_SEMANTIC_MEMORY_AND_MEDIA_COMPLETION_RETURN_20260913T185528Z.tar.gz`, SHA-256 `3bcb860291c6ddc878e60bd1fa52570411a95c35385d911f12ca0d6fb246d9ed`. Original member not reopened by this worker; selected-value derivative is local.
+- Local selected-value route: `references/ews/selected_field_projections.json` at `/records/25`.
+
+<a id="ws-p_measured"></a>
+
+## WS-P_measured: EWS measured
+
+**Role:** external_archive_member. HISTORICAL_EWS3_NAMED_ARCHIVE_MEMBER
+
+- Archive member `evidence/measured_results.json`; archive `RADIOLARIA_EPHEMERAL_WORKSPACE_EWS3_SEMANTIC_MEMORY_AND_MEDIA_COMPLETION_RETURN_20260913T185528Z.tar.gz`, SHA-256 `3bcb860291c6ddc878e60bd1fa52570411a95c35385d911f12ca0d6fb246d9ed`. Original member not reopened by this worker; selected-value derivative is local.
+- Local selected-value route: `references/ews/selected_field_projections.json` at `/records/26`.
+
+<a id="ws-p_live_accounting"></a>
+
+## WS-P_live_accounting: EWS live_accounting
+
+**Role:** later_presentation_derivative. HISTORICAL_LIVE_LATER_DERIVATIVE
+
+`WS/presentation_evidence/semantic_boundary_io_projection_v01.json`: `/historical_attempt_counts`, `/covered_by_ews4r_anchor`, `/new_runtime_or_provider_execution`.
+- Local selected-value route: `references/ews/selected_field_projections.json` at `/records/13`.
+
+<a id="ws-p_controlled_1"></a>
+
+## WS-P_controlled_1: EWS controlled_1
+
+**Role:** later_presentation_derivative. PRINCIPAL_CONTROLLED_LATER_DERIVATIVE
+
+`WS/presentation_evidence/semantic_boundary_io_projection_v01.json`: `/principal_controlled_role_records/1/source_binding`, `/principal_controlled_role_records/1/mode`, `/principal_controlled_role_records/1/model`, `/principal_controlled_role_records/1/role`, `/principal_controlled_role_records/1/bounded_input`, `/principal_controlled_role_records/1/structured_output`, `/principal_controlled_role_records/1/provider_call_performed_for_this_role`.
+- Local selected-value route: `references/ews/selected_field_projections.json` at `/records/11`.
+
+<a id="x-td-nav"></a>
+
+## X-TD-NAV: Cross-case TD-NAV
+
+**Role:** showcase navigation with evidence_head 5d20037c58414a48811464ce3a581d70d895de13; not primary execution. Resolve Supplier S1, Airline attempt 04 and X1 actual sources; no slide treated as execution proof
+
+`docs/showcase/two_domain_master_v01/hedgehog_os_two_domain_master_showcase_sources_v01.json`: whole index/document.
+- Local selected-value route: `references/cases/source_field_projections.json`.
+
+<a id="x-x1"></a>
+
+## X-X1: Cross-case X1
+
+**Role:** recorded cross-domain source/evidence index. Distinct source heads, differences, common authority laws, non-claims and audit/replay routes
+
+`docs/evidence/two_domain_all_real_sealed_evidence_program_v01/cross_domain_evidence_index_v01.json`: whole index/document.
+- Local selected-value route: `references/cases/source_field_projections.json`.
+
+<a id="x-s-report"></a>
+
+## X-S-REPORT: Cross-case S-REPORT
+
+**Role:** public-safe recorded S1 provider-origin execution report; raw prompts/responses excluded
+
+`docs/evidence/two_domain_all_real_sealed_evidence_program_v01/supplier_water_filter/supplier_safe_execution_report_v01.json`: `/execution_head`, `/provider_mode`, `/provider_call_count`, `/safe_execution_projection/transaction_id`, `/real_payment_executed`, `/real_shipment_released`.
+- Local selected-value route: `references/cases/source_field_projections.json`.
+
+<a id="x-s-index"></a>
+
+## X-S-INDEX: Cross-case S-INDEX
+
+**Role:** nine-row historical scenario index; controlled probes and live-bound deterministic rows explicitly classified
+
+`docs/evidence/two_domain_all_real_sealed_evidence_program_v01/supplier_water_filter/supplier_safe_evidence_index_v01.json`: `/scenario_rows/0/scenario_id`, `/scenario_rows/0/root_status`, `/scenario_rows/2/scenario_id`, `/scenario_rows/2/root_status`, `/scenario_rows/2/packet_status`, `/scenario_rows/3/packet_status`, `/scenario_rows/4/corridor_status`, `/scenario_rows/4/receipt_status`, `/scenario_rows/5/root_status`, `/scenario_rows/5/packet_status`, `/scenario_rows/5/supplier_a_status`, `/scenario_rows/8/supplier_b_status`, `/scenario_rows/8/shipment_status`, `/scenario_rows/8/business_outcome`.
+- Local selected-value route: `references/cases/source_field_projections.json`.
+
+<a id="x-a-report"></a>
+
+## X-A-REPORT: Cross-case A-REPORT
+
+**Role:** public-safe historical attempt 04 execution report; separate from full-stack claim-matrix history
+
+`docs/evidence/two_domain_all_real_sealed_evidence_program_v01/airline/airline_safe_execution_report_attempt_04_v01.json`: `/execution_head`, `/run_id`, `/selected_offer_id`, `/counters/provider_call_count`, `/actors/2/safe_projection/actor_id`, `/actors/2/safe_projection/authority_created`, `/root_finals/0/safe_projection/root_owner`, `/root_finals/1/safe_projection/root_owner`, `/root_finals/2/safe_projection/root_owner`, `/root_finals/2/safe_projection/depends_on/0`, `/bsep/projections/0/safe_projection/permission_created`, `/corridor/safe_projection/corridor_execution_count`, `/corridor/safe_projection/mock_only`, `/corridor/safe_projection/real_world_effects_count`, `/receipts/2/safe_projection/authority_class`, `/receipts/2/safe_projection/depends_on`.
+- Local selected-value route: `references/cases/source_field_projections.json`.
+
+<a id="x-a-matrix"></a>
+
+## X-A-MATRIX: Cross-case A-MATRIX
+
+**Role:** older source-bound claim matrix; audits local packages at its recorded a701743/ec50c1f lineage. Preserved failed/recovery distinction and signature_verified=false; never imported into attempt 04
+
+`docs/showcase/airline_all_real_full_stack_v01/claim_evidence_matrix_v01.json`: `/21/claim_id`, `/21/observed_value`, `/22/observed_value`, `/23/display_label`, `/23/observed_value`.
+- Local selected-value route: `references/cases/source_field_projections.json`.
+
+<a id="x-ls-projection"></a>
+
+## X-LS-PROJECTION: Cross-case LS-PROJECTION
+
+**Role:** LS2R2 public safe-derived fields, not raw provider history or whole-history execution seal
+
+`docs/showcase/landslide_sentinel_v01/public_safe_package/projection.json`: `/slice_id`, `/artifacts/0/payload/safe_document/actual_roles/0/intended_role`, `/artifacts/0/payload/safe_document/actual_roles/0/actual_mode`, `/artifacts/1/payload/safe_document/compositions/0/output/selection`, `/artifacts/1/payload/safe_document/compositions/1/output/selection`, `/artifacts/1/payload/safe_document/compositions/1/output/checks/0/detail/fitness`, `/artifacts/1/payload/safe_document/compositions/1/output/checks/0/detail/measured_span`, `/artifacts/1/payload/safe_document/compositions/1/output/checks/0/detail/range_value`, `/artifacts/1/payload/safe_document/compositions/1/output/checks/0/detail/policy/maximum_range_um`, `/artifacts/1/payload/safe_document/compositions/1/output/checks/0/detail/policy/minimum_samples`, `/artifacts/1/payload/safe_document/compositions/1/output/checks/0/detail/outcome`, `/artifacts/1/payload/safe_document/compositions/1/output/checks/0/detail/receipt_ref`, `/artifacts/1/payload/safe_document/compositions/0/output/checks/1/detail/physical_mapping`, `/artifacts/1/payload/safe_document/compositions/0/root/permission_created`.
+- Local selected-value route: `references/cases/source_field_projections.json`.
+
+<a id="x-ls-matrix"></a>
+
+## X-LS-MATRIX: Cross-case LS-MATRIX
+
+**Role:** explanatory source-bound index; source_commit 2f328be634247be11bc18a3b22a919f393d6ed1d
+
+`docs/showcase/landslide_sentinel_v01/claim_evidence_matrix_v01.json`: `/claims/0/original_outcome`, `/claims/23/original_outcome`.
+- Local selected-value route: `references/cases/source_field_projections.json`.
+
+<a id="x-ls-claims"></a>
+
+## X-LS-CLAIMS: Cross-case LS-CLAIMS
+
+**Role:** archive/member/hash routing and claim boundaries; external originals not reopened by worker
+
+`docs/showcase/landslide_sentinel_v01/claim_evidence_map_v01.json`: whole index/document.
+- Local selected-value route: `references/cases/source_field_projections.json`.
+
+<a id="x-ls-source"></a>
+
+## X-LS-SOURCE: Cross-case LS-SOURCE
+
+**Role:** reviewed implementation-body identities and bounded test-setup distinction, not execution evidence
+
+`docs/showcase/landslide_sentinel_v01/source_index_v01.json`: whole index/document.
+- Local selected-value route: `references/cases/source_field_projections.json`.
+
+<a id="x-atlas"></a>
+
+## X-ATLAS: Cross-case ATLAS
+
+**Role:** canonical 68250583-byte INCIDENT_ATLAS_AT5_V01 saved proof; selected subtrees inspected, not a claim of reading all embedded code
+
+`docs/showcase/incident_to_proof_atlas_v01/evidence/atlas_package.json`: `/testflix/fixture/profile`, `/testflix/fixture/execution`, `/testflix/clock_law`, `/testflix/T1/changed_terms/amount_minor`, `/testflix/T1/refusal/reason`, `/testflix/T1/refusal/executor_delta`, `/testflix/T2/deadline`, `/testflix/T2/main_clock/evaluation_time`, `/testflix/T2/expiry/executor_delta`, `/testflix/T2/revocation/executor_delta`, `/testflix/T2/owning_root`, `/testflix/T2/period_unchanged/candidate/plan/price_minor`, `/testflix/T2/period_unchanged/candidate/renewal`, `/testflix/T2/period_unchanged/candidate/valid_to`, `/testflix/T3/extension_reason`, `/testflix/T4/no_consent/review/tuple_items/2/fields/decision`, `/testflix/T4/no_consent/review/tuple_items/2/fields/reason_code`, `/testflix/T4/explicit_consent/review/tuple_items/2/fields/decision`, `/testflix/experience/before/output/provenance_checked`, `/testflix/experience/after/output/provenance_checked`, `/testflix/consumption/material/operation`, `/testflix/consumption/material/work_artifact_ref`, `/testflix/consumption/session/candidate/valid_from`, `/testflix/consumption/session/candidate/valid_to`, `/testflix/consumption/playback/output/playback_state`, `/testflix/consumption/executor_delta`, `/testflix/consumption/wrong_work_control/executor_delta`, `/testflix/counts/unique_experience_consumers`, `/sentinel/profile`, `/sentinel/continuation/optional_profile`, `/sentinel/continuation/same_episode`, `/sentinel/continuation/waiting/pending_alive`, `/sentinel/continuation/waiting/signal/signal`, `/sentinel/continuation/consumption/creates_permission`, `/sentinel/continuation/late/semantic_refusal/reason`, `/sentinel/counts/mock_effect`, `/sentinel/counts/outbox_deliver`, `/sentinel/continuation/budget_final/recovery_witnesses/0/tick`, `/sentinel/continuation/budget_final/recovery_witnesses/1/tick`, `/sentinel/continuation/budget_final/recovery_witnesses/2/tick`, `/profile`, `/supplier/donor/sources/observations/0/origin/source_class`, `/supplier/donor/sources/observations/0/parsed/recipient`, `/supplier/donor/sources/observations/0/parsed/amount`, `/supplier/donor/sources/observations/0/parsed/recommendation`, `/cards/S1/boundary/stage`, `/cards/S1/boundary/quality`, `/cards/S1/boundary/enforcement`, `/cards/S1/boundary/effects`, `/cards/S1/boundary/firewall`, `/cards/S1/boundary/packet`, `/supplier/donor/sources/observations/3/parsed/recipient`, `/supplier/donor/sources/observations/3/parsed/amount`, `/supplier/donor/sources/observations/3/parsed/evidence_refs/0`, `/supplier/donor/sources/observations/3/native/consumed_work_ref`, `/supplier/donor/sources/current/work/operation`, `/cards/S1/consumer_binding`, `/cards/T4/consumer_binding`, `/cards/S4/consumer_binding`, `/cards/S4/causal_limit`, `/replay_scope`, `/native_replay`.
+- Local selected-value route: `references/cases/source_field_projections.json`.
+
+<a id="x-at-cases"></a>
+
+## X-AT-CASES: Cross-case AT-CASES
+
+**Role:** ATLAS_EXACT_CARD_INDEX_V02; card pointers and causal-scope labels
+
+`docs/showcase/incident_to_proof_atlas_v01/reader/CASE_ROUTES.json`: `/counts/unique_experience_consumers`, `/counts/effective_history_samples`, `/counts/historical_model_calls`, `/counts/new_provider_calls`.
+- Local selected-value route: `references/cases/source_field_projections.json`.
+
+<a id="x-at-claims"></a>
+
+## X-AT-CLAIMS: Cross-case AT-CLAIMS
+
+**Role:** ATLAS_EDITORIAL_CLAIM_ROUTES_V02; C03/C05/C06/C07/C10-C17 package references, not additional proof
+
+`docs/showcase/incident_to_proof_atlas_v01/reader/CLAIM_ROUTES.json`: whole index/document.
+- Local selected-value route: `references/cases/source_field_projections.json`.
+
+<a id="x-at-consumers"></a>
+
+## X-AT-CONSUMERS: Cross-case AT-CONSUMERS
+
+**Role:** five actual consumer routes and effective sample accounting
+
+`docs/showcase/incident_to_proof_atlas_v01/reader/CONSUMER_ROUTES.json`: whole index/document.
+- Local selected-value route: `references/cases/source_field_projections.json`.
+
+<a id="x-at-bindings"></a>
+
+## X-AT-BINDINGS: Cross-case AT-BINDINGS
+
+**Role:** static source selection, distinct historical phase hashes and AT6 landed bodies; not an import closure
+
+`docs/showcase/incident_to_proof_atlas_v01/reader/SOURCE_BINDINGS.json`: whole index/document.
+- Local selected-value route: `references/cases/source_field_projections.json`.
+
+<a id="x-at-review"></a>
+
+## X-AT-REVIEW: Cross-case AT-REVIEW
+
+**Role:** saved independent source-and-evidence review of the September 23 AT5 return, no archived code execution or test reruns
+
+`docs/showcase/incident_to_proof_atlas_v01/evidence/review/AT5_INDEPENDENT_REVIEW.json`: `/decision`, `/review_execution/test_reruns`, `/review_execution/model_calls`.
+- Local selected-value route: `references/cases/source_field_projections.json`.
+
+<a id="x-at-external"></a>
+
+## X-AT-EXTERNAL: Cross-case AT-EXTERNAL
+
+**Role:** dated September 23 external-source catalog; worker read local entries only, did not verify web claims
+
+`docs/showcase/incident_to_proof_atlas_v01/presentation/external_sources.json`: `/created_on`.
+- Local selected-value route: `references/cases/source_field_projections.json`.
+
+<a id="f01"></a>
+
+## F01: Permitted schedule and native offer
+
+**Role:** exact selected historical records. Historical G54D1 p7_candidate_f779b790; revoked neighbor p7_candidate_7071661f. Original archive and member identities retained, not the later G6A Football.
+
+`SUPERVISOR_EVIDENCE/p7_candidate_f779b790/worker/publisher/evidence/shift/original_event.json`: `entire file`.
+- Exact selected copy: `references/episode/main_pub_shift_original_event.json`; historical archive SHA-256 `0558786b4d2882be7610223dd754e927bedce2530e2d5ac4ca1d429ce7ac22f0`.
+`SUPERVISOR_EVIDENCE/p7_candidate_f779b790/worker/publisher/evidence/shift/original_source_inputs.json`: `entire file`.
+- Exact selected copy: `references/episode/main_pub_shift_original_source_inputs.json`; historical archive SHA-256 `0558786b4d2882be7610223dd754e927bedce2530e2d5ac4ca1d429ce7ac22f0`.
+`SUPERVISOR_EVIDENCE/p7_candidate_f779b790/worker/publisher/evidence/shift/venue_work.json`: `entire file`.
+- Exact selected copy: `references/episode/main_pub_shift_venue_work.json`; historical archive SHA-256 `0558786b4d2882be7610223dd754e927bedce2530e2d5ac4ca1d429ce7ac22f0`.
+
+<a id="f02"></a>
+
+## F02: Source body and requester consumption
+
+**Role:** exact selected historical records. Historical G54D1 p7_candidate_f779b790; revoked neighbor p7_candidate_7071661f. Original archive and member identities retained, not the later G6A Football.
+
+`SUPERVISOR_EVIDENCE/p7_candidate_f779b790/worker/publisher/evidence/shift/offer_body.json`: `entire file`.
+- Exact selected copy: `references/episode/main_pub_shift_offer_body.json`; historical archive SHA-256 `0558786b4d2882be7610223dd754e927bedce2530e2d5ac4ca1d429ce7ac22f0`.
+`SUPERVISOR_EVIDENCE/p7_candidate_f779b790/worker/publisher/evidence/shift/source_review.json`: `entire file`.
+- Exact selected copy: `references/episode/main_pub_shift_source_review.json`; historical archive SHA-256 `0558786b4d2882be7610223dd754e927bedce2530e2d5ac4ca1d429ce7ac22f0`.
+`SUPERVISOR_EVIDENCE/p7_candidate_f779b790/worker/publisher/evidence/shift/bundle.json`: `entire file`.
+- Exact selected copy: `references/episode/main_pub_shift_bundle.json`; historical archive SHA-256 `0558786b4d2882be7610223dd754e927bedce2530e2d5ac4ca1d429ce7ac22f0`.
+`SUPERVISOR_EVIDENCE/p7_candidate_f779b790/worker/requester/evidence/shift/status.json`: `entire file`.
+- Exact selected copy: `references/episode/main_req_shift_status.json`; historical archive SHA-256 `0558786b4d2882be7610223dd754e927bedce2530e2d5ac4ca1d429ce7ac22f0`.
+`SUPERVISOR_EVIDENCE/p7_candidate_f779b790/worker/requester/evidence/shift/consumption_context.json`: `entire file`.
+- Exact selected copy: `references/episode/main_req_shift_consumption_context.json`; historical archive SHA-256 `0558786b4d2882be7610223dd754e927bedce2530e2d5ac4ca1d429ce7ac22f0`.
+`SUPERVISOR_EVIDENCE/p7_candidate_f779b790/worker/requester/evidence/shift/requester_work.json`: `entire file`.
+- Exact selected copy: `references/episode/main_req_shift_requester_work.json`; historical archive SHA-256 `0558786b4d2882be7610223dd754e927bedce2530e2d5ac4ca1d429ce7ac22f0`.
+
+<a id="f03"></a>
+
+## F03: Revoked-source neighbor
+
+**Role:** exact selected historical records. Historical G54D1 p7_candidate_f779b790; revoked neighbor p7_candidate_7071661f. Original archive and member identities retained, not the later G6A Football.
+
+`SUPERVISOR_EVIDENCE/p7_candidate_7071661f/worker/requester/evidence/shift/status.json`: `entire file`.
+- Exact selected copy: `references/episode/negative_shift_status.json`; historical archive SHA-256 `0558786b4d2882be7610223dd754e927bedce2530e2d5ac4ca1d429ce7ac22f0`.
+`SUPERVISOR_EVIDENCE/p7_candidate_7071661f/worker/requester/evidence/shift/refusal.json`: `entire file`.
+- Exact selected copy: `references/episode/negative_shift_refusal.json`; historical archive SHA-256 `0558786b4d2882be7610223dd754e927bedce2530e2d5ac4ca1d429ce7ac22f0`.
+`SUPERVISOR_EVIDENCE/p7_candidate_7071661f/worker/requester/evidence/shift/report.json`: `entire file`.
+- Exact selected copy: `references/episode/negative_shift_report.json`; historical archive SHA-256 `0558786b4d2882be7610223dd754e927bedce2530e2d5ac4ca1d429ce7ac22f0`.
+
+<a id="f04"></a>
+
+## F04: Separate booking and history
+
+**Role:** exact selected historical records. Historical G54D1 p7_candidate_f779b790; revoked neighbor p7_candidate_7071661f. Original archive and member identities retained, not the later G6A Football.
+
+`SUPERVISOR_EVIDENCE/p7_candidate_f779b790/worker/publisher/evidence/book/action_root.json`: `entire file`.
+- Exact selected copy: `references/episode/main_pub_book_action_root.json`; historical archive SHA-256 `0558786b4d2882be7610223dd754e927bedce2530e2d5ac4ca1d429ce7ac22f0`.
+`SUPERVISOR_EVIDENCE/p7_candidate_f779b790/worker/publisher/evidence/book/receipt.json`: `entire file`.
+- Exact selected copy: `references/episode/main_pub_book_receipt.json`; historical archive SHA-256 `0558786b4d2882be7610223dd754e927bedce2530e2d5ac4ca1d429ce7ac22f0`.
+`SUPERVISOR_EVIDENCE/p7_candidate_f779b790/worker/publisher/evidence/book/state_readback.json`: `entire file`.
+- Exact selected copy: `references/episode/main_pub_book_state_readback.json`; historical archive SHA-256 `0558786b4d2882be7610223dd754e927bedce2530e2d5ac4ca1d429ce7ac22f0`.
+`SUPERVISOR_EVIDENCE/p7_candidate_f779b790/worker/requester/evidence/repeat/report.json`: `entire file`.
+- Exact selected copy: `references/episode/main_req_repeat_report.json`; historical archive SHA-256 `0558786b4d2882be7610223dd754e927bedce2530e2d5ac4ca1d429ce7ac22f0`.
+`SUPERVISOR_EVIDENCE/p7_candidate_f779b790/worker/requester/evidence/verify/report.json`: `entire file`.
+- Exact selected copy: `references/episode/main_req_verify_report.json`; historical archive SHA-256 `0558786b4d2882be7610223dd754e927bedce2530e2d5ac4ca1d429ce7ac22f0`.
+
+<a id="e01"></a>
+
+## E01: Indices and Source Views
+
+**Role:** mixed classes identified per source. Indices and Source Views
+
+`G6/evidence_index.json`: `/resources`.
+`G6/source_impact.json`: `whole document`.
+- Expanded field/function context: `references/experience/source_ledger.md`, original section `S01: Indices and Source Views`. Its full context is also retained in the structured key.
+
+<a id="e02"></a>
+
+## E02: Exact G3 Numerical Rules
+
+**Role:** mixed classes identified per source. Exact G3 Numerical Rules
+
+`hedgehog/outcome_calibration_v01.py`: `round_half_even_rational_v01 L334`, `_half_life L706`, `bounded_gt_event_fold_v01 L852`, `_evaluate_from_plain L970`, `_decayed_trust L1134`, `evaluate_gt_decay_value_v01 L1150`, `evaluate_review_pressure_v01 L1164`, `fold_avf_history_prior_v01 L1406`.
+- Expanded field/function context: `references/experience/source_ledger.md`, original section `S02: Exact G3 Numerical Rules`. Its full context is also retained in the structured key.
+
+<a id="e03"></a>
+
+## E03: Supplier Refusal -> History -> Different Review
+
+**Role:** mixed classes identified per source. Supplier Refusal -> History -> Different Review
+
+`docs/showcase/gate3_closure_v01/evidence/g36r/runtime/captured_final/report.json`: `/native_boundaries/2`, `/history/fold`, `/history/prior`, `/current`, `/native_boundaries/3`.
+- Expanded field/function context: `references/experience/source_ledger.md`, original section `S03: Supplier Refusal -> History -> Different Review`. Its full context is also retained in the structured key.
+
+<a id="e04"></a>
+
+## E04: G35 Does Not Manufacture Scorable History
+
+**Role:** mixed classes identified per source. G35 Does Not Manufacture Scorable History
+
+`G6/evidence/blobs/ec4ad7b768ca5790a3c261d2797b62a9f4992d314fd31bd2ea5104aad0ceb97e`: `/aggregate`, `/rows`.
+- Expanded field/function context: `references/experience/source_ledger.md`, original section `S04: G35 Does Not Manufacture Scorable History`. Its full context is also retained in the structured key.
+
+<a id="e05"></a>
+
+## E05: Worked G4 Allocation, Exact Recorded Numbers
+
+**Role:** mixed classes identified per source. Worked G4 Allocation, Exact Recorded Numbers
+
+`G6/evidence/blobs/a0d0753edb2e6d235fdc18a14eb184a9d8d7f9c8d77eecaced3c679fb5443db9`: `/comparisons/cp_budget`, `/instances`.
+`G6/evidence/blobs/cfc0bf8da5e79b2778b3383d6d20e1dff09f02ad213cfc779128089b2488466d`: `/feedback`.
+`G6/evidence/blobs/9dbc3c2e1abf432c6fecc2545b09e10f71a003f2c8482fafcf19da7e0989ad08`: `/snapshot/updates/0`, `/snapshot/prior`.
+`G6/evidence/blobs/ae6fde136d0c0f8180d71ed082c2b197c744ffb12217b80f83772d95ef7d253f`: `/budget`, `/allocation`.
+`G6/evidence/blobs/7271bfcc4e6d0097895fcab16d94efb96f67494a1599db58c72c6445c62ea2b4`: `/budget`, `/allocation`.
+`hedgehog/gate4_pressure_budget_v01.py`: `evaluate_reference_pressure_v01 L12`, `_weights L47`, `_apportion L65`, `allocate_reference_work_budget_v01 L103`, `validate_reference_allocation_v01 L146`.
+- Expanded field/function context: `references/experience/source_ledger.md`, original section `S05: Worked G4 Allocation, Exact Recorded Numbers`. Its full context is also retained in the structured key.
+
+<a id="e06"></a>
+
+## E06: Current History Descent
+
+**Role:** mixed classes identified per source. Current History Descent
+
+`G6/evidence/blobs/d7603a6812fc2f14a917b8891e2aceaebfd60a718fd9eab816b702fbefcd825a`: `/0/read_audit`, `/0/descent`, `/0/review/result`, `/0/bridge/payload/prior/prior_fp`.
+`G6/evidence/blobs/1a173e73b908da52b3cbb3a09220a2d5d2f1d2dbd46bc35fa7ef8408a57270d5`: `whole document`.
+`hedgehog/domains/airline/gate4_reference_history_v01.py`: `consume_opened_v01 L96`.
+- Expanded field/function context: `references/experience/source_ledger.md`, original section `S06: Current History Descent`. Its full context is also retained in the structured key.
+
+<a id="e07"></a>
+
+## E07: Choice Is Not Shared Authority
+
+**Role:** mixed classes identified per source. Choice Is Not Shared Authority
+
+`G6/evidence/blobs/a0d0753edb2e6d235fdc18a14eb184a9d8d7f9c8d77eecaced3c679fb5443db9`: `/comparisons/cp_strategy`, `/real_business_effects`, `/full_gate4`.
+`hedgehog/gate4_strategy_reference_v01.py`: `evaluate_reference_strategy_v01 L8`.
+- Expanded field/function context: `references/experience/source_ledger.md`, original section `S07: Choice Is Not Shared Authority`. Its full context is also retained in the structured key.
+
+<a id="e08"></a>
+
+## E08: N4-04 Cold/Warm Reuse
+
+**Role:** mixed classes identified per source. N4-04 Cold/Warm Reuse
+
+`G6/evidence/retained_obligations/reuse/witness.json`: `/business_cold`, `/business_warm`, `/cold/value/outputs`, `/warm/value/answer/answer`, `/changed_business`, `/changed_refusal/value/reason`, `/expired/@tuple/1/@tuple/0`, `/wrong_root/@tuple/1/@tuple/0`.
+`G6/evidence/retained_obligations/reuse/checked.json`: `whole document`.
+`demo/run_gate6_retained_obligations_v01.py`: `collect_reuse L250`, `business_binding L235`, `warm_consume L244`, `shortcut L194`, `check_reuse L501`.
+`hedgehog/external_drs/gate5_contracts_v01.py`: `calibration L55`, `rational L35`.
+- Expanded field/function context: `references/experience/source_ledger.md`, original section `S08: N4-04 Cold/Warm Reuse`. Its full context is also retained in the structured key.
+
+<a id="e09"></a>
+
+## E09: N4-05 Current Policy and Restricted Descent
+
+**Role:** mixed classes identified per source. N4-05 Current Policy and Restricted Descent
+
+`G6/evidence/retained_obligations/policy/witness.json`: `whole document`.
+`G6/evidence/retained_obligations/policy/checked.json`: `whole document`.
+`demo/run_gate6_retained_obligations_v01.py`: `current_policy_id L297`, `current_policy_consume L315`, `descent_case L334`, `check_policy L537`.
+- Expanded field/function context: `references/experience/source_ledger.md`, original section `S09: N4-05 Current Policy and Restricted Descent`. Its full context is also retained in the structured key.
+
+<a id="e10"></a>
+
+## E10: High Score Does Not Supply Permission
+
+**Role:** mixed classes identified per source. High Score Does Not Supply Permission
+
+`G6/evidence/retained_obligations/avf/checked.json`: `whole document`.
+`demo/run_gate6_retained_obligations_v01.py`: `collect_avf L108`, `check_avf L467`.
+- Expanded field/function context: `references/experience/source_ledger.md`, original section `S10: High Score Does Not Supply Permission`. Its full context is also retained in the structured key.
+
+<a id="e11"></a>
+
+## E11: Nested Work and Memory: What Is Actually Supported
+
+**Role:** mixed classes identified per source. Nested Work and Memory: What Is Actually Supported
+
+`hedgehog/kernel/work_composition_v01.py`: `WorkOutputBindingV01 L26`, `WorkHistoricalOutputV01 L33`, `_inputs L382`, `observe_missing_pure_need_v01 L1042`, `_historical_value L1104`, `build_work_historical_output_v01 L1132`, `execute_work_task_review_v01 L1355`.
+`hedgehog/capability_memory_binding_v01.py`: `search_pure_need_v01 L41`, `retrieve_pure_memory_v01 L282`, `validate_pure_memory_retrieval_v01 L379`.
+`docs/common_action_and_dynamic_composition_checkpoint_v01.md`: `historical U3/U4 sections`.
+- Expanded field/function context: `references/experience/source_ledger.md`, original section `S11: Nested Work and Memory: What Is Actually Supported`. Its full context is also retained in the structured key.
+
+<a id="e12"></a>
+
+## E12: Deferrals and Non-Claims
+
+**Role:** mixed classes identified per source. Deferrals and Non-Claims
+
+`G6/acceptance_matrix.json`: `/rows`.
+`docs/gate4_reference_contract_v01.md`: `H6`, `H7`, `H10`.
+`G6/FINITE_COMPLETION.md`: `whole document`.
+`G6/BOUNDARY_AND_FINDINGS.md`: `whole document`.
+- Expanded field/function context: `references/experience/source_ledger.md`, original section `S12: Deferrals and Non-Claims`. Its full context is also retained in the structured key.
+
+<a id="rw01"></a>
+
+## RW01: Google OR-Tools. CP-SAT Solver
+
+**Role:** external primary reference; inherited retrieval only. Integer constraints and explicit solver statuses.
+
+- [https://developers.google.com/optimization/cp/cp_solver](https://developers.google.com/optimization/cp/cp_solver): `page cited in chapter 12`.
+
+<a id="rw02"></a>
+
+## RW02: Temporal Technologies. Tasks
+
+**Role:** external primary reference; inherited retrieval only. Durable execution and recorded results.
+
+- [https://docs.temporal.io/tasks](https://docs.temporal.io/tasks): `page cited in chapter 12`.
+
+<a id="rw03"></a>
+
+## RW03: Open Policy Agent. Documentation
+
+**Role:** external primary reference; inherited retrieval only. Policy decisions and enforcement.
+
+- [https://www.openpolicyagent.org/docs](https://www.openpolicyagent.org/docs): `page cited in chapter 12`.
+
+<a id="rw04"></a>
+
+## RW04: seL4 project. capDL
+
+**Role:** external primary reference; inherited retrieval only. Kernel objects and capability distributions.
+
+- [https://docs.sel4.systems/projects/capdl/](https://docs.sel4.systems/projects/capdl/): `page cited in chapter 12`.
+
+<a id="rw05"></a>
+
+## RW05: W3C. PROV Overview, Working Group Note, 30 April 2013
+
+**Role:** external primary reference; inherited retrieval only. Provenance concepts, not truth or authority.
+
+- [https://www.w3.org/TR/2013/NOTE-prov-overview-20130430/](https://www.w3.org/TR/2013/NOTE-prov-overview-20130430/): `page cited in chapter 12`.
+
+<a id="rw06"></a>
+
+## RW06: Prime Minister of Australia. Press conference, New York; recorded publication date 24 September 2026
+
+**Role:** external primary reference; inherited retrieval only. External incident motivation only.
+
+- [https://www.pm.gov.au/media/press-conference-new-york](https://www.pm.gov.au/media/press-conference-new-york): `page cited in chapter 12`.
+
+<a id="rw07"></a>
+
+## RW07: European Commission. AI Act overview: timeline and simplification
+
+**Role:** external primary reference; inherited retrieval only. Dated legal context; inherited summary requires the separate ED17 check.
+
+- [https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:02024R1689-20260727](https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:02024R1689-20260727): `page cited in chapter 12`.
+
+<a id="rw08"></a>
+
+## RW08: NIST. AI Risk Management Framework
+
+**Role:** external primary reference; inherited retrieval only. Voluntary risk-management context.
+
+- [https://www.nist.gov/itl/ai-risk-management-framework](https://www.nist.gov/itl/ai-risk-management-framework): `page cited in chapter 12`.
+
+<a id="rw09"></a>
+
+## RW09: ISO/IEC. ISO/IEC 42001:2023 public abstract
+
+**Role:** external primary reference; inherited retrieval only. Management-system scope; paid full text not inspected.
+
+- [https://www.iso.org/standard/42001](https://www.iso.org/standard/42001): `page cited in chapter 12`.
+
+ED17 current access note, 28 September 2026: RW01-RW06 and RW08-RW09 were rechecked on the cited primary pages. RW07 current dated statements use the [Commission overview](https://digital-strategy.ec.europa.eu/en/policies/regulatory-framework-ai), sections Application timeline and simplification. Fresh EUR-Lex retrieval returned a JavaScript challenge; the earlier consolidated-text locator remains provenance, not a fresh full-text check.
+
+<a id="or-atlas"></a>
+
+## OR-ATLAS: Incident origins and exact case routes
+
+Context and limits: [references/current/external_sources.json](references/current/external_sources.json). Full fields and exact selectors are preserved in the structured key. No fresh runtime or external exploit reproduction.
+
+<a id="or-sentinel"></a>
+
+## OR-SENTINEL: Research-to-Sentinel translation
+
+Context and limits: [references/current/research_context_v01.json](references/current/research_context_v01.json). Full fields and exact selectors are preserved in the structured key. No fresh runtime or external exploit reproduction.
+
+<a id="rw10"></a>
+
+## RW10: Microsoft IFC and FIDES context
+
+Context and limits: [references/current/external_context.json](references/current/external_context.json). Full fields and exact selectors are preserved in the structured key. No fresh runtime or external exploit reproduction.
+
+<a id="rw11"></a>
+
+## RW11: Apple manufacturer context
+
+Context and limits: [references/current/external_context.json](references/current/external_context.json). Full fields and exact selectors are preserved in the structured key. No fresh runtime or external exploit reproduction.
+````

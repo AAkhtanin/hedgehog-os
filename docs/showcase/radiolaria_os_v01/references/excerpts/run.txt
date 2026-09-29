@@ -1,0 +1,21 @@
+            save(folder/'consumer_use_time.json',dict(utc=use_time))
+            context=context_from_checked(checked,observed['value'])
+            save(folder/'consumption_context.json',context); save(folder/'offer_body.json',body)
+            work=perform('requester',r,context,p['local_root'],'task:football:consume:'+dependency,evidence_folder=folder)
+            save(folder/'requester_work.json',work)
+            result=c.decode(work['outputs']['result_json'].encode())
+            need(result==consume(r,context),'reported_consumer_binding')
+            claim=dict(request_sha256=c.sha(r),offer_sha256=c.sha(body),result_sha256=c.sha(result))
+            final=review(p['local_root'],'transaction:football:result:'+dependency,work['artifact']['artifact_id'],
+                r['request_id'],dict(native_result=work['attempts']==1,consumed_original_request=planning_equal(r,body['offer']['request'])),
+                claim,x.clock(),folder,'requester_review',
+                window=(body['time_envelope']['valid_from'],min(checked['source_end'],fetch['deadline'],
+                    observed['value']['value']['valid_until'],observed['value']['value']['checked_at']+60)))
+            need(final[2].decision=='ACCEPT','requester_result_review_refused')
+            save(root/'accepted'/(c.sha(body)+'.json'),dict(body=body,material=material,context=context,work=work,review=n.root_plain(final)))
+            if r['operation']=='FIND_OFFER':
+                state(history_path(root,r),dict(body=body,request=r,source=context['source_projection']))
+            else:
+                save(object_path(root,r),dict(request=r,booking=body['booking'],
+                     original_body_sha256=c.sha(prior['body']),source=context['source_projection']))
+            save(folder/'dedup.json',dict(disposition=kind,independent_source_credit=0))

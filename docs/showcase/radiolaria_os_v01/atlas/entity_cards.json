@@ -1,0 +1,700 @@
+{
+  "entities": [
+    {
+      "id": "INTENT",
+      "label": "Practical intention",
+      "meaning": "User or event; not an executable permission"
+    },
+    {
+      "id": "ROOT",
+      "label": "Independent local Root",
+      "meaning": "Sole local final and commit authority"
+    },
+    {
+      "id": "WORK",
+      "label": "Bounded Work",
+      "meaning": "Typed computation yielding proposals/evidence"
+    },
+    {
+      "id": "MODEL",
+      "label": "Semantic model participant",
+      "meaning": "Untrusted provider/model participant. Its returned PROPOSAL and BSEP input are distinct objects."
+    },
+    {
+      "id": "MEMORY",
+      "label": "Retained information",
+      "meaning": "Historical material that can inform a fresh qualified use. TIME is a separate concern."
+    },
+    {
+      "id": "FIREWALL",
+      "label": "Effect Firewall",
+      "meaning": "Exclusive bounded effect owner after current Root packet"
+    },
+    {
+      "id": "VENUE",
+      "label": "VenueRoot",
+      "meaning": "Owns venue source and booking registry"
+    },
+    {
+      "id": "REQUESTER",
+      "label": "ActivePlanetRoot",
+      "meaning": "Owns local consumption and decision"
+    },
+    {
+      "id": "E",
+      "label": "Computed offer",
+      "meaning": "Native producer output offer_json"
+    },
+    {
+      "id": "B",
+      "label": "Published body",
+      "meaning": "Offer plus Work/review references and temporal envelope"
+    },
+    {
+      "id": "C",
+      "label": "Consumer context",
+      "meaning": "B plus authenticated currentness projection"
+    },
+    {
+      "id": "POINTER",
+      "label": "Address and descriptor",
+      "meaning": "Locator, not payload or permission"
+    },
+    {
+      "id": "STATUS",
+      "label": "Current source status",
+      "meaning": "Bound signed observation with finite use window"
+    },
+    {
+      "id": "KIT",
+      "label": "Authoring Kit HOW",
+      "meaning": "Public interfaces; no hidden expected answers"
+    },
+    {
+      "id": "WHAT",
+      "label": "Domain task WHAT",
+      "meaning": "Requirements distinct from general kit"
+    },
+    {
+      "id": "CANDIDATE",
+      "label": "Authored program",
+      "meaning": "Untrusted until independently examined/admitted"
+    },
+    {
+      "id": "EXAMINER",
+      "label": "Independent examiner",
+      "meaning": "Own oracle and observed native execution"
+    },
+    {
+      "id": "READER",
+      "label": "Audit Reader",
+      "meaning": "Inert explanation/evidence, not an authoring kit"
+    },
+    {
+      "id": "VISUAL_SEAL",
+      "label": "Visual Seal companion",
+      "meaning": "Conceptual human-facing image. No demonstrated receipt binding; not a crypto seal."
+    },
+    {
+      "id": "SOURCE_ADMISSION",
+      "label": "Reviewed source admission",
+      "meaning": "Separately authorized repository/source operation; not runtime Root permission."
+    },
+    {
+      "id": "AUTHOR",
+      "label": "External author",
+      "meaning": "Produces a candidate from HOW and WHAT; does not admit it."
+    },
+    {
+      "id": "BSEP",
+      "label": "Semantic membrane",
+      "meaning": "Canonical semantic membrane; a validated BSEP has side-specific projections. Neither is authority."
+    },
+    {
+      "id": "TOPOLOGY",
+      "label": "Runtime topology",
+      "meaning": "Runtime-owned executable structure for bounded cells."
+    },
+    {
+      "id": "CHILD",
+      "label": "Child Work",
+      "meaning": "Nested typed computation; returns result proposals to parent."
+    },
+    {
+      "id": "TIME",
+      "label": "Time envelope",
+      "meaning": "Profile-bound observation and validity; no automatic renewal."
+    },
+    {
+      "id": "PACKET",
+      "label": "ActionCommitPacket",
+      "meaning": "Current scoped Root-created action permission carrier."
+    },
+    {
+      "id": "RECEIPT",
+      "label": "EvidenceReceipt",
+      "meaning": "Evidence of a bounded completed effect, not repeat permission."
+    },
+    {
+      "id": "POSTVV",
+      "label": "Post V&V",
+      "meaning": "Declared post-execution obligations. A domain original-condition CHECKER is not renamed Post V&V by analogy."
+    },
+    {
+      "id": "GT",
+      "label": "Terminal GT advisory",
+      "meaning": "Terminal advisory output. Not the observed OUTCOME, OFE record or current ADVICE."
+    },
+    {
+      "id": "DRS",
+      "label": "Local / External DRS",
+      "meaning": "Discoverable stored material subject to current descent and use."
+    },
+    {
+      "id": "ENV",
+      "label": "Task environment",
+      "meaning": "Owned finite resources participating in current Work."
+    },
+    {
+      "id": "SOLVER",
+      "label": "Classical search participant",
+      "meaning": "Computes candidates; a separately identified CHECKER evaluates original conditions."
+    },
+    {
+      "id": "QPU",
+      "label": "External numerical participant",
+      "meaning": "Returns measurements, not final decisions."
+    },
+    {
+      "id": "PROPOSAL",
+      "label": "Returned semantic proposal",
+      "meaning": "Finite untrusted semantic fields emitted by MODEL and checked locally."
+    },
+    {
+      "id": "SOURCE",
+      "label": "Source provenance",
+      "meaning": "Origin and source material qualifying the data used by Work; not authority."
+    },
+    {
+      "id": "METHOD_ADMIN",
+      "label": "Pre-granted administrator premise",
+      "meaning": "Method-only threat-model premise, not the external author role."
+    },
+    {
+      "id": "METHOD_STATE_EDIT",
+      "label": "Direct privileged state edit",
+      "meaning": "Method-only comparison, not the untrusted authored candidate."
+    },
+    {
+      "id": "KERNEL",
+      "label": "Execution kernel implementation",
+      "meaning": "Common reviewed implementation, distinct from the authoring kit and a live Root instance."
+    },
+    {
+      "id": "RESULT",
+      "label": "Typed result",
+      "meaning": "Returned value/proposal with provenance and bindings; no permission."
+    },
+    {
+      "id": "CONSUMPTION",
+      "label": "Actual result consumption",
+      "meaning": "Downstream Work binds and uses the identified upstream field."
+    },
+    {
+      "id": "CURRENTNESS",
+      "label": "Local currentness check",
+      "meaning": "Consumes authenticated status/time/source facts; does not inherit their authority."
+    },
+    {
+      "id": "EXECUTOR",
+      "label": "Bounded executor",
+      "meaning": "Performs an authorized operation; may share reviewed implementation with Firewall."
+    },
+    {
+      "id": "COMPILER",
+      "label": "Local compiler",
+      "meaning": "Maps accepted semantic material into the declared numerical representation."
+    },
+    {
+      "id": "DECODER",
+      "label": "Measurement decoder",
+      "meaning": "Interprets actual column/order metadata without repairing candidates."
+    },
+    {
+      "id": "CHECKER",
+      "label": "Original-condition checker",
+      "meaning": "Evaluates the actual candidate against the declared original problem."
+    },
+    {
+      "id": "OUTCOME",
+      "label": "Observed outcome",
+      "meaning": "Source-bound occurrence that may be eligible for an OFE/history fold."
+    },
+    {
+      "id": "OFE",
+      "label": "Outcome feedback evidence",
+      "meaning": "Finite source-bound feedback record. Distinct from GT output and permission."
+    },
+    {
+      "id": "ADVICE",
+      "label": "Current advisory values",
+      "meaning": "Eligible historical information offered to current review/allocation."
+    },
+    {
+      "id": "PRESSURE",
+      "label": "Finite pressure",
+      "meaning": "Profile-defined fixed-point comparison used in apportionment."
+    },
+    {
+      "id": "ALLOCATION",
+      "label": "Bounded allocation",
+      "meaning": "Integer allocation within explicit spent/reserved/current budget."
+    },
+    {
+      "id": "CRYPTO_SEAL",
+      "label": "Cryptographic evidence seal",
+      "meaning": "Bound evidence identity and verification material, distinct from Visual Seal."
+    },
+    {
+      "id": "TECHNICAL_A",
+      "label": "Technical version A",
+      "meaning": "Accepted implementation identity, not Football A/B/C."
+    },
+    {
+      "id": "PUBLICATION_B",
+      "label": "Publication version B",
+      "meaning": "This uncommitted editorial successor."
+    },
+    {
+      "id": "ARCHIVE_C",
+      "label": "Archive identity C",
+      "meaning": "Eventual separately bound archival version; no deposit claimed."
+    }
+  ],
+  "detailed_cards": {
+    "ROOT": [
+      "Type / current local authority",
+      "Local owner constructs decisions; Work, policies and observations supply inputs.",
+      "Route, result or action-specific input; current transaction, source and policy.",
+      "Decision is stored as evidence; new use needs a current decision.",
+      "Type is not VenueRoot or ActivePlanetRoot, nor a SuperRoot.",
+      "Football separate BOOK; Testflix no-consent and exact-expiry refusal.",
+      "02_geometry"
+    ],
+    "WORK": [
+      "Typed executable computation",
+      "Runtime invokes capability; parent/downstream Work consumes actual fields.",
+      "Declared bindings, source context, task/revision and bounded budget.",
+      "Results may be retained; unchanged identity does not prove current applicability.",
+      "No finality, permission or arbitrary code isolation.",
+      "Wedding compiler input and USED /material; wrong-result substitutions refuse.",
+      "08_wedding"
+    ],
+    "CHILD": [
+      "Nested Work / result proposal",
+      "Runtime owns child topology; canonical parent slot consumes result.",
+      "Parent/current prefix, typed input and retained origin.",
+      "Historical result fields persist while selected child recomputes.",
+      "Does not prove autonomous memory search at all nesting depths.",
+      "Retained parent consumption and bounded missing-capability descent sources.",
+      "05_experience"
+    ],
+    "RECEIPT": [
+      "Versioned evidence of completed effect",
+      "Exclusive Firewall/Corridor emits; ledger, replay and later review inspect.",
+      "Packet, source/time, operation and effect result bound to actual execution.",
+      "Stored and repeatedly read; new activity must qualify it under current rules.",
+      "Does not authorize a second payment, write or booking.",
+      "Football one receipt repeated; Testflix period already consumed refuses.",
+      "10_cross_case"
+    ],
+    "PACKET": [
+      "Root-created scoped action carrier",
+      "Current Root creates; Host/Firewall checks before execution.",
+      "Owner, action, material, current capture and finite validity window.",
+      "Historical packet can remain available after expiry or consumption.",
+      "Prior ACCEPT is not renewal; foreign Root cannot issue local permission.",
+      "EWS old packet fails; separate SAVE packet succeeds.",
+      "09_workspace"
+    ],
+    "DRS": [
+      "Local or external owner-held memory",
+      "Producer/history writer stores; discovering task requests current descent.",
+      "Address, schema, scope, source history and receiving owner policy.",
+      "Summary-only and artifact descent differ; original remains historical.",
+      "Discovery, digest or remembered code is not installation or permission.",
+      "N4-04 warm summary; N4-05 policy denial; Football revoked source.",
+      "05_experience"
+    ],
+    "TIME": [
+      "Profile-specific time envelope",
+      "Trusted observation/capture binds; current consumer evaluates.",
+      "Observed time, logical time, validity and expiry must not be collapsed.",
+      "Old envelopes remain evidence, not extended intervals.",
+      "Freshly reading an old object does not refresh source authority.",
+      "Testflix evaluation < valid_to; Football fractional UTC ordering.",
+      "03_time_memory"
+    ],
+    "GT": [
+      "Terminal GT advisory",
+      "Terminal advisory output. Not the observed OUTCOME, OFE record or current ADVICE.",
+      "Terminal advisory input to independent local Root review, not an outcome occurrence.",
+      "A saved advisory remains evidence of its original context, not current permission.",
+      "Does not decide for Root.",
+      "Architectural role only here; G36/G4 numerical examples belong to OUTCOME, OFE and ADVICE.",
+      "02_geometry"
+    ],
+    "MODEL": [
+      "Semantic model participant",
+      "Untrusted provider/model participant. Its returned PROPOSAL and BSEP input are distinct objects.",
+      "Exact request, role, snapshot, finite semantic fields and provenance.",
+      "Capture preserves response as inert evidence; replay is not live authority.",
+      "Does not mint Root decisions, trusted source refs or hardware consent.",
+      "Wedding objective/amendment consumption; ambiguous request clarifies.",
+      "08_wedding"
+    ],
+    "ENV": [
+      "Task-owned resources",
+      "Runtime/session creates bounded services; task Work uses them.",
+      "Current resource availability, command scope and ownership metadata.",
+      "Ends by reaping owned resources; approved output/history may remain.",
+      "Cleanup does not erase viewed pixels or all host data.",
+      "EWS audio loss/silent continuation; ownership conflict is incomplete cleanup.",
+      "09_workspace"
+    ],
+    "BSEP": [
+      "Canonical semantic membrane",
+      "BSEP creation and validation precede side-specific projections for semantic/runtime participants.",
+      "Declared task meaning and disclosure boundary.",
+      "Projection evidence can be retained without acquiring authority.",
+      "Not a permission or an outcome-feedback replacement.",
+      "Airline side projections authority_created=false.",
+      "10_cross_case"
+    ],
+    "TOPOLOGY": [
+      "Runtime-owned execution structure",
+      "Runtime materializes from accepted bounded proposal; cells execute.",
+      "Typed dependencies and current input/output bindings.",
+      "Retained graph explains old work, not a live executor.",
+      "A drawn or model-proposed graph is not an executed graph.",
+      "Wedding ordered review/compile/solve/validate/consume.",
+      "08_wedding"
+    ],
+    "INTENT": [
+      "User/event purpose, not executable authority",
+      "User or event supplies a request; local intake and semantic roles interpret it.",
+      "Request revision, declared preferences and consent are bound before Work. Ambiguity produces clarification.",
+      "Original request and clarified revision remain history; later preferences do not rewrite them.",
+      "Does not itself authorize a booking, payment, write or arbitrary capability.",
+      "Wedding ambiguous request and SR2 amendments; chapter Practical Question and Change Two Placements.",
+      "08_wedding"
+    ],
+    "MEMORY": [
+      "Conceptual umbrella for retained information",
+      "Prior producer stores results/summaries; a new task obtains permitted current descent.",
+      "Lookup scope, source identity, expiry, disclosure and new task applicability are distinct inputs.",
+      "Bytes may persist after a task ends; they are not a running Host or continuing permission.",
+      "Does not execute a recalled component or refresh an expired decision.",
+      "N4-04 cold/warm current read; N4-05 policy refusal, Inset 2.",
+      "05_experience"
+    ],
+    "FIREWALL": [
+      "Exclusive bounded effect owner",
+      "Current Host/action path invokes the Firewall with Root packet; receipt consumers inspect its result.",
+      "Before-start packet, actual capture/currentness, owner and operation must all match.",
+      "One dispatch produces effect evidence; subsequent reads of its receipt do not redispatch.",
+      "Cannot issue Root permission, accept another owner's packet or extend packet life.",
+      "Football separate BOOK, one mock effect; EWS old packet refusal.",
+      "02_geometry"
+    ],
+    "VENUE": [
+      "Concrete Football owner: VenueRoot",
+      "Venue source/runtime creates offer and publication; requester reads released evidence. Venue Root alone reviews booking.",
+      "Venue registry, quote/slot version, expiry and explicit BOOK consent qualify action.",
+      "Publication and receipt persist; source revocation changes current eligibility without erasing history.",
+      "Does not decide requester policy or transfer its booking permission.",
+      "Football FIELD_LEDGER; SHIFT/FETCH/BOOK and revoked neighbor.",
+      "07_football"
+    ],
+    "REQUESTER": [
+      "Concrete Football owner: ActivePlanetRoot",
+      "Requester builds current context C, consumes offer_json and independently reviews its own result.",
+      "Published body B, release/status, source binding and local request constraints.",
+      "Consumed context/result remains evidence; later use reconstructs current applicability.",
+      "Cannot issue VenueRoot booking authority or treat a fetch as a reservation.",
+      "Football requester invocation binding and revoked-source refusal.",
+      "07_football"
+    ],
+    "E": [
+      "Football native producer result value",
+      "Producer Work computes offer_json; owner publication includes it as B.offer.",
+      "EXACT or allowed SHIFT request, actual venue source and price constraints.",
+      "Preserved value is part of published evidence; it is not the complete fetched object.",
+      "Does not book or independently prove current source status.",
+      "Football Three Distinct Objects; main_req_shift result/offer_json.",
+      "07_football"
+    ],
+    "B": [
+      "Football owner-held published body",
+      "Owner packages offer and evidence; FETCH returns it and receiver inserts it as C.body.",
+      "Release binds full body.json bytes; manifest/hash are separate from semantic validity.",
+      "Released bytes remain historical even when status is revoked.",
+      "Does not carry reusable Root permission or make E equal C.",
+      "Football FETCH /value/body and manifest/files/0; revoked neighbor.",
+      "07_football"
+    ],
+    "C": [
+      "Football receiver current context",
+      "Receiver constructs from B and current release/status; requester Work consumes its bound offer.",
+      "Body identity, authentication/currentness and receiving task scope, not just a digest.",
+      "Invocation records retain what was consumed; independent later invocation qualifies its own context.",
+      "Does not restore a live owner from saved JSON or authorize Venue action.",
+      "Football requester context/input binding and current revocation refusal.",
+      "07_football"
+    ],
+    "POINTER": [
+      "Descriptor/location, not payload",
+      "Publisher exposes a locator; discovery/FETCH consumer resolves owner-held B.",
+      "Address, schema/source reference and requested descent level; resolution may refuse.",
+      "Locator may persist after material becomes unavailable or revoked.",
+      "Does not prove content, grant access, or identify the inner E as the whole fetched object.",
+      "Football main_req_shift_fetch_request pointer_ref; FETCH body manifest.",
+      "07_football"
+    ],
+    "STATUS": [
+      "Current source qualification in Football",
+      "Source/status path returns current qualification; receiver checks before Work.",
+      "Owner/source version, release binding and evaluation time; ACTIVE and revoked differ.",
+      "Recorded status is timestamped evidence, not a permanent guarantee.",
+      "Cannot mint consent or override Root/Firewall refusal.",
+      "Football revoked native BLOCKED_FAIL_CLOSED/hard_identity_violation.",
+      "07_football"
+    ],
+    "KIT": [
+      "Reviewed HOW: authoring interface and finite rules",
+      "Maintainers freeze kit; external author reads it; examiner checks the independent WHAT.",
+      "Exact kit identity, source/interface version and trial correction policy.",
+      "Frozen bundle persists as design-time source, not installed runtime authority.",
+      "Cannot accept its own candidate or expand a trial's correction allowance.",
+      "G54D1 restored continuation and authorized correction 4; source ledger A01-A03.",
+      "11_integration"
+    ],
+    "WHAT": [
+      "Task/exam specification, separate from HOW",
+      "Task owner supplies target and constraints; author implements, independent oracle evaluates.",
+      "Football requirements, bounded scenarios and observable outcomes.",
+      "Exam input and results remain tied to their frozen versions.",
+      "Does not change kernel authority rules or let candidate output become oracle.",
+      "G54D1 native football exam and supplied validation.",
+      "11_integration"
+    ],
+    "AUTHOR": [
+      "Design-time external developer/model participant",
+      "Receives HOW and WHAT; emits an untrusted candidate for independent examination.",
+      "Exact model/mode, allowed context, interface and correction lineage are recorded.",
+      "Candidate and corrections persist; author session ending does not admit code.",
+      "Does not award source admission or current runtime permission.",
+      "G54B1/G54D INCOMPLETE; G54D1 correction 4 accepted continuation.",
+      "11_integration"
+    ],
+    "CANDIDATE": [
+      "Proposed component/source bytes",
+      "Author emits; trusted runner/examiner executes bounded checks and reports to reviewer.",
+      "Source pins, kit version, task interface and allowed dependencies.",
+      "Frozen candidate remains inspectable, including failures; installed bytes need separate admission.",
+      "Cannot certify itself or replace an independent oracle with its own report.",
+      "G54D1 actual native exam, live and two supplied consumers.",
+      "11_integration"
+    ],
+    "EXAMINER": [
+      "Independent expected-result and observation boundary",
+      "Reviewed examiner derives oracle expectations; runner observes native behavior; reviewer consumes source-bound receipts.",
+      "Exact exam inputs, candidate source and declared trusted-reference assumptions.",
+      "Receipts preserve completed phases and failed histories; replays are distinguished from fresh execution.",
+      "Does not create action permission or prove universal adversarial-code isolation.",
+      "G54C4 reference boundary and G54D1 supplied controls; Method trust boundary.",
+      "06_method"
+    ],
+    "SOURCE_ADMISSION": [
+      "Design-time reviewed source operation",
+      "Owner authorizes exact proposal; unchanged R1/Git checks derive accepted byte state.",
+      "Exact base, allowlist, candidate content/modes and full staged/committed state.",
+      "Actual commit is derived after operation; this unpublished corpus has none.",
+      "Does not create Root permission, runtime acceptance or public certification.",
+      "Technical A identity and publication identity; no future commit invented.",
+      "13_verification"
+    ],
+    "POSTVV": [
+      "Post V&V",
+      "Declared post-execution obligations. A domain original-condition CHECKER is not renamed Post V&V by analogy.",
+      "Expected typed outputs, obligations, source/time and actual consumption evidence.",
+      "Validation reports retain context; another input needs its own checks.",
+      "Cannot issue final Root ACCEPT, repair invalid QPU samples silently or authorize save.",
+      "Canonical runtime post-execution V&V obligations. Wedding qpu_validate is a separate profile-specific original-condition CHECKER, not this entity.",
+      "02_geometry"
+    ],
+    "SOLVER": [
+      "Classical search participant",
+      "Computes candidates; a separately identified CHECKER evaluates original conditions.",
+      "Wedding original hard/soft constraints, objective and revision-specific problem.",
+      "Candidate and score remain evidence of that problem; changed constraints require re-evaluation.",
+      "Does not choose consent or become Root, nor make a remote backend interchangeable.",
+      "Wedding 36-indicator formulation, penalties and SR2 old-plan refusal.",
+      "08_wedding"
+    ],
+    "QPU": [
+      "Recorded remote Rigetti numerical participant",
+      "Configured Braket task returns measurements; local decoder/validator then native Work consume selected candidate.",
+      "Revision-1 input, ten-qubit local encoding, device/task identity and 1000-shot budget.",
+      "Raw samples and timestamps persist; task completion is not correctness. No new call in B3.",
+      "Does not authorize hardware spend/save, prove advantage or repair invalid samples.",
+      "Wedding KEEP shot 63/basis 517, 33 valid/967 invalid and consumed material.",
+      "08_wedding"
+    ],
+    "READER": [
+      "Inert source-bound documentation module",
+      "Editorial builder selects pinned fields; human/model reader inspects text, not embedded instructions.",
+      "Question, technical/publication identity, file hashes, mode and token estimate.",
+      "Markdown/XML and inspection records persist; update changes their identities.",
+      "Does not execute code, reinstantiate authority or establish B5 comprehension by loading a file.",
+      "M0/CORE/focus contracts; B5 NOT_RUN.",
+      "13_verification"
+    ],
+    "VISUAL_SEAL": [
+      "Visual Seal companion",
+      "Conceptual human-facing image. No demonstrated receipt binding; not a crypto seal.",
+      "Publication alias only; not a new runtime type or permission.",
+      "Exact profile sources and limitations are listed in the view's source route."
+    ],
+    "PROPOSAL": [
+      "Returned semantic proposal",
+      "Finite untrusted semantic fields emitted by MODEL and checked locally.",
+      "Publication alias only; not a new runtime type or permission.",
+      "Exact profile sources and limitations are listed in the view's source route."
+    ],
+    "SOURCE": [
+      "Source provenance",
+      "Origin and source material qualifying the data used by Work; not authority.",
+      "Publication alias only; not a new runtime type or permission.",
+      "Exact profile sources and limitations are listed in the view's source route."
+    ],
+    "METHOD_ADMIN": [
+      "Pre-granted administrator premise",
+      "Method-only threat-model premise, not the external author role.",
+      "Publication alias only; not a new runtime type or permission.",
+      "Exact profile sources and limitations are listed in the view's source route."
+    ],
+    "METHOD_STATE_EDIT": [
+      "Direct privileged state edit",
+      "Method-only comparison, not the untrusted authored candidate.",
+      "Publication alias only; not a new runtime type or permission.",
+      "Exact profile sources and limitations are listed in the view's source route."
+    ],
+    "KERNEL": [
+      "Execution kernel implementation",
+      "Common reviewed implementation, distinct from the authoring kit and a live Root instance.",
+      "Publication alias only; not a new runtime type or permission.",
+      "Exact profile sources and limitations are listed in the view's source route."
+    ],
+    "RESULT": [
+      "Typed result",
+      "Returned value/proposal with provenance and bindings; no permission.",
+      "Publication alias only; not a new runtime type or permission.",
+      "Exact profile sources and limitations are listed in the view's source route."
+    ],
+    "CONSUMPTION": [
+      "Actual result consumption",
+      "Downstream Work binds and uses the identified upstream field.",
+      "Publication alias only; not a new runtime type or permission.",
+      "Exact profile sources and limitations are listed in the view's source route."
+    ],
+    "CURRENTNESS": [
+      "Local currentness check",
+      "Consumes authenticated status/time/source facts; does not inherit their authority.",
+      "Publication alias only; not a new runtime type or permission.",
+      "Exact profile sources and limitations are listed in the view's source route."
+    ],
+    "EXECUTOR": [
+      "Bounded executor",
+      "Performs an authorized operation; may share reviewed implementation with Firewall.",
+      "Publication alias only; not a new runtime type or permission.",
+      "Exact profile sources and limitations are listed in the view's source route."
+    ],
+    "COMPILER": [
+      "Local compiler",
+      "Maps accepted semantic material into the declared numerical representation.",
+      "Publication alias only; not a new runtime type or permission.",
+      "Exact profile sources and limitations are listed in the view's source route."
+    ],
+    "DECODER": [
+      "Measurement decoder",
+      "Interprets actual column/order metadata without repairing candidates.",
+      "Publication alias only; not a new runtime type or permission.",
+      "Exact profile sources and limitations are listed in the view's source route."
+    ],
+    "CHECKER": [
+      "Original-condition checker",
+      "Evaluates the actual candidate against the declared original problem.",
+      "Publication alias only; not a new runtime type or permission.",
+      "Exact profile sources and limitations are listed in the view's source route."
+    ],
+    "OUTCOME": [
+      "Observed outcome",
+      "Source-bound occurrence that may be eligible for an OFE/history fold.",
+      "Publication alias only; not a new runtime type or permission.",
+      "Exact profile sources and limitations are listed in the view's source route."
+    ],
+    "OFE": [
+      "Outcome feedback evidence",
+      "Finite source-bound feedback record. Distinct from GT output and permission.",
+      "Publication alias only; not a new runtime type or permission.",
+      "Exact profile sources and limitations are listed in the view's source route."
+    ],
+    "ADVICE": [
+      "Current advisory values",
+      "Eligible historical information offered to current review/allocation.",
+      "Publication alias only; not a new runtime type or permission.",
+      "Exact profile sources and limitations are listed in the view's source route."
+    ],
+    "PRESSURE": [
+      "Finite pressure",
+      "Profile-defined fixed-point comparison used in apportionment.",
+      "Publication alias only; not a new runtime type or permission.",
+      "Exact profile sources and limitations are listed in the view's source route."
+    ],
+    "ALLOCATION": [
+      "Bounded allocation",
+      "Integer allocation within explicit spent/reserved/current budget.",
+      "Publication alias only; not a new runtime type or permission.",
+      "Exact profile sources and limitations are listed in the view's source route."
+    ],
+    "CRYPTO_SEAL": [
+      "Cryptographic evidence seal",
+      "Bound evidence identity and verification material, distinct from Visual Seal.",
+      "Publication alias only; not a new runtime type or permission.",
+      "Exact profile sources and limitations are listed in the view's source route."
+    ],
+    "TECHNICAL_A": [
+      "Technical version A",
+      "Accepted implementation identity, not Football A/B/C.",
+      "Publication alias only; not a new runtime type or permission.",
+      "Exact profile sources and limitations are listed in the view's source route."
+    ],
+    "PUBLICATION_B": [
+      "Publication version B",
+      "This uncommitted editorial successor.",
+      "Publication alias only; not a new runtime type or permission.",
+      "Exact profile sources and limitations are listed in the view's source route."
+    ],
+    "ARCHIVE_C": [
+      "Archive identity C",
+      "Eventual separately bound archival version; no deposit claimed.",
+      "Publication alias only; not a new runtime type or permission.",
+      "Exact profile sources and limitations are listed in the view's source route."
+    ]
+  },
+  "role": "Editorial correspondence, not runtime registry",
+  "editorial_aliases": {
+    "SEAL": "Deprecated ambiguous editorial ID; current views use VISUAL_SEAL or CRYPTO_SEAL. Historical pilot bytes unchanged."
+  }
+}

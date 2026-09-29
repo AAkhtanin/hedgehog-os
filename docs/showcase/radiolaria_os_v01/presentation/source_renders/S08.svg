@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 1280 720" role="img" aria-labelledby="title desc">
+<title id="title">One paid period, distinct session decisions</title>
+<desc id="desc">RECORDED ATLAS T2  /  Lawful main and expiry control use separate Device Hosts</desc>
+<defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L9,3 z" fill="#176B68"/></marker></defs>
+<rect width="1280" height="720" fill="white"/>
+<text id="S08_title" font-family="Nimbus Sans" font-size="42" font-weight="bold" fill="#16282B">
+<tspan x="54" y="78.0">One paid period, distinct session decisions</tspan>
+</text>
+<text id="S08_scope" font-family="Nimbus Sans" font-size="23" font-weight="normal" fill="#43595D">
+<tspan x="56" y="136.0">RECORDED ATLAS T2 / Lawful main and expiry control use separate Device Hosts</tspan>
+</text>
+<text id="S08_period" font-family="Nimbus Sans" font-size="25" font-weight="bold" fill="#16282B">
+<tspan x="56" y="230.0">PAID PERIOD</tspan>
+</text>
+<rect x="340" y="206" width="820" height="45" id="S08_paid" fill="#DDECE6" stroke="#176B68" stroke-width="2"/>
+<text id="S08_session" font-family="Nimbus Sans" font-size="25" font-weight="bold" fill="#16282B">
+<tspan x="56" y="331.0">EXPIRY CONTROL</tspan>
+</text>
+<rect x="340" y="307" width="290" height="45" id="S08_old" fill="#F3DAD6" stroke="#A13D32" stroke-width="2"/>
+<text id="S08_refusal" font-family="Nimbus Sans" font-size="28" font-weight="normal" fill="#A13D32">
+<tspan x="670" y="330.0">At 1790115652: refuses</tspan>
+</text>
+<text id="S08_fresh" font-family="Nimbus Sans" font-size="25" font-weight="bold" fill="#16282B">
+<tspan x="56" y="443.0">LAWFUL MAIN</tspan>
+</text>
+<rect x="340" y="418" width="430" height="45" id="S08_new" fill="#DDECE6" stroke="#176B68" stroke-width="2"/>
+<text id="S08_lawful" font-family="Nimbus Sans" font-size="28" font-weight="normal" fill="#16282B">
+<tspan x="56" y="525.0">Main time 1790115596; session [1790115592, 1790115652).</tspan>
+<tspan x="56" y="557.2">Main Host was not advanced or revoked by these controls.</tspan>
+</text>
+<text id="S08_qualification" font-family="Nimbus Sans" font-size="23" font-weight="normal" fill="#43595D">
+<tspan x="56" y="619.0">Branch bars are not a chronological scale. Retained paid history is context, not a standing permission or proof of</tspan>
+<tspan x="56" y="645.45">later renewal.</tspan>
+</text>
+<line id="S08_rule" x1="56" y1="671" x2="1218" y2="671" stroke="#B8C8C6" stroke-width="1"/>
+<a href="https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/showcase/incident_to_proof_atlas_v01/evidence/atlas_package.json">
+<text id="S08_source_link" font-family="Nimbus Sans" font-size="18" font-weight="normal" fill="#315E8B">
+<tspan x="56" y="703.0">S08 Source: incident</tspan>
+</text>
+</a>
+<a href="../../atlas/README.html">
+<text id="S08_atlas_locator" font-family="Nimbus Sans" font-size="17" font-weight="normal" fill="#315E8B">
+<tspan x="660" y="702.0">Atlas: Overview / GEO 1 2 3 4 5 6 7</tspan>
+</text>
+</a>
+</svg>

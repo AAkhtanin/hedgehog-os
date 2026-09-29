@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 1280 720" role="img" aria-labelledby="title desc">
+<title id="title">Integration supplies meaning within common boundaries</title>
+<desc id="desc">INTEGRATOR VIEW  /  Existing HOW route, no claimed customer deployment</desc>
+<defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L9,3 z" fill="#176B68"/></marker></defs>
+<rect width="1280" height="720" fill="white"/>
+<text id="S20_title" font-family="Nimbus Sans" font-size="42" font-weight="bold" fill="#16282B">
+<tspan x="54" y="78.0">Integration supplies meaning within common boundaries</tspan>
+</text>
+<text id="S20_scope" font-family="Nimbus Sans" font-size="23" font-weight="normal" fill="#43595D">
+<tspan x="56" y="136.0">INTEGRATOR VIEW / Existing HOW route, no claimed customer deployment</tspan>
+</text>
+<rect x="56.0" y="249" width="310" height="110" id="S20_integrate_0" fill="#EFF5F3" stroke="#176B68" stroke-width="2"/>
+<text id="S20_integrate_0_label" font-family="Nimbus Sans" font-size="24" font-weight="normal" fill="#16282B">
+<tspan x="69.0" y="285.0">Kernel provides</tspan>
+<tspan x="69.0" y="312.6">typed Work, time, Root</tspan>
+</text>
+<rect x="485.0" y="249" width="310" height="110" id="S20_integrate_1" fill="#EFF5F3" stroke="#176B68" stroke-width="2"/>
+<text id="S20_integrate_1_label" font-family="Nimbus Sans" font-size="24" font-weight="normal" fill="#16282B">
+<tspan x="498.0" y="285.0">Integration supplies</tspan>
+<tspan x="498.0" y="312.6">sources and adapters</tspan>
+</text>
+<rect x="914.0" y="249" width="310" height="110" id="S20_integrate_2" fill="#EFF5F3" stroke="#176B68" stroke-width="2"/>
+<text id="S20_integrate_2_label" font-family="Nimbus Sans" font-size="24" font-weight="normal" fill="#16282B">
+<tspan x="927.0" y="285.0">Independent review</tspan>
+<tspan x="927.0" y="312.6">checks exact candidate</tspan>
+</text>
+<line id="S20_integrate_edge_0" x1="366.0" y1="304.0" x2="485.0" y2="304.0" stroke="#315E8B" stroke-width="2" marker-end="url(#arrow)"/>
+<text id="S20_integrate_edge_0_label" font-family="Nimbus Sans" font-size="17" font-weight="normal" fill="#43595D">
+<tspan x="370.0" y="239.0">documented</tspan>
+<tspan x="370.0" y="258.55">HOW</tspan>
+</text>
+<line id="S20_integrate_edge_1" x1="795.0" y1="304.0" x2="914.0" y2="304.0" stroke="#176B68" stroke-width="2" marker-end="url(#arrow)"/>
+<text id="S20_integrate_edge_1_label" font-family="Nimbus Sans" font-size="17" font-weight="normal" fill="#43595D">
+<tspan x="799.0" y="239.0">observable</tspan>
+<tspan x="799.0" y="258.55">evidence</tspan>
+</text>
+<text id="S20_details" font-family="Nimbus Sans" font-size="30" font-weight="normal" fill="#16282B">
+<tspan x="56" y="450.0">Source observations, payload schemas and effect mapping remain integration work.</tspan>
+<tspan x="56" y="484.5">IAM, policy engines and cloud services are possible integrations, not endorsements.</tspan>
+</text>
+<text id="S20_qualification" font-family="Nimbus Sans" font-size="23" font-weight="normal" fill="#43595D">
+<tspan x="56" y="619.0">Source admission and every current runtime action remain separate. The HOW link opens accepted source</tspan>
+<tspan x="56" y="645.45">documentation.</tspan>
+</text>
+<line id="S20_rule" x1="56" y1="671" x2="1218" y2="671" stroke="#B8C8C6" stroke-width="1"/>
+<a href="https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/gate5_authoring_kit_v01/START_HERE.md">
+<text id="S20_source_link" font-family="Nimbus Sans" font-size="18" font-weight="normal" fill="#315E8B">
+<tspan x="56" y="703.0">S20 Source: author</tspan>
+</text>
+</a>
+<a href="../../atlas/README.html">
+<text id="S20_atlas_locator" font-family="Nimbus Sans" font-size="17" font-weight="normal" fill="#315E8B">
+<tspan x="660" y="702.0">Atlas: Overview / GEO 1 2 3 4 5 6 7</tspan>
+</text>
+</a>
+</svg>

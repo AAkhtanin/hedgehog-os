@@ -1,0 +1,82 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 1280 720" role="img" aria-labelledby="title desc">
+<title id="title">Creating a component does not grant its authority</title>
+<desc id="desc">CONCEPTUAL / HOW and WHAT are separate; candidate material is not its author</desc>
+<defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L9,3 z" fill="#176B68"/></marker></defs>
+<rect width="1280" height="720" fill="white"/>
+<text id="GEO-7_title" font-family="Nimbus Sans" font-size="42" font-weight="bold" fill="#16282B">
+<tspan x="54" y="78.0">Creating a component does not grant its authority</tspan>
+</text>
+<text id="GEO-7_scope" font-family="Nimbus Sans" font-size="23" font-weight="normal" fill="#43595D">
+<tspan x="56" y="136.0">CONCEPTUAL / HOW and WHAT are separate; candidate material is not its author</tspan>
+</text>
+<rect x="56" y="205" width="282" height="60" id="GEO-7_kit" fill="#EFF5F3" stroke="#176B68" stroke-width="2"/>
+<text id="GEO-7_kit_label" font-family="Nimbus Sans" font-size="24" font-weight="normal" fill="#16282B">
+<tspan x="69" y="241.0">HOW: interfaces</tspan>
+</text>
+<rect x="56" y="310" width="282" height="60" id="GEO-7_what" fill="#EFF5F3" stroke="#176B68" stroke-width="2"/>
+<text id="GEO-7_what_label" font-family="Nimbus Sans" font-size="24" font-weight="normal" fill="#16282B">
+<tspan x="69" y="346.0">WHAT: task</tspan>
+</text>
+<rect x="441" y="251" width="260" height="80" id="GEO-7_author" fill="#EFF5F3" stroke="#176B68" stroke-width="2"/>
+<text id="GEO-7_author_label" font-family="Nimbus Sans" font-size="24" font-weight="normal" fill="#16282B">
+<tspan x="454" y="287.0">External author</tspan>
+</text>
+<rect x="844" y="251" width="356" height="80" id="GEO-7_candidate" fill="#EFF5F3" stroke="#176B68" stroke-width="2"/>
+<text id="GEO-7_candidate_label" font-family="Nimbus Sans" font-size="24" font-weight="normal" fill="#16282B">
+<tspan x="857" y="287.0">Candidate bytes</tspan>
+</text>
+<line id="GEO-7_how_input" x1="338" y1="235" x2="441" y2="291" stroke="#176B68" stroke-width="2" marker-end="url(#arrow)"/>
+<text id="GEO-7_how_input_label" font-family="Nimbus Sans" font-size="19" font-weight="normal" fill="#43595D">
+<tspan x="348" y="227.0">reference</tspan>
+</text>
+<line id="GEO-7_what_input" x1="338" y1="340" x2="441" y2="291" stroke="#176B68" stroke-width="2" marker-end="url(#arrow)"/>
+<text id="GEO-7_what_input_label" font-family="Nimbus Sans" font-size="19" font-weight="normal" fill="#43595D">
+<tspan x="348" y="354.0">task</tspan>
+</text>
+<line id="GEO-7_creates" x1="701" y1="291.0" x2="844" y2="291.0" stroke="#176B68" stroke-width="2" marker-end="url(#arrow)"/>
+<text id="GEO-7_creates_label" font-family="Nimbus Sans" font-size="19" font-weight="normal" fill="#43595D">
+<tspan x="721" y="249.0">creates</tspan>
+</text>
+<rect x="844" y="428" width="356" height="74" id="GEO-7_exam" fill="#EFF5F3" stroke="#176B68" stroke-width="2"/>
+<text id="GEO-7_exam_label" font-family="Nimbus Sans" font-size="24" font-weight="normal" fill="#16282B">
+<tspan x="857" y="464.0">Independent exam</tspan>
+</text>
+<rect x="410" y="428" width="337" height="74" id="GEO-7_admission" fill="#EFF5F3" stroke="#176B68" stroke-width="2"/>
+<text id="GEO-7_admission_label" font-family="Nimbus Sans" font-size="24" font-weight="normal" fill="#16282B">
+<tspan x="423" y="464.0">Owner source admission</tspan>
+</text>
+<rect x="56" y="428" width="253" height="74" id="GEO-7_work" fill="#EFF5F3" stroke="#176B68" stroke-width="2"/>
+<text id="GEO-7_work_label" font-family="Nimbus Sans" font-size="24" font-weight="normal" fill="#16282B">
+<tspan x="69" y="464.0">New bounded Work</tspan>
+</text>
+<line id="GEO-7_examines" x1="1022.0" y1="331" x2="1022.0" y2="428" stroke="#176B68" stroke-width="2" marker-end="url(#arrow)"/>
+<text id="GEO-7_examines_label" font-family="Nimbus Sans" font-size="19" font-weight="normal" fill="#43595D">
+<tspan x="728" y="373.0">checks actual material</tspan>
+</text>
+<line id="GEO-7_review" x1="844" y1="465.0" x2="747" y2="465.0" stroke="#176B68" stroke-width="2" marker-end="url(#arrow)"/>
+<text id="GEO-7_review_label" font-family="Nimbus Sans" font-size="19" font-weight="normal" fill="#43595D">
+<tspan x="757" y="415.0">review</tspan>
+</text>
+<line id="GEO-7_identity" x1="410" y1="465.0" x2="309" y2="465.0" stroke="#176B68" stroke-width="2" marker-end="url(#arrow)"/>
+<text id="GEO-7_identity_label" font-family="Nimbus Sans" font-size="19" font-weight="normal" fill="#43595D">
+<tspan x="311" y="416.0">identity</tspan>
+</text>
+<text id="GEO-7_current" font-family="Nimbus Sans" font-size="25" font-weight="normal" fill="#16282B">
+<tspan x="56" y="563.0">New current inputs and Root decisions remain required. No stored runtime grant.</tspan>
+</text>
+<text id="GEO-7_qualification" font-family="Nimbus Sans" font-size="23" font-weight="normal" fill="#43595D">
+<tspan x="56" y="619.0">G54B1/G54D remain INCOMPLETE. G54D1 includes explicitly authorized correction 4; the audit packet is not the</tspan>
+<tspan x="56" y="645.45">kit.</tspan>
+</text>
+<line id="GEO-7_rule" x1="56" y1="671" x2="1218" y2="671" stroke="#B8C8C6" stroke-width="1"/>
+<a href="https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/gate5_authoring_kit_v01/START_HERE.md">
+<text id="GEO-7_source_link" font-family="Nimbus Sans" font-size="18" font-weight="normal" fill="#315E8B">
+<tspan x="56" y="703.0">GEO-7 Source: author</tspan>
+</text>
+</a>
+<a href="../atlas/README.html">
+<text id="GEO-7_atlas_locator" font-family="Nimbus Sans" font-size="17" font-weight="normal" fill="#315E8B">
+<tspan x="660" y="702.0">Atlas: Overview / GEO 1 2 3 4 5 6 7</tspan>
+</text>
+</a>
+</svg>

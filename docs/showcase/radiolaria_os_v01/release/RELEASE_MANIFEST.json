@@ -1,0 +1,22 @@
+{
+  "schema": "g6b6.release_manifest_plan.v01",
+  "role": "STABLE_SOURCE_NAVIGATION_NOT_SELF_HASHING_MANIFEST",
+  "actual_exact_inventory": "detached inventories/dispositions.json and candidate_delta.json in full source bundle",
+  "accepted_postimages": 341,
+  "B5_small_additions": 5,
+  "assets": [
+    "reader/READ_RADIOLARIA.xml",
+    "whitepaper.pdf",
+    "presentation/main.pptx",
+    "presentation/main_export.pdf",
+    "atlas/atlas.pdf"
+  ],
+  "derived_assets_excluded_from_source_xml": [
+    "RADIOLARIA_FULL_SOURCE.xml",
+    "RADIOLARIA_FULL_SOURCE_BUNDLE.zip",
+    "export/ASSET_BINDINGS.json",
+    "export/ZIP_MEMBER_MANIFEST.json",
+    "detached return manifests"
+  ],
+  "exact_final_values": "detached export/ASSET_BINDINGS.json and return evidence/DELIVERY.json"
+}

@@ -1,0 +1,416 @@
+{
+  "$schema": "current_module.schema.json",
+  "B5": "NOT_RUN",
+  "claim_ids": [
+    "CL01",
+    "CL02",
+    "CL03",
+    "CL04",
+    "GCL01",
+    "GCL02",
+    "GCL03",
+    "GCL04",
+    "GCL05"
+  ],
+  "dependencies": {
+    "availability": "Bundled ledgers identify exact accepted paths and external archive/member pins; not all original bytes are bundled.",
+    "source_ledgers": [
+      {
+        "bytes": 670156,
+        "path": "PAPER_SOURCE_KEY.json",
+        "role": "BUNDLED_SOURCE_LEDGER_NOT_ALL_UNDERLYING_RAW_EVIDENCE",
+        "sha256": "ae31620b61257c8fa33837a0026dafffae1d316ebc8daf639dc7d554965c7e3d"
+      },
+      {
+        "bytes": 2133,
+        "path": "references/accepted_link_dependencies.json",
+        "role": "BUNDLED_SOURCE_LEDGER_NOT_ALL_UNDERLYING_RAW_EVIDENCE",
+        "sha256": "b8ce5e6652527eaaa47db278a88f775b3938acd5a279ddbc88998ffae626a414"
+      },
+      {
+        "bytes": 46133,
+        "path": "references/cases/source_ledger.json",
+        "role": "BUNDLED_SOURCE_LEDGER_NOT_ALL_UNDERLYING_RAW_EVIDENCE",
+        "sha256": "310e704fa0d29d7cd0a2745813e182418f9ec78fc03c8b502c8bda6a2c79fa38"
+      },
+      {
+        "bytes": 2403,
+        "path": "references/current/source_ledger.json",
+        "role": "BUNDLED_SOURCE_LEDGER_NOT_ALL_UNDERLYING_RAW_EVIDENCE",
+        "sha256": "809ed345161616e40e6e7dd85af5beb98c55ccd2b0581000c626933629819828"
+      },
+      {
+        "bytes": 74208,
+        "path": "references/embedded_sources.json",
+        "role": "BUNDLED_SOURCE_LEDGER_NOT_ALL_UNDERLYING_RAW_EVIDENCE",
+        "sha256": "c24780fbf772815d539a0b484f716abc24e562d0cd08f33bd30ea69a7a65ee29"
+      },
+      {
+        "bytes": 39937,
+        "path": "references/episode_sources.json",
+        "role": "BUNDLED_SOURCE_LEDGER_NOT_ALL_UNDERLYING_RAW_EVIDENCE",
+        "sha256": "07289fb65b06e23aac2318f42e518a0132ee1e13692200ab093ef7c5f7ff849c"
+      },
+      {
+        "bytes": 21203,
+        "path": "references/ews/source_ledger.json",
+        "role": "BUNDLED_SOURCE_LEDGER_NOT_ALL_UNDERLYING_RAW_EVIDENCE",
+        "sha256": "f5741eecd90470e7a999e75faa34f9d4d62116f67a282034634e637cf520e5a9"
+      },
+      {
+        "bytes": 33815,
+        "path": "references/experience/source_ledger.html",
+        "role": "BUNDLED_SOURCE_LEDGER_NOT_ALL_UNDERLYING_RAW_EVIDENCE",
+        "sha256": "6958ed955efbf7d1a7496acf62b29d890a0e7e841511319025894eb9c17bf025"
+      },
+      {
+        "bytes": 26401,
+        "path": "references/experience/source_ledger.md",
+        "role": "BUNDLED_SOURCE_LEDGER_NOT_ALL_UNDERLYING_RAW_EVIDENCE",
+        "sha256": "9bfcf11a69a480adf2256769c45151c8f50ab68d20f66d554e2ca18cc52d5c30"
+      },
+      {
+        "bytes": 22722,
+        "path": "references/wedding/CHAIN_LEDGER.json",
+        "role": "BUNDLED_SOURCE_LEDGER_NOT_ALL_UNDERLYING_RAW_EVIDENCE",
+        "sha256": "841ff40cb8f28a9cbecfc14e0ebedfd7b763f20e2df082fe4518057790138824"
+      },
+      {
+        "bytes": 237464,
+        "path": "references/wedding/SOURCE_LEDGER.json",
+        "role": "BUNDLED_SOURCE_LEDGER_NOT_ALL_UNDERLYING_RAW_EVIDENCE",
+        "sha256": "4c7862c251b07c5b479d9beb3f05ea215c8337038ff2d9bcf67569271c82d6fb"
+      }
+    ],
+    "standalone_file": "Embedded publication sources are complete. Relative deep routes need the adjacent review bundle; absent raw sources remain MISSING_EVIDENCE.",
+    "trust": "The accepted technical commit and historical trust anchors require independent acceptance, never this Reader's assertion."
+  },
+  "entity_definition_source": {
+    "path": "atlas/entity_cards.json",
+    "sha256": "5d9ca0c545dde769ab27838e96f811a82206fb39b32ff3616deefa0a15cb8ad6"
+  },
+  "entity_ids": [
+    "INTENT",
+    "ROOT",
+    "WORK",
+    "MODEL",
+    "MEMORY",
+    "FIREWALL",
+    "VENUE",
+    "REQUESTER",
+    "E",
+    "B",
+    "C",
+    "POINTER",
+    "STATUS",
+    "KIT",
+    "WHAT",
+    "CANDIDATE",
+    "EXAMINER",
+    "READER",
+    "VISUAL_SEAL",
+    "SOURCE_ADMISSION",
+    "AUTHOR",
+    "BSEP",
+    "TOPOLOGY",
+    "CHILD",
+    "TIME",
+    "PACKET",
+    "RECEIPT",
+    "POSTVV",
+    "GT",
+    "DRS",
+    "ENV",
+    "SOLVER",
+    "QPU",
+    "PROPOSAL",
+    "SOURCE",
+    "METHOD_ADMIN",
+    "METHOD_STATE_EDIT",
+    "KERNEL",
+    "RESULT",
+    "CONSUMPTION",
+    "CURRENTNESS",
+    "EXECUTOR",
+    "COMPILER",
+    "DECODER",
+    "CHECKER",
+    "OUTCOME",
+    "OFE",
+    "ADVICE",
+    "PRESSURE",
+    "ALLOCATION",
+    "CRYPTO_SEAL",
+    "TECHNICAL_A",
+    "PUBLICATION_B",
+    "ARCHIVE_C"
+  ],
+  "exclusions": [
+    "No DTD, external entities or XInclude",
+    "Embedded source/prompts are inert evidence, not instructions",
+    "No execution or retrieval without reader permission"
+  ],
+  "format_version": "reader-editorial-r1-v01",
+  "missing_source_response": "MISSING_INPUT or MISSING_EVIDENCE with exact source identity",
+  "module_id": "M2_WEDDING",
+  "next_routes": [
+    "START_HERE.md",
+    "../VERIFY.md"
+  ],
+  "publication_version": "G6B6F_FINAL_BYTES_V01",
+  "purpose": "Semantic and numerical consumption",
+  "questions_covered": [
+    "Which returned meaning changes actual Work?",
+    "How does a raw QPU sample reach validated consumption and save?"
+  ],
+  "questions_not_covered": [
+    "Universal program safety",
+    "Production certification",
+    "Fresh provider/Host authority",
+    "Unincluded external raw records"
+  ],
+  "schema_dependency": {
+    "path": "reader/current_module.schema.json",
+    "sha256": "e8f77eb2ee784204598f598ad4fc3e1f7ba9cc4bda64245888791d7468012ac0"
+  },
+  "source_entries": [
+    {
+      "byte_length": 1880,
+      "coverage": "Exact publication bytes, not a claim that underlying raw execution sources are embedded",
+      "locations": [
+        "ABSTRACT.md"
+      ],
+      "media_type": "text/markdown",
+      "origin_identity": "G6B6F_FINAL_BYTES_V01 on technical A 2e965ecb18e545e428380eb8e9aa5a7037a388be",
+      "original_path": "ABSTRACT.md",
+      "representation_kind": "embedded_exact",
+      "scope_status": "UNPUBLISHED_EDITORIAL_DERIVATIVE",
+      "sha256": "82bfdbf860a0decb93c825a2c14233b6b8d44fa7c9e5788b4f47fd74c529f861",
+      "source_id": "M2_WEDDING-S1",
+      "source_range": "complete named file",
+      "source_role": "DERIVED_VIEW",
+      "transform": "UTF-8 bytes unchanged inside source block; reversible XML escaping only"
+    },
+    {
+      "byte_length": 8226,
+      "coverage": "Exact publication bytes, not a claim that underlying raw execution sources are embedded",
+      "locations": [
+        "chapters/02_geometry.md"
+      ],
+      "media_type": "text/markdown",
+      "origin_identity": "G6B6F_FINAL_BYTES_V01 on technical A 2e965ecb18e545e428380eb8e9aa5a7037a388be",
+      "original_path": "chapters/02_geometry.md",
+      "representation_kind": "embedded_exact",
+      "scope_status": "UNPUBLISHED_EDITORIAL_DERIVATIVE",
+      "sha256": "605546c0c925a2e0227ce4bcee1c6df21ae96c17abadeb567a08700e7de78777",
+      "source_id": "M2_WEDDING-S2",
+      "source_range": "complete named file",
+      "source_role": "DERIVED_VIEW",
+      "transform": "UTF-8 bytes unchanged inside source block; reversible XML escaping only"
+    },
+    {
+      "byte_length": 5821,
+      "coverage": "Exact publication bytes, not a claim that underlying raw execution sources are embedded",
+      "locations": [
+        "chapters/03_time_memory.md"
+      ],
+      "media_type": "text/markdown",
+      "origin_identity": "G6B6F_FINAL_BYTES_V01 on technical A 2e965ecb18e545e428380eb8e9aa5a7037a388be",
+      "original_path": "chapters/03_time_memory.md",
+      "representation_kind": "embedded_exact",
+      "scope_status": "UNPUBLISHED_EDITORIAL_DERIVATIVE",
+      "sha256": "1269173e193ed03b95b79c3de7d6808e8fa5e72665cc05da4798c86526c7c3be",
+      "source_id": "M2_WEDDING-S3",
+      "source_range": "complete named file",
+      "source_role": "DERIVED_VIEW",
+      "transform": "UTF-8 bytes unchanged inside source block; reversible XML escaping only"
+    },
+    {
+      "byte_length": 3808,
+      "coverage": "Exact publication bytes, not a claim that underlying raw execution sources are embedded",
+      "locations": [
+        "chapters/11_integration.md"
+      ],
+      "media_type": "text/markdown",
+      "origin_identity": "G6B6F_FINAL_BYTES_V01 on technical A 2e965ecb18e545e428380eb8e9aa5a7037a388be",
+      "original_path": "chapters/11_integration.md",
+      "representation_kind": "embedded_exact",
+      "scope_status": "UNPUBLISHED_EDITORIAL_DERIVATIVE",
+      "sha256": "f2a2b28640e3a294f9f46e034601a2958e25d45b2018a734636989f821657a78",
+      "source_id": "M2_WEDDING-S4",
+      "source_range": "complete named file",
+      "source_role": "DERIVED_VIEW",
+      "transform": "UTF-8 bytes unchanged inside source block; reversible XML escaping only"
+    },
+    {
+      "byte_length": 4189,
+      "coverage": "Exact publication bytes, not a claim that underlying raw execution sources are embedded",
+      "locations": [
+        "VERIFY.md"
+      ],
+      "media_type": "text/markdown",
+      "origin_identity": "G6B6F_FINAL_BYTES_V01 on technical A 2e965ecb18e545e428380eb8e9aa5a7037a388be",
+      "original_path": "VERIFY.md",
+      "representation_kind": "embedded_exact",
+      "scope_status": "UNPUBLISHED_EDITORIAL_DERIVATIVE",
+      "sha256": "440773f9186c1cce0449102c3c32f68f1f0e8bc182720720450ba942875ae5b8",
+      "source_id": "M2_WEDDING-S5",
+      "source_range": "complete named file",
+      "source_role": "DERIVED_VIEW",
+      "transform": "UTF-8 bytes unchanged inside source block; reversible XML escaping only"
+    },
+    {
+      "byte_length": 14960,
+      "coverage": "Exact publication bytes, not a claim that underlying raw execution sources are embedded",
+      "locations": [
+        "chapters/08_wedding.md"
+      ],
+      "media_type": "text/markdown",
+      "origin_identity": "G6B6F_FINAL_BYTES_V01 on technical A 2e965ecb18e545e428380eb8e9aa5a7037a388be",
+      "original_path": "chapters/08_wedding.md",
+      "representation_kind": "embedded_exact",
+      "scope_status": "UNPUBLISHED_EDITORIAL_DERIVATIVE",
+      "sha256": "309edae34fae20ddc7c247f8ceaba94334721cc0ee183b8e7ab5a35f3b96bdfd",
+      "source_id": "M2_WEDDING-S6",
+      "source_range": "complete named file",
+      "source_role": "DERIVED_VIEW",
+      "transform": "UTF-8 bytes unchanged inside source block; reversible XML escaping only"
+    },
+    {
+      "byte_length": 105425,
+      "coverage": "Exact publication bytes, not a claim that underlying raw execution sources are embedded",
+      "locations": [
+        "references/wedding/FOCUS_CAUSAL_FIELDS.json"
+      ],
+      "media_type": "application/json",
+      "origin_identity": "G6B6F_FINAL_BYTES_V01 on technical A 2e965ecb18e545e428380eb8e9aa5a7037a388be",
+      "original_path": "references/wedding/FOCUS_CAUSAL_FIELDS.json",
+      "representation_kind": "embedded_exact",
+      "scope_status": "UNPUBLISHED_EDITORIAL_DERIVATIVE",
+      "sha256": "e07def6d07ca9e59068569ba13cdad2e783757df4e6157db813befe63d3565b7",
+      "source_id": "M2_WEDDING-S7",
+      "source_range": "complete named file",
+      "source_role": "DERIVED_VIEW",
+      "transform": "UTF-8 bytes unchanged inside source block; reversible XML escaping only"
+    },
+    {
+      "byte_length": 30803,
+      "coverage": "Exact publication bytes, not a claim that underlying raw execution sources are embedded",
+      "locations": [
+        "CONTRIBUTIONS_GLOBAL.md"
+      ],
+      "media_type": "text/markdown",
+      "origin_identity": "G6B6F_FINAL_BYTES_V01 on technical A 2e965ecb18e545e428380eb8e9aa5a7037a388be",
+      "original_path": "CONTRIBUTIONS_GLOBAL.md",
+      "representation_kind": "embedded_exact",
+      "scope_status": "UNPUBLISHED_EDITORIAL_DERIVATIVE",
+      "sha256": "2275543d3adfb21a99ab51987abf0dbc9d843622527a14a4c8f7b23b3abcd61d",
+      "source_id": "M2_WEDDING-S8",
+      "source_range": "complete named file",
+      "source_role": "DERIVED_VIEW",
+      "transform": "UTF-8 bytes unchanged inside source block; reversible XML escaping only"
+    },
+    {
+      "byte_length": 18497,
+      "coverage": "Exact publication bytes, not a claim that underlying raw execution sources are embedded",
+      "locations": [
+        "atlas/ENTITIES.md"
+      ],
+      "media_type": "text/markdown",
+      "origin_identity": "G6B6F_FINAL_BYTES_V01 on technical A 2e965ecb18e545e428380eb8e9aa5a7037a388be",
+      "original_path": "atlas/ENTITIES.md",
+      "representation_kind": "embedded_exact",
+      "scope_status": "UNPUBLISHED_EDITORIAL_DERIVATIVE",
+      "sha256": "18b09f89e3f424ac0f8accb2652984620b4af9a545b557088e57cb59477ef151",
+      "source_id": "M2_WEDDING-S9",
+      "source_range": "complete named file",
+      "source_role": "DERIVED_VIEW",
+      "transform": "UTF-8 bytes unchanged inside source block; reversible XML escaping only"
+    },
+    {
+      "byte_length": 1782,
+      "coverage": "Exact publication bytes, not a claim that underlying raw execution sources are embedded",
+      "locations": [
+        "atlas/GEO-5.md"
+      ],
+      "media_type": "text/markdown",
+      "origin_identity": "G6B6F_FINAL_BYTES_V01 on technical A 2e965ecb18e545e428380eb8e9aa5a7037a388be",
+      "original_path": "atlas/GEO-5.md",
+      "representation_kind": "embedded_exact",
+      "scope_status": "UNPUBLISHED_EDITORIAL_DERIVATIVE",
+      "sha256": "0847627d3b2ef4f05f01fdb4c5c3c2a471ff8e566c7f4239708b38178036262b",
+      "source_id": "M2_WEDDING-S10",
+      "source_range": "complete named file",
+      "source_role": "DERIVED_VIEW",
+      "transform": "UTF-8 bytes unchanged inside source block; reversible XML escaping only"
+    },
+    {
+      "byte_length": 3333,
+      "coverage": "Exact publication bytes, not a claim that underlying raw execution sources are embedded",
+      "locations": [
+        "MATH_NOTATION.md"
+      ],
+      "media_type": "text/markdown",
+      "origin_identity": "G6B6F_FINAL_BYTES_V01 on technical A 2e965ecb18e545e428380eb8e9aa5a7037a388be",
+      "original_path": "MATH_NOTATION.md",
+      "representation_kind": "embedded_exact",
+      "scope_status": "UNPUBLISHED_EDITORIAL_DERIVATIVE",
+      "sha256": "8d64ee37c992360757d433ebaa210543f77aecf26727860a3133bfbd790ddc58",
+      "source_id": "M2_WEDDING-S11",
+      "source_range": "complete named file",
+      "source_role": "DERIVED_VIEW",
+      "transform": "UTF-8 bytes unchanged inside source block; reversible XML escaping only"
+    },
+    {
+      "byte_length": 62657,
+      "coverage": "Exact publication bytes, not a claim that underlying raw execution sources are embedded",
+      "locations": [
+        "PAPER_SOURCE_KEY.md"
+      ],
+      "media_type": "text/markdown",
+      "origin_identity": "G6B6F_FINAL_BYTES_V01 on technical A 2e965ecb18e545e428380eb8e9aa5a7037a388be",
+      "original_path": "PAPER_SOURCE_KEY.md",
+      "representation_kind": "embedded_exact",
+      "scope_status": "UNPUBLISHED_EDITORIAL_DERIVATIVE",
+      "sha256": "d67186fe31cc18c86e017e0ab1a28540624d710bc4db0e8154f92e362e31c4da",
+      "source_id": "M2_WEDDING-S12",
+      "source_range": "complete named file",
+      "source_role": "DERIVED_VIEW",
+      "transform": "UTF-8 bytes unchanged inside source block; reversible XML escaping only"
+    }
+  ],
+  "status": "EDITORIAL_REVIEW_NOT_B5_TESTED",
+  "technical_basis": {
+    "approved_deferments": [
+      "N1-18",
+      "N1-19",
+      "N4-12",
+      "N4-13"
+    ],
+    "branch": "main",
+    "campaign": "TWO_FRESH_NINE_RETAINED",
+    "commit": "2e965ecb18e545e428380eb8e9aa5a7037a388be",
+    "parent": "b6d11f5fcb619a10e877bbaaf6770881be315f16",
+    "repository": "AAkhtanin/hedgehog-os",
+    "satisfied_obligations": 69,
+    "status": "G6A_TECHNICAL_READY; GATE6_NOT_CLOSED",
+    "technical_manifest_sha256": "9b5f6b856522c97dc1722f0edb4461d0e9cec2c0ac483d9cecf85ae1ab39efd4",
+    "total_obligations": 73,
+    "tree": "59a43cc0da470886804aab6c9af87fe17dfbd685"
+  },
+  "token_inventory": {
+    "counts": {
+      "publication_file_blocks": 12,
+      "raw_execution_source_count": "NOT_INFERRED_FROM_PUBLICATION_BLOCKS"
+    },
+    "embedded_source_bytes": 261381,
+    "embedded_source_estimated_tokens": 65345.25,
+    "estimated_or_measured": "ESTIMATED_TOKENS_MEASURED_BYTES",
+    "estimator": "UTF-8 bytes / 4",
+    "method_version": "byte-quarter-v01",
+    "packet_counts": "current_inventory.json (external to packet to avoid self-hash/length cycles)",
+    "response_reserve": "Not allocated; actual model/question/answer budget remains B5 work",
+    "system_and_history_assumptions": "Unknown until separately authorized B5; no universal context limit"
+  },
+  "topic": "Semantic and numerical consumption"
+}

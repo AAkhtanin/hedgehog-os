@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 1280 720" role="img" aria-labelledby="title desc">
+<title id="title">One permitted shift makes the football request fit</title>
+<desc id="desc">RECORDED FOOTBALL  /  Three natural-grass sessions, total EUR 63 within EUR 70</desc>
+<defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L9,3 z" fill="#176B68"/></marker></defs>
+<rect width="1280" height="720" fill="white"/>
+<text id="S03_title" font-family="Nimbus Sans" font-size="42" font-weight="bold" fill="#16282B">
+<tspan x="54" y="78.0">One permitted shift makes the football request fit</tspan>
+</text>
+<text id="S03_scope" font-family="Nimbus Sans" font-size="23" font-weight="normal" fill="#43595D">
+<tspan x="56" y="136.0">RECORDED FOOTBALL / Three natural-grass sessions, total EUR 63 within EUR 70</tspan>
+</text>
+<text id="S03_before_label" font-family="Nimbus Sans" font-size="26" font-weight="bold" fill="#16282B">
+<tspan x="60" y="221.0">REQUEST</tspan>
+</text>
+<text id="S03_after_label" font-family="Nimbus Sans" font-size="26" font-weight="bold" fill="#16282B">
+<tspan x="650" y="221.0">ACCEPTABLE OFFER</tspan>
+</text>
+<text id="S03_before0" font-family="Nimbus Sans" font-size="29" font-weight="normal" fill="#43595D">
+<tspan x="60" y="293.0">Jan 07: 16:30-18:00</tspan>
+</text>
+<line id="S03_change0" x1="545" y1="289" x2="623" y2="289" stroke="#176B68" stroke-width="2" marker-end="url(#arrow)"/>
+<text id="S03_after0" font-family="Nimbus Sans" font-size="29" font-weight="normal" fill="#43595D">
+<tspan x="660" y="293.0">Jan 07: 16:30-18:00</tspan>
+</text>
+<text id="S03_before1" font-family="Nimbus Sans" font-size="29" font-weight="normal" fill="#A13D32">
+<tspan x="60" y="379.0">Jan 08: 11:00-12:30</tspan>
+</text>
+<line id="S03_change1" x1="545" y1="375" x2="623" y2="375" stroke="#176B68" stroke-width="2" marker-end="url(#arrow)"/>
+<text id="S03_after1" font-family="Nimbus Sans" font-size="29" font-weight="normal" fill="#176B68">
+<tspan x="660" y="379.0">Jan 08: 11:30-13:00 (+30 min)</tspan>
+</text>
+<text id="S03_before2" font-family="Nimbus Sans" font-size="29" font-weight="normal" fill="#43595D">
+<tspan x="60" y="465.0">Jan 09: 11:00-12:30</tspan>
+</text>
+<line id="S03_change2" x1="545" y1="461" x2="623" y2="461" stroke="#176B68" stroke-width="2" marker-end="url(#arrow)"/>
+<text id="S03_after2" font-family="Nimbus Sans" font-size="29" font-weight="normal" fill="#43595D">
+<tspan x="660" y="465.0">Jan 09: 11:00-12:30</tspan>
+</text>
+<text id="S03_price" font-family="Nimbus Sans" font-size="27" font-weight="normal" fill="#16282B">
+<tspan x="60" y="569.0">EUR 63 / 70 Natural grass Separate BOOK consent and one mock effect</tspan>
+</text>
+<text id="S03_qualification" font-family="Nimbus Sans" font-size="23" font-weight="normal" fill="#43595D">
+<tspan x="56" y="619.0">All dates are in 2027. Only Jan 08 shifts. The offer is computed evidence; it does not reserve the venue by itself.</tspan>
+</text>
+<line id="S03_rule" x1="56" y1="671" x2="1218" y2="671" stroke="#B8C8C6" stroke-width="1"/>
+<a href="../../references/episode_sources.json">
+<text id="S03_source_link" font-family="Nimbus Sans" font-size="18" font-weight="normal" fill="#315E8B">
+<tspan x="56" y="703.0">S03 Source: football</tspan>
+</text>
+</a>
+<a href="../../atlas/README.html">
+<text id="S03_atlas_locator" font-family="Nimbus Sans" font-size="17" font-weight="normal" fill="#315E8B">
+<tspan x="660" y="702.0">Atlas: Overview / GEO 1 2 3 4 5 6 7</tspan>
+</text>
+</a>
+</svg>

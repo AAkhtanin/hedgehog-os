@@ -1,0 +1,39 @@
+[
+  {
+    "origin_path": "/Users/admin/Projects/hedgehog-os/docs/showcase/gate5_reference_v01/assets/radiolaria_reference_cover.png",
+    "path": "assets/radiolaria_reference_cover.png",
+    "sha256": "a8570e18d4c79834fb188e8d24cf0612380a5430bf370676bf69421ffb1c49f6",
+    "bytes": 1499173,
+    "transform": "EXACT_BYTES",
+    "public_use": "OWNER_AUTHORIZED_PUBLIC_USE",
+    "owner_message_sha256": "9288a849f620d2068bb13c8cfe4760754d38ec011ccb96275424a9b83b13baa3",
+    "rights_limit": "Exact asset only; not independent rights-chain certification or blanket CC BY"
+  },
+  {
+    "origin_path": "/Users/admin/Projects/radiolaria-visual-seal/samples/calibration_d6_b1r3_NONCANONICAL_PREVIEW.png",
+    "path": "assets/visual_seal_NONCANONICAL_PREVIEW.png",
+    "sha256": "c88382d33797c3bb50888797a2daafc0b8f5de2d0a88fe5da63ff3a99016c284",
+    "bytes": 73886,
+    "transform": "EXACT_BYTES",
+    "public_use": "OWNER_AUTHORIZED_PUBLIC_USE",
+    "owner_message_sha256": "9288a849f620d2068bb13c8cfe4760754d38ec011ccb96275424a9b83b13baa3",
+    "rights_limit": "Exact asset only; not independent rights-chain certification or blanket CC BY"
+  },
+  {
+    "origin_path": "/Users/admin/Projects/radiolaria-visual-seal/samples/calibration_d6_b1r3.svg",
+    "path": "assets/visual_seal_prototype.svg",
+    "sha256": "4e1640fb48a8cac8d1f0e379572efe2696843b5352e4b3a3363247fc7f10bda9",
+    "bytes": 48764,
+    "transform": "EXACT_BYTES",
+    "public_use": "OWNER_AUTHORIZED_PUBLIC_USE",
+    "owner_message_sha256": "9288a849f620d2068bb13c8cfe4760754d38ec011ccb96275424a9b83b13baa3",
+    "rights_limit": "Exact asset only; not independent rights-chain certification or blanket CC BY"
+  },
+  {
+    "origin_path": "/Users/admin/Projects/hedgehog-os/docs/showcase/gate5_reference_v01/assets/PROVENANCE.md",
+    "path": "assets/COVER_PROVENANCE.md",
+    "sha256": "aefd9550d0496cdfc932bd8e12176c8e1f3b703c5e9c0ed01725b777458323b7",
+    "bytes": 1073,
+    "transform": "EXACT_BYTES"
+  }
+]

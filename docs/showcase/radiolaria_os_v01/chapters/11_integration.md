@@ -1,0 +1,19 @@
+# Build a Profile; Do Not Rebuild the Authority Law
+
+An application team does not start by replacing the kernel. It defines the subject matter that the kernel cannot infer safely: schemas, owner identities, available capabilities, actual sources, scope and time rules, effect adapters, and an examiner or independent validation appropriate to the domain. The common interfaces then organize proposals, Work, result consumption, local review and history. Variation moves toward profiles and adapters, but the development history does not prove that the kernel never changed or that integration cost is zero.
+
+## The Existing Entry Points
+
+The accepted [HOW / Authoring Kit](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/gate5_authoring_kit_v01/START_HERE.md) separates public execution contracts and interface guidance from WHAT, the requirements of a new domain. An external author receives those declared inputs and produces a candidate. An independent examiner uses its own oracle and observes native execution. Source admission is a separately authorized operation on exact reviewed bytes. Runtime Root decisions occur later under the actual task's conditions.
+
+The [accepted authoring dossier](https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/docs/showcase/gate5_reference_v01/dossiers/A.md) supplies a finite example of changing the developer, not just the request. G54B1 and G54D remain historically INCOMPLETE. G54D1 used an explicitly authorized fourth correction in restored continuation and then received the declared independent acceptance. That lineage must be visible beside the achievement. It is not a one-shot cold success, an unlimited correction experiment, or proof that a model can safely install arbitrary code. [R-AUTHOR](../PAPER_SOURCE_KEY.md#r-author)
+
+The Audit Reader is not the Authoring Kit. It may contain evidence and examiner detail suitable for evaluating a finished case; giving it to a future cold author would alter the experiment. Likewise, an archived candidate or receipt is inert evidence, not an instruction to install or execute it. The kit's general interfaces and the domain task should be obtained from their accepted source paths rather than reconstructed from this narrative.
+
+## An Integrator's Concrete Work
+
+First define the purpose and significant conditions, including when ambiguity requires clarification rather than guessing. Define owners and the materials each may disclose. Declare typed producer and consumer fields and independently check their actual binding. Define source observation, time and invalidation behavior. Keep action intent, consent and result acceptance distinct. Implement an effect adapter only within the current Root packet and exclusive Firewall/Corridor path. Supply useful negative neighbors and a lawful continuation, not only happy-path examples.
+
+Operational deployment adds responsibilities that the reference artifacts do not discharge: credential management, host isolation appropriate to adversaries, provider terms, data protection, monitoring, availability and incident response. IAM, OPA-style policy decisions, content-addressed storage and numerical solvers can contribute to those deployments. They do not have to be displaced by Radiolaria. A proposed integration is not an existing customer, partnership or endorsement.
+
+The constructive next direction is a more complete capability-creation process with explicit engineering and admission. The current source shows bounded external authorship and finite pure capability readmission; an integrated autonomous capability factory is not claimed. Approved advanced numerical deferments remain open. Growing what a system can compute must not silently grow what it can authorize.

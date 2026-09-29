@@ -1,0 +1,375 @@
+[
+  {
+    "id": "S01",
+    "title": "ISO/IEC/IEEE 42010:2022 - Architecture description",
+    "phases": "B1-B3",
+    "output": "atlas/README.md",
+    "application": "Separate viewpoints and relationships; open abstract only, not full paid ISO text.",
+    "source_read": "INHERITED_PRIMARY_SOURCE_SUMMARIES_READ; no new external retrieval",
+    "result": "METHOD_APPLIED_TO_DESIGN_NOT_INDEPENDENT_PASS",
+    "inherited_primary_urls": [
+      "https://www.iso.org/standard/74393.html"
+    ],
+    "b3_application": "Applied as editorial guidance, not an external standard certification or new technical PASS.",
+    "b3_review_anchor": "SEMANTIC_TRANSFER.md"
+  },
+  {
+    "id": "S02",
+    "title": "Documenting Software Architectures: Views and Beyond, Second Edition - SEI, 2010",
+    "phases": "B1-B3",
+    "output": "atlas/figures.json",
+    "application": "View consistency, not automatic completeness.",
+    "source_read": "INHERITED_PRIMARY_SOURCE_SUMMARIES_READ; no new external retrieval",
+    "result": "METHOD_APPLIED_TO_DESIGN_NOT_INDEPENDENT_PASS",
+    "inherited_primary_urls": [
+      "https://www.sei.cmu.edu/library/documenting-software-architectures-views-and-beyond-second-edition/"
+    ],
+    "b3_application": "Applied as editorial guidance, not an external standard certification or new technical PASS.",
+    "b3_review_anchor": "SEMANTIC_TRANSFER.md",
+  "r1_outputs": [
+    "atlas/views.json",
+    "atlas/native_views.json",
+    "atlas/entity_cards.json"
+  ]
+  },
+  {
+    "id": "S03",
+    "title": "A Structured Approach for Reviewing Architecture Documentation - SEI, 2009",
+    "phases": "B2-B5",
+    "output": "REMAINING.md",
+    "application": "Review concrete outputs; independent editorial review is not a reader trial.",
+    "source_read": "INHERITED_PRIMARY_SOURCE_SUMMARIES_READ; no new external retrieval",
+    "result": "METHOD_APPLIED_TO_DESIGN_NOT_INDEPENDENT_PASS",
+    "inherited_primary_urls": [
+      "https://www.sei.cmu.edu/library/a-structured-approach-for-reviewing-architecture-documentation/",
+      "https://www.sei.cmu.edu/documents/2176/2009_004_001_15083.pdf"
+    ],
+    "b3_application": "Applied as editorial guidance, not an external standard certification or new technical PASS.",
+    "b3_review_anchor": "SEMANTIC_TRANSFER.md"
+  },
+  {
+    "id": "S04",
+    "title": "C4 model - diagrams, dynamic diagrams and notation",
+    "phases": "B2-B3",
+    "output": "atlas/README.md",
+    "application": "Explicit scope and edge legend; not an actual runtime graph.",
+    "source_read": "INHERITED_PRIMARY_SOURCE_SUMMARIES_READ; no new external retrieval",
+    "result": "METHOD_APPLIED_TO_DESIGN_NOT_INDEPENDENT_PASS",
+    "inherited_primary_urls": [
+      "https://c4model.com/diagrams",
+      "https://c4model.com/diagrams/dynamic",
+      "https://c4model.com/diagrams/notation"
+    ],
+    "b3_application": "Applied as editorial guidance, not an external standard certification or new technical PASS.",
+    "b3_review_anchor": "SEMANTIC_TRANSFER.md"
+  },
+  {
+    "id": "S05",
+    "title": "Arguing Security - Creating Security Assurance Cases - SEI, 2013",
+    "phases": "B1-B3",
+    "output": "CONTRIBUTIONS.md",
+    "application": "Claim, mechanism, evidence and limitation, not certification.",
+    "source_read": "INHERITED_PRIMARY_SOURCE_SUMMARIES_READ; no new external retrieval",
+    "result": "METHOD_APPLIED_TO_DESIGN_NOT_INDEPENDENT_PASS",
+    "inherited_primary_urls": [
+      "https://www.sei.cmu.edu/library/arguing-security-creating-security-assurance-cases/",
+      "https://www.sei.cmu.edu/documents/383/2013_019_001_293637.pdf"
+    ],
+    "b3_application": "Applied as editorial guidance, not an external standard certification or new technical PASS.",
+    "b3_review_anchor": "SEMANTIC_TRANSFER.md",
+  "r1_outputs": [
+    "corpus/editorial.json",
+    "CONTRIBUTIONS_GLOBAL.md"
+  ]
+  },
+  {
+    "id": "S06",
+    "title": "Eliminative Argumentation: A Basis for Arguing Confidence in System Properties - SEI, 2015",
+    "phases": "B1-B3",
+    "output": "LIMITS.md",
+    "application": "Preserve counterexamples and unresolved trust assumptions.",
+    "source_read": "INHERITED_PRIMARY_SOURCE_SUMMARIES_READ; no new external retrieval",
+    "result": "METHOD_APPLIED_TO_DESIGN_NOT_INDEPENDENT_PASS",
+    "inherited_primary_urls": [
+      "https://www.sei.cmu.edu/library/eliminative-argumentation-a-basis-for-arguing-confidence-in-system-properties/"
+    ],
+    "b3_application": "Applied as editorial guidance, not an external standard certification or new technical PASS.",
+    "b3_review_anchor": "SEMANTIC_TRANSFER.md"
+  },
+  {
+    "id": "S07",
+    "title": "NIST AI RMF Playbook - MEASURE; AI Risk Management Framework",
+    "phases": "B3",
+    "output": "REGULATORY_MAP.md",
+    "application": "Future risk background; no conformity claim.",
+    "source_read": "Official NIST AI RMF page retrieved 2026-09-27; other inherited method details remain historical",
+    "result": "METHOD_APPLIED_TO_DESIGN_NOT_INDEPENDENT_PASS",
+    "inherited_primary_urls": [
+      "https://airc.nist.gov/airmf-resources/playbook/measure/",
+      "https://www.nist.gov/itl/ai-risk-management-framework"
+    ],
+    "b3_application": "Applied as editorial guidance, not an external standard certification or new technical PASS.",
+    "b3_review_anchor": "SEMANTIC_TRANSFER.md"
+  },
+  {
+    "id": "S08",
+    "title": "Di\u00e1taxis - documentation system, Explanation and Reference",
+    "phases": "B1-B4",
+    "output": "README.md",
+    "application": "Explanation/reference/build routes have distinct jobs.",
+    "source_read": "INHERITED_PRIMARY_SOURCE_SUMMARIES_READ; no new external retrieval",
+    "result": "METHOD_APPLIED_TO_DESIGN_NOT_INDEPENDENT_PASS",
+    "inherited_primary_urls": [
+      "https://diataxis.fr/",
+      "https://diataxis.fr/explanation/",
+      "https://diataxis.fr/reference/"
+    ],
+    "b3_application": "Applied as editorial guidance, not an external standard certification or new technical PASS.",
+    "b3_review_anchor": "SEMANTIC_TRANSFER.md"
+  },
+  {
+    "id": "S09",
+    "title": "Simon Peyton Jones - How to write a great research paper",
+    "phases": "B1-B3",
+    "output": "ABSTRACT.md",
+    "application": "Problem and mechanism before internal chronology.",
+    "source_read": "INHERITED_PRIMARY_SOURCE_SUMMARIES_READ; no new external retrieval",
+    "result": "METHOD_APPLIED_TO_DESIGN_NOT_INDEPENDENT_PASS",
+    "inherited_primary_urls": [
+      "https://www.microsoft.com/en-us/research/academic-program/write-great-research-paper/",
+      "https://www.microsoft.com/en-us/research/wp-content/uploads/2016/07/How-to-write-a-great-research-paper.pdf"
+    ],
+    "b3_application": "Applied as editorial guidance, not an external standard certification or new technical PASS.",
+    "b3_review_anchor": "SEMANTIC_TRANSFER.md"
+  },
+  {
+    "id": "S10",
+    "title": "Assertion\u2013Evidence - Michael Alley / Penn State",
+    "phases": "B2-B4",
+    "output": "presentation/pilots.pdf",
+    "application": "Readable assertion titles with substantive evidence.",
+    "source_read": "INHERITED_PRIMARY_SOURCE_SUMMARIES_READ; no new external retrieval",
+    "result": "METHOD_APPLIED_TO_DESIGN_NOT_INDEPENDENT_PASS",
+    "inherited_primary_urls": [
+      "https://www.assertion-evidence.com/"
+    ],
+    "b3_application": "Applied as editorial guidance, not an external standard certification or new technical PASS.",
+    "b3_review_anchor": "SEMANTIC_TRANSFER.md"
+  },
+  {
+    "id": "S11",
+    "title": "USENIX OSDI \u201926 - Call for Artifacts",
+    "phases": "B3-B6",
+    "output": "VERIFY.md",
+    "application": "Availability, functional checking and independent reproduction differ.",
+    "source_read": "INHERITED_PRIMARY_SOURCE_SUMMARIES_READ; no new external retrieval",
+    "result": "METHOD_APPLIED_TO_DESIGN_NOT_INDEPENDENT_PASS",
+    "inherited_primary_urls": [
+      "https://www.usenix.org/conference/osdi26/call-for-artifacts"
+    ],
+    "b3_application": "Applied as editorial guidance, not an external standard certification or new technical PASS.",
+    "b3_review_anchor": "SEMANTIC_TRANSFER.md"
+  },
+  {
+    "id": "S12",
+    "title": "USENIX Security \u201926 - Call for Artifacts",
+    "phases": "B3-B6",
+    "output": "VERIFY.md",
+    "related_output": "PUBLICATION_BOUNDARY.md",
+    "application": "Separate artifact availability, functionality and reproducibility; prepare a permanent archive of the exact declared materials. GitHub navigation alone does not establish permanent archival completeness or an artifact badge.",
+    "source_read": "INHERITED_PRIMARY_SOURCE_SUMMARIES_READ; no new external retrieval",
+    "result": "METHOD_APPLIED_TO_DESIGN_NOT_INDEPENDENT_PASS",
+    "inherited_primary_urls": [
+      "https://www.usenix.org/conference/usenixsecurity26/call-for-artifacts"
+    ],
+    "b3_application": "Applied as editorial guidance, not an external standard certification or new technical PASS.",
+    "b3_review_anchor": "SEMANTIC_TRANSFER.md"
+  },
+  {
+    "id": "S13",
+    "title": "W3C PROV Overview / PROV-DM",
+    "phases": "B1-B4",
+    "output": "references/episode_sources.json",
+    "application": "Origin and derivation separated from authority.",
+    "source_read": "INHERITED_PRIMARY_SOURCE_SUMMARIES_READ; no new external retrieval",
+    "result": "METHOD_APPLIED_TO_DESIGN_NOT_INDEPENDENT_PASS",
+    "inherited_primary_urls": [
+      "https://www.w3.org/TR/2013/NOTE-prov-overview-20130430/",
+      "https://www.w3.org/TR/prov-dm/"
+    ],
+    "b3_application": "Applied as editorial guidance, not an external standard certification or new technical PASS.",
+    "b3_review_anchor": "SEMANTIC_TRANSFER.md"
+  },
+  {
+    "id": "S14",
+    "title": "RO-Crate specification 1.3 - Introduction",
+    "phases": "B4-B6",
+    "output": "PUBLICATION_BOUNDARY.md",
+    "application": "Exact research-object packaging, not a claimed RO-Crate implementation.",
+    "source_read": "INHERITED_PRIMARY_SOURCE_SUMMARIES_READ; no new external retrieval",
+    "result": "METHOD_APPLIED_TO_DESIGN_NOT_INDEPENDENT_PASS",
+    "inherited_primary_urls": [
+      "https://www.researchobject.org/ro-crate/specification/1.3/introduction.html",
+      "https://www.researchobject.org/ro-crate/specification/1.3/index.html"
+    ],
+    "b3_application": "Applied as editorial guidance, not an external standard certification or new technical PASS.",
+    "b3_review_anchor": "SEMANTIC_TRANSFER.md"
+  },
+  {
+    "id": "S15",
+    "title": "Lost in the Middle: How Language Models Use Long Contexts - Liu et al., 2023",
+    "phases": "B2-B5",
+    "output": "reader/token_inventory.json",
+    "application": "Position/context limitations; no fresh model evaluation.",
+    "source_read": "INHERITED_PRIMARY_SOURCE_SUMMARIES_READ; no new external retrieval",
+    "result": "METHOD_APPLIED_TO_DESIGN_NOT_INDEPENDENT_PASS",
+    "inherited_primary_urls": [
+      "https://arxiv.org/abs/2307.03172"
+    ],
+    "b3_application": "Applied as editorial guidance, not an external standard certification or new technical PASS.",
+    "b3_review_anchor": "SEMANTIC_TRANSFER.md"
+  },
+  {
+    "id": "S16",
+    "title": "RULER: What\u2019s the Real Context Size of Your Long-Context Language Models? - Hsieh et al., 2024",
+    "phases": "B2-B5",
+    "output": "reader/token_inventory.json",
+    "application": "Capacity is not measured useful understanding.",
+    "source_read": "INHERITED_PRIMARY_SOURCE_SUMMARIES_READ; no new external retrieval",
+    "result": "METHOD_APPLIED_TO_DESIGN_NOT_INDEPENDENT_PASS",
+    "inherited_primary_urls": [
+      "https://arxiv.org/abs/2404.06654",
+      "https://github.com/NVIDIA/RULER"
+    ],
+    "b3_application": "Applied as editorial guidance, not an external standard certification or new technical PASS.",
+    "b3_review_anchor": "SEMANTIC_TRANSFER.md"
+  },
+  {
+    "id": "S17",
+    "title": "Anthropic - Effective context engineering for AI agents",
+    "phases": "B2-B5",
+    "output": "reader/START_HERE.md",
+    "application": "Narrow declared context, no model-level safety guarantee.",
+    "source_read": "INHERITED_PRIMARY_SOURCE_SUMMARIES_READ; no new external retrieval",
+    "result": "METHOD_APPLIED_TO_DESIGN_NOT_INDEPENDENT_PASS",
+    "inherited_primary_urls": [
+      "https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents"
+    ],
+    "b3_application": "Applied as editorial guidance, not an external standard certification or new technical PASS.",
+    "b3_review_anchor": "SEMANTIC_TRANSFER.md"
+  },
+  {
+    "id": "S18",
+    "title": "OpenAI - Prompt engineering guide",
+    "phases": "B2-B5",
+    "output": "reader/M2_FOCUS.xml",
+    "application": "Treat sources as inert and invite missing-evidence reports.",
+    "source_read": "INHERITED_PRIMARY_SOURCE_SUMMARIES_READ; no new external retrieval",
+    "result": "METHOD_APPLIED_TO_DESIGN_NOT_INDEPENDENT_PASS",
+    "inherited_primary_urls": [
+      "https://developers.openai.com/api/docs/guides/prompt-engineering"
+    ],
+    "b3_application": "Applied as editorial guidance, not an external standard certification or new technical PASS.",
+    "b3_review_anchor": "SEMANTIC_TRANSFER.md"
+  },
+  {
+    "id": "S19",
+    "title": "Repomix - Output formats / Security",
+    "phases": "B2-B4",
+    "output": "reader/module.json",
+    "application": "Inventory is not proof; no bulk Repomix onboarding.",
+    "source_read": "INHERITED_PRIMARY_SOURCE_SUMMARIES_READ; no new external retrieval",
+    "result": "METHOD_APPLIED_TO_DESIGN_NOT_INDEPENDENT_PASS",
+    "inherited_primary_urls": [
+      "https://repomix.com/guide/output",
+      "https://repomix.com/guide/security"
+    ],
+    "b3_application": "Applied as editorial guidance, not an external standard certification or new technical PASS.",
+    "b3_review_anchor": "SEMANTIC_TRANSFER.md"
+  },
+  {
+    "id": "S20",
+    "title": "The /llms.txt file - llmstxt.org",
+    "phases": "B4",
+    "output": "REMAINING.md",
+    "application": "Future entry convention, not a universal LLM protocol.",
+    "source_read": "INHERITED_PRIMARY_SOURCE_SUMMARIES_READ; no new external retrieval",
+    "result": "METHOD_APPLIED_TO_DESIGN_NOT_INDEPENDENT_PASS",
+    "inherited_primary_urls": [
+      "https://llmstxt.org/"
+    ],
+    "b3_application": "Applied as editorial guidance, not an external standard certification or new technical PASS.",
+    "b3_review_anchor": "SEMANTIC_TRANSFER.md"
+  },
+  {
+    "id": "S21",
+    "title": "W3C - Web Content Accessibility Guidelines (WCAG) 2.2",
+    "phases": "B2-B4",
+    "output": "presentation/README.md",
+    "application": "Contrast/text/link inspection; no WCAG certificate.",
+    "source_read": "INHERITED_PRIMARY_SOURCE_SUMMARIES_READ; no new external retrieval",
+    "result": "METHOD_APPLIED_TO_DESIGN_NOT_INDEPENDENT_PASS",
+    "inherited_primary_urls": [
+      "https://www.w3.org/TR/WCAG22/"
+    ],
+    "b3_application": "Applied as editorial guidance, not an external standard certification or new technical PASS.",
+    "b3_review_anchor": "SEMANTIC_TRANSFER.md"
+  },
+  {
+    "id": "S22",
+    "title": "W3C - Guidance on Applying WCAG 2.2 to Non-Web ICT (WCAG2ICT)",
+    "phases": "B2-B4",
+    "output": "presentation/README.md",
+    "application": "Non-web readability; no PDF/UA certification.",
+    "source_read": "INHERITED_PRIMARY_SOURCE_SUMMARIES_READ; no new external retrieval",
+    "result": "METHOD_APPLIED_TO_DESIGN_NOT_INDEPENDENT_PASS",
+    "inherited_primary_urls": [
+      "https://www.w3.org/TR/wcag2ict-22/"
+    ],
+    "b3_application": "Applied as editorial guidance, not an external standard certification or new technical PASS.",
+    "b3_review_anchor": "SEMANTIC_TRANSFER.md"
+  },
+  {
+    "id": "S23",
+    "title": "GitHub Docs - Immutable releases",
+    "phases": "B6",
+    "output": "PUBLICATION_BOUNDARY.md",
+    "application": "Exact release and readback remain separate future operations.",
+    "source_read": "INHERITED_PRIMARY_SOURCE_SUMMARIES_READ; no new external retrieval",
+    "result": "METHOD_APPLIED_TO_DESIGN_NOT_INDEPENDENT_PASS",
+    "inherited_primary_urls": [
+      "https://docs.github.com/en/code-security/concepts/supply-chain-security/immutable-releases"
+    ],
+    "b3_application": "Applied as editorial guidance, not an external standard certification or new technical PASS.",
+    "b3_review_anchor": "SEMANTIC_TRANSFER.md"
+  },
+  {
+    "id": "S24",
+    "title": "GitHub Docs - About CITATION files",
+    "phases": "B6",
+    "output": "PUBLICATION_BOUNDARY.md",
+    "application": "CITATION root draft remains outside current R1 ledger.",
+    "source_read": "INHERITED_PRIMARY_SOURCE_SUMMARIES_READ; no new external retrieval",
+    "result": "METHOD_APPLIED_TO_DESIGN_NOT_INDEPENDENT_PASS",
+    "inherited_primary_urls": [
+      "https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-citation-files"
+    ],
+    "b3_application": "Applied as editorial guidance, not an external standard certification or new technical PASS.",
+    "b3_review_anchor": "SEMANTIC_TRANSFER.md"
+  },
+  {
+    "id": "S25",
+    "title": "Zenodo Help - GitHub / Archive software",
+    "phases": "B6",
+    "output": "PUBLICATION_BOUNDARY.md",
+    "application": "Actual archive contents and real DOI only after authorized publication.",
+    "source_read": "INHERITED_PRIMARY_SOURCE_SUMMARIES_READ; no new external retrieval",
+    "result": "METHOD_APPLIED_TO_DESIGN_NOT_INDEPENDENT_PASS",
+    "inherited_primary_urls": [
+      "https://help.zenodo.org/docs/github/",
+      "https://help.zenodo.org/docs/github/archive-software/github-upload/"
+    ],
+    "b3_application": "Applied as editorial guidance, not an external standard certification or new technical PASS.",
+    "b3_review_anchor": "SEMANTIC_TRANSFER.md"
+  }
+]

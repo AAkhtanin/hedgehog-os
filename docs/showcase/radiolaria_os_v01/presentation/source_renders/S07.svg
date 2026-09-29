@@ -1,0 +1,79 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 1280 720" role="img" aria-labelledby="title desc">
+<title id="title">A result reaches an action through current authority</title>
+<desc id="desc">CONCEPTUAL AUTHORITY PATTERN  /  Real carrier roles, no extra process implied</desc>
+<defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L9,3 z" fill="#176B68"/></marker></defs>
+<rect width="1280" height="720" fill="white"/>
+<text id="S07_title" font-family="Nimbus Sans" font-size="42" font-weight="bold" fill="#16282B">
+<tspan x="54" y="78.0">A result reaches an action through current authority</tspan>
+</text>
+<text id="S07_scope" font-family="Nimbus Sans" font-size="23" font-weight="normal" fill="#43595D">
+<tspan x="56" y="136.0">CONCEPTUAL AUTHORITY PATTERN / Real carrier roles, no extra process implied</tspan>
+</text>
+<rect x="56.0" y="226" width="290" height="110" id="S07_review_0" fill="#EFF5F3" stroke="#176B68" stroke-width="2"/>
+<text id="S07_review_0_label" font-family="Nimbus Sans" font-size="24" font-weight="normal" fill="#16282B">
+<tspan x="69.0" y="262.0">Proposed result</tspan>
+<tspan x="69.0" y="289.6">and evidence</tspan>
+</text>
+<rect x="495.0" y="226" width="290" height="110" id="S07_review_1" fill="#EFF5F3" stroke="#176B68" stroke-width="2"/>
+<text id="S07_review_1_label" font-family="Nimbus Sans" font-size="24" font-weight="normal" fill="#16282B">
+<tspan x="508.0" y="262.0">Current local</tspan>
+<tspan x="508.0" y="289.6">Root review</tspan>
+</text>
+<rect x="934.0" y="226" width="290" height="110" id="S07_review_2" fill="#EFF5F3" stroke="#176B68" stroke-width="2"/>
+<text id="S07_review_2_label" font-family="Nimbus Sans" font-size="24" font-weight="normal" fill="#16282B">
+<tspan x="947.0" y="262.0">Scoped current</tspan>
+<tspan x="947.0" y="289.6">ActionCommitPacket</tspan>
+</text>
+<line id="S07_review_edge_0" x1="346.0" y1="281.0" x2="495.0" y2="281.0" stroke="#176B68" stroke-width="2" marker-end="url(#arrow)"/>
+<text id="S07_review_edge_0_label" font-family="Nimbus Sans" font-size="17" font-weight="normal" fill="#43595D">
+<tspan x="350.0" y="216.0">review input</tspan>
+</text>
+<line id="S07_review_edge_1" x1="785.0" y1="281.0" x2="934.0" y2="281.0" stroke="#A13D32" stroke-width="2" marker-end="url(#arrow)"/>
+<text id="S07_review_edge_1_label" font-family="Nimbus Sans" font-size="17" font-weight="normal" fill="#43595D">
+<tspan x="789.0" y="216.0">local action</tspan>
+<tspan x="789.0" y="235.55">decision</tspan>
+</text>
+<rect x="934.0" y="443" width="290" height="110" id="S07_execute_0" fill="#EFF5F3" stroke="#176B68" stroke-width="2"/>
+<text id="S07_execute_0_label" font-family="Nimbus Sans" font-size="24" font-weight="normal" fill="#16282B">
+<tspan x="947.0" y="479.0">Host / Firewall</tspan>
+<tspan x="947.0" y="506.6">prestart enforcement</tspan>
+</text>
+<rect x="495.0" y="443" width="290" height="110" id="S07_execute_1" fill="#EFF5F3" stroke="#176B68" stroke-width="2"/>
+<text id="S07_execute_1_label" font-family="Nimbus Sans" font-size="24" font-weight="normal" fill="#16282B">
+<tspan x="508.0" y="479.0">Bounded executor</tspan>
+<tspan x="508.0" y="506.6">actual effect</tspan>
+</text>
+<rect x="56.0" y="443" width="290" height="110" id="S07_execute_2" fill="#EFF5F3" stroke="#176B68" stroke-width="2"/>
+<text id="S07_execute_2_label" font-family="Nimbus Sans" font-size="24" font-weight="normal" fill="#16282B">
+<tspan x="69.0" y="479.0">EvidenceReceipt</tspan>
+<tspan x="69.0" y="506.6">completed outcome</tspan>
+</text>
+<line id="S07_execute_edge_0" x1="934.0" y1="498.0" x2="785.0" y2="498.0" stroke="#176B68" stroke-width="2" marker-end="url(#arrow)"/>
+<text id="S07_execute_edge_0_label" font-family="Nimbus Sans" font-size="17" font-weight="normal" fill="#43595D">
+<tspan x="789.0" y="433.0">checked</tspan>
+<tspan x="789.0" y="452.55">invocation</tspan>
+</text>
+<line id="S07_execute_edge_1" x1="495.0" y1="498.0" x2="346.0" y2="498.0" stroke="#176B68" stroke-width="2" marker-end="url(#arrow)"/>
+<text id="S07_execute_edge_1_label" font-family="Nimbus Sans" font-size="17" font-weight="normal" fill="#43595D">
+<tspan x="350.0" y="433.0">result evidence</tspan>
+</text>
+<line id="S07_packet_consumption" x1="1079.0" y1="336" x2="1079.0" y2="443" stroke="#A13D32" stroke-width="2" marker-end="url(#arrow)"/>
+<text id="S07_packet_consumption_label" font-family="Nimbus Sans" font-size="19" font-weight="normal" fill="#43595D">
+<tspan x="818" y="386.0">actual current packet</tspan>
+</text>
+<text id="S07_qualification" font-family="Nimbus Sans" font-size="23" font-weight="normal" fill="#43595D">
+<tspan x="56" y="619.0">The packet feeds enforcement. Receipt may inform a later review, but grants no new action and orders no</tspan>
+<tspan x="56" y="645.45">cleanup.</tspan>
+</text>
+<line id="S07_rule" x1="56" y1="671" x2="1218" y2="671" stroke="#B8C8C6" stroke-width="1"/>
+<a href="https://github.com/AAkhtanin/hedgehog-os/blob/2e965ecb18e545e428380eb8e9aa5a7037a388be/specs/current_architecture_lock_v01.md">
+<text id="S07_source_link" font-family="Nimbus Sans" font-size="18" font-weight="normal" fill="#315E8B">
+<tspan x="56" y="703.0">S07 Source: architecture</tspan>
+</text>
+</a>
+<a href="../../atlas/README.html">
+<text id="S07_atlas_locator" font-family="Nimbus Sans" font-size="17" font-weight="normal" fill="#315E8B">
+<tspan x="660" y="702.0">Atlas: Overview / GEO 1 2 3 4 5 6 7</tspan>
+</text>
+</a>
+</svg>

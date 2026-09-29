@@ -1,0 +1,30 @@
+{
+  "checked_on": "2026-09-28",
+  "method": "Three exact primary pages opened through web tool; short original paraphrases only; no integration or benchmark",
+  "sources": [
+    {
+      "id": "RW10-FIDES",
+      "url": "https://devblogs.microsoft.com/agent-framework/fides/",
+      "date": "2026-05-20",
+      "sections": "Labels, policy before tools, current limitations"
+    },
+    {
+      "id": "RW10-IFC",
+      "url": "https://commandline.microsoft.com/information-flow-control-moving-toward-secure-autonomous-agents/",
+      "date": "2026-06-16",
+      "sections": "Label, propagate, check; prototypes and boundaries"
+    },
+    {
+      "id": "RW11",
+      "url": "https://www.apple.com/fr/newsroom/2026/08/apple-introduces-m6-and-m5-ultra-for-a-big-leap-in-performance-and-ai-compute/",
+      "date": "2026-08-25",
+      "sections": "Manufacturer announcement; local computation/unified memory only"
+    }
+  ],
+  "not_claimed": [
+    "Raw article reproduction",
+    "Independent experiments",
+    "Speed or security comparison",
+    "Apple/Sentinel adapter"
+  ]
+}

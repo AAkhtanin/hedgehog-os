@@ -1,0 +1,23 @@
+def consume(r,context):
+    from candidate_domain.profile import profile
+    c.shape(context,('body','source_projection'))
+    b=context['body']; s=context['source_projection']
+    c.validate('body',b,profile=profile()); c.shape(s,SOURCE); request_times(r)
+    need(planning_equal(r,b['offer']['request']),'consumer_original_request_binding')
+    t=b['time_envelope']
+    expected=dict(publisher=b['publisher'],recipient=b['recipient'],request_revision=b['offer']['request']['revision'],
+                  schedule_revision=b['offer']['schedule_revision'],offer_revision=b['source_revision'],
+                  observed_at=t['source_observed_at'],valid_from=t['valid_from'],valid_to=t['valid_to'],
+                  ttl=t['ttl_seconds'],pt=t['pt_created_at'])
+    need(all(s[k]==v for k,v in expected.items()),'consumer_context_projection')
+    need(s['status']=='ACTIVE' and type(s['status_checked']) is int and
+         type(s['status_until']) is int and 0<s['status_until']-s['status_checked']<=60,'consumer_status')
+    e=b['offer']; booking=b['booking']
+    if r['operation']=='FIND_OFFER':
+        need(r==e['request'] and booking is None,'find_binding')
+        status=e['status']; receipt=None
+    else:
+        need(r['operation']=='CONFIRM_MOCK_BOOKING' and booking is not None and
+             booking['request_sha256']==c.sha(r) and e['status']=='OFFER_READY','confirmation_binding')
+        status='MOCK_BOOKED'; receipt=booking['receipt_ref']
+    return report(r,status,e['slots'],s,receipt,search=1,observed=1)

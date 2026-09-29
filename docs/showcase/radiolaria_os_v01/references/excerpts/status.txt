@@ -1,0 +1,22 @@
+def authenticate_status(envelope, pointer, request, policy, now, history):
+    """Authenticate observations, including terminal entries, before current-use checks."""
+    value = verify(envelope, policy['peer_keys'], 'STATUS', pointer['artifact_manifest_ref'].split(':')[1])
+    validate('status',value); entry=value['entry']
+    require((value['requested_pointer_hash'],value['requester'],value['subject_request_ref'],value['request_revision'],value['nonce']) ==
+        (sha(pointer),request['requester'],request['request_id'],request['request_revision'],request['nonce']), 'status_request_binding')
+    require((entry['pointer_id'],entry['publisher_root_id'],entry['stream_id']) ==
+        (pointer['pointer_id'],pointer['publisher_root_id'],pointer['revocation_stream_id']), 'status_pointer_binding')
+    require(value['checked_at'] <= now < min(value['valid_until'],add(value['checked_at'],60)), 'status_not_current')
+    require(entry['effective_at']<=now, 'status_not_effective')
+    key=canonical([entry['publisher_root_id'],entry['pointer_id'],entry['stream_id']]).decode()
+    old=history.get(key)
+    if old:
+        require(entry['revision']>=old['revision'], 'status_rollback')
+        require(entry['revision']!=old['revision'] or entry['entry_hash']==old['entry_hash'], 'status_equivocation')
+        require(old['state']=='ACTIVE' or entry['state']==old['state'], 'status_terminal_revival')
+    return key,entry
+
+def check_status(envelope, pointer, request, policy, now, history):
+    key,entry=authenticate_status(envelope,pointer,request,policy,now,history)
+    require(entry['state']=='ACTIVE','status_not_active')
+    return key,entry

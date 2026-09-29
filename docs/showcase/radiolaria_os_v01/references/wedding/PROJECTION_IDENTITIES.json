@@ -1,0 +1,25 @@
+{
+  "scope": "Current integrated Wedding derivative files; independent of original-source and historical worker-output identities",
+  "files": [
+    {
+      "path": "CAPTURE_PROJECTIONS.json",
+      "bytes": 104282,
+      "sha256": "2c1dcc64651ae8c51ee567edfcecae216cc7b27dd3611257fe01969826ecbc11"
+    },
+    {
+      "path": "CODE_AND_EDITORIAL_PROJECTIONS.json",
+      "bytes": 49442,
+      "sha256": "7dfe2c462b64f11c6e025973f145da9346fe334ac621e03f8e1b0ec93ccd6d68"
+    },
+    {
+      "path": "W3_PROJECTIONS.json",
+      "bytes": 508746,
+      "sha256": "7c94e1a28e0449930bd1966ed718a3305024ba794ac39909154a869f207ad315"
+    },
+    {
+      "path": "W4_PROJECTIONS.json",
+      "bytes": 127009,
+      "sha256": "8d7edf459d7be7f3793231e430bad062a703893a377e1675142d94fc5d5ef67a"
+    }
+  ]
+}

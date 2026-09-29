@@ -1,0 +1,341 @@
+{
+  "schema": "radiolaria.b5.independent_question_review.v01",
+  "method": "Reviewer read both answers and supplied evidence, independently reconstructed references/numeric relations, then compared provisional grades; no new model reviewer.",
+  "questions": [
+    {
+      "route": "A",
+      "question": "Q1",
+      "score": 2,
+      "maximum": 2,
+      "critical_confusions": [],
+      "independent_reason_ru": "Восстановлен объект системы: деятельность вокруг намерения, типизированная работа, потребление результатов и местные решения. Система не сведена к фильтру текста.",
+      "source_anchors": [
+        "M2_FOOTBALL.xml:S1/shared_context/purpose_intent_centred_activity",
+        "M2_FOOTBALL.xml:S4/GCL01.a"
+      ],
+      "observed_B_tool_operations": [],
+      "source_scope": "Pinned supplied material and observed reads; no fresh execution"
+    },
+    {
+      "route": "A",
+      "question": "Q2",
+      "score": 2,
+      "maximum": 2,
+      "critical_confusions": [],
+      "independent_reason_ru": "Прослежены разрешённый сдвиг только 8 января, вычисление E, B.offer=E и C.body=B с проверенным статусом, затем фактический вход потребителя. Производные представления и выдержки кода не названы новым исполнением.",
+      "source_anchors": [
+        "M2_FOOTBALL.xml:S1/VIEW_producer",
+        "M2_FOOTBALL.xml:S1/VIEW_consumer",
+        "M2_FOOTBALL.xml:S1/VIEW_parent_input",
+        "M2_FOOTBALL.xml:S1/CODE_run",
+        "M2_FOOTBALL.xml:S1/CODE_native",
+        "M2_FOOTBALL.xml:S1/CODE_independent_check"
+      ],
+      "observed_B_tool_operations": [],
+      "source_scope": "Pinned supplied material and observed reads; no fresh execution"
+    },
+    {
+      "route": "A",
+      "question": "Q3",
+      "score": 2,
+      "maximum": 2,
+      "critical_confusions": [],
+      "independent_reason_ru": "Предложение, решение владельца источника, местное разрешение действия, ActionCommitPacket/Firewall и квитанция разделены. Чужое одобрение, GT/PostV&V и квитанция не создают местных полномочий.",
+      "source_anchors": [
+        "M2_FOOTBALL.xml:S1/semantic_proposal_vs_authority_vs_execution",
+        "M2_FOOTBALL.xml:S1/action review and receipt excerpts",
+        "M2_FOOTBALL.xml:S5",
+        "M2_FOOTBALL.xml:S6",
+        "M2_FOOTBALL.xml:S7"
+      ],
+      "observed_B_tool_operations": [],
+      "source_scope": "Pinned supplied material and observed reads; no fresh execution"
+    },
+    {
+      "route": "A",
+      "question": "Q4",
+      "score": 2,
+      "maximum": 2,
+      "critical_confusions": [],
+      "independent_reason_ru": "Адрес, материал, текущая применимость и разрешение не смешаны. ACTIVE и REVOKED разобраны по данным; отказ status_not_active и Root BLOCKED_FAIL_CLOSED не выданы за плохую подпись. Отсутствие эффекта ограничено показанным отрицательным случаем.",
+      "source_anchors": [
+        "M2_FOOTBALL.xml:S1/positive STATUS projection",
+        "M2_FOOTBALL.xml:S1/REVOKED refusal and Root review"
+      ],
+      "observed_B_tool_operations": [],
+      "source_scope": "Pinned supplied material and observed reads; no fresh execution"
+    },
+    {
+      "route": "A",
+      "question": "Q5",
+      "score": 2,
+      "maximum": 2,
+      "critical_confusions": [],
+      "independent_reason_ru": "Три слота по 2100 дают 6300 EUR minor при бюджете 7000. SHIFT означает готовое предложение: booking=null, dispatch=0, mutations=0, а не уже состоявшуюся бронь. Значения независимо пересчитаны.",
+      "source_anchors": [
+        "M2_FOOTBALL.xml:S1/VIEW_producer",
+        "M2_FOOTBALL.xml:S1/VIEW_consumer"
+      ],
+      "observed_B_tool_operations": [],
+      "source_scope": "Pinned supplied material and observed reads; no fresh execution"
+    },
+    {
+      "route": "A",
+      "question": "Q7",
+      "score": 2,
+      "maximum": 2,
+      "critical_confusions": [],
+      "independent_reason_ru": "Чтение сохранённого, проверка сохранённых связей, новый native и новый live разделены. Читатель не утверждает, что запускал код, проверял криптографию или пересчитывал хэши.",
+      "source_anchors": [
+        "M2_FOOTBALL.xml:S2/VERIFY.md",
+        "M2_FOOTBALL.xml:S1/source evidence classes"
+      ],
+      "observed_B_tool_operations": [],
+      "source_scope": "Pinned supplied material and observed reads; no fresh execution"
+    },
+    {
+      "route": "A",
+      "question": "Q9",
+      "score": 2,
+      "maximum": 2,
+      "critical_confusions": [],
+      "independent_reason_ru": "Назван предел FOCUS: выдержек недостаточно для полной проверки подписанных оболочек и всех первичных журналов. Внешняя ссылка не выдана за фактически прочитанный файл.",
+      "source_anchors": [
+        "M2_FOOTBALL.xml:S1/source coverage and VIEW notes",
+        "M2_FOOTBALL.xml:S8/PAPER_SOURCE_KEY",
+        "references/episode/main_pub_shift_bundle.json — explicitly outside supplied text"
+      ],
+      "observed_B_tool_operations": [],
+      "source_scope": "Pinned supplied material and observed reads; no fresh execution"
+    },
+    {
+      "route": "A",
+      "question": "Q10",
+      "score": 2,
+      "maximum": 2,
+      "critical_confusions": [],
+      "independent_reason_ru": "Отсутствующее подтверждение реального денежного расчёта обозначено MISSING_EVIDENCE. Mock-квитанция бронирования не превращена в банковское свидетельство.",
+      "source_anchors": [
+        "M2_FOOTBALL.xml:S1/mock receipt and limits",
+        "M2_FOOTBALL.xml:S2/verification scope"
+      ],
+      "observed_B_tool_operations": [],
+      "source_scope": "Pinned supplied material and observed reads; no fresh execution"
+    },
+    {
+      "route": "B",
+      "question": "Q1",
+      "score": 2,
+      "maximum": 2,
+      "critical_confusions": [],
+      "independent_reason_ru": "Radiolaria объяснена как прикладная вычислительная система вокруг намерения с RDL Kernel, а не замена host OS или только модерация текста. Механизмы отделены от профилей и адаптеров.",
+      "source_anchors": [
+        "publication/chapters/01_intent.md",
+        "publication/references/current/current_architecture_lock_v01.md §§3–7"
+      ],
+      "observed_B_tool_operations": [
+        6,
+        35
+      ],
+      "source_scope": "Pinned supplied material and observed reads; no fresh execution"
+    },
+    {
+      "route": "B",
+      "question": "Q2",
+      "score": 2,
+      "maximum": 2,
+      "critical_confusions": [],
+      "independent_reason_ru": "Wedding восстановлен до потребления: модельное REVISE/MIX_CIRCLES, отдельный контролируемый пользовательский ввод, Root revision 3, компиляция, solve, validate, consume. Подтверждены 10 hard-условий, перенос guest07/08 и вычисленный перенос guest09/10, hard=0, mix=0, keep=24. Исторический live и контролируемое согласие не смешаны.",
+      "source_anchors": [
+        "publication/references/wedding/FOCUS_CAUSAL_FIELDS.json:SR2-returned1, SR2-material, work1/work4 consumption",
+        "publication/references/wedding/W3_PROJECTIONS.json",
+        "publication/chapters/08_wedding.md"
+      ],
+      "observed_B_tool_operations": [
+        8,
+        9,
+        22,
+        24,
+        25,
+        26,
+        28,
+        55
+      ],
+      "source_scope": "Pinned supplied material and observed reads; no fresh execution"
+    },
+    {
+      "route": "B",
+      "question": "Q3",
+      "score": 2,
+      "maximum": 2,
+      "critical_confusions": [],
+      "independent_reason_ru": "Предложение работы, вложенное вычисление, местное разрешение действия и допуск исходников различены. Нет наследования окончательной власти, SuperRoot или требования отдельного Root на каждое дочернее вычисление.",
+      "source_anchors": [
+        "publication/chapters/02_geometry.md",
+        "publication/references/current/current_architecture_lock_v01.md",
+        "publication/references/accepted/docs/showcase/gate5_reference_v01/dossiers/A.md:A10–A11"
+      ],
+      "observed_B_tool_operations": [
+        7,
+        35,
+        39
+      ],
+      "source_scope": "Pinned supplied material and observed reads; no fresh execution"
+    },
+    {
+      "route": "B",
+      "question": "Q4",
+      "score": 2,
+      "maximum": 2,
+      "critical_confusions": [],
+      "independent_reason_ru": "Адрес и подписанный материал не равны актуальности и текущему разрешению. Прочитаны positive STATUS и negative REVOKED; сохранность исторических байтов после expiry не выдана за право нового действия.",
+      "source_anchors": [
+        "publication/references/episode/main_req_shift_fetch_request.json",
+        "publication/references/episode/main_req_shift_offer_body.json",
+        "publication/references/episode/main_req_shift_status.json",
+        "publication/references/episode/negative_shift_refusal.json",
+        "publication/references/episode/negative_shift_status.json",
+        "publication/references/current/current_architecture_lock_v01.md §7"
+      ],
+      "observed_B_tool_operations": [
+        35,
+        40,
+        41,
+        42,
+        43,
+        44
+      ],
+      "source_scope": "Pinned supplied material and observed reads; no fresh execution"
+    },
+    {
+      "route": "B",
+      "question": "Q5",
+      "score": 2,
+      "maximum": 2,
+      "critical_confusions": [],
+      "independent_reason_ru": "E=10^9, controlled O=0, рейтинг 500M→375M и prior −62.5M связаны с S05/E02–E03. Семь единиц распределены 4/3→3/4, но вызовов осталось 9; ускорение не придумано. N4-04 показывает domain Work 1→0 в узком окне, а не нулевую работу всей системы. Читатель прямо обозначил производный ledger и непрочитанные нижележащие blobs.",
+      "source_anchors": [
+        "publication/references/experience/source_ledger.md §S05 (E02/E03), §S08 (N4-04/E08)",
+        "publication/chapters/05_experience.md"
+      ],
+      "observed_B_tool_operations": [
+        11,
+        12,
+        33,
+        34
+      ],
+      "source_scope": "Pinned supplied material and observed reads; no fresh execution"
+    },
+    {
+      "route": "B",
+      "question": "Q6",
+      "score": 2,
+      "maximum": 2,
+      "critical_confusions": [],
+      "independent_reason_ru": "Техническая готовность A, замороженный статус редакционного B4, исторический G54D INCOMPLETE и разрешённая четвёртая коррекция D1 разделены. Историческое B5_NOT_RUN в входном пакете не подменено новым статусом; публикация, DOI и автономная фабрика не объявлены состоявшимися.",
+      "source_anchors": [
+        "START_HERE.md",
+        "publication/reader/READ_RADIOLARIA.xml metadata",
+        "publication/LIMITS.md",
+        "publication/references/accepted/docs/showcase/gate5_reference_v01/dossiers/A.md:A06–A07",
+        "publication/chapters/11_integration.md"
+      ],
+      "observed_B_tool_operations": [
+        1,
+        3,
+        15,
+        16,
+        38
+      ],
+      "source_scope": "Pinned supplied material and observed reads; no fresh execution"
+    },
+    {
+      "route": "B",
+      "question": "Q7",
+      "score": 2,
+      "maximum": 2,
+      "critical_confusions": [],
+      "independent_reason_ru": "Четыре режима проверки разделены. Читатель сообщает только о чтении через разрешённый брокер и не присваивает себе выполнение verifier/native/live или проверку подписей.",
+      "source_anchors": [
+        "publication/chapters/13_verification.md"
+      ],
+      "observed_B_tool_operations": [
+        14
+      ],
+      "source_scope": "Pinned supplied material and observed reads; no fresh execution"
+    },
+    {
+      "route": "B",
+      "question": "Q8",
+      "score": 2,
+      "maximum": 2,
+      "critical_confusions": [],
+      "independent_reason_ru": "Изменение Wedding-входа и вычисления внутри профиля отличено от Gate5-авторства нового предметного пакета, экзамена и допуска. Не заявлены однопроходное безошибочное авторство, отсутствие интеграции или вечная неизменность ядра.",
+      "source_anchors": [
+        "publication/chapters/08_wedding.md",
+        "publication/references/accepted/docs/showcase/gate5_reference_v01/dossiers/A.md:A01–A02,A07,A11",
+        "publication/chapters/11_integration.md"
+      ],
+      "observed_B_tool_operations": [
+        8,
+        9,
+        15,
+        36,
+        38,
+        39
+      ],
+      "source_scope": "Pinned supplied material and observed reads; no fresh execution"
+    },
+    {
+      "route": "B",
+      "question": "Q9",
+      "score": 2,
+      "maximum": 2,
+      "critical_confusions": [],
+      "independent_reason_ru": "Существенные ограничения найдены: очистка метаданных не удаляет визуальную информацию, EWS не доказывает host/account/process isolation, reviewed-reference не защищает от произвольного враждебного Python. Не заявлено чтение всего XML, бинарников, внешней библиографии или отсутствующих первичных G4-blobs.",
+      "source_anchors": [
+        "publication/chapters/09_workspace.md",
+        "publication/references/accepted/docs/showcase/gate5_reference_v01/dossiers/A.md:A10",
+        "publication/reader/default_inventory.json",
+        "publication/chapters/10_cross_case.md",
+        "publication/references/current/research_context_v01.json"
+      ],
+      "observed_B_tool_operations": [
+        4,
+        19,
+        39,
+        47,
+        48,
+        49,
+        53,
+        59
+      ],
+      "source_scope": "Pinned supplied material and observed reads; no fresh execution"
+    },
+    {
+      "route": "B",
+      "question": "Q10",
+      "score": 2,
+      "maximum": 2,
+      "critical_confusions": [],
+      "independent_reason_ru": "Для field false-negative rate Sentinel дан MISSING_EVIDENCE: нет соответствующих ground truth и знаменателя. Восемь нормализованных реальных EA-записей не названы валидированной физической картой, внешние исследования — результатами проекта.",
+      "source_anchors": [
+        "publication/references/current/research_context_v01.json:matrix row 6, whitepaper_paragraph, limits, D06",
+        "publication/chapters/10_cross_case.md"
+      ],
+      "observed_B_tool_operations": [
+        18,
+        19,
+        48,
+        49,
+        59
+      ],
+      "source_scope": "Pinned supplied material and observed reads; no fresh execution"
+    }
+  ],
+  "totals": {
+    "A": 16,
+    "B": 20
+  },
+  "critical_confusions": 0
+}

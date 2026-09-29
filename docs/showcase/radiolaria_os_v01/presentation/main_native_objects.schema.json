@@ -1,0 +1,515 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:g6b3r1:native:v1",
+  "title": "Final consolidation native presentation model",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "canvas",
+    "font",
+    "slides"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "g6b3r1-native-v1"
+    },
+    "canvas": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "width",
+        "height",
+        "unit",
+        "dpi"
+      ],
+      "properties": {
+        "width": {
+          "const": 1280
+        },
+        "height": {
+          "const": 720
+        },
+        "unit": {
+          "const": "css_px"
+        },
+        "dpi": {
+          "const": 96
+        }
+      }
+    },
+    "font": {
+      "const": "Nimbus Sans"
+    },
+    "short_route": {
+      "type": "array",
+      "minItems": 14,
+      "maxItems": 14,
+      "items": {
+        "$ref": "#/$defs/id"
+      }
+    },
+    "export_status": {
+      "const": "CONTENT_READY_FOR_WORK_EXPORT"
+    },
+    "runtime_authority": {
+      "const": false
+    },
+    "slides": {
+      "type": "array",
+      "minItems": 25,
+      "maxItems": 25,
+      "items": {
+        "$ref": "#/$defs/slide"
+      }
+    }
+  },
+  "$defs": {
+    "id": {
+      "type": "string",
+      "pattern": "^[A-Za-z][A-Za-z0-9_.-]{0,127}$"
+    },
+    "string": {
+      "type": "string",
+      "minLength": 1
+    },
+    "color": {
+      "type": "string",
+      "pattern": "^#[0-9A-Fa-f]{6}$"
+    },
+    "paint": {
+      "type": "string",
+      "pattern": "^(none|#[0-9A-Fa-f]{6})$"
+    },
+    "coordinate": {
+      "type": "number",
+      "minimum": 0
+    },
+    "delta": {
+      "type": "number"
+    },
+    "positive": {
+      "type": "number",
+      "exclusiveMinimum": 0
+    },
+    "order": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "slide": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "title",
+        "source_refs",
+        "objects",
+        "notes_en"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "title": {
+          "$ref": "#/$defs/string"
+        },
+        "notes_ru": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "[Ѐ-ӿ]"
+        },
+        "scope": {},
+        "relations": {
+          "type": "array",
+          "items": {}
+        },
+        "reading_order": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/order"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/id"
+              }
+            }
+          ]
+        },
+        "source_refs": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "label",
+              "target"
+            ],
+            "properties": {
+              "label": {
+                "$ref": "#/$defs/string"
+              },
+              "target": {
+                "$ref": "#/$defs/string"
+              }
+            }
+          }
+        },
+        "objects": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "oneOf": [
+              {
+                "$ref": "#/$defs/text"
+              },
+              {
+                "$ref": "#/$defs/shape"
+              },
+              {
+                "$ref": "#/$defs/line"
+              },
+              {
+                "$ref": "#/$defs/arrow"
+              },
+              {
+                "$ref": "#/$defs/image"
+              }
+            ]
+          }
+        },
+        "notes_en": {
+          "type": "string",
+          "minLength": 20
+        }
+      }
+    },
+    "text": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "kind",
+        "x",
+        "y",
+        "w",
+        "h",
+        "reading_order",
+        "alt",
+        "text",
+        "font_px",
+        "color",
+        "bold"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "kind": {
+          "const": "text"
+        },
+        "x": {
+          "$ref": "#/$defs/coordinate"
+        },
+        "y": {
+          "$ref": "#/$defs/coordinate"
+        },
+        "w": {
+          "$ref": "#/$defs/positive"
+        },
+        "h": {
+          "$ref": "#/$defs/positive"
+        },
+        "reading_order": {
+          "$ref": "#/$defs/order"
+        },
+        "alt": {
+          "$ref": "#/$defs/string"
+        },
+        "entity_id": {
+          "$ref": "#/$defs/string"
+        },
+        "relation_type": {
+          "$ref": "#/$defs/string"
+        },
+        "text": {
+          "$ref": "#/$defs/string"
+        },
+        "font_px": {
+          "$ref": "#/$defs/positive"
+        },
+        "line_height_px": {
+          "$ref": "#/$defs/positive"
+        },
+        "color": {
+          "$ref": "#/$defs/color"
+        },
+        "bold": {
+          "type": "boolean"
+        },
+        "align": {
+          "enum": [
+            "left",
+            "center",
+            "right",
+            "justify"
+          ]
+        },
+        "link_target": {
+          "$ref": "#/$defs/string"
+        }
+      }
+    },
+    "shape": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "kind",
+        "x",
+        "y",
+        "w",
+        "h",
+        "reading_order",
+        "alt",
+        "fill",
+        "stroke",
+        "stroke_width"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "kind": {
+          "enum": [
+            "rect",
+            "ellipse"
+          ]
+        },
+        "x": {
+          "$ref": "#/$defs/coordinate"
+        },
+        "y": {
+          "$ref": "#/$defs/coordinate"
+        },
+        "w": {
+          "$ref": "#/$defs/positive"
+        },
+        "h": {
+          "$ref": "#/$defs/positive"
+        },
+        "reading_order": {
+          "$ref": "#/$defs/order"
+        },
+        "alt": {
+          "$ref": "#/$defs/string"
+        },
+        "entity_id": {
+          "$ref": "#/$defs/string"
+        },
+        "relation_type": {
+          "$ref": "#/$defs/string"
+        },
+        "fill": {
+          "$ref": "#/$defs/paint"
+        },
+        "stroke": {
+          "$ref": "#/$defs/paint"
+        },
+        "stroke_width": {
+          "$ref": "#/$defs/coordinate"
+        }
+      }
+    },
+    "line": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "kind",
+        "x",
+        "y",
+        "w",
+        "h",
+        "reading_order",
+        "alt",
+        "color",
+        "stroke_width"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "kind": {
+          "const": "line"
+        },
+        "x": {
+          "$ref": "#/$defs/coordinate"
+        },
+        "y": {
+          "$ref": "#/$defs/coordinate"
+        },
+        "w": {
+          "$ref": "#/$defs/delta"
+        },
+        "h": {
+          "$ref": "#/$defs/delta"
+        },
+        "reading_order": {
+          "$ref": "#/$defs/order"
+        },
+        "alt": {
+          "$ref": "#/$defs/string"
+        },
+        "entity_id": {
+          "$ref": "#/$defs/string"
+        },
+        "relation_type": {
+          "$ref": "#/$defs/string"
+        },
+        "color": {
+          "$ref": "#/$defs/color"
+        },
+        "stroke_width": {
+          "$ref": "#/$defs/positive"
+        }
+      }
+    },
+    "arrow": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "kind",
+        "x",
+        "y",
+        "w",
+        "h",
+        "reading_order",
+        "alt",
+        "source_id",
+        "target_id",
+        "head",
+        "color",
+        "stroke_width"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "kind": {
+          "const": "arrow"
+        },
+        "x": {
+          "$ref": "#/$defs/coordinate"
+        },
+        "y": {
+          "$ref": "#/$defs/coordinate"
+        },
+        "w": {
+          "$ref": "#/$defs/delta"
+        },
+        "h": {
+          "$ref": "#/$defs/delta"
+        },
+        "reading_order": {
+          "$ref": "#/$defs/order"
+        },
+        "alt": {
+          "$ref": "#/$defs/string"
+        },
+        "entity_id": {
+          "$ref": "#/$defs/string"
+        },
+        "relation_type": {
+          "$ref": "#/$defs/string"
+        },
+        "source_id": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/id"
+            },
+            {
+              "const": null
+            }
+          ]
+        },
+        "target_id": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/id"
+            },
+            {
+              "const": null
+            }
+          ]
+        },
+        "head": {
+          "const": "triangle"
+        },
+        "color": {
+          "$ref": "#/$defs/color"
+        },
+        "stroke_width": {
+          "$ref": "#/$defs/positive"
+        }
+      }
+    },
+    "image": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "kind",
+        "x",
+        "y",
+        "w",
+        "h",
+        "reading_order",
+        "alt",
+        "path",
+        "originalbitmap"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "kind": {
+          "const": "image"
+        },
+        "x": {
+          "$ref": "#/$defs/coordinate"
+        },
+        "y": {
+          "$ref": "#/$defs/coordinate"
+        },
+        "w": {
+          "$ref": "#/$defs/positive"
+        },
+        "h": {
+          "$ref": "#/$defs/positive"
+        },
+        "reading_order": {
+          "$ref": "#/$defs/order"
+        },
+        "alt": {
+          "$ref": "#/$defs/string"
+        },
+        "entity_id": {
+          "$ref": "#/$defs/string"
+        },
+        "relation_type": {
+          "$ref": "#/$defs/string"
+        },
+        "path": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\.(png|jpg|jpeg)$"
+        },
+        "originalbitmap": {
+          "const": true
+        }
+      }
+    }
+  }
+}

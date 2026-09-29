@@ -1,0 +1,42 @@
+[
+  {
+    "original": "docs/gate6_reference_v01/ENVIRONMENT_AND_DEPENDENCIES.md",
+    "commit": "2e965ecb18e545e428380eb8e9aa5a7037a388be",
+    "included": "references/accepted/docs/gate6_reference_v01/ENVIRONMENT_AND_DEPENDENCIES.md",
+    "bytes": 1823,
+    "sha256": "42b5b92b265c39b878183c4febfbbecbc232bfc5bb3368edb8d89b7d1b823e35",
+    "reason": "Exact immediate link dependency of already selected accepted source; data only."
+  },
+  {
+    "original": "docs/gate6_reference_v01/acceptance_matrix.json",
+    "commit": "2e965ecb18e545e428380eb8e9aa5a7037a388be",
+    "included": "references/accepted/docs/gate6_reference_v01/acceptance_matrix.json",
+    "bytes": 309004,
+    "sha256": "7cc4568a5ef8d0a438baa039219ff39119d8b67dbe84a4f9ca901aeb7d1fb4c9",
+    "reason": "Exact immediate link dependency of already selected accepted source; data only."
+  },
+  {
+    "original": "docs/gate6_reference_v01/evidence_index.json",
+    "commit": "2e965ecb18e545e428380eb8e9aa5a7037a388be",
+    "included": "references/accepted/docs/gate6_reference_v01/evidence_index.json",
+    "bytes": 9265306,
+    "sha256": "4fc7605c34f7045100ddc200ace3ab201158509f462b614d4c7ae9f4102f73ce",
+    "reason": "Exact immediate link dependency of already selected accepted source; data only."
+  },
+  {
+    "original": "docs/gate6_reference_v01/machine_manifest.json",
+    "commit": "2e965ecb18e545e428380eb8e9aa5a7037a388be",
+    "included": "references/accepted/docs/gate6_reference_v01/machine_manifest.json",
+    "bytes": 10411,
+    "sha256": "8841154c029c1ce584d056c3c538a31f85b4ef1fadf20ebb088d829a071b7558",
+    "reason": "Exact immediate link dependency of already selected accepted source; data only."
+  },
+  {
+    "original": "docs/showcase/gate5_reference_v01/evidence/SOURCE_MAP.json",
+    "commit": "2e965ecb18e545e428380eb8e9aa5a7037a388be",
+    "included": "references/accepted/docs/showcase/gate5_reference_v01/evidence/SOURCE_MAP.json",
+    "bytes": 609528,
+    "sha256": "d0d527d286a01f390d508e3826a93172a2bbf56bba5d5bf4ac784ad04cd52521",
+    "reason": "Exact immediate link dependency of already selected accepted source; data only."
+  }
+]
